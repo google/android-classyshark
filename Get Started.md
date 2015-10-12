@@ -15,7 +15,7 @@ for (int i = 0; i < 50; i++) {
 }
 ```
 
-The full example is [here](https://github.com/borisf/ClassySharkSpy/tree/master/Scenarios)
+The full example is [here](https://github.com/googlesamples/android-classyshark/tree/master/Scenarios)
 
 When running this code we have a race condition, in FancyLibrary more than one thread changes the value.
 
