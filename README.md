@@ -2,7 +2,7 @@
 
 ### This is not an offical Google product
 
-![](https://github.com/borisf/ClassySharkSpy/blob/master/Resources/Intro.png)
+![](https://github.com/googlesamples/android-classyshark/blob/master/Resources/Intro.png)
 
 While developing apps we tend to think about dexs, jars, apks and classes as build/run time abstractions that just work. Most of the time this is true, however, when trying to debug runtime issues in large apps, things can sometimes get tricky.
 
