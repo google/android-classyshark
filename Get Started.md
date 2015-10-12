@@ -31,16 +31,16 @@ Let's say SampleLibrary is a popular open source project, so to find the problem
 
 Lets use ClassyShark, first let's fire up ClassyShark
 
-![](https://github.com/borisf/ClassySharkSpy/blob/master/Resources/Get%20Started%20Open%20File.png)
+![](https://github.com/googlesamples/android-classyshark/blob/master/Resources/Get%20Started%20Open%20File.png)
 
 
 Double Click, opening the FancyLib.jar
 
-![](https://github.com/borisf/ClassySharkSpy/blob/master/Resources/Get%20Started%20Lib%20View.png)
+![](https://github.com/googlesamples/android-classyshark/blob/master/Resources/Get%20Started%20Lib%20View.png)
 
 We see, all the classes exactly as our app sees them. Let's head into FancyLibrary.class, as this is the class from our code that does the trouble (either in command line or double click)
 
-![](https://github.com/borisf/ClassySharkSpy/blob/master/Resources/Get%20Started%20Class%20View.png)
+![](https://github.com/googlesamples/android-classyshark/blob/master/Resources/Get%20Started%20Class%20View.png)
 
 Now we see the problem, this class is not thread safe because of the variable declaration. One way to solve this is to wrap the access to the FancyLibrary inside synchronized block.
 
