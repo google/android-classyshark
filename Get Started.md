@@ -1,6 +1,6 @@
 # ClassyShark - Get started
 
-Let's examine the following simplified scenario. What if we have a main method that calls a FancyLibrary (simulated dependency. FancyLibrary is a simple Reader/Writer implementation, where a field is written once and accessed many times. Our app is using FancyLibrary, as a 3-rd party dependency. Here is our app's main code
+Let's examine the following simplified scenario. What if we have a main method that calls a FancyLibrary (simulated dependency). FancyLibrary is a simple Reader/Writer implementation, where a field is written once and accessed many times. Our app is using FancyLibrary, as a 3-rd party dependency. Here is our app's main code:
 
 ``` java
 final FancyLibrary fancyLibrary = new FancyLibrary();
@@ -15,9 +15,9 @@ for (int i = 0; i < 50; i++) {
 }
 ```
 
-The full example is [here](https://github.com/googlesamples/android-classyshark/tree/master/Scenarios)
+The full example is [here](https://github.com/googlesamples/android-classyshark/tree/master/Scenarios).
 
-When running this code we have a race condition, in FancyLibrary more than one thread changes the value.
+When running this code we have a race condition, in FancyLibrary more than one thread changes the value:
 
 * thread T0 ==> wrote value
 * thread T1 ==> wrote value
@@ -27,9 +27,9 @@ When running this code we have a race condition, in FancyLibrary more than one t
 * thread T5 ==> read value
 * thread T6 ==> read value
 
-Let's say SampleLibrary is a popular open source project, so to find the problem we need to research the code and make sure we have an understanding, which code made its way to the jar in our Android project
+Let's say FancyLibrary is a popular open source project, so to find the problem we need to research the code and make sure we have an understanding, which code made its way to the jar in our Android project.
 
-Lets use ClassyShark, first let's fire up ClassyShark
+Let's use ClassyShark, first let's fire up ClassyShark
 
 ![](https://github.com/googlesamples/android-classyshark/blob/master/Resources/Get%20Started%20Open%20File.png)
 
@@ -61,4 +61,4 @@ private static synchronized void wrapLibrary(FancyLibrary fLib) {
    fLib.changeNumber();
 }
 ```
-Bottom line the FancyLib is not thread safe, however it was not documented anywhere
+Bottom line the FancyLib is not thread safe, however it was not documented anywhere.
