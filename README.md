@@ -20,7 +20,7 @@ Hope you find ClassyShark as useful and enjoyable as I do. Get started [here] (h
 
 ## Dependencies
 * dexlib2 by jesusfreke
-* guava bu Google
+* guava by Google
 
 License
 =======
