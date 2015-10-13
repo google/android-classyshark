@@ -1,6 +1,6 @@
 # ClassyShark - Android executables browser
 
-### This is not an offical Google product
+### This is not an official Google product
 
 ![](https://github.com/googlesamples/android-classyshark/blob/master/Resources/Intro.png)
 
@@ -8,9 +8,9 @@ While developing apps we tend to think about dexs, jars, apks and classes as bui
 
 After working with 3rd party dependencies and analysing crashes neither being able to view the sources nor having time time to learn the library, I wrote a tool to assist me. By looking inside the jars and dexes I can see how they work and which libraries they call. 
 
-With ClassyShark analyzing dependencies is breeze. ClassyShark is fast and shows the right info (dependency classes,packages, methods and AndroidManifest) in no time. If your app is crashing or misbehaving at runtime and you’re not sure why then ClassyShark may be able to help you.
+With ClassyShark analyzing dependencies is a breeze. ClassyShark is fast and shows the right info (dependency classes, packages, methods and `AndroidManifest`) in no time. If your app is crashing or misbehaving at runtime and you’re not sure why then ClassyShark may be able to help you.
 
-Hope you find ClassyShark as useful and enjoyable as I do. Get started [here] (https://github.com/googlesamples/android-classyshark/blob/master/Get%20Started.md)
+Hope you find ClassyShark as useful and enjoyable as I do. Get started [here] (https://github.com/googlesamples/android-classyshark/blob/master/Get%20Started.md).
 
 ## Features
 * Multi tabbed interface
