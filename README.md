@@ -18,6 +18,10 @@ Hope you find ClassyShark as useful and enjoyable as I do. Get started [here] (h
 * Android manifest
 * Incremental/Camel/Fuzzy searches
 
+## Dependencies
+* dexlib2 by jesusfreke
+* guava bu Google
+
 License
 =======
 
