@@ -1,8 +1,10 @@
-# ClassyShark - Android executables browser
+# ClassyShark
+
+Android executables browser
 
 ### This is not an official Google product
 
-![](https://github.com/googlesamples/android-classyshark/blob/master/Resources/Intro.png)
+### Introduction
 
 While developing apps we tend to think about dexs, jars, apks and classes as build/run time abstractions that just work. Most of the time this is true, however, when trying to debug runtime issues in large apps, things can sometimes get tricky.
 
@@ -12,15 +14,34 @@ With ClassyShark analyzing dependencies is a breeze. ClassyShark is fast and sho
 
 Hope you find ClassyShark as useful and enjoyable as I do. Get started [here] (https://github.com/googlesamples/android-classyshark/blob/master/Get%20Started.md).
 
-## Features
+### Downloads
+
+Grab the latest release from [here] (https://github.com/googlesamples/android-classyshark/releases).
+
+### Screenshot
+
+![](https://github.com/googlesamples/android-classyshark/blob/master/Resources/Intro.png)
+
+### Getting Started
+Clone this repository and import the `ClassySharkWS` folder in your favorite IDE.
+
+### Features
 * Multi tabbed interface
 * Apk/Dex/Jar/Class formats
 * Android manifest
 * Incremental/Camel/Fuzzy searches
 
-## Dependencies
+### Dependencies
 * dexlib2 by jesusfreke
 * guava by Google
+
+### Support
+If you've found an error, please file an issue:
+
+https://github.com/googlesamples/android-classyshark/issues
+
+Patches are encouraged, and may be submitted by forking this project and
+submitting a pull request through GitHub.
 
 License
 =======
