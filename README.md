@@ -13,20 +13,32 @@ After working with 3rd party dependencies and analysing crashes neither being ab
 With ClassyShark analyzing dependencies is a breeze. ClassyShark is fast and shows the right info (dependency classes, packages, methods and `AndroidManifest`) in no time. If your app is crashing or misbehaving at runtime and you’re not sure why then ClassyShark may be able to help you.
 
 Hope you find ClassyShark as useful and enjoyable as I do. Get started [here] (https://github.com/googlesamples/android-classyshark/blob/master/Get%20Started.md).
+Grab the latest release from [here] (https://github.com/googlesamples/android-classyshark/releases)
 
-## Screenshot
+### Screenshot
 
 ![](https://github.com/googlesamples/android-classyshark/blob/master/Resources/Intro.png)
 
-## Features
+### Getting Started
+Clone this repository and import the `ClassySharkWS` folder in your favorite IDE.
+
+### Features
 * Multi tabbed interface
 * Apk/Dex/Jar/Class formats
 * Android manifest
 * Incremental/Camel/Fuzzy searches
 
-## Dependencies
+### Dependencies
 * dexlib2 by jesusfreke
 * guava by Google
+
+### Support
+If you've found an error, please file an issue:
+
+https://github.com/googlesamples/android-classyshark/issues
+
+Patches are encouraged, and may be submitted by forking this project and
+submitting a pull request through GitHub.
 
 License
 =======
