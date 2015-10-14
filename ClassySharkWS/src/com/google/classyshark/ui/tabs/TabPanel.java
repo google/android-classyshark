@@ -60,6 +60,7 @@ public class TabPanel extends JPanel implements KeyListener {
     public TabPanel(JTabbedPane tabbedPane, int myIndex) {
         super(false);
 
+        this.setLayout(new BorderLayout());
         this.tabbedPane = tabbedPane;
         this.myIndexAtTabbedPane = myIndex;
 
@@ -75,7 +76,7 @@ public class TabPanel extends JPanel implements KeyListener {
         JScrollPane scrollPane = new JScrollPane(displayArea.onAddComponentToPane());
         scrollPane.setPreferredSize(new Dimension(800, 700));
 
-        add(scrollPane, BorderLayout.SOUTH);
+        add(scrollPane, BorderLayout.CENTER);
     }
 
     @Override
