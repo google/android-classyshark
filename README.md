@@ -13,6 +13,9 @@ After working with 3rd party dependencies and analysing crashes neither being ab
 With ClassyShark analyzing dependencies is a breeze. ClassyShark is fast and shows the right info (dependency classes, packages, methods and `AndroidManifest`) in no time. If your app is crashing or misbehaving at runtime and you’re not sure why then ClassyShark may be able to help you.
 
 Hope you find ClassyShark as useful and enjoyable as I do. Get started [here] (https://github.com/googlesamples/android-classyshark/blob/master/Get%20Started.md).
+
+### Downloads
+
 Grab the latest release from [here] (https://github.com/googlesamples/android-classyshark/releases).
 
 ### Screenshot
