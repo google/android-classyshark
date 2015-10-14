@@ -17,6 +17,7 @@
 package com.google.classyshark.ui.tabs;
 
 import com.google.classyshark.ui.ClassySharkFrame;
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -27,6 +28,7 @@ import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.UIManager;
 import javax.swing.border.Border;
+import javax.swing.border.LineBorder;
 
 /**
  * toolbar = buttons + command line
@@ -67,10 +69,15 @@ public class ToolBar extends JToolBar {
         add(infoBtn);
 
         setFloatable(false);
+
+        Border roundedBorder = new LineBorder(Color.BLACK, 5);
+        setBorder(roundedBorder);
     }
 
     @Override
-    public void setBorder(Border border) {}
+    public void setBorder(Border border) {
+        super.setBorder(border);
+    }
 
     public void addKeyListenerToTypingArea(TabPanel mm) {
         typingArea.addKeyListener(mm);
