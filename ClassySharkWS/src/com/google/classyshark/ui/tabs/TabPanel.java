@@ -60,7 +60,9 @@ public class TabPanel extends JPanel implements KeyListener {
     public TabPanel(JTabbedPane tabbedPane, int myIndex) {
         super(false);
 
-        this.setLayout(new BorderLayout());
+        BorderLayout borderLayout = new BorderLayout();
+        borderLayout.setVgap(5);
+        this.setLayout(borderLayout);
         this.tabbedPane = tabbedPane;
         this.myIndexAtTabbedPane = myIndex;
 
