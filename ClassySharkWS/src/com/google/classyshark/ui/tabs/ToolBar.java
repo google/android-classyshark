@@ -17,7 +17,6 @@
 package com.google.classyshark.ui.tabs;
 
 import com.google.classyshark.ui.ClassySharkFrame;
-import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -70,7 +69,7 @@ public class ToolBar extends JToolBar {
 
         setFloatable(false);
 
-        Border roundedBorder = new LineBorder(Color.BLACK, 5);
+        Border roundedBorder = new LineBorder(ClassySharkFrame.ColorScheme.BLACK, 5);
         setBorder(roundedBorder);
     }
 
@@ -113,8 +112,10 @@ public class ToolBar extends JToolBar {
     }
 
     private JTextField buildTypingArea() {
-        final JTextField result = new JTextField(50){
-            @Override public void setBorder(Border border) {}
+        final JTextField result = new JTextField(50) {
+            @Override
+            public void setBorder(Border border) {
+            }
         };
 
         result.addMouseListener(new MouseAdapter() {
