@@ -79,16 +79,16 @@ Bottom line the FancyLib is not thread safe, however it was not documented anywh
 
 
 
-### Start developing
+## Start developing
 Clone this repository and import the `ClassySharkWS` folder in your favorite IDE.
 
-### Features
+## Features
 * Multi tabbed interface
 * Apk/Dex/Jar/Class formats
 * Android manifest
 * Incremental/Camel/Fuzzy searches
 
-### Dependencies
+## Dependencies
 * dexlib2 by jesusfreke
 * guava by Google
 
