@@ -1,6 +1,4 @@
-# ClassyShark
-
-Android executables browser
+# ClassyShark - Android executables browser
 
 ### This is not an official Google product
 
