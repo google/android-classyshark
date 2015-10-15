@@ -22,7 +22,7 @@ Grab the latest release from [here] (https://github.com/googlesamples/android-cl
 
 ![](https://github.com/googlesamples/android-classyshark/blob/master/Resources/Intro.png)
 
-### Getting Started
+### Start developing
 Clone this repository and import the `ClassySharkWS` folder in your favorite IDE.
 
 ### Features
