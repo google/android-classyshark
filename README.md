@@ -2,17 +2,17 @@
 
 ### This is not an official Google product
 
-### Introduction
+## Introduction
 
 While developing apps we tend to think about dexs, jars, apks and classes as build/run time abstractions that just work. Most of the time this is true, however, when trying to debug runtime issues in large apps, things can sometimes get tricky.
 
 With ClassyShark analyzing dependencies is a breeze. ClassyShark is fast and shows the right info (dependency classes, packages, methods and `AndroidManifest`) in no time. If your app is crashing or misbehaving at runtime and you’re not sure why then ClassyShark may be able to help you.
 
-### Downloads
+## Downloads
 
 Grab the latest release from [here] (https://github.com/googlesamples/android-classyshark/releases).
 
-### Get started
+## Get started
 
 Let's examine the following simplified scenario. What if we have a main method that calls a FancyLibrary (simulated dependency). FancyLibrary is a simple Reader/Writer implementation, where a field is written once and accessed many times. Our app is using FancyLibrary, as a 3-rd party dependency. Here is our app's main code:
 
@@ -92,7 +92,7 @@ Clone this repository and import the `ClassySharkWS` folder in your favorite IDE
 * dexlib2 by jesusfreke
 * guava by Google
 
-### Support
+## Support
 If you've found an error, please file an issue:
 
 https://github.com/googlesamples/android-classyshark/issues
