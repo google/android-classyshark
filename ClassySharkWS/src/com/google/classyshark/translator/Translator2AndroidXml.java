@@ -38,7 +38,7 @@ import javax.xml.transform.stream.StreamSource;
  * Is a function : (apk file) --> ,manifest XML text, as list of tokens with tag
  * based om code posted on StackOverflow by Ribo:
  * http://stackoverflow.com/a/4761689/496992
- *
+ * <p/>
  * There is a bug that some manifests can't be shown, added a fallback case to display
  * all strings
  */
@@ -101,16 +101,43 @@ public class Translator2AndroidXml implements Translator {
         StringTokenizer st = new StringTokenizer(formatted, "\n");
 
         while (st.hasMoreElements()) {
-            xmlCode.add(new ELEMENT("\n" + st.nextElement().toString(),
+            String currentFormattedXmlLine = st.nextElement().toString();
+
+            xmlCode.add(new ELEMENT("\n",
                     TAG.DOCUMENT));
+
+            int indexTag = currentFormattedXmlLine.indexOf("<");
+
+            xmlCode.add(new ELEMENT(currentFormattedXmlLine.substring(0, indexTag),
+                    TAG.DOCUMENT));
+
+            String actualXmlTextLine = currentFormattedXmlLine.substring(indexTag);
+            int indexOfSpaceInsideXmlText = actualXmlTextLine.indexOf(" ");
+
+            xmlCode.add(new ELEMENT("<",
+                    TAG.IDENTIFIER));
+            if (indexOfSpaceInsideXmlText > 0) {
+                xmlCode.add(new ELEMENT(actualXmlTextLine.substring(1, indexOfSpaceInsideXmlText),
+                        TAG.DOCUMENT));
+
+                xmlCode.add(new ELEMENT(actualXmlTextLine.substring(indexOfSpaceInsideXmlText,
+                        actualXmlTextLine.length() - 1),
+                        TAG.IDENTIFIER));
+            } else {
+                xmlCode.add(new ELEMENT(currentFormattedXmlLine.substring(indexTag + 1, 
+                        currentFormattedXmlLine.length() - 1),
+                        TAG.DOCUMENT));
+            }
+            xmlCode.add(new ELEMENT(">",
+                    TAG.IDENTIFIER));
         }
 
         if (xml.isEmpty() || fallback) {
             xmlCode.add(new ELEMENT("The was a problem decoding the XML, showing all strings: ",
                     TAG.DOCUMENT));
             Collections.sort(fallBacklist);
-            for(String s : fallBacklist) {
-                if(!s.isEmpty()) {
+            for (String s : fallBacklist) {
+                if (!s.isEmpty()) {
                     xmlCode.add(new ELEMENT("\n" + s, TAG.IDENTIFIER));
                 }
             }
@@ -194,7 +221,7 @@ public class Translator2AndroidXml implements Translator {
         fallBacklist = new ArrayList<>();
         // TMP, dump string table to tr for debugging
         // tr.addSelect("strings", null);
-        for (int ii=0; ii<numbStrings; ii++) {
+        for (int ii = 0; ii < numbStrings; ii++) {
             // Length of string starts at StringTable plus offset in StrIndTable
             String str = compXmlString(xml, sitOff, stOff, ii);
             fallBacklist.add(str);
