@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package com.google.classyshark.translator;
+package com.google.classyshark.translator.java;
 
-import com.google.classyshark.translator.metaobject.MetaObject;
-import com.google.classyshark.translator.metaobject.MetaObjectFactory;
-import com.google.classyshark.translator.metaobject.clazz.MetaObjectClass;
-import com.google.classyshark.translator.metaobject.clazz.TypesToNamesMapper;
+import com.google.classyshark.translator.Translator;
+import com.google.classyshark.translator.java.clazz.TypesToNamesMapper;
+import com.google.classyshark.translator.java.clazz.reflect.MetaObjectClass;
 import java.io.File;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -36,7 +35,8 @@ public class Translator2Java implements Translator {
     private List<ELEMENT> sourceCode;
     private TypesToNamesMapper namesMapper;
 
-    /** used for testing
+    /**
+     * used for testing
      *
      * @param clazz
      */

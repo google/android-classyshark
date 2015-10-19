@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package com.google.classyshark.translator.metaobject.clazz;
+package com.google.classyshark.translator.java.clazz.reflect;
 
 import com.google.classyshark.translator.Translator;
-import com.google.classyshark.translator.Translator2Java;
+import com.google.classyshark.translator.java.Translator2Java;
 import com.google.classyshark.translator.TranslatorFactory;
-import com.google.classyshark.translator.metaobject.MetaObject;
+import com.google.classyshark.translator.java.MetaObject;
+import com.google.classyshark.translator.java.clazz.TypesToNamesMapper;
 import java.io.File;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;

@@ -16,6 +16,8 @@
 
 package com.google.classyshark.translator;
 
+import com.google.classyshark.translator.java.Translator2Java;
+import com.google.classyshark.translator.xml.Translator2AndroidXml;
 import java.io.File;
 
 /**

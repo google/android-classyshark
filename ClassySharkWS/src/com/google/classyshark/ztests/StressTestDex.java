@@ -19,7 +19,7 @@ package com.google.classyshark.ztests;
 import com.google.classyshark.reducer.ArchiveReader;
 import com.google.classyshark.translator.Translator;
 import com.google.classyshark.translator.TranslatorFactory;
-import com.google.classyshark.translator.metaobject.dex.DexlibAdapter;
+import com.google.classyshark.translator.java.dex.DexlibAdapter;
 import java.io.File;
 import java.util.Set;
 import org.jf.dexlib2.iface.ClassDef;

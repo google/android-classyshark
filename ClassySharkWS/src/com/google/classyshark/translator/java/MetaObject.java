@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.classyshark.translator.metaobject;
+package com.google.classyshark.translator.java;
 
 /**
  * Meta object representation for class output

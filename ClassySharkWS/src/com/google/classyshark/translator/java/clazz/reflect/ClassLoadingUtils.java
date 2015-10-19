@@ -14,20 +14,22 @@
  * limitations under the License.
  */
 
-package com.google.classyshark.translator.metaobject.clazz;
+package com.google.classyshark.translator.java.clazz.reflect;
 
 import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 
 /**
  * Helper method for class loading
  */
-public class ClassUtils {
+public class ClassLoadingUtils {
 
-    private ClassUtils() {}
+    private ClassLoadingUtils() {}
 
-    public static Class load(String jarAbsolutePath, String className) throws Exception {
+    public static Class load(String jarAbsolutePath, String className) throws
+            MalformedURLException, ClassNotFoundException {
         Class result;
         URL[] classLoaderUrls = new URL[]{new File(jarAbsolutePath).toURI().toURL()};
         URLClassLoader child = new URLClassLoader(classLoaderUrls);

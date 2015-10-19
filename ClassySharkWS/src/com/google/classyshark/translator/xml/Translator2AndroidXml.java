@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package com.google.classyshark.translator;
+package com.google.classyshark.translator.xml;
 
+import com.google.classyshark.translator.Translator;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
