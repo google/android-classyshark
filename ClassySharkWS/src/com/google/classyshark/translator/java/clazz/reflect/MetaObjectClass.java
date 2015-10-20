@@ -19,7 +19,6 @@ package com.google.classyshark.translator.java.clazz.reflect;
 import com.google.classyshark.reducer.Reducer;
 import com.google.classyshark.translator.java.MetaObject;
 import com.google.classyshark.translator.java.clazz.TypesToNamesMapper;
-import java.io.File;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;

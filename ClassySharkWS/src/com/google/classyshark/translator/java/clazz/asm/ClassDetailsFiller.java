@@ -17,8 +17,11 @@
 package com.google.classyshark.translator.java.clazz.asm;
 
 import com.google.classyshark.translator.java.MetaObject;
+import com.google.classyshark.translator.java.dex.DexlibAdapter;
 import java.io.File;
 import java.io.RandomAccessFile;
+import java.util.ArrayList;
+import java.util.List;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.Attribute;
 import org.objectweb.asm.ClassReader;
@@ -27,14 +30,19 @@ import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
+import static org.objectweb.asm.Type.getArgumentTypes;
+import static org.objectweb.asm.Type.getReturnType;
+
 public class ClassDetailsFiller extends ClassVisitor {
     private MetaObject.AnnotationInfo[] annotationInfo = new MetaObject.AnnotationInfo[0];
     private String name = "test";
     private int modifiers = 0;
     private String superClass = "test";
-    private String superclassGenerics = "test";
+    private String superclassGenerics = "";
     private MetaObject.InterfaceInfo[] interfaces = new MetaObject.InterfaceInfo[0];
-    private MetaObject.FieldInfo[] declaredFields = new MetaObject.FieldInfo[0];
+
+    private List<MetaObject.FieldInfo> declaredFields = new ArrayList<>();
+
     private MetaObject.ConstructorInfo[] declaredConstructors = new MetaObject.ConstructorInfo[0];
     private MetaObject.MethodInfo[] declaredMethods = new MetaObject.MethodInfo[0];
 
@@ -45,6 +53,10 @@ public class ClassDetailsFiller extends ClassVisitor {
     public void visit(int version, int access, String name,
                       String signature, String superName, String[] interfaces) {
         System.out.println(name + " extends " + superName + " {");
+
+        this.name = name.replaceAll("/", "\\.");
+        this.superClass = superName.replaceAll("/", "\\.");
+        this.modifiers = access;
     }
 
     public void visitSource(String source, String debug) {
@@ -68,17 +80,35 @@ public class ClassDetailsFiller extends ClassVisitor {
     public FieldVisitor visitField(int access, String name, String desc,
                                    String signature, Object value) {
         System.out.println(" " + desc + " " + name);
+
+        MetaObject.FieldInfo fi = new
+                MetaObject.FieldInfo();
+
+        fi.typeName = DexlibAdapter.getTypeName(desc);
+        fi.modifiers = access;
+        fi.annotations = new MetaObject.AnnotationInfo[0];
+        fi.name = name.replaceAll("/", "\\.");
+
+        declaredFields.add(fi);
+
         return null;
     }
 
     public MethodVisitor visitMethod(int access, String name,
                                      String desc, String signature, String[] exceptions) {
+
+        // TODO stopped here fill the methods and constructors
+        // TODO note the qualified names
+        // constuctor's name is <init>
         System.out.println(" " + name + desc);
+
+        org.objectweb.asm.Type[] arguments = getArgumentTypes(desc);
+        org.objectweb.asm.Type returnType = getReturnType(desc);
+
         return null;
     }
 
     public void visitEnd() {
-        System.out.println("}");
     }
 
     public static void main(String[] args) throws Exception {
@@ -124,7 +154,8 @@ public class ClassDetailsFiller extends ClassVisitor {
     }
 
     public MetaObject.FieldInfo[] getDeclaredFields() {
-        return declaredFields;
+        MetaObject.FieldInfo[] array = new MetaObject.FieldInfo[declaredFields.size()];
+        return declaredFields.toArray(array);
     }
 
     public MetaObject.ConstructorInfo[] getDeclaredConstructors() {

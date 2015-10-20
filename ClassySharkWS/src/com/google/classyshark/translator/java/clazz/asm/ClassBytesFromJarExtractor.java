@@ -35,30 +35,30 @@ public class ClassBytesFromJarExtractor {
 
                     String qualiName = entry.getName().replaceAll("/", "\\.");
                     if (qualiName.equalsIgnoreCase(fullClassName)) {
-                            try (InputStream inputStream = jarFile.getInputStream(entry)) {
-                                return getBytes(inputStream);
-                            } catch (IOException ioException) {
-                                System.out.println("Could not obtain class entry for " + entry.getName());
-                                throw ioException;
-                            }
+                        try (InputStream inputStream = jarFile.getInputStream(entry)) {
+                            return getBytes(inputStream);
+                        } catch (IOException ioException) {
+                            System.out.println("Could not obtain class entry for " + entry.getName());
+                            throw ioException;
                         }
                     }
                 }
             }
-            throw new IOException("File not found");
         }
+        throw new IOException("File not found");
+    }
 
-        public static byte[] getBytes (InputStream is)throws IOException {
-            try (ByteArrayOutputStream os = new ByteArrayOutputStream();) {
-                byte[] buffer = new byte[0xFFFF];
-                for (int len; (len = is.read(buffer)) != -1; )
-                    os.write(buffer, 0, len);
-                os.flush();
-                return os.toByteArray();
-            }
+    public static byte[] getBytes(InputStream is) throws IOException {
+        try (ByteArrayOutputStream os = new ByteArrayOutputStream();) {
+            byte[] buffer = new byte[0xFFFF];
+            for (int len; (len = is.read(buffer)) != -1; )
+                os.write(buffer, 0, len);
+            os.flush();
+            return os.toByteArray();
         }
+    }
 
-        private static char[] hexArray = "0123456789ABCDEF".toCharArray();
+    private static char[] hexArray = "0123456789ABCDEF".toCharArray();
 
     public static String bytesToHex(byte[] bytes) {
         char[] hexChars = new char[bytes.length * 2];

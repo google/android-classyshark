@@ -32,7 +32,7 @@ public abstract class MetaObject {
     /**
      * data class for fields
      */
-    public class FieldInfo {
+    public static class FieldInfo {
         public String typeName;
         public int modifiers;
         public AnnotationInfo[] annotations;
