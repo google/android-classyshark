@@ -21,6 +21,9 @@ import java.io.File;
 import java.io.InputStream;
 import org.objectweb.asm.ClassReader;
 
+/**
+ *  Meta object for class format, based on ASM parsing
+ */
 public class MetaObjectAsmClass extends MetaObject {
 
     ClassDetailsFiller classDetailsFiller;
