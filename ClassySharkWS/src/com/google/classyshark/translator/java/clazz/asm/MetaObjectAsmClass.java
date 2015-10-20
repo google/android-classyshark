@@ -16,89 +16,103 @@
 
 package com.google.classyshark.translator.java.clazz.asm;
 
+import com.google.classyshark.reducer.Reducer;
 import com.google.classyshark.translator.java.MetaObject;
 import java.io.File;
+import java.io.InputStream;
 import org.objectweb.asm.ClassReader;
 
 public class MetaObjectAsmClass extends MetaObject {
 
-    private final String className;
-    private final File archiveFile;
+    ClassDetailsFiller classDetailsFiller;
 
     public MetaObjectAsmClass(String className, File archiveFile) {
-        this.className = className;
-        this.archiveFile = archiveFile;
-
         try {
             byte[] bytes =
                     ClassBytesFromJarExtractor.getBytes(className,
                             archiveFile.getAbsolutePath());
 
-            ClassPrinter cp = new ClassPrinter();
+            classDetailsFiller = new ClassDetailsFiller();
             ClassReader cr = new ClassReader(bytes);
-            cr.accept(cp, 0);
+            cr.accept(classDetailsFiller, 0);
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    public MetaObjectAsmClass(Class clazz) throws Exception {
+        super();
+
+        String className = clazz.getName();
+        String classAsPath = className.replace('.', '/') + ".class";
+        InputStream stream = clazz.getClassLoader().getResourceAsStream(classAsPath);
+
+        ClassDetailsFiller cp = new ClassDetailsFiller();
+        ClassReader cr = new ClassReader(stream);
+        cr.accept(cp, 0);
+    }
 
     @Override
     public String getClassGenerics(String name) {
-        return null;
+        return classDetailsFiller.getClassGenerics(name);
     }
 
     @Override
     public String getName() {
-        return null;
+        return classDetailsFiller.getName();
     }
 
     @Override
     public AnnotationInfo[] getAnnotations() {
-        return new AnnotationInfo[0];
+        return classDetailsFiller.getAnnotationInfo();
     }
 
     @Override
     public int getModifiers() {
-        return 0;
+        return classDetailsFiller.getModifiers();
     }
 
     @Override
     public String getSuperclass() {
-        return null;
+        return classDetailsFiller.getSuperClass();
     }
 
     @Override
     public String getSuperclassGenerics() {
-        return null;
+        return classDetailsFiller.getSuperclassGenerics();
     }
 
     @Override
     public InterfaceInfo[] getInterfaces() {
-        return new InterfaceInfo[0];
+        return classDetailsFiller.getInterfaces();
     }
 
     @Override
     public FieldInfo[] getDeclaredFields() {
-        return new FieldInfo[0];
+        return classDetailsFiller.getDeclaredFields();
     }
 
     @Override
     public ConstructorInfo[] getDeclaredConstructors() {
-        return new ConstructorInfo[0];
+        return classDetailsFiller.getDeclaredConstructors();
     }
 
     @Override
     public MethodInfo[] getDeclaredMethods() {
-        return new MethodInfo[0];
+        return classDetailsFiller.getDeclaredMethods();
     }
 
     public static void testCustomClass() throws Exception {
-        final File testFile = new File(System.getProperty("user.home") +
-                "/Desktop/BytecodeViewer.jar");
-        String textClass = "jd.cli.Main.class";
+        //final File testFile = new File(System.getProperty("user.home") +
+        //        "/Desktop/BytecodeViewer.jar");
+        //String textClass = "jd.cli.Main.class";
+        //MetaObjectAsmClass moac = new MetaObjectAsmClass(textClass, testFile);
 
-        MetaObjectAsmClass moac = new MetaObjectAsmClass(textClass, testFile);
+        MetaObjectAsmClass moac = new MetaObjectAsmClass(Reducer.class);
+
+        System.out.println(moac);
     }
 
     public static void main(String[] args) throws Exception {

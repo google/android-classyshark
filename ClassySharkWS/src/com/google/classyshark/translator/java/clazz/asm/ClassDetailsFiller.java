@@ -16,6 +16,7 @@
 
 package com.google.classyshark.translator.java.clazz.asm;
 
+import com.google.classyshark.translator.java.MetaObject;
 import java.io.File;
 import java.io.RandomAccessFile;
 import org.objectweb.asm.AnnotationVisitor;
@@ -26,13 +27,19 @@ import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
-public class ClassPrinter extends ClassVisitor {
+public class ClassDetailsFiller extends ClassVisitor {
+    private MetaObject.AnnotationInfo[] annotationInfo = new MetaObject.AnnotationInfo[0];
+    private String name = "test";
+    private int modifiers = 0;
+    private String superClass = "test";
+    private String superclassGenerics = "test";
+    private MetaObject.InterfaceInfo[] interfaces = new MetaObject.InterfaceInfo[0];
+    private MetaObject.FieldInfo[] declaredFields = new MetaObject.FieldInfo[0];
+    private MetaObject.ConstructorInfo[] declaredConstructors = new MetaObject.ConstructorInfo[0];
+    private MetaObject.MethodInfo[] declaredMethods = new MetaObject.MethodInfo[0];
 
-    public ClassPrinter() {
+    public ClassDetailsFiller() {
         super(Opcodes.ASM5);
-
-        // TODO convertion to type mapper name + desc
-
     }
 
     public void visit(int version, int access, String name,
@@ -76,17 +83,55 @@ public class ClassPrinter extends ClassVisitor {
 
     public static void main(String[] args) throws Exception {
 
-        final File testFile = new File(System.getProperty("user.home") + "/Desktop/Scenarios/3 Class/Reducer.class");
-        String textClass = "com.google.classyshark.reducer.Reducer.class";
-
+        final File testFile = new File(System.getProperty("user.home") +
+                "/Desktop/Scenarios/3 Class/Reducer.class");
 
         RandomAccessFile f = new RandomAccessFile(testFile, "r");
         byte[] b = new byte[(int) f.length()];
         f.read(b);
 
-        ClassPrinter cp = new ClassPrinter();
+        ClassDetailsFiller cp = new ClassDetailsFiller();
         ClassReader cr = new ClassReader(b);
         cr.accept(cp, 0);
+    }
 
+    public String getClassGenerics(String name) {
+        return null;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public MetaObject.AnnotationInfo[] getAnnotationInfo() {
+        return annotationInfo;
+    }
+
+    public int getModifiers() {
+        return modifiers;
+    }
+
+    public String getSuperClass() {
+        return superClass;
+    }
+
+    public String getSuperclassGenerics() {
+        return superclassGenerics;
+    }
+
+    public MetaObject.InterfaceInfo[] getInterfaces() {
+        return interfaces;
+    }
+
+    public MetaObject.FieldInfo[] getDeclaredFields() {
+        return declaredFields;
+    }
+
+    public MetaObject.ConstructorInfo[] getDeclaredConstructors() {
+        return declaredConstructors;
+    }
+
+    public MetaObject.MethodInfo[] getDeclaredMethods() {
+        return declaredMethods;
     }
 }
