@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.classyshark.translator.metaobject.dex;
+package com.google.classyshark.translator.java.dex;
 
 import org.jf.dexlib2.iface.ClassDef;
 import org.jf.dexlib2.iface.DexFile;
@@ -77,6 +77,10 @@ public class  DexlibAdapter {
         String convertedDexName = dexName.replaceAll("/", ".");
 
         if (convertedDexName.startsWith("[")) {
+            return convertedDexName;
+        }
+
+        if (!dexName.startsWith("L") && !dexName.endsWith(";")) {
             return convertedDexName;
         }
 

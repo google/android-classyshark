@@ -17,7 +17,7 @@
 package com.google.classyshark.ui.tabs.displayarea;
 
 import com.google.classyshark.translator.Translator;
-import com.google.classyshark.translator.Translator2Java;
+import com.google.classyshark.translator.java.Translator2Java;
 import com.google.classyshark.ui.ClassySharkFrame.ColorScheme;
 import com.google.classyshark.ui.tabs.TabPanel;
 import java.awt.Component;

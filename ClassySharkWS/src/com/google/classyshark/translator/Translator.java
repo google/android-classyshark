@@ -19,7 +19,8 @@ package com.google.classyshark.translator;
 import java.util.List;
 
 /**
- * Is a function : (binary data) --> list of elements <String, Tag>
+ * Is a function : (binary data) --> list of elements <String, Tag>, with Java and XML
+ * semantics
  */
 public interface Translator {
 

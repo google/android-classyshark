@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.classyshark.translator.metaobject;
+package com.google.classyshark.translator.java;
 
 /**
  * Meta object representation for class output
@@ -24,7 +24,7 @@ public abstract class MetaObject {
     /**
      * data class for interfaces
      */
-    public class InterfaceInfo {
+    public static class InterfaceInfo {
         public String interfaceStr;
         public String genericsStr = "";
     }
@@ -32,7 +32,7 @@ public abstract class MetaObject {
     /**
      * data class for fields
      */
-    public class FieldInfo {
+    public static class FieldInfo {
         public String typeName;
         public int modifiers;
         public AnnotationInfo[] annotations;
@@ -43,7 +43,7 @@ public abstract class MetaObject {
     /**
      * data class for constructors
      */
-    public class ConstructorInfo {
+    public static class ConstructorInfo {
         public AnnotationInfo[] annotations;
         public ParameterInfo[] parameterTypes;
         public int modifiers;
@@ -52,7 +52,7 @@ public abstract class MetaObject {
     /**
      * data class for methods
      */
-    public class MethodInfo {
+    public static class MethodInfo {
         public AnnotationInfo[] annotations;
         public ParameterInfo[] parameterTypes;
         public int modifiers;
@@ -65,14 +65,14 @@ public abstract class MetaObject {
     /**
      * data class for annotations
      */
-    public class AnnotationInfo {
+    public static class AnnotationInfo {
         public String annotationStr;
     }
 
     /**
      * data class for parameters
      */
-    public class ParameterInfo {
+    public static class ParameterInfo {
         public String parameterStr;
         public String genericStr = "";
     }

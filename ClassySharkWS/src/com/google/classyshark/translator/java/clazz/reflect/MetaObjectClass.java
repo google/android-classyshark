@@ -14,13 +14,11 @@
  * limitations under the License.
  */
 
-package com.google.classyshark.translator.metaobject.clazz;
+package com.google.classyshark.translator.java.clazz.reflect;
 
-import com.google.classyshark.translator.Translator;
-import com.google.classyshark.translator.Translator2Java;
-import com.google.classyshark.translator.TranslatorFactory;
-import com.google.classyshark.translator.metaobject.MetaObject;
-import java.io.File;
+import com.google.classyshark.reducer.Reducer;
+import com.google.classyshark.translator.java.MetaObject;
+import com.google.classyshark.translator.java.clazz.TypesToNamesMapper;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -78,7 +76,6 @@ public class MetaObjectClass extends MetaObject {
 
     @Override
     public String getSuperclassGenerics() {
-
         if (clazz.getSuperclass() != null) {
             TypeVariable[] tv = clazz.getSuperclass().getTypeParameters();
             if (tv.length != 0) {
@@ -252,45 +249,8 @@ public class MetaObjectClass extends MetaObject {
         return result.toArray(array);
     }
 
-    public static void testJar() {
-        final File testFile = new File(System.getProperty("user.home") + "/Desktop/" + "ClassyShark.jar");
-        String textClass = "com.google.classyshark.reducer.Reducer.class";
-        Translator sourceGenerator = TranslatorFactory.createTranslator(textClass, testFile);
-        sourceGenerator.apply();
-
-        System.out.println(sourceGenerator.toString());
-    }
-
-    public static void testSystemClass() {
-        Translator emitter = new Translator2Java(Enum.class);
-        emitter.apply();
-        System.out.print(emitter);
-    }
-
-    public static void testCustomClass() {
-        final File testFile = new File(System.getProperty("user.home") + "/Desktop/Scenarios/3 Class/Reducer.class");
-        //String textClass = "com.apisolutions.classysharkandroid.dex.DexLoaderBuilder";
-        String textClass = "com.google.classyshark.reducer.Reducer.class";
-        Translator sourceGenerator = TranslatorFactory.createTranslator(textClass, testFile);
-        sourceGenerator.apply();
-
-        System.out.println(sourceGenerator.toString());
-    }
-
-    public static void testInnerClass() {
-        //
-        final File testFile = new File(System.getProperty("user.home") + "/Desktop/Scenarios/3 Class/Reducer$1.class");
-        String textClass = "com.google.classyshark.reducer.Reducer$1.class";
-        Translator sourceGenerator = TranslatorFactory.createTranslator(textClass, testFile);
-        sourceGenerator.apply();
-
-        System.out.println(sourceGenerator.toString());
-    }
-
     public static void main(String[] args) throws Exception {
-        testJar();
-        testSystemClass();
-        testCustomClass();
-        testInnerClass();
+        MetaObjectClass moc = new MetaObjectClass(Reducer.class);
+        System.out.println(moc.getAnnotations());
     }
 }

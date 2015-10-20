@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package com.google.classyshark.translator.metaobject.clazz;
+package com.google.classyshark.translator.java.clazz;
 
-import com.google.classyshark.translator.metaobject.dex.DexlibAdapter;
+import com.google.classyshark.translator.java.dex.DexlibAdapter;
 import java.util.HashMap;
 import java.util.Set;
 

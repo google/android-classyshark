@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package com.google.classyshark.translator.metaobject.dex;
+package com.google.classyshark.translator.java.dex;
 
 import com.google.classyshark.translator.Translator;
 import com.google.classyshark.translator.TranslatorFactory;
-import com.google.classyshark.translator.metaobject.MetaObject;
+import com.google.classyshark.translator.java.MetaObject;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
