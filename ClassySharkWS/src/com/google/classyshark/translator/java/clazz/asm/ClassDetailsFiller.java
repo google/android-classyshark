@@ -44,7 +44,7 @@ public class ClassDetailsFiller extends ClassVisitor {
     private List<MetaObject.FieldInfo> declaredFields = new ArrayList<>();
 
     private MetaObject.ConstructorInfo[] declaredConstructors = new MetaObject.ConstructorInfo[0];
-    private MetaObject.MethodInfo[] declaredMethods = new MetaObject.MethodInfo[0];
+    private List<MetaObject.MethodInfo> declaredMethods = new ArrayList<>();
 
     public ClassDetailsFiller() {
         super(Opcodes.ASM5);
@@ -96,37 +96,40 @@ public class ClassDetailsFiller extends ClassVisitor {
 
     public MethodVisitor visitMethod(int access, String name,
                                      String desc, String signature, String[] exceptions) {
+        if (name.equals("<init>")) {
+            return null;
+        }
 
-        // TODO stopped here fill the methods and constructors
-        // TODO note the qualified names
-        // constuctor's name is <init>
-        System.out.println(" " + name + desc);
+        MetaObject.MethodInfo mi = new MetaObject.MethodInfo();
+        mi.modifiers = access;
+        mi.annotations = new MetaObject.AnnotationInfo[0];
+        mi.parameterTypes = new MetaObject.ParameterInfo[0];
+
+        // TODO fill exceptions
+        mi.exceptionTypes = new MetaObject.ExceptionInfo[0];
+
+        mi.name = name.replaceAll("/", "\\.");
+        mi.returnType = DexlibAdapter.getTypeName(getReturnType(desc).toString()).replaceAll("/", "\\.");
 
         org.objectweb.asm.Type[] arguments = getArgumentTypes(desc);
-        org.objectweb.asm.Type returnType = getReturnType(desc);
+        mi.parameterTypes = new MetaObject.ParameterInfo[arguments.length];
 
+        int i = 0;
+        for (org.objectweb.asm.Type t : arguments) {
+            mi.parameterTypes[i] = new MetaObject.ParameterInfo();
+            mi.parameterTypes[i].parameterStr = DexlibAdapter.getTypeName(t.toString()).replaceAll("/", "\\.");
+            i++;
+        }
+
+        declaredMethods.add(mi);
         return null;
     }
 
     public void visitEnd() {
     }
 
-    public static void main(String[] args) throws Exception {
-
-        final File testFile = new File(System.getProperty("user.home") +
-                "/Desktop/Scenarios/3 Class/Reducer.class");
-
-        RandomAccessFile f = new RandomAccessFile(testFile, "r");
-        byte[] b = new byte[(int) f.length()];
-        f.read(b);
-
-        ClassDetailsFiller cp = new ClassDetailsFiller();
-        ClassReader cr = new ClassReader(b);
-        cr.accept(cp, 0);
-    }
-
     public String getClassGenerics(String name) {
-        return null;
+        return "";
     }
 
     public String getName() {
@@ -163,6 +166,21 @@ public class ClassDetailsFiller extends ClassVisitor {
     }
 
     public MetaObject.MethodInfo[] getDeclaredMethods() {
-        return declaredMethods;
+        MetaObject.MethodInfo[] array = new MetaObject.MethodInfo[declaredMethods.size()];
+        return declaredMethods.toArray(array);
+    }
+
+    public static void main(String[] args) throws Exception {
+
+        final File testFile = new File(System.getProperty("user.home") +
+                "/Desktop/Scenarios/3 Class/Reducer.class");
+
+        RandomAccessFile f = new RandomAccessFile(testFile, "r");
+        byte[] b = new byte[(int) f.length()];
+        f.read(b);
+
+        ClassDetailsFiller cp = new ClassDetailsFiller();
+        ClassReader cr = new ClassReader(b);
+        cr.accept(cp, 0);
     }
 }

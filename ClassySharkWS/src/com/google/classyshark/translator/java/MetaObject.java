@@ -43,7 +43,7 @@ public abstract class MetaObject {
     /**
      * data class for constructors
      */
-    public class ConstructorInfo {
+    public static class ConstructorInfo {
         public AnnotationInfo[] annotations;
         public ParameterInfo[] parameterTypes;
         public int modifiers;
@@ -52,7 +52,7 @@ public abstract class MetaObject {
     /**
      * data class for methods
      */
-    public class MethodInfo {
+    public static class MethodInfo {
         public AnnotationInfo[] annotations;
         public ParameterInfo[] parameterTypes;
         public int modifiers;
@@ -65,14 +65,14 @@ public abstract class MetaObject {
     /**
      * data class for annotations
      */
-    public class AnnotationInfo {
+    public static class AnnotationInfo {
         public String annotationStr;
     }
 
     /**
      * data class for parameters
      */
-    public class ParameterInfo {
+    public static class ParameterInfo {
         public String parameterStr;
         public String genericStr = "";
     }

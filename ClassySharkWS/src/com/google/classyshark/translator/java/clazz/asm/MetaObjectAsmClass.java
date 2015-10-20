@@ -49,9 +49,9 @@ public class MetaObjectAsmClass extends MetaObject {
         String classAsPath = className.replace('.', '/') + ".class";
         InputStream stream = clazz.getClassLoader().getResourceAsStream(classAsPath);
 
-        ClassDetailsFiller cp = new ClassDetailsFiller();
+        classDetailsFiller = new ClassDetailsFiller();
         ClassReader cr = new ClassReader(stream);
-        cr.accept(cp, 0);
+        cr.accept(classDetailsFiller, 0);
     }
 
     @Override
@@ -105,14 +105,16 @@ public class MetaObjectAsmClass extends MetaObject {
     }
 
     public static void testCustomClass() throws Exception {
-        //final File testFile = new File(System.getProperty("user.home") +
-        //        "/Desktop/BytecodeViewer.jar");
-        //String textClass = "jd.cli.Main.class";
-        //MetaObjectAsmClass moac = new MetaObjectAsmClass(textClass, testFile);
+        final File testFile = new File(System.getProperty("user.home") +
+                "/Desktop/BytecodeViewer 2.9.8.jar");
+        String textClass = "jd.cli.Main.class";
+        MetaObjectAsmClass moac = new MetaObjectAsmClass(textClass, testFile);
 
-        MetaObjectAsmClass moac = new MetaObjectAsmClass(Reducer.class);
+        //MetaObjectAsmClass moac = new MetaObjectAsmClass(Reducer.class);
 
-        System.out.println(moac);
+        MethodInfo[] ddd = moac.getDeclaredMethods();
+
+        System.out.println(ddd);
     }
 
     public static void main(String[] args) throws Exception {
