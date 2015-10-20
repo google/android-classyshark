@@ -33,17 +33,18 @@ import org.objectweb.asm.Opcodes;
 import static org.objectweb.asm.Type.getArgumentTypes;
 import static org.objectweb.asm.Type.getReturnType;
 
+/**
+ * ASM class visitor for scanning the class bytes
+ */
 public class ClassDetailsFiller extends ClassVisitor {
     private MetaObject.AnnotationInfo[] annotationInfo = new MetaObject.AnnotationInfo[0];
-    private String name = "test";
+    private String name = "";
     private int modifiers = 0;
-    private String superClass = "test";
+    private String superClass = "";
     private String superclassGenerics = "";
-    private MetaObject.InterfaceInfo[] interfaces = new MetaObject.InterfaceInfo[0];
-
+    private List<MetaObject.InterfaceInfo> interfaces = new ArrayList<>();
     private List<MetaObject.FieldInfo> declaredFields = new ArrayList<>();
-
-    private MetaObject.ConstructorInfo[] declaredConstructors = new MetaObject.ConstructorInfo[0];
+    private List<MetaObject.ConstructorInfo> declaredConstructors = new ArrayList<>();
     private List<MetaObject.MethodInfo> declaredMethods = new ArrayList<>();
 
     public ClassDetailsFiller() {
@@ -51,12 +52,17 @@ public class ClassDetailsFiller extends ClassVisitor {
     }
 
     public void visit(int version, int access, String name,
-                      String signature, String superName, String[] interfaces) {
-        System.out.println(name + " extends " + superName + " {");
-
+                      String signature, String superName,
+                      String[] interfaces) {
         this.name = name.replaceAll("/", "\\.");
         this.superClass = superName.replaceAll("/", "\\.");
         this.modifiers = access;
+
+        for (String iface : interfaces) {
+            MetaObject.InterfaceInfo ii = new MetaObject.InterfaceInfo();
+            ii.interfaceStr = DexlibAdapter.getClassStringFromDex(iface);
+            this.interfaces.add(ii);
+        }
     }
 
     public void visitSource(String source, String debug) {
@@ -79,8 +85,6 @@ public class ClassDetailsFiller extends ClassVisitor {
 
     public FieldVisitor visitField(int access, String name, String desc,
                                    String signature, Object value) {
-        System.out.println(" " + desc + " " + name);
-
         MetaObject.FieldInfo fi = new
                 MetaObject.FieldInfo();
 
@@ -95,8 +99,10 @@ public class ClassDetailsFiller extends ClassVisitor {
     }
 
     public MethodVisitor visitMethod(int access, String name,
-                                     String desc, String signature, String[] exceptions) {
+                                     String desc, String signature,
+                                     String[] exceptions) {
         if (name.equals("<init>")) {
+            fillConstructor(access, desc);
             return null;
         }
 
@@ -109,7 +115,7 @@ public class ClassDetailsFiller extends ClassVisitor {
         mi.exceptionTypes = new MetaObject.ExceptionInfo[0];
 
         mi.name = name.replaceAll("/", "\\.");
-        mi.returnType = DexlibAdapter.getTypeName(getReturnType(desc).toString()).replaceAll("/", "\\.");
+        mi.returnType = DexlibAdapter.getTypeName(getReturnType(desc).toString());
 
         org.objectweb.asm.Type[] arguments = getArgumentTypes(desc);
         mi.parameterTypes = new MetaObject.ParameterInfo[arguments.length];
@@ -117,12 +123,31 @@ public class ClassDetailsFiller extends ClassVisitor {
         int i = 0;
         for (org.objectweb.asm.Type t : arguments) {
             mi.parameterTypes[i] = new MetaObject.ParameterInfo();
-            mi.parameterTypes[i].parameterStr = DexlibAdapter.getTypeName(t.toString()).replaceAll("/", "\\.");
+            mi.parameterTypes[i].parameterStr = DexlibAdapter.getTypeName(t.toString());
             i++;
         }
 
         declaredMethods.add(mi);
         return null;
+    }
+
+    private void fillConstructor(int access, String desc) {
+        MetaObject.ConstructorInfo ci = new MetaObject.ConstructorInfo();
+        ci.modifiers = access;
+        ci.annotations = new MetaObject.AnnotationInfo[0];
+        ci.parameterTypes = new MetaObject.ParameterInfo[0];
+
+        org.objectweb.asm.Type[] arguments = getArgumentTypes(desc);
+        ci.parameterTypes = new MetaObject.ParameterInfo[arguments.length];
+
+        int i = 0;
+        for (org.objectweb.asm.Type t : arguments) {
+            ci.parameterTypes[i] = new MetaObject.ParameterInfo();
+            ci.parameterTypes[i].parameterStr = DexlibAdapter.getTypeName(t.toString());
+            i++;
+        }
+
+        declaredConstructors.add(ci);
     }
 
     public void visitEnd() {
@@ -153,7 +178,8 @@ public class ClassDetailsFiller extends ClassVisitor {
     }
 
     public MetaObject.InterfaceInfo[] getInterfaces() {
-        return interfaces;
+        MetaObject.InterfaceInfo[] array = new MetaObject.InterfaceInfo[interfaces.size()];
+        return interfaces.toArray(array);
     }
 
     public MetaObject.FieldInfo[] getDeclaredFields() {
@@ -162,7 +188,9 @@ public class ClassDetailsFiller extends ClassVisitor {
     }
 
     public MetaObject.ConstructorInfo[] getDeclaredConstructors() {
-        return declaredConstructors;
+        MetaObject.ConstructorInfo[] array =
+                new MetaObject.ConstructorInfo[declaredConstructors.size()];
+        return declaredConstructors.toArray(array);
     }
 
     public MetaObject.MethodInfo[] getDeclaredMethods() {
@@ -171,7 +199,6 @@ public class ClassDetailsFiller extends ClassVisitor {
     }
 
     public static void main(String[] args) throws Exception {
-
         final File testFile = new File(System.getProperty("user.home") +
                 "/Desktop/Scenarios/3 Class/Reducer.class");
 

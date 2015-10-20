@@ -40,7 +40,7 @@ public class MetaObjectFactory {
         if (archiveFile.getName().toLowerCase().endsWith(".jar")) {
             result = getMetaObjectFromJar(className, archiveFile);
         } else if (archiveFile.getName().toLowerCase().endsWith(".class")) {
-            result = getMetaObjectFromClass(archiveFile);
+            result = getMetaObjectFromClass(className, archiveFile);
         } else if (archiveFile.getName().toLowerCase().endsWith(".dex")) {
             result = getMetaObjectFromDex(className, archiveFile);
         } else if (archiveFile.getName().toLowerCase().endsWith(".apk")) {
@@ -55,23 +55,20 @@ public class MetaObjectFactory {
     private static MetaObject getMetaObjectFromJar(String className, File archiveFile) {
         MetaObject result = null;
         String trimmedName = className.substring(0, className.lastIndexOf('.'));
-        Class clazz = null;
+        Class clazz;
         try {
             clazz = ClassLoadingUtils.load(archiveFile.getPath(), trimmedName);
         } catch (ClassNotFoundException e) {
             clazz = Exception.class;
         } catch (MalformedURLException e) {
             clazz = Exception.class;
-        }
-        catch (NoClassDefFoundError e) {
+        } catch (NoClassDefFoundError e) {
             // the fallback to ASM case
             result = new MetaObjectAsmClass(className, archiveFile);
             return result;
         }
 
         try {
-            // TODO checks for all clazz methods
-            // TODO common logic with class
             if (clazz.getFields() != null) {
                 result = new MetaObjectClass(clazz);
             }
@@ -108,7 +105,7 @@ public class MetaObjectFactory {
         return result;
     }
 
-    private static MetaObject getMetaObjectFromClass(File archiveFile) {
+    private static MetaObject getMetaObjectFromClass(String className, File archiveFile) {
         MetaObject result;
         try {
             Class clazz;
@@ -120,6 +117,8 @@ public class MetaObjectFactory {
             result = new MetaObjectClass(clazz);
         } catch (Exception e) {
             result = new MetaObjectClass(Exception.class);
+        } catch (NoClassDefFoundError e) {
+            result = new MetaObjectAsmClass(className, archiveFile);
         }
         return result;
     }

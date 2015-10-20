@@ -16,7 +16,6 @@
 
 package com.google.classyshark.translator.java.clazz.asm;
 
-import com.google.classyshark.reducer.Reducer;
 import com.google.classyshark.translator.java.MetaObject;
 import java.io.File;
 import java.io.InputStream;
@@ -35,8 +34,6 @@ public class MetaObjectAsmClass extends MetaObject {
             classDetailsFiller = new ClassDetailsFiller();
             ClassReader cr = new ClassReader(bytes);
             cr.accept(classDetailsFiller, 0);
-
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -44,7 +41,6 @@ public class MetaObjectAsmClass extends MetaObject {
 
     public MetaObjectAsmClass(Class clazz) throws Exception {
         super();
-
         String className = clazz.getName();
         String classAsPath = className.replace('.', '/') + ".class";
         InputStream stream = clazz.getClassLoader().getResourceAsStream(classAsPath);
@@ -109,12 +105,8 @@ public class MetaObjectAsmClass extends MetaObject {
                 "/Desktop/BytecodeViewer 2.9.8.jar");
         String textClass = "jd.cli.Main.class";
         MetaObjectAsmClass moac = new MetaObjectAsmClass(textClass, testFile);
-
-        //MetaObjectAsmClass moac = new MetaObjectAsmClass(Reducer.class);
-
-        MethodInfo[] ddd = moac.getDeclaredMethods();
-
-        System.out.println(ddd);
+        MethodInfo[] methods = moac.getDeclaredMethods();
+        System.out.println(methods);
     }
 
     public static void main(String[] args) throws Exception {

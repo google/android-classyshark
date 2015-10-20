@@ -24,7 +24,7 @@ public abstract class MetaObject {
     /**
      * data class for interfaces
      */
-    public class InterfaceInfo {
+    public static class InterfaceInfo {
         public String interfaceStr;
         public String genericsStr = "";
     }

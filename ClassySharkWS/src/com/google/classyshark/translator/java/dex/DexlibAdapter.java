@@ -80,6 +80,10 @@ public class  DexlibAdapter {
             return convertedDexName;
         }
 
+        if (!dexName.startsWith("L") && !dexName.endsWith(";")) {
+            return convertedDexName;
+        }
+
         convertedDexName = convertedDexName.substring(1, convertedDexName.length() - 1);
 
         return convertedDexName;

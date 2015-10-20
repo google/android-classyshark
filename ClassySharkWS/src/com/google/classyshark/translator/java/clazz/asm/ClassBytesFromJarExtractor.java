@@ -23,6 +23,11 @@ import java.util.Enumeration;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+/**
+ * Extractor of class bytes from jar
+ * based on
+ * http://stackoverflow.com/questions/31482847/read-bytes-from-a-class-file-within-a-jar-file
+ */
 public class ClassBytesFromJarExtractor {
     public static byte[] getBytes(String fullClassName, String jar) throws IOException {
         // ... inputs check omitted ...

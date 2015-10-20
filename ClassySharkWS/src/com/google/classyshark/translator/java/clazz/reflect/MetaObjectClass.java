@@ -76,7 +76,6 @@ public class MetaObjectClass extends MetaObject {
 
     @Override
     public String getSuperclassGenerics() {
-
         if (clazz.getSuperclass() != null) {
             TypeVariable[] tv = clazz.getSuperclass().getTypeParameters();
             if (tv.length != 0) {
