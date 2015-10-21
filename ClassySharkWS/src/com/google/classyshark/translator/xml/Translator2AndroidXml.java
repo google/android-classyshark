@@ -49,6 +49,7 @@ public class Translator2AndroidXml implements Translator {
     private static int endDocTag = 0x00100101;
     private static int startTag = 0x00100102;
     private static int endTag = 0x00100103;
+    private static int cDataTag = 0x00100104;
     private final File archiveFile;
     private String xml;
     private List<ELEMENT> xmlCode;
@@ -125,7 +126,7 @@ public class Translator2AndroidXml implements Translator {
                         actualXmlTextLine.length() - 1),
                         TAG.IDENTIFIER));
             } else {
-                xmlCode.add(new ELEMENT(currentFormattedXmlLine.substring(indexTag + 1, 
+                xmlCode.add(new ELEMENT(currentFormattedXmlLine.substring(indexTag + 1,
                         currentFormattedXmlLine.length() - 1),
                         TAG.DOCUMENT));
             }
@@ -291,6 +292,13 @@ public class Translator2AndroidXml implements Translator {
                         + "-" + lineNo + ")");
                 // tr.parent(); // Step back up the NobTree
 
+            } else if (tag0 == cDataTag) {
+                String name = compXmlString(xml, sitOff, stOff, nameNsSi);
+                // Commented while the code highlighter doesn't support showing
+                // CDATA sections properly. It shouldn' matter to AndroidManifest.xml
+                System.err.printf("Found CDATA tag %s. Ignoring it", name);
+//                finalXML.append("<![CDATA[").append(name).append("]]>");
+                off += 7 * 4;
             } else if (tag0 == endDocTag) { // END OF XML DOC TAG
                 break;
 
