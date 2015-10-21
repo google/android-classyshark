@@ -340,11 +340,11 @@ public class Translator2AndroidXml implements Translator {
                 | arr[off] & 0xFF;
     }
 
-    private static String prettyFormat(String input) {
+    private  String prettyFormat(String input) {
         return prettyFormat(input, 2);
     }
 
-    private static String prettyFormat(String input, int indent) {
+    private String prettyFormat(String input, int indent) {
         try {
             Source xmlInput = new StreamSource(new StringReader(input));
             StringWriter stringWriter = new StringWriter();
@@ -356,6 +356,7 @@ public class Translator2AndroidXml implements Translator {
             transformer.transform(xmlInput, xmlOutput);
             return xmlOutput.getWriter().toString();
         } catch (Exception e) {
+            fallback = true;
             return "";
         }
     }
