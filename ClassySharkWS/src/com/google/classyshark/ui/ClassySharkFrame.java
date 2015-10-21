@@ -54,7 +54,7 @@ public class ClassySharkFrame extends JFrame {
 
     public ClassySharkFrame(String name, List<String> cmdLineArgs) {
         super(name);
-        setPreferredSize(new Dimension(800, 800));
+        setPreferredSize(new Dimension(1000, 800));
         getContentPane().setBackground(ColorScheme.BACKGROUND);
         addTabbedPane(cmdLineArgs);
     }

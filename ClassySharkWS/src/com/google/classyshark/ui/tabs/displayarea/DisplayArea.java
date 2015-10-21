@@ -26,11 +26,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.StringTokenizer;
-import javax.swing.Action;
-import javax.swing.JFrame;
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
-import javax.swing.JTextPane;
+import javax.swing.*;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultEditorKit;
 import javax.swing.text.DefaultStyledDocument;
@@ -86,7 +82,7 @@ public class DisplayArea {
                     System.out.println(selectedLine);
 
                     if (displayDataState == DisplayDataState.CLASSES_LIST) {
-                        tabPanel.onSelectedClassNameFromMouseClick(selectedLine);
+                        tabPanel.onSelectedClassName(selectedLine);
                     } else if (displayDataState == DisplayDataState.INSIDE_CLASS) {
                         if (selectedLine.contains("import")) {
                             tabPanel.onSelectedImportFromMouseClick(
@@ -190,6 +186,7 @@ public class DisplayArea {
     }
 
     public void displayAllClassesNames(List<String> classNames) {
+
         long start = System.currentTimeMillis();
 
         displayDataState = DisplayDataState.CLASSES_LIST;
