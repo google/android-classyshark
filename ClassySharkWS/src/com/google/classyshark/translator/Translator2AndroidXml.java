@@ -48,6 +48,7 @@ public class Translator2AndroidXml implements Translator {
     private static int endDocTag = 0x00100101;
     private static int startTag = 0x00100102;
     private static int endTag = 0x00100103;
+    private static int cDataTag = 0x00100104;
     private final File archiveFile;
     private String xml;
     private List<ELEMENT> xmlCode;
@@ -102,34 +103,35 @@ public class Translator2AndroidXml implements Translator {
 
         while (st.hasMoreElements()) {
             String currentFormattedXmlLine = st.nextElement().toString();
+            xmlCode.add(new ELEMENT(currentFormattedXmlLine, TAG.DOCUMENT));
 
             xmlCode.add(new ELEMENT("\n",
                     TAG.DOCUMENT));
-
-            int indexTag = currentFormattedXmlLine.indexOf("<");
-
-            xmlCode.add(new ELEMENT(currentFormattedXmlLine.substring(0, indexTag),
-                    TAG.DOCUMENT));
-
-            String actualXmlTextLine = currentFormattedXmlLine.substring(indexTag);
-            int indexOfSpaceInsideXmlText = actualXmlTextLine.indexOf(" ");
-
-            xmlCode.add(new ELEMENT("<",
-                    TAG.IDENTIFIER));
-            if (indexOfSpaceInsideXmlText > 0) {
-                xmlCode.add(new ELEMENT(actualXmlTextLine.substring(1, indexOfSpaceInsideXmlText),
-                        TAG.DOCUMENT));
-
-                xmlCode.add(new ELEMENT(actualXmlTextLine.substring(indexOfSpaceInsideXmlText,
-                        actualXmlTextLine.length() - 1),
-                        TAG.IDENTIFIER));
-            } else {
-                xmlCode.add(new ELEMENT(currentFormattedXmlLine.substring(indexTag + 1, 
-                        currentFormattedXmlLine.length() - 1),
-                        TAG.DOCUMENT));
-            }
-            xmlCode.add(new ELEMENT(">",
-                    TAG.IDENTIFIER));
+//
+//            int indexTag = currentFormattedXmlLine.indexOf("<");
+//
+//            xmlCode.add(new ELEMENT(currentFormattedXmlLine.substring(0, indexTag),
+//                    TAG.DOCUMENT));
+//
+//            String actualXmlTextLine = currentFormattedXmlLine.substring(indexTag);
+//            int indexOfSpaceInsideXmlText = actualXmlTextLine.indexOf(" ");
+//
+//            xmlCode.add(new ELEMENT("<",
+//                    TAG.IDENTIFIER));
+//            if (indexOfSpaceInsideXmlText > 0) {
+//                xmlCode.add(new ELEMENT(actualXmlTextLine.substring(1, indexOfSpaceInsideXmlText),
+//                        TAG.DOCUMENT));
+//
+//                xmlCode.add(new ELEMENT(actualXmlTextLine.substring(indexOfSpaceInsideXmlText,
+//                        actualXmlTextLine.length() - 1),
+//                        TAG.IDENTIFIER));
+//            } else {
+//                xmlCode.add(new ELEMENT(currentFormattedXmlLine.substring(indexTag + 1,
+//                        currentFormattedXmlLine.length() - 1),
+//                        TAG.DOCUMENT));
+//            }
+//            xmlCode.add(new ELEMENT(">",
+//                    TAG.IDENTIFIER));
         }
 
         if (xml.isEmpty() || fallback) {
@@ -290,6 +292,10 @@ public class Translator2AndroidXml implements Translator {
                         + "-" + lineNo + ")");
                 // tr.parent(); // Step back up the NobTree
 
+            } else if (tag0 == cDataTag) {
+                String name = compXmlString(xml, sitOff, stOff, nameNsSi);
+                finalXML.append("<![CDATA[").append(name).append("]]>");
+                off += 7 * 4;
             } else if (tag0 == endDocTag) { // END OF XML DOC TAG
                 break;
 
@@ -344,6 +350,7 @@ public class Translator2AndroidXml implements Translator {
     }
 
     private static String prettyFormat(String input, int indent) {
+        System.out.println(input);
         try {
             Source xmlInput = new StreamSource(new StringReader(input));
             StringWriter stringWriter = new StringWriter();
