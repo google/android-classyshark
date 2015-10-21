@@ -91,6 +91,7 @@ Clone this repository and import the `ClassySharkWS` folder in your favorite IDE
 ## Dependencies
 * dexlib2 by jesusfreke
 * guava by Google
+* ASM by OW2
 
 ## Support
 If you've found an error, please file an issue:
