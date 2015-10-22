@@ -23,8 +23,8 @@ import com.google.classyshark.translator.TranslatorFactory;
 import com.google.classyshark.ui.ClassySharkFrame;
 import com.google.classyshark.ui.tabs.displayarea.DisplayArea;
 import com.google.classyshark.ui.tabs.displayarea.FileStubGenerator;
-import java.awt.BorderLayout;
-import java.awt.Dimension;
+
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
@@ -57,6 +57,9 @@ public class TabPanel extends JPanel implements KeyListener {
     private List<String> displayedClassNames;
     private final DefaultTreeModel treeModel;
     private final JTree jTree;
+    private final JSplitPane jSplitPane;
+
+    private int dividerLocation = 0;
 
     public TabPanel(JTabbedPane tabbedPane, int myIndex) {
         super(false);
@@ -83,7 +86,7 @@ public class TabPanel extends JPanel implements KeyListener {
 
         JScrollPane leftScrollPane = new JScrollPane(jTree);
 
-        JSplitPane jSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+        jSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
         jSplitPane.setDividerSize(3);
         jSplitPane.setPreferredSize(new Dimension(1000, 700));
 
@@ -217,6 +220,16 @@ public class TabPanel extends JPanel implements KeyListener {
         isDataLoaded = true;
         toolBar.activateNavigationButtons();
         jTree.setRootVisible(true);
+    }
+
+    public void changeLeftPaneVisibitily(boolean visible) {
+        if (visible) {
+            jSplitPane.setDividerLocation(dividerLocation);
+        } else {
+            dividerLocation = jSplitPane.getDividerLocation();
+        }
+        jSplitPane.getLeftComponent().setVisible(visible);
+        jSplitPane.updateUI();
     }
 
     private String fitArchiveNameToTab(File resultFile) {
@@ -375,6 +388,7 @@ public class TabPanel extends JPanel implements KeyListener {
         cellRenderer.setBackground(ClassySharkFrame.ColorScheme.BACKGROUND);
         cellRenderer.setBackgroundNonSelectionColor(ClassySharkFrame.ColorScheme.BACKGROUND);
         cellRenderer.setTextNonSelectionColor(ClassySharkFrame.ColorScheme.FOREGROUND_CYAN);
+        cellRenderer.setFont(new Font("Menlo", Font.PLAIN, 18));
         jTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
         jTree.addTreeSelectionListener(new TreeSelectionListener() {
             @Override
