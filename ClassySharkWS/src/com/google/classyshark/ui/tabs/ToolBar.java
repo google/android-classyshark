@@ -17,17 +17,19 @@
 package com.google.classyshark.ui.tabs;
 
 import com.google.classyshark.ui.ClassySharkFrame;
-import java.awt.Font;
+import javafx.scene.control.ToggleButton;
+
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import javax.swing.JButton;
-import javax.swing.JTextField;
-import javax.swing.JToolBar;
-import javax.swing.UIManager;
+import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 /**
  * toolbar = buttons + command line
@@ -41,6 +43,7 @@ public class ToolBar extends JToolBar {
     private JButton viewBtn;
     private JButton backBtn;
     private JButton infoBtn;
+    private JToggleButton leftPanelToggleBtn;
 
     public ToolBar(final TabPanel tabPanel) {
         super();
@@ -60,7 +63,11 @@ public class ToolBar extends JToolBar {
         backBtn = buildBackButton();
         viewBtn = buildViewButton();
         infoBtn = buildInfoButton();
+        leftPanelToggleBtn = buildLeftPanelToggleButton();
 
+        this.setBackground(ClassySharkFrame.ColorScheme.BLACK);
+
+        add(leftPanelToggleBtn);
         add(openBtn);
         add(backBtn);
         add(viewBtn);
@@ -208,5 +215,21 @@ public class ToolBar extends JToolBar {
         result.setBackground(ClassySharkFrame.ColorScheme.BLACK);
 
         return result;
+    }
+
+    private JToggleButton buildLeftPanelToggleButton() {
+        final JToggleButton jToggleButton = new JToggleButton("\u2592", true);
+        jToggleButton.setBorderPainted(false);
+        jToggleButton.setFocusPainted(true);
+        jToggleButton.setForeground(ClassySharkFrame.ColorScheme.FOREGROUND_YELLOW);
+        jToggleButton.setBackground(ClassySharkFrame.ColorScheme.BLACK);
+        jToggleButton.setFont(new Font("Menlo", Font.PLAIN, 18));
+        jToggleButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                tabPanel.changeLeftPaneVisibitily(jToggleButton.isSelected());
+            }
+        });
+        return jToggleButton;
     }
 }

@@ -16,6 +16,7 @@
 
 package com.google.classyshark.ui;
 
+import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
 import javax.swing.UIManager;
@@ -46,6 +47,8 @@ public class Main {
         final List<String> cmdLineArgs = Arrays.asList(args);
 
         UIManager.put("swing.boldMetal", Boolean.FALSE);
+        UIManager.put("Button.select", Color.GRAY);
+        UIManager.put("ToggleButton.select", Color.GRAY);
 
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {

@@ -23,18 +23,17 @@ import com.google.classyshark.translator.TranslatorFactory;
 import com.google.classyshark.ui.ClassySharkFrame;
 import com.google.classyshark.ui.tabs.displayarea.DisplayArea;
 import com.google.classyshark.ui.tabs.displayarea.FileStubGenerator;
-import java.awt.BorderLayout;
-import java.awt.Dimension;
+
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
 import java.util.List;
-import javax.swing.JFileChooser;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
-import javax.swing.SwingWorker;
+import javax.swing.*;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 import javax.swing.filechooser.FileFilter;
+import javax.swing.tree.*;
 
 /**
  * individual tab
@@ -56,6 +55,11 @@ public class TabPanel extends JPanel implements KeyListener {
     private boolean isDataLoaded = false;
     private File loadedFile;
     private List<String> displayedClassNames;
+    private final DefaultTreeModel treeModel;
+    private final JTree jTree;
+    private final JSplitPane jSplitPane;
+
+    private int dividerLocation = 0;
 
     public TabPanel(JTabbedPane tabbedPane, int myIndex) {
         super(false);
@@ -74,10 +78,24 @@ public class TabPanel extends JPanel implements KeyListener {
         toolBar.setTypingArea();
 
         displayArea = new DisplayArea(this);
-        JScrollPane scrollPane = new JScrollPane(displayArea.onAddComponentToPane());
-        scrollPane.setPreferredSize(new Dimension(800, 700));
+        JScrollPane rightScrollPane = new JScrollPane(displayArea.onAddComponentToPane());
 
-        add(scrollPane, BorderLayout.CENTER);
+        treeModel = new DefaultTreeModel(new DefaultMutableTreeNode());
+        jTree = new JTree(treeModel);
+        configureJTree(jTree);
+
+        JScrollPane leftScrollPane = new JScrollPane(jTree);
+
+        jSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+        jSplitPane.setDividerSize(3);
+        jSplitPane.setPreferredSize(new Dimension(1000, 700));
+
+        jSplitPane.add(leftScrollPane, JSplitPane.LEFT);
+        jSplitPane.add(rightScrollPane, JSplitPane.RIGHT);
+        jSplitPane.getLeftComponent().setVisible(true);
+        jSplitPane.setDividerLocation(300);
+
+        add(jSplitPane, BorderLayout.CENTER);
     }
 
     @Override
@@ -104,8 +122,7 @@ public class TabPanel extends JPanel implements KeyListener {
                 processKeyPressWithTypedText(e, toolBar.getText());
         final boolean isAutoComplete = isAutoComplete(e);
 
-        fillDisplayArea(textFromTypingArea, isAutoComplete,
-                !IS_CLASSNAME_FROM_MOUSE_CLICK);
+        fillDisplayArea(textFromTypingArea, isAutoComplete, !IS_CLASSNAME_FROM_MOUSE_CLICK);
     }
 
     @Override
@@ -166,7 +183,7 @@ public class TabPanel extends JPanel implements KeyListener {
         }
 
         if (reducer.getAllClassesNames().contains(className)) {
-            onSelectedClassNameFromMouseClick(className);
+            onSelectedClassName(className);
         }
     }
 
@@ -191,7 +208,7 @@ public class TabPanel extends JPanel implements KeyListener {
         }
     }
 
-    public void onSelectedClassNameFromMouseClick(String className) {
+    public void onSelectedClassName(String className) {
         fillDisplayArea(className, VIEW_TOP_CLASS, IS_CLASSNAME_FROM_MOUSE_CLICK);
     }
 
@@ -202,6 +219,17 @@ public class TabPanel extends JPanel implements KeyListener {
         loadAndFillDisplayArea(resultFile);
         isDataLoaded = true;
         toolBar.activateNavigationButtons();
+        jTree.setRootVisible(true);
+    }
+
+    public void changeLeftPaneVisibitily(boolean visible) {
+        if (visible) {
+            jSplitPane.setDividerLocation(dividerLocation);
+        } else {
+            dividerLocation = jSplitPane.getDividerLocation();
+        }
+        jSplitPane.getLeftComponent().setVisible(visible);
+        jSplitPane.updateUI();
     }
 
     private String fitArchiveNameToTab(File resultFile) {
@@ -213,7 +241,7 @@ public class TabPanel extends JPanel implements KeyListener {
         return tabName;
     }
 
-    private void loadAndFillDisplayArea(File file) {
+    private void loadAndFillDisplayArea(final File file) {
         TabPanel.this.loadedFile = file;
         reducer = new Reducer(TabPanel.this.loadedFile);
 
@@ -229,7 +257,9 @@ public class TabPanel extends JPanel implements KeyListener {
 
             protected void done() {
                 if (!displayedClassNames.isEmpty()) {
-                    displayArea.displayAllClassesNames(displayedClassNames);
+                    TreeNode rootNode = createJTreeModel(file.getName(), displayedClassNames);
+                    displayArea.displaySharkey();
+                    treeModel.setRoot(rootNode);
                 } else {
                     displayArea.displayError();
                 }
@@ -237,6 +267,32 @@ public class TabPanel extends JPanel implements KeyListener {
         };
 
         worker.execute();
+    }
+
+    private TreeNode createJTreeModel(String fileName, List<String> displayedClassNames ) {
+        DefaultMutableTreeNode root = new DefaultMutableTreeNode(fileName);
+        DefaultMutableTreeNode classes = new DefaultMutableTreeNode("classes");
+
+        String lastPackage = null;
+        DefaultMutableTreeNode packageNode = null;
+        for (int i = 0; i < displayedClassNames.size(); i++) {
+            String resName = displayedClassNames.get(i);
+            if (resName.equals("AndroidManifest.xml")) {
+                root.add(new DefaultMutableTreeNode(resName));
+            } else {
+                String pkg = resName.substring(0, resName.lastIndexOf('.'));
+                if (lastPackage == null || !pkg.equals(lastPackage)) {
+                    if (packageNode != null) {
+                        classes.add(packageNode);
+                    }
+                    lastPackage = pkg;
+                    packageNode = new DefaultMutableTreeNode(pkg);
+                }
+                packageNode.add(new DefaultMutableTreeNode(resName));
+            }
+        }
+        root.add(classes);
+        return root;
     }
 
     private String processKeyPressWithTypedText(KeyEvent e, String text) {
@@ -324,6 +380,29 @@ public class TabPanel extends JPanel implements KeyListener {
             FileStubGenerator.generateStubFile(translator.getClassName(),
                     translator.toString());
         }
+    }
+
+    private void configureJTree(final JTree jTree) {
+        jTree.setRootVisible(false);
+        jTree.setBackground(ClassySharkFrame.ColorScheme.BACKGROUND);
+        DefaultTreeCellRenderer cellRenderer = (DefaultTreeCellRenderer) jTree.getCellRenderer();
+        cellRenderer.setBackground(ClassySharkFrame.ColorScheme.BACKGROUND);
+        cellRenderer.setBackgroundNonSelectionColor(ClassySharkFrame.ColorScheme.BACKGROUND);
+        cellRenderer.setTextNonSelectionColor(ClassySharkFrame.ColorScheme.FOREGROUND_CYAN);
+        cellRenderer.setFont(new Font("Menlo", Font.PLAIN, 18));
+        jTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+        jTree.addTreeSelectionListener(new TreeSelectionListener() {
+            @Override
+            public void valueChanged(TreeSelectionEvent e) {
+                Object selection = jTree.getLastSelectedPathComponent();
+                if (selection == null) return;
+
+                DefaultMutableTreeNode defaultMutableTreeNode = (DefaultMutableTreeNode) selection;
+                if (!defaultMutableTreeNode.isLeaf()) return;
+
+                onSelectedClassName((String) defaultMutableTreeNode.getUserObject());
+            }
+        });
     }
 
     private static boolean isOpenFile(KeyEvent e) {
