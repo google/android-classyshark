@@ -258,6 +258,7 @@ public class TabPanel extends JPanel implements KeyListener {
             protected void done() {
                 if (!displayedClassNames.isEmpty()) {
                     TreeNode rootNode = createJTreeModel(file.getName(), displayedClassNames);
+                    displayArea.displaySharkey();
                     treeModel.setRoot(rootNode);
                 } else {
                     displayArea.displayError();

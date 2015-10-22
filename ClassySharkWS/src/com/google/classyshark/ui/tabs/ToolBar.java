@@ -223,6 +223,7 @@ public class ToolBar extends JToolBar {
         jToggleButton.setFocusPainted(true);
         jToggleButton.setForeground(ClassySharkFrame.ColorScheme.FOREGROUND_YELLOW);
         jToggleButton.setBackground(ClassySharkFrame.ColorScheme.BLACK);
+        jToggleButton.setFont(new Font("Menlo", Font.PLAIN, 18));
         jToggleButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
