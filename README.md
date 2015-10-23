@@ -4,6 +4,8 @@
 
 ## Introduction
 
+![](https://github.com/googlesamples/android-classyshark/blob/master/Resources/Main%20Shot.png)
+
 While developing apps we tend to think about dexs, jars, apks and classes as build/run time abstractions that just work. Most of the time this is true, however, when trying to debug runtime issues in large apps, things can sometimes get tricky.
 
 With ClassyShark analyzing dependencies is a breeze. ClassyShark is fast and shows the right info (dependency classes, packages, methods and `AndroidManifest`) in no time. If your app is crashing or misbehaving at runtime and you’re not sure why then ClassyShark may be able to help you.
