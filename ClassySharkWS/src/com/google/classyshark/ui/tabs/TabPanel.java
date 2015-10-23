@@ -23,17 +23,28 @@ import com.google.classyshark.translator.TranslatorFactory;
 import com.google.classyshark.ui.ClassySharkFrame;
 import com.google.classyshark.ui.tabs.displayarea.DisplayArea;
 import com.google.classyshark.ui.tabs.displayarea.FileStubGenerator;
-
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
 import java.util.List;
-import javax.swing.*;
+import javax.swing.JFileChooser;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTree;
+import javax.swing.SwingWorker;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.filechooser.FileFilter;
-import javax.swing.tree.*;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeCellRenderer;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeNode;
+import javax.swing.tree.TreeSelectionModel;
 
 /**
  * individual tab
@@ -99,7 +110,8 @@ public class TabPanel extends JPanel implements KeyListener {
     }
 
     @Override
-    public void keyTyped(KeyEvent e) {}
+    public void keyTyped(KeyEvent e) {
+    }
 
     @Override
     public void keyPressed(KeyEvent e) {
@@ -126,7 +138,8 @@ public class TabPanel extends JPanel implements KeyListener {
     }
 
     @Override
-    public void keyReleased(KeyEvent e) {}
+    public void keyReleased(KeyEvent e) {
+    }
 
     public void openArchive() {
         final JFileChooser fc = new JFileChooser();
@@ -191,16 +204,16 @@ public class TabPanel extends JPanel implements KeyListener {
 
         System.out.println(key);
 
-        for(String clazz : translator.getDependencies()) {
-            if(clazz.contains(key)) {
+        for (String clazz : translator.getDependencies()) {
+            if (clazz.contains(key)) {
                 System.out.println(clazz);
                 onSelectedImportFromMouseClick(clazz);
                 return;
             }
         }
 
-        for(String clazz : reducer.getAllClassesNames()) {
-            if(clazz.contains(key)) {
+        for (String clazz : reducer.getAllClassesNames()) {
+            if (clazz.contains(key)) {
                 System.out.println(clazz);
                 onSelectedImportFromMouseClick(clazz);
                 return;
@@ -257,7 +270,14 @@ public class TabPanel extends JPanel implements KeyListener {
 
             protected void done() {
                 if (!displayedClassNames.isEmpty()) {
-                    TreeNode rootNode = createJTreeModel(file.getName(), displayedClassNames);
+                    TreeNode rootNode;
+                    if (loadedFile.getName().endsWith("dex") ||
+                            loadedFile.getName().endsWith("apk")) {
+                        rootNode = createJTreeModelAndroid(file.getName(), displayedClassNames);
+                    } else {
+                        rootNode = createJTreeModelClass(file.getName(), displayedClassNames);
+                    }
+
                     displayArea.displaySharkey();
                     treeModel.setRoot(rootNode);
                 } else {
@@ -269,7 +289,7 @@ public class TabPanel extends JPanel implements KeyListener {
         worker.execute();
     }
 
-    private TreeNode createJTreeModel(String fileName, List<String> displayedClassNames ) {
+    private TreeNode createJTreeModelAndroid(String fileName, List<String> displayedClassNames) {
         DefaultMutableTreeNode root = new DefaultMutableTreeNode(fileName);
         DefaultMutableTreeNode classes = new DefaultMutableTreeNode("classes");
 
@@ -290,6 +310,29 @@ public class TabPanel extends JPanel implements KeyListener {
                 }
                 packageNode.add(new DefaultMutableTreeNode(resName));
             }
+        }
+        root.add(classes);
+        return root;
+    }
+
+    private TreeNode createJTreeModelClass(String fileName, List<String> displayedClassNames) {
+        DefaultMutableTreeNode root = new DefaultMutableTreeNode(fileName);
+        DefaultMutableTreeNode classes = new DefaultMutableTreeNode("classes");
+        String lastPackage = null;
+        DefaultMutableTreeNode packageNode = null;
+
+        for (int i = 0; i < displayedClassNames.size(); i++) {
+            String fullClassName = displayedClassNames.get(i);
+            String pkg = fullClassName.substring(0, fullClassName.lastIndexOf('.'));
+            pkg = pkg.substring(0, pkg.lastIndexOf('.'));
+
+            if (lastPackage == null || !pkg.equals(lastPackage)) {
+                lastPackage = pkg;
+                packageNode = new DefaultMutableTreeNode(pkg);
+                classes.add(packageNode);
+            }
+            packageNode.add(new DefaultMutableTreeNode(fullClassName));
+
         }
         root.add(classes);
         return root;

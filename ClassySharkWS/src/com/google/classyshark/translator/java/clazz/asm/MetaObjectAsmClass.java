@@ -19,10 +19,13 @@ package com.google.classyshark.translator.java.clazz.asm;
 import com.google.classyshark.translator.java.MetaObject;
 import java.io.File;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import org.objectweb.asm.ClassReader;
 
 /**
- *  Meta object for class format, based on ASM parsing
+ * Meta object for class format, based on ASM parsing
  */
 public class MetaObjectAsmClass extends MetaObject {
 
@@ -33,6 +36,19 @@ public class MetaObjectAsmClass extends MetaObject {
             byte[] bytes =
                     ClassBytesFromJarExtractor.getBytes(className,
                             archiveFile.getAbsolutePath());
+
+            classDetailsFiller = new ClassDetailsFiller();
+            ClassReader cr = new ClassReader(bytes);
+            cr.accept(classDetailsFiller, 0);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public MetaObjectAsmClass(File archiveFile) {
+        try {
+            Path path = Paths.get(archiveFile.getAbsolutePath());
+            byte[] bytes = Files.readAllBytes(path);
 
             classDetailsFiller = new ClassDetailsFiller();
             ClassReader cr = new ClassReader(bytes);

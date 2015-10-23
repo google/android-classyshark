@@ -26,7 +26,8 @@ import java.net.URLClassLoader;
  */
 public class ClassLoadingUtils {
 
-    private ClassLoadingUtils() {}
+    private ClassLoadingUtils() {
+    }
 
     // TODO add logic when the className ends with .class
     public static Class load(String jarAbsolutePath, String className) throws

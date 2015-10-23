@@ -40,7 +40,7 @@ public class MetaObjectFactory {
         if (archiveFile.getName().toLowerCase().endsWith(".jar")) {
             result = getMetaObjectFromJar(className, archiveFile);
         } else if (archiveFile.getName().toLowerCase().endsWith(".class")) {
-            result = getMetaObjectFromClass(className, archiveFile);
+            result = getMetaObjectFromClass(archiveFile);
         } else if (archiveFile.getName().toLowerCase().endsWith(".dex")) {
             result = getMetaObjectFromDex(className, archiveFile);
         } else if (archiveFile.getName().toLowerCase().endsWith(".apk")) {
@@ -105,21 +105,8 @@ public class MetaObjectFactory {
         return result;
     }
 
-    private static MetaObject getMetaObjectFromClass(String className, File archiveFile) {
-        MetaObject result;
-        try {
-            Class clazz;
-            try {
-                clazz = ArchiveReader.loadClassFromClassFile(archiveFile);
-            } catch (Exception e) {
-                clazz = Exception.class;
-            }
-            result = new MetaObjectClass(clazz);
-        } catch (Exception e) {
-            result = new MetaObjectClass(Exception.class);
-        } catch (NoClassDefFoundError e) {
-            result = new MetaObjectAsmClass(className, archiveFile);
-        }
+    private static MetaObject getMetaObjectFromClass(File archiveFile) {
+        MetaObject result = new MetaObjectAsmClass(archiveFile);
         return result;
     }
 }
