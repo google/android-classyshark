@@ -17,11 +17,8 @@
 package com.google.classyshark.translator.xml;
 
 import com.google.classyshark.translator.Translator;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.io.StringReader;
-import java.io.StringWriter;
+
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -72,26 +69,36 @@ public class Translator2AndroidXml implements Translator {
         try {
             InputStream is;
             ZipFile zip = null;
+            long size;
 
             if (archiveFile.getName().endsWith(".apk")
                     || archiveFile.getName().endsWith(".zip")) {
                 zip = new ZipFile(archiveFile);
                 ZipEntry mft = zip.getEntry("AndroidManifest.xml");
+                size = mft.getSize();
                 is = zip.getInputStream(mft);
-
             } else {
+                size = archiveFile.length();
                 is = new FileInputStream(archiveFile);
             }
 
-            byte[] buf = new byte[1024000000];
-            int bytesRead = is.read(buf);
+            if (size > Integer.MAX_VALUE) {
+                throw new IOException("File larger than " + Integer.MAX_VALUE + " bytes not supported");
+            }
+
+            ByteArrayOutputStream bout = new ByteArrayOutputStream((int)size);
+            byte[] buffer = new byte[1024];
+            int bytesRead;
+            while ((bytesRead = is.read(buffer)) > 0) {
+                bout.write(buffer, 0 , bytesRead);
+            }
 
             is.close();
             if (zip != null) {
                 zip.close();
             }
 
-            this.xml = decompressXML(buf);
+            this.xml = decompressXML(bout.toByteArray());
         } catch (Exception e) {
             fallback = true;
         }
@@ -308,7 +315,6 @@ public class Translator2AndroidXml implements Translator {
                 break;
             }
         }
-
         return finalXML.toString();
     }
 
