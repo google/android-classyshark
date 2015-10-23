@@ -54,11 +54,16 @@ public class TabPanel extends JPanel implements KeyListener {
     private static final boolean IS_CLASSNAME_FROM_MOUSE_CLICK = true;
     private static final boolean VIEW_TOP_CLASS = true;
 
-    private final JTabbedPane tabbedPane;
-    private final int myIndexAtTabbedPane;
+    private final JTabbedPane jTabbedPane;
+    private final int myIndexAtJTabbedPane;
 
-    private final DisplayArea displayArea;
     private final ToolBar toolBar;
+    private final JSplitPane jSplitPane;
+    private int dividerLocation = 0;
+    private final DisplayArea displayArea;
+
+    private final DefaultTreeModel treeModel;
+    private final JTree jTree;
 
     private Reducer reducer;
     private Translator translator;
@@ -66,19 +71,14 @@ public class TabPanel extends JPanel implements KeyListener {
     private boolean isDataLoaded = false;
     private File loadedFile;
     private List<String> displayedClassNames;
-    private final DefaultTreeModel treeModel;
-    private final JTree jTree;
-    private final JSplitPane jSplitPane;
-
-    private int dividerLocation = 0;
 
     public TabPanel(JTabbedPane tabbedPane, int myIndex) {
         super(false);
 
         BorderLayout borderLayout = new BorderLayout();
         this.setLayout(borderLayout);
-        this.tabbedPane = tabbedPane;
-        this.myIndexAtTabbedPane = myIndex;
+        this.jTabbedPane = tabbedPane;
+        this.myIndexAtJTabbedPane = myIndex;
 
         setBackground(ClassySharkFrame.ColorScheme.BLACK);
 
@@ -132,9 +132,10 @@ public class TabPanel extends JPanel implements KeyListener {
 
         final String textFromTypingArea =
                 processKeyPressWithTypedText(e, toolBar.getText());
-        final boolean isAutoComplete = isAutoComplete(e);
+        final boolean isViewTopClassKeyPressed = isViewTopClassKeyPressed(e);
 
-        fillDisplayArea(textFromTypingArea, isAutoComplete, !IS_CLASSNAME_FROM_MOUSE_CLICK);
+        fillDisplayArea(textFromTypingArea, isViewTopClassKeyPressed,
+                !IS_CLASSNAME_FROM_MOUSE_CLICK);
     }
 
     @Override
@@ -165,7 +166,7 @@ public class TabPanel extends JPanel implements KeyListener {
         toolBar.setText("");
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File resultFile = fc.getSelectedFile();
-            updateUiAfterFileRead(tabbedPane, resultFile, myIndexAtTabbedPane);
+            updateUiAfterFileRead(jTabbedPane, resultFile, myIndexAtJTabbedPane);
         }
     }
 
@@ -175,7 +176,7 @@ public class TabPanel extends JPanel implements KeyListener {
         reducer.reduce("");
     }
 
-    public void onViewFilePressed() {
+    public void onViewTopClassPressed() {
         final String textFromTypingArea = toolBar.getText();
         fillDisplayArea(textFromTypingArea, VIEW_TOP_CLASS,
                 !IS_CLASSNAME_FROM_MOUSE_CLICK);
@@ -200,21 +201,16 @@ public class TabPanel extends JPanel implements KeyListener {
         }
     }
 
-    public void onSelectedTypeClassfromMouseClick(String key) {
-
-        System.out.println(key);
-
+    public void onSelectedTypeClassFromMouseClick(String selectedClass) {
         for (String clazz : translator.getDependencies()) {
-            if (clazz.contains(key)) {
-                System.out.println(clazz);
+            if (clazz.contains(selectedClass)) {
                 onSelectedImportFromMouseClick(clazz);
                 return;
             }
         }
 
         for (String clazz : reducer.getAllClassesNames()) {
-            if (clazz.contains(key)) {
-                System.out.println(clazz);
+            if (clazz.contains(selectedClass)) {
                 onSelectedImportFromMouseClick(clazz);
                 return;
             }
@@ -235,7 +231,7 @@ public class TabPanel extends JPanel implements KeyListener {
         jTree.setRootVisible(true);
     }
 
-    public void changeLeftPaneVisibitily(boolean visible) {
+    public void changeLeftPaneVisibility(boolean visible) {
         if (visible) {
             jSplitPane.setDividerLocation(dividerLocation);
         } else {
@@ -412,13 +408,13 @@ public class TabPanel extends JPanel implements KeyListener {
 
     private void handleControlPress(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_1) {
-            this.tabbedPane.setSelectedIndex(0);
+            this.jTabbedPane.setSelectedIndex(0);
         } else if (e.getKeyCode() == KeyEvent.VK_2) {
-            this.tabbedPane.setSelectedIndex(1);
+            this.jTabbedPane.setSelectedIndex(1);
         } else if (e.getKeyCode() == KeyEvent.VK_3) {
-            this.tabbedPane.setSelectedIndex(2);
+            this.jTabbedPane.setSelectedIndex(2);
         } else if (e.getKeyCode() == KeyEvent.VK_4) {
-            this.tabbedPane.setSelectedIndex(3);
+            this.jTabbedPane.setSelectedIndex(3);
         } else if (e.getKeyCode() == KeyEvent.VK_S) {
             FileStubGenerator.generateStubFile(translator.getClassName(),
                     translator.toString());
@@ -452,7 +448,7 @@ public class TabPanel extends JPanel implements KeyListener {
         return (e.getKeyCode() == 37);
     }
 
-    private static boolean isAutoComplete(KeyEvent e) {
+    private static boolean isViewTopClassKeyPressed(KeyEvent e) {
         return (e.getKeyCode() == 39);
     }
 }

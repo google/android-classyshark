@@ -21,14 +21,12 @@ import com.google.classyshark.translator.java.Translator2Java;
 import com.google.classyshark.ui.ClassySharkFrame.ColorScheme;
 import com.google.classyshark.ui.tabs.TabPanel;
 import java.awt.Component;
-import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.StringTokenizer;
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
-import javax.swing.text.DefaultEditorKit;
 import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.Document;
 import javax.swing.text.Style;
@@ -47,12 +45,9 @@ public class DisplayArea {
     private final JTextPane jTextPane;
     private Style style;
 
-    private JPopupMenu popup;
     private DisplayDataState displayDataState;
 
     public DisplayArea(final TabPanel tabPanel) {
-        popup = setupPopup();
-
         jTextPane = new JTextPane();
         jTextPane.setEditable(false);
         jTextPane.setBackground(ColorScheme.BACKGROUND);
@@ -93,9 +88,7 @@ public class DisplayArea {
                             rowEnd = Utilities.getWordEnd(jTextPane, offset);
                             String word = jTextPane.getText().substring(rowStart, rowEnd);
 
-                            tabPanel.onSelectedTypeClassfromMouseClick(word);
-                            // TODO might not need the pop up
-                            //popup.show(e.getComponent(), e.getX(), e.getY());
+                            tabPanel.onSelectedTypeClassFromMouseClick(word);
                         }
                     }
                 } catch (BadLocationException e1) {
@@ -186,7 +179,6 @@ public class DisplayArea {
     }
 
     public void displayAllClassesNames(List<String> classNames) {
-
         long start = System.currentTimeMillis();
 
         displayDataState = DisplayDataState.CLASSES_LIST;
@@ -312,24 +304,6 @@ public class DisplayArea {
 
     public boolean isDisplayingClassesList() {
         return displayDataState == DisplayDataState.CLASSES_LIST;
-    }
-
-    private JPopupMenu setupPopup() {
-        Action[] textActions = { new DefaultEditorKit.CopyAction() };
-        JPopupMenu result = new JPopupMenu();
-
-        for (Action textAction : textActions) {
-            JMenuItem jmi = new JMenuItem(textAction);
-            jmi.setForeground(ColorScheme.FOREGROUND_YELLOW);
-            jmi.setBackground(ColorScheme.BLACK);
-            jmi.setFont(new Font("Menlo", Font.PLAIN, 14));
-            result.add(jmi);
-        }
-
-        result.setForeground(ColorScheme.FOREGROUND_YELLOW);
-        result.setBackground(ColorScheme.BLACK);
-
-        return result;
     }
 
     private void clearText() {
