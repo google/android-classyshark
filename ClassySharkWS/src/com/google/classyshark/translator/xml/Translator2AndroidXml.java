@@ -351,11 +351,12 @@ public class Translator2AndroidXml implements Translator {
     // is followed by that number of 16 bit (Unicode) chars.
     private static String compXmlStringAt(byte[] arr, int strOff) {
         int strLen = arr[strOff + 1] << 8 & 0xff00 | arr[strOff] & 0xff;
-        byte[] chars = new byte[strLen];
-        for (int ii = 0; ii < strLen; ii++) {
-            chars[ii] = arr[strOff + 2 + ii * 2];
+        try {
+            return new String(arr, strOff + 2, strLen * 2, "UTF-16LE");
+        } catch (UnsupportedEncodingException ex) {
+            System.err.println("Unsupported Encoding");
+            return null;
         }
-        return new String(chars); // Hack, just use 8 byte chars
     }
 
     // LEW -- Return value of a Little Endian 32 bit word from the byte array
