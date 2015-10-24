@@ -31,6 +31,7 @@ import java.awt.event.KeyListener;
 import java.io.File;
 import java.util.List;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -107,6 +108,12 @@ public class TabPanel extends JPanel implements KeyListener {
         jSplitPane.setDividerLocation(300);
 
         add(jSplitPane, BorderLayout.CENTER);
+    }
+
+    public TabPanel(File archive) {
+        this(null, 1);
+        toolBar.setText("");
+        updateUiAfterFileRead(archive);
     }
 
     @Override
@@ -225,6 +232,10 @@ public class TabPanel extends JPanel implements KeyListener {
                                       int myIndexAtTabbedPane) {
         String tabName = fitArchiveNameToTab(resultFile);
         tabbedPane.setTitleAt(myIndexAtTabbedPane, tabName);
+        updateUiAfterFileRead(resultFile);
+    }
+
+    public void updateUiAfterFileRead(File resultFile) {
         loadAndFillDisplayArea(resultFile);
         isDataLoaded = true;
         toolBar.activateNavigationButtons();
@@ -450,5 +461,15 @@ public class TabPanel extends JPanel implements KeyListener {
 
     private static boolean isViewTopClassKeyPressed(KeyEvent e) {
         return (e.getKeyCode() == 39);
+    }
+
+    public static void main(String[] args) {
+        TabPanel tp = new TabPanel(new File (System.getProperty("user.home") +
+                "/Desktop/Scenarios/2 Samples/android.jar"));
+
+        JFrame frame = new JFrame("Test");
+        frame.getContentPane().add(tp);
+        frame.pack();
+        frame.setVisible(true);
     }
 }
