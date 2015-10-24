@@ -16,6 +16,7 @@
 
 package com.google.classyshark.ui;
 
+import com.google.classyshark.ui.tabs.TabsFrame;
 import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
@@ -58,7 +59,7 @@ public class Main {
     }
 
     private static void buildAndShowClassySharkFrame(List<String> cmdLineArgs) {
-        ClassySharkFrame frame = new ClassySharkFrame("ClassyShark Browser", cmdLineArgs);
+        TabsFrame frame = new TabsFrame("ClassyShark Browser", cmdLineArgs);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);

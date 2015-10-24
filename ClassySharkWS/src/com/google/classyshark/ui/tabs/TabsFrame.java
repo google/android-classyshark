@@ -14,9 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.classyshark.ui;
-
-import com.google.classyshark.ui.tabs.TabbedPaneBuilder;
+package com.google.classyshark.ui.tabs;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -30,7 +28,7 @@ import javax.swing.LayoutFocusTraversalPolicy;
 /**
  *  main application form
  */
-public class ClassySharkFrame extends JFrame {
+public class TabsFrame extends JFrame {
 
     /**
      * application color scheme
@@ -52,7 +50,7 @@ public class ClassySharkFrame extends JFrame {
 
     private JTabbedPane tabbedPane;
 
-    public ClassySharkFrame(String name, List<String> cmdLineArgs) {
+    public TabsFrame(String name, List<String> cmdLineArgs) {
         super(name);
         setPreferredSize(new Dimension(1000, 800));
         getContentPane().setBackground(ColorScheme.BACKGROUND);
@@ -61,7 +59,7 @@ public class ClassySharkFrame extends JFrame {
 
     private void addTabbedPane(List<String> args) {
         setBackground(ColorScheme.BACKGROUND);
-        tabbedPane = TabbedPaneBuilder.build(args);
+        tabbedPane = TabsBuilder.build(args);
 
         getContentPane().add(tabbedPane);
         applyWorkaroundForLoosingActiveTabFocusAfterDialog();

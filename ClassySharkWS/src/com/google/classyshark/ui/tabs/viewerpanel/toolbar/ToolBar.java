@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package com.google.classyshark.ui.tabs;
+package com.google.classyshark.ui.tabs.viewerpanel.toolbar;
 
-import com.google.classyshark.ui.ClassySharkFrame;
+import com.google.classyshark.ui.tabs.TabsFrame;
+import com.google.classyshark.ui.tabs.viewerpanel.ViewerPanel;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -36,7 +37,7 @@ import javax.swing.border.LineBorder;
 public class ToolBar extends JToolBar {
 
     private final JTextField typingArea;
-    private final TabPanel tabPanel;
+    private final ViewerPanel tabPanel;
 
     private JButton openBtn;
     private JButton viewBtn;
@@ -44,13 +45,13 @@ public class ToolBar extends JToolBar {
     private JButton infoBtn;
     private JToggleButton leftPanelToggleBtn;
 
-    public ToolBar(final TabPanel tabPanel) {
+    public ToolBar(final ViewerPanel tabPanel) {
         super();
-        UIManager.put("ToolBar.background", ClassySharkFrame.ColorScheme.BACKGROUND);
-        UIManager.put("ToolBar.foreground", ClassySharkFrame.ColorScheme.BACKGROUND);
+        UIManager.put("ToolBar.background", TabsFrame.ColorScheme.BACKGROUND);
+        UIManager.put("ToolBar.foreground", TabsFrame.ColorScheme.BACKGROUND);
 
-        UIManager.put("Button.background", ClassySharkFrame.ColorScheme.BACKGROUND);
-        UIManager.put("Button.foreground", ClassySharkFrame.ColorScheme.WHITE);
+        UIManager.put("Button.background", TabsFrame.ColorScheme.BACKGROUND);
+        UIManager.put("Button.foreground", TabsFrame.ColorScheme.WHITE);
 
         Font f = new Font("Menlo", Font.PLAIN, 18);
         UIManager.put("Button.font", f);
@@ -64,7 +65,7 @@ public class ToolBar extends JToolBar {
         infoBtn = buildInfoButton();
         leftPanelToggleBtn = buildLeftPanelToggleButton();
 
-        this.setBackground(ClassySharkFrame.ColorScheme.BLACK);
+        this.setBackground(TabsFrame.ColorScheme.BLACK);
 
         add(leftPanelToggleBtn);
         add(openBtn);
@@ -75,7 +76,7 @@ public class ToolBar extends JToolBar {
 
         setFloatable(false);
 
-        Border roundedBorder = new LineBorder(ClassySharkFrame.ColorScheme.BLACK, 5);
+        Border roundedBorder = new LineBorder(TabsFrame.ColorScheme.BLACK, 5);
         setBorder(roundedBorder);
     }
 
@@ -84,16 +85,16 @@ public class ToolBar extends JToolBar {
         super.setBorder(border);
     }
 
-    public void addKeyListenerToTypingArea(TabPanel mm) {
+    public void addKeyListenerToTypingArea(ViewerPanel mm) {
         typingArea.addKeyListener(mm);
     }
 
     public void setTypingArea() {
-        typingArea.setBackground(ClassySharkFrame.ColorScheme.LIGHT_GRAY);
+        typingArea.setBackground(TabsFrame.ColorScheme.LIGHT_GRAY);
 
         Font typingAreaFont = new Font("Menlo", Font.PLAIN, 18);
         typingArea.setFont(typingAreaFont);
-        typingArea.setForeground(ClassySharkFrame.ColorScheme.FOREGROUND_CYAN);
+        typingArea.setForeground(TabsFrame.ColorScheme.FOREGROUND_CYAN);
 
         setTypingAreaCaret();
     }
@@ -101,7 +102,7 @@ public class ToolBar extends JToolBar {
     public void setTypingAreaCaret() {
         int len = typingArea.getDocument().getLength();
         typingArea.setCaretPosition(len);
-        typingArea.setCaretColor(ClassySharkFrame.ColorScheme.FOREGROUND_CYAN);
+        typingArea.setCaretColor(TabsFrame.ColorScheme.FOREGROUND_CYAN);
     }
 
     public String getText() {
@@ -154,8 +155,8 @@ public class ToolBar extends JToolBar {
 
         result.setBorderPainted(false);
         result.setFocusPainted(true);
-        result.setForeground(ClassySharkFrame.ColorScheme.WHITE);
-        result.setBackground(ClassySharkFrame.ColorScheme.BLACK);
+        result.setForeground(TabsFrame.ColorScheme.WHITE);
+        result.setBackground(TabsFrame.ColorScheme.BLACK);
 
         return result;
     }
@@ -172,8 +173,8 @@ public class ToolBar extends JToolBar {
 
         result.setBorderPainted(false);
         result.setFocusPainted(true);
-        result.setForeground(ClassySharkFrame.ColorScheme.FOREGROUND_YELLOW);
-        result.setBackground(ClassySharkFrame.ColorScheme.BLACK);
+        result.setForeground(TabsFrame.ColorScheme.FOREGROUND_YELLOW);
+        result.setBackground(TabsFrame.ColorScheme.BLACK);
         result.setEnabled(false);
 
         return result;
@@ -191,8 +192,8 @@ public class ToolBar extends JToolBar {
 
         result.setBorderPainted(false);
         result.setFocusPainted(true);
-        result.setForeground(ClassySharkFrame.ColorScheme.FOREGROUND_YELLOW);
-        result.setBackground(ClassySharkFrame.ColorScheme.BLACK);
+        result.setForeground(TabsFrame.ColorScheme.FOREGROUND_YELLOW);
+        result.setBackground(TabsFrame.ColorScheme.BLACK);
         result.setEnabled(false);
 
         return result;
@@ -210,8 +211,8 @@ public class ToolBar extends JToolBar {
 
         result.setBorderPainted(false);
         result.setFocusPainted(true);
-        result.setForeground(ClassySharkFrame.ColorScheme.WHITE);
-        result.setBackground(ClassySharkFrame.ColorScheme.BLACK);
+        result.setForeground(TabsFrame.ColorScheme.WHITE);
+        result.setBackground(TabsFrame.ColorScheme.BLACK);
 
         return result;
     }
@@ -220,8 +221,8 @@ public class ToolBar extends JToolBar {
         final JToggleButton jToggleButton = new JToggleButton("\u2592", true);
         jToggleButton.setBorderPainted(false);
         jToggleButton.setFocusPainted(true);
-        jToggleButton.setForeground(ClassySharkFrame.ColorScheme.FOREGROUND_YELLOW);
-        jToggleButton.setBackground(ClassySharkFrame.ColorScheme.BLACK);
+        jToggleButton.setForeground(TabsFrame.ColorScheme.FOREGROUND_YELLOW);
+        jToggleButton.setBackground(TabsFrame.ColorScheme.BLACK);
         jToggleButton.setFont(new Font("Menlo", Font.PLAIN, 18));
         jToggleButton.addActionListener(new ActionListener() {
             @Override
