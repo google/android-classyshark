@@ -26,7 +26,7 @@ import java.util.List;
  *  Stress test for classes
  */
 public class StressTestClass {
-    public static void runAllClassesinArchive(String jarCanonicalPath) throws Exception {
+    public static void runAllClassesInArchive(String jarCanonicalPath) throws Exception {
         List<String> allStuff = ArchiveReader.readClassNamesFromJar(
                 jarCanonicalPath);
 
@@ -42,6 +42,6 @@ public class StressTestClass {
         String allAndroid = System.getProperty("user.home") +
                 "/Desktop/Scenarios/2 Samples/android.jar";
 
-        runAllClassesinArchive(allAndroid);
+        runAllClassesInArchive(allAndroid);
     }
 }

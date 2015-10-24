@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.classyshark.ui.tabs.viewerpanel.displayarea;
+package com.google.classyshark.ui.tabs.tabpanel.displayarea;
 
 import java.util.ArrayList;
 import javax.swing.text.AttributeSet;

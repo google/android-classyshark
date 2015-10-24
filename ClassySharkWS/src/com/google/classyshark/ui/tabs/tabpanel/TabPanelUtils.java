@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package com.google.classyshark.ui.tabs.viewerpanel;
+package com.google.classyshark.ui.tabs.tabpanel;
 
 import com.google.classyshark.reducer.ArchiveReader;
 import com.google.classyshark.translator.Translator;
-import com.google.classyshark.ui.tabs.viewerpanel.displayarea.FileStubGenerator;
+import com.google.classyshark.ui.tabs.tabpanel.displayarea.FileStubGenerator;
 import java.io.File;
 
-public class ViewerPanelUtils {
-    private ViewerPanelUtils(){}
+public class TabPanelUtils {
+    private TabPanelUtils(){}
 
     public static void generateStubFile(Translator translator) {
         FileStubGenerator.generateStubFile(translator.getClassName(),

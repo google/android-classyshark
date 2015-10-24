@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package com.google.classyshark.ui.tabs.viewerpanel;
+package com.google.classyshark.ui.tabs.tabpanel;
 
 import com.google.classyshark.reducer.Reducer;
 import com.google.classyshark.translator.Translator;
 import com.google.classyshark.translator.TranslatorFactory;
 import com.google.classyshark.ui.tabs.TabsFrame;
-import com.google.classyshark.ui.tabs.viewerpanel.displayarea.DisplayArea;
-import com.google.classyshark.ui.tabs.viewerpanel.toolbar.ToolBar;
-import com.google.classyshark.ui.tabs.viewerpanel.tree.FilesTree;
+import com.google.classyshark.ui.tabs.tabpanel.displayarea.DisplayArea;
+import com.google.classyshark.ui.tabs.tabpanel.toolbar.ToolBar;
+import com.google.classyshark.ui.tabs.tabpanel.tree.FilesTree;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.KeyEvent;
@@ -39,9 +39,9 @@ import javax.swing.SwingWorker;
 import javax.swing.filechooser.FileFilter;
 
 /**
- * individual viewerpanel
+ * individual tabpanel
  */
-public class ViewerPanel extends JPanel implements KeyListener {
+public class TabPanel extends JPanel implements KeyListener {
 
     private static final boolean IS_CLASSNAME_FROM_MOUSE_CLICK = true;
     private static final boolean VIEW_TOP_CLASS = true;
@@ -53,7 +53,7 @@ public class ViewerPanel extends JPanel implements KeyListener {
     private final JSplitPane jSplitPane;
     private int dividerLocation = 0;
     private final DisplayArea displayArea;
-    private FilesTree filesTree;
+    private final FilesTree filesTree;
 
     private Reducer reducer;
     private Translator translator;
@@ -61,7 +61,7 @@ public class ViewerPanel extends JPanel implements KeyListener {
     private File loadedFile;
     private List<String> displayedClassNames;
 
-    public ViewerPanel(JTabbedPane tabbedPane, int myIndex) {
+    public TabPanel(JTabbedPane tabbedPane, int myIndex) {
         super(false);
 
         BorderLayout borderLayout = new BorderLayout();
@@ -95,7 +95,7 @@ public class ViewerPanel extends JPanel implements KeyListener {
         add(jSplitPane, BorderLayout.CENTER);
     }
 
-    public ViewerPanel(File archive) {
+    public TabPanel(File archive) {
         this(null, 1);
         toolBar.setText("");
         updateUiAfterFileRead(archive);
@@ -139,12 +139,12 @@ public class ViewerPanel extends JPanel implements KeyListener {
         fc.setFileFilter(new FileFilter() {
             @Override
             public boolean accept(File f) {
-                return ViewerPanelUtils.acceptFile(f);
+                return TabPanelUtils.acceptFile(f);
             }
 
             @Override
             public String getDescription() {
-                return ViewerPanelUtils.getFileChooserDescription();
+                return TabPanelUtils.getFileChooserDescription();
             }
         });
 
@@ -212,7 +212,7 @@ public class ViewerPanel extends JPanel implements KeyListener {
     public void updateUiAfterFileRead(JTabbedPane tabbedPane,
                                       File resultFile,
                                       int myIndexAtTabbedPane) {
-        String tabName = ViewerPanelUtils.fitArchiveNameToTab(resultFile);
+        String tabName = TabPanelUtils.fitArchiveNameToTab(resultFile);
         tabbedPane.setTitleAt(myIndexAtTabbedPane, tabName);
         updateUiAfterFileRead(resultFile);
     }
@@ -335,7 +335,7 @@ public class ViewerPanel extends JPanel implements KeyListener {
 
     private void handleControlPress(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_S) {
-            ViewerPanelUtils.generateStubFile(translator);
+            TabPanelUtils.generateStubFile(translator);
             return;
         }
 
@@ -363,11 +363,11 @@ public class ViewerPanel extends JPanel implements KeyListener {
     }
 
     public static void main(String[] args) {
-        ViewerPanel vp = new ViewerPanel(new File(System.getProperty("user.home") +
+        TabPanel tabPanel = new TabPanel(new File(System.getProperty("user.home") +
                 "/Desktop/Scenarios/2 Samples/android.jar"));
 
         JFrame frame = new JFrame("Test");
-        frame.getContentPane().add(vp);
+        frame.getContentPane().add(tabPanel);
         frame.pack();
         frame.setVisible(true);
     }

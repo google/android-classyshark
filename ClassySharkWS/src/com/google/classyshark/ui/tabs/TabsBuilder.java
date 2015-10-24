@@ -18,7 +18,7 @@ package com.google.classyshark.ui.tabs;
 
 import com.google.classyshark.reducer.ArchiveReader;
 import com.google.classyshark.ui.tabs.TabsFrame.ColorScheme;
-import com.google.classyshark.ui.tabs.viewerpanel.ViewerPanel;
+import com.google.classyshark.ui.tabs.tabpanel.TabPanel;
 import java.awt.Font;
 import java.io.File;
 import java.util.List;
@@ -46,7 +46,7 @@ public class TabsBuilder {
         result.setFont(tabFont);
 
         for (int i = 0; i < cmdLineArgFiles.size(); i++) {
-            ViewerPanel panel = new ViewerPanel(result, i);
+            TabPanel panel = new TabPanel(result, i);
             result.addTab("Opening", panel);
             result.setForegroundAt(i, ColorScheme.FOREGROUND_CYAN);
 
@@ -57,7 +57,7 @@ public class TabsBuilder {
         }
 
         for (int i = 0; i < NUMBER_OF_TABS - cmdLineArgFiles.size(); i++) {
-            ViewerPanel panel = new ViewerPanel(result, i + cmdLineArgFiles.size());
+            TabPanel panel = new TabPanel(result, i + cmdLineArgFiles.size());
             result.addTab("Open ...", panel);
             result.setForegroundAt(i + cmdLineArgFiles.size(), ColorScheme.FOREGROUND_CYAN);
         }

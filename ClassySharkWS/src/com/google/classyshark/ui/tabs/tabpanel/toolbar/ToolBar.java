@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package com.google.classyshark.ui.tabs.viewerpanel.toolbar;
+package com.google.classyshark.ui.tabs.tabpanel.toolbar;
 
 import com.google.classyshark.ui.tabs.TabsFrame;
-import com.google.classyshark.ui.tabs.viewerpanel.ViewerPanel;
+import com.google.classyshark.ui.tabs.tabpanel.TabPanel;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -37,7 +37,7 @@ import javax.swing.border.LineBorder;
 public class ToolBar extends JToolBar {
 
     private final JTextField typingArea;
-    private final ViewerPanel tabPanel;
+    private final TabPanel tabPanel;
 
     private JButton openBtn;
     private JButton viewBtn;
@@ -45,7 +45,7 @@ public class ToolBar extends JToolBar {
     private JButton infoBtn;
     private JToggleButton leftPanelToggleBtn;
 
-    public ToolBar(final ViewerPanel tabPanel) {
+    public ToolBar(final TabPanel tabPanel) {
         super();
         UIManager.put("ToolBar.background", TabsFrame.ColorScheme.BACKGROUND);
         UIManager.put("ToolBar.foreground", TabsFrame.ColorScheme.BACKGROUND);
@@ -85,7 +85,7 @@ public class ToolBar extends JToolBar {
         super.setBorder(border);
     }
 
-    public void addKeyListenerToTypingArea(ViewerPanel mm) {
+    public void addKeyListenerToTypingArea(TabPanel mm) {
         typingArea.addKeyListener(mm);
     }
 

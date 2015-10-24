@@ -14,14 +14,17 @@
  * limitations under the License.
  */
 
-package com.google.classyshark.ui.tabs.viewerpanel.tree;
+package com.google.classyshark.ui.tabs.tabpanel.tree;
 
+import com.google.classyshark.reducer.Reducer;
 import com.google.classyshark.ui.tabs.TabsFrame;
-import com.google.classyshark.ui.tabs.viewerpanel.ViewerPanel;
+import com.google.classyshark.ui.tabs.tabpanel.TabPanel;
 import java.awt.Component;
 import java.awt.Font;
 import java.io.File;
 import java.util.List;
+import javax.swing.JFrame;
+import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
@@ -32,11 +35,11 @@ import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreeSelectionModel;
 
 public class FilesTree {
-    private final ViewerPanel viewerPanel   ;
+    private final TabPanel viewerPanel;
     private DefaultTreeModel treeModel = null;
     private JTree jTree = null;
 
-    public FilesTree(ViewerPanel viewerPanel) {
+    public FilesTree(TabPanel viewerPanel) {
         treeModel = new DefaultTreeModel(new DefaultMutableTreeNode());
         jTree = new JTree(treeModel);
         configureJTree(jTree);
@@ -127,12 +130,31 @@ public class FilesTree {
                 DefaultMutableTreeNode defaultMutableTreeNode = (DefaultMutableTreeNode) selection;
                 if (!defaultMutableTreeNode.isLeaf()) return;
 
-                FilesTree.this.viewerPanel.onSelectedClassName((String) defaultMutableTreeNode.getUserObject());
+                if (FilesTree.this.viewerPanel != null) {
+                    FilesTree.this.viewerPanel.onSelectedClassName((String) defaultMutableTreeNode.getUserObject());
+                }
             }
         });
     }
 
     public void setVisibleRoot() {
         jTree.setRootVisible(true);
+    }
+
+    public static void main(String[] args) {
+        File test = new File(System.getProperty("user.home") +
+                "/Desktop/Scenarios/2 Samples/android.jar");
+
+        FilesTree filesTree = new FilesTree(null);
+
+        Reducer reducer = new Reducer(test);
+        reducer.reduce("");
+        filesTree.fillArchive(test, reducer.getAllClassesNames());
+
+        JFrame frame = new JFrame("Test");
+        JScrollPane scrolledTree = new JScrollPane(filesTree.getJTree());
+        frame.getContentPane().add(scrolledTree);
+        frame.pack();
+        frame.setVisible(true);
     }
 }
