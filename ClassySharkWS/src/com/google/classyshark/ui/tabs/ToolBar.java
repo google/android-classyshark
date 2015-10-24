@@ -199,7 +199,7 @@ public class ToolBar extends JToolBar {
     }
 
     private JButton buildInfoButton() {
-        JButton result = new JButton("Info");
+        JButton result = new JButton(" ? ");
 
         result.addActionListener(new ActionListener() {
             @Override
