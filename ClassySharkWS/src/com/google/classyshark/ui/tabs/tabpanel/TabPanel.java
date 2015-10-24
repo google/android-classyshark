@@ -213,7 +213,10 @@ public class TabPanel extends JPanel implements KeyListener {
                                       File resultFile,
                                       int myIndexAtTabbedPane) {
         String tabName = TabPanelUtils.fitArchiveNameToTab(resultFile);
-        tabbedPane.setTitleAt(myIndexAtTabbedPane, tabName);
+        if( jTabbedPane != null) {
+            tabbedPane.setTitleAt(myIndexAtTabbedPane, tabName);
+        }
+
         updateUiAfterFileRead(resultFile);
     }
 

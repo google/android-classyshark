@@ -22,7 +22,7 @@ package com.google.classyshark.ui.tabs.tabpanel.displayarea;
 public class InfoBG {
 
     public static final String INFO =
-            "\n\n\t\t\tClassyShark ver. 2.8"
+            "\n\n\t\t\tClassyShark ver. 2.9"
                     + "\n\t            ========================"
                     + "\n\n\t\t\tMOUSE USAGE"
                     + "\n\t            ==============="
