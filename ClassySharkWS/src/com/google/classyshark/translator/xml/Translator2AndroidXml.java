@@ -66,9 +66,10 @@ public class Translator2AndroidXml implements Translator {
 
     @Override
     public void apply() {
+        InputStream is = null;
+        ZipFile zip = null;
+        ByteArrayOutputStream bout = null;
         try {
-            InputStream is;
-            ZipFile zip = null;
             long size;
 
             if (archiveFile.getName().endsWith(".apk")
@@ -86,21 +87,33 @@ public class Translator2AndroidXml implements Translator {
                 throw new IOException("File larger than " + Integer.MAX_VALUE + " bytes not supported");
             }
 
-            ByteArrayOutputStream bout = new ByteArrayOutputStream((int)size);
+            bout = new ByteArrayOutputStream((int)size);
             byte[] buffer = new byte[1024];
             int bytesRead;
             while ((bytesRead = is.read(buffer)) > 0) {
                 bout.write(buffer, 0 , bytesRead);
             }
 
-            is.close();
-            if (zip != null) {
-                zip.close();
-            }
-
             this.xml = decompressXML(bout.toByteArray());
         } catch (Exception e) {
             fallback = true;
+        } finally {
+            closeResource(is);
+            closeResource(zip);
+            closeResource(bout);
+        }
+    }
+
+    private void closeResource(Closeable closeable) {
+        if (closeable == null) {
+            return;
+        }
+
+        try {
+            closeable.close();
+        } catch (IOException ex) {
+            System.err.println("Error closing resource: " + ex.getMessage());
+            ex.printStackTrace(System.err);
         }
     }
 
