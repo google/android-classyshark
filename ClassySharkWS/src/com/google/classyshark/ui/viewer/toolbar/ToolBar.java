@@ -37,7 +37,7 @@ import javax.swing.border.LineBorder;
 public class ToolBar extends JToolBar {
 
     private final JTextField typingArea;
-    private final ClassySharkPanel tabPanel;
+    private final ClassySharkPanel classySharkPanel;
 
     private JButton openBtn;
     private JButton viewBtn;
@@ -45,7 +45,7 @@ public class ToolBar extends JToolBar {
     private JButton infoBtn;
     private JToggleButton leftPanelToggleBtn;
 
-    public ToolBar(final ClassySharkPanel tabPanel) {
+    public ToolBar(final ClassySharkPanel classySharkPanel) {
         super();
         UIManager.put("ToolBar.background", ColorScheme.BACKGROUND);
         UIManager.put("ToolBar.foreground", ColorScheme.BACKGROUND);
@@ -56,7 +56,7 @@ public class ToolBar extends JToolBar {
         Font f = new Font("Menlo", Font.PLAIN, 18);
         UIManager.put("Button.font", f);
 
-        this.tabPanel = tabPanel;
+        this.classySharkPanel = classySharkPanel;
 
         typingArea = buildTypingArea();
         openBtn = buildOpenButton();
@@ -85,8 +85,8 @@ public class ToolBar extends JToolBar {
         super.setBorder(border);
     }
 
-    public void addKeyListenerToTypingArea(ClassySharkPanel mm) {
-        typingArea.addKeyListener(mm);
+    public void addKeyListenerToTypingArea(ClassySharkPanel classySharkPanel) {
+        typingArea.addKeyListener(classySharkPanel);
     }
 
     public void setTypingArea() {
@@ -135,7 +135,7 @@ public class ToolBar extends JToolBar {
                             result.getText().lastIndexOf(textToDelete));
 
                     result.setText(selectedLine);
-                    tabPanel.onChangedTextFromTypingArea(result.getText());
+                    classySharkPanel.onChangedTextFromTypingArea(result.getText());
                 }
             }
         });
@@ -149,7 +149,7 @@ public class ToolBar extends JToolBar {
         result.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                tabPanel.openArchive();
+                classySharkPanel.openArchive();
             }
         });
 
@@ -167,7 +167,7 @@ public class ToolBar extends JToolBar {
         result.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                tabPanel.onGoBackPressed();
+                classySharkPanel.onGoBackPressed();
             }
         });
 
@@ -186,7 +186,7 @@ public class ToolBar extends JToolBar {
         result.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                tabPanel.onViewTopClassPressed();
+                classySharkPanel.onViewTopClassPressed();
             }
         });
 
@@ -205,7 +205,7 @@ public class ToolBar extends JToolBar {
         result.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                tabPanel.onShowInfoPressed();
+                classySharkPanel.onShowInfoPressed();
             }
         });
 
@@ -227,7 +227,7 @@ public class ToolBar extends JToolBar {
         jToggleButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                tabPanel.onChangeLeftPaneVisibility(jToggleButton.isSelected());
+                classySharkPanel.onChangeLeftPaneVisibility(jToggleButton.isSelected());
             }
         });
         return jToggleButton;

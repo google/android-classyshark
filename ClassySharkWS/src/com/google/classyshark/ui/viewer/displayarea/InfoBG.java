@@ -33,7 +33,7 @@ public class InfoBG {
                     + "\t\t\t\n5. Double click on import opens class, \nif the class is part of the "
                     + "loaded archive"
                     + "\t\t\t\n6. Mouse selection for command line removes the selected text"
-                    + "\t\t\t\n7. Mouse selection for text shows pop up to copy/paste"
+                    + "\t\t\t"
                     + "\n\n\t\t\tKEYBOARD USAGE"
                     + "\n\t            =================="
                     + "\t\t\t\n1. Can pass archives as command line arguments"
