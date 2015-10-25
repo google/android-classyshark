@@ -18,7 +18,7 @@ package com.google.classyshark.ui;
 
 import com.google.classyshark.ui.tabs.ClassySharkTabsFrame;
 import com.google.classyshark.ui.viewer.ClassySharkPanel;
-import java.awt.*;
+import java.awt.Color;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
@@ -28,7 +28,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
 
 /**
- *  the driver class of the app
+ * the driver class of the app
  */
 public class Main {
 
@@ -65,16 +65,15 @@ public class Main {
         JFrame frame;
 
         if (isMultiTab(cmdLineArgs)) {
-           frame = new ClassySharkTabsFrame("ClassyShark Browser", cmdLineArgs);
+            frame = new ClassySharkTabsFrame("ClassyShark", cmdLineArgs);
         } else {
             frame = new JFrame();
             frame.setTitle("ClassyShark");
-
             if (cmdLineArgs.size() == 1) {
                 frame.getContentPane().add(
-                        new ClassySharkPanel(new File(cmdLineArgs.get(0))));
+                        new ClassySharkPanel(frame, new File(cmdLineArgs.get(0))));
             } else {
-                frame.getContentPane().add(new ClassySharkPanel(null, 1));
+                frame.getContentPane().add(new ClassySharkPanel(frame));
             }
         }
 
@@ -88,7 +87,7 @@ public class Main {
             return true;
         }
 
-        boolean moreThanOneFile = cmdLineArgs.size() >= 2;
+        boolean moreThanOneFile = (cmdLineArgs.size() >= 2);
         return moreThanOneFile;
     }
 }

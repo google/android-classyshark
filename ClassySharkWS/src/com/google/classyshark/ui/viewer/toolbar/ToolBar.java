@@ -227,7 +227,7 @@ public class ToolBar extends JToolBar {
         jToggleButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                tabPanel.changeLeftPaneVisibility(jToggleButton.isSelected());
+                tabPanel.onChangeLeftPaneVisibility(jToggleButton.isSelected());
             }
         });
         return jToggleButton;

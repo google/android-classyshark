@@ -12,13 +12,13 @@ import javax.swing.plaf.metal.MetalLookAndFeel;
 
 public class ExperimentalBlackFrame {
     public static void Driver (String args[]) {
-        JFrame f = new JFrame();
-        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        f.setSize(1000, 800);
-        f.setLocationRelativeTo(null);
+        JFrame frame = new JFrame();
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(1000, 800);
+        frame.setLocationRelativeTo(null);
 
-        f.setUndecorated(true);
-        f.getRootPane().setWindowDecorationStyle(JRootPane.FRAME);
+        frame.setUndecorated(true);
+        frame.getRootPane().setWindowDecorationStyle(JRootPane.FRAME);
 
         DefaultMetalTheme blackSchemeForMetal =
                 new DefaultMetalTheme() {
@@ -71,17 +71,17 @@ public class ExperimentalBlackFrame {
             e.printStackTrace();
         }
 
-        SwingUtilities.updateComponentTreeUI(f);
+        SwingUtilities.updateComponentTreeUI(frame);
 
         ////
         File testFile = new File(System.getProperty("user.home") +
                 "/Desktop/Scenarios/2 Samples/android.jar");
 
-        ClassySharkPanel tabPanel = new ClassySharkPanel(testFile);
-        f.setContentPane(tabPanel);
+        ClassySharkPanel tabPanel = new ClassySharkPanel(frame, testFile);
+        frame.setContentPane(tabPanel);
         ///
 
-        f.setVisible(true);
+        frame.setVisible(true);
     }
 
     public static void main(final String args[]) {

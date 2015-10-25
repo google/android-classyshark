@@ -52,7 +52,7 @@ public class TabsBuilder {
 
             File cmdFile = new File(cmdLineArgFiles.get(i));
             if (cmdFile.exists() && ArchiveReader.isSupportedArchiveFile(cmdFile)) {
-                panel.updateUiAfterFileRead(result, new File(cmdLineArgFiles.get(i)), i);
+                panel.updateUiAfterFileRead(new File(cmdLineArgFiles.get(i)));
             }
         }
 
