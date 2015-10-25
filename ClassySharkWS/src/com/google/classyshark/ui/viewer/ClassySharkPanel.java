@@ -213,6 +213,7 @@ public class ClassySharkPanel extends JPanel implements KeyListener {
     public void updateUiAfterFileRead(JTabbedPane tabbedPane,
                                       File resultFile,
                                       int myIndexAtTabbedPane) {
+        // TODO update file name if there is panel and not tab view
         String tabName = PanelUtils.fitArchiveNameToTab(resultFile);
         if( jTabbedPane != null) {
             tabbedPane.setTitleAt(myIndexAtTabbedPane, tabName);

@@ -232,6 +232,4 @@ public class ToolBar extends JToolBar {
         });
         return jToggleButton;
     }
-
-
 }

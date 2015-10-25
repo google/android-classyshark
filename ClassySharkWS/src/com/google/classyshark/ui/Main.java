@@ -61,10 +61,9 @@ public class Main {
     }
 
     private static void buildAndShowClassySharkFrame(List<String> cmdLineArgs) {
-
         JFrame frame;
 
-        if(cmdLineArgs.size() >= 2) {
+        if(isMultiTab(cmdLineArgs)) {
            frame = new ClassySharkTabsFrame("ClassyShark Browser", cmdLineArgs);
         } else {
             frame = new JFrame();
@@ -74,5 +73,14 @@ public class Main {
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
+    }
+
+    private static boolean isMultiTab(List<String> cmdLineArgs) {
+        if(cmdLineArgs.contains("-t")) {
+            return true;
+        }
+
+        boolean moreThanOneFile = cmdLineArgs.size() >= 2;
+        return moreThanOneFile;
     }
 }

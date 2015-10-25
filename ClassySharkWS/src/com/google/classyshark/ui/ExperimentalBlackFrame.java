@@ -20,11 +20,13 @@ public class ExperimentalBlackFrame {
         f.setUndecorated(true);
         f.getRootPane().setWindowDecorationStyle(JRootPane.FRAME);
 
+        ////
         File testFile = new File(System.getProperty("user.home") +
                 "/Desktop/Scenarios/2 Samples/android.jar");
 
         ClassySharkPanel tabPanel = new ClassySharkPanel(testFile);
         f.setContentPane(tabPanel);
+        /// 
 
         DefaultMetalTheme blackSchemeForMetal =
                 new DefaultMetalTheme() {
