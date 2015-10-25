@@ -68,6 +68,7 @@ public class Main {
            frame = new ClassySharkTabsFrame("ClassyShark Browser", cmdLineArgs);
         } else {
             frame = new JFrame();
+            frame.setTitle("ClassyShark");
 
             if (cmdLineArgs.size() == 1) {
                 frame.getContentPane().add(
