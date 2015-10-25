@@ -60,7 +60,7 @@ public class ClassySharkPanel extends JPanel implements KeyListener {
     private Translator translator;
     private boolean isDataLoaded = false;
     private File loadedFile;
-    private List<String> displayedClassNames;
+    private List<String> allClassesInArchive;
 
     public ClassySharkPanel(JTabbedPane tabbedPane, int myIndex) {
         super(false);
@@ -142,7 +142,7 @@ public class ClassySharkPanel extends JPanel implements KeyListener {
     }
 
     public void onGoBackPressed() {
-        displayArea.displayAllClassesNames(displayedClassNames);
+        displayArea.displayAllClassesNames(allClassesInArchive);
         toolBar.setText("");
         reducer.reduce("");
     }
@@ -256,15 +256,15 @@ public class ClassySharkPanel extends JPanel implements KeyListener {
             @Override
             protected Void doInBackground() throws Exception {
                 long start = System.currentTimeMillis();
-                displayedClassNames = reducer.reduce("");
+                allClassesInArchive = reducer.reduce("");
                 System.out.println("Archive Reading "
                         + (System.currentTimeMillis() - start) + " ms ");
                 return null;
             }
 
             protected void done() {
-                if (!displayedClassNames.isEmpty()) {
-                    filesTree.fillArchive(loadedFile, displayedClassNames);
+                if (!allClassesInArchive.isEmpty()) {
+                    filesTree.fillArchive(loadedFile, allClassesInArchive);
                     displayArea.displaySharkey();
                 } else {
                     displayArea.displayError();
