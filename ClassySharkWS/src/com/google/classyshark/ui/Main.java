@@ -19,6 +19,7 @@ package com.google.classyshark.ui;
 import com.google.classyshark.ui.tabs.ClassySharkTabsFrame;
 import com.google.classyshark.ui.viewer.ClassySharkPanel;
 import java.awt.*;
+import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 import javax.swing.JFrame;
@@ -63,11 +64,17 @@ public class Main {
     private static void buildAndShowClassySharkFrame(List<String> cmdLineArgs) {
         JFrame frame;
 
-        if(isMultiTab(cmdLineArgs)) {
+        if (isMultiTab(cmdLineArgs)) {
            frame = new ClassySharkTabsFrame("ClassyShark Browser", cmdLineArgs);
         } else {
             frame = new JFrame();
-            frame.getContentPane().add(new ClassySharkPanel(null, 1));
+
+            if (cmdLineArgs.size() == 1) {
+                frame.getContentPane().add(
+                        new ClassySharkPanel(new File(cmdLineArgs.get(0))));
+            } else {
+                frame.getContentPane().add(new ClassySharkPanel(null, 1));
+            }
         }
 
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -76,7 +83,7 @@ public class Main {
     }
 
     private static boolean isMultiTab(List<String> cmdLineArgs) {
-        if(cmdLineArgs.contains("-t")) {
+        if (cmdLineArgs.contains("-t")) {
             return true;
         }
 

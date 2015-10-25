@@ -39,14 +39,15 @@ import javax.swing.SwingWorker;
 import javax.swing.filechooser.FileFilter;
 
 /**
- * individual tabpanel
+ * individual ClassySharkPanel
  */
 public class ClassySharkPanel extends JPanel implements KeyListener {
 
     private static final boolean IS_CLASSNAME_FROM_MOUSE_CLICK = true;
     private static final boolean VIEW_TOP_CLASS = true;
 
-    // TODO abstract out
+    // TODO abstract out add parent frame as parameter
+    // TODO and check instanceof
     private final JTabbedPane jTabbedPane;
     private final int myIndexAtJTabbedPane;
 
@@ -370,12 +371,8 @@ public class ClassySharkPanel extends JPanel implements KeyListener {
     public static void main(String[] args) {
         File testFile = new File(System.getProperty("user.home") +
                 "/Desktop/Scenarios/2 Samples/android.jar");
-
-
         ClassySharkPanel tabPanel = new ClassySharkPanel(testFile);
-
         JFrame frame = new JFrame(testFile.getName());
-
         frame.getContentPane().add(tabPanel);
         frame.pack();
         frame.setVisible(true);

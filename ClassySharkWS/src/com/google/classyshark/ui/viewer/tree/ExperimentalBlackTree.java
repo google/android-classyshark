@@ -1,20 +1,22 @@
-package com.google.classyshark.ui;
+package com.google.classyshark.ui.viewer.tree;
 
-import com.google.classyshark.ui.viewer.ClassySharkPanel;
+import com.google.classyshark.reducer.Reducer;
+import com.google.classyshark.ui.ColorScheme;
 import java.io.File;
 import javax.swing.JFrame;
 import javax.swing.JRootPane;
+import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.plaf.ColorUIResource;
 import javax.swing.plaf.metal.DefaultMetalTheme;
 import javax.swing.plaf.metal.MetalLookAndFeel;
 
-public class ExperimentalBlackFrame {
+public class ExperimentalBlackTree {
     public static void Driver (String args[]) {
         JFrame f = new JFrame();
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        f.setSize(1000, 800);
+        f.setSize(600, 800);
         f.setLocationRelativeTo(null);
 
         f.setUndecorated(true);
@@ -57,6 +59,7 @@ public class ExperimentalBlackFrame {
                                 (ColorScheme.BLACK);
                     }
 
+
                     public ColorUIResource getControl() {
                         return new ColorUIResource
                                 (ColorScheme.BLACK);
@@ -76,10 +79,16 @@ public class ExperimentalBlackFrame {
         ////
         File testFile = new File(System.getProperty("user.home") +
                 "/Desktop/Scenarios/2 Samples/android.jar");
+        FilesTree filesTree = new FilesTree(null);
 
-        ClassySharkPanel tabPanel = new ClassySharkPanel(testFile);
-        f.setContentPane(tabPanel);
+        Reducer reducer = new Reducer(testFile);
+        reducer.reduce("");
+        filesTree.fillArchive(testFile, reducer.getAllClassesNames());
+        JScrollPane scrolledTree = new JScrollPane(filesTree.getJTree());
+
+        f.setContentPane(scrolledTree);
         ///
+
 
         f.setVisible(true);
     }
