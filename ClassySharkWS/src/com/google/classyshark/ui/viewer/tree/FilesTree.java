@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package com.google.classyshark.ui.tabs.tabpanel.tree;
+package com.google.classyshark.ui.viewer.tree;
 
 import com.google.classyshark.reducer.Reducer;
-import com.google.classyshark.ui.tabs.TabsFrame;
-import com.google.classyshark.ui.tabs.tabpanel.TabPanel;
+import com.google.classyshark.ui.ColorScheme;
+import com.google.classyshark.ui.viewer.ClassySharkPanel;
 import java.awt.Component;
 import java.awt.Font;
 import java.io.File;
@@ -35,11 +35,11 @@ import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreeSelectionModel;
 
 public class FilesTree {
-    private final TabPanel viewerPanel;
+    private final ClassySharkPanel viewerPanel;
     private DefaultTreeModel treeModel = null;
     private JTree jTree = null;
 
-    public FilesTree(TabPanel viewerPanel) {
+    public FilesTree(ClassySharkPanel viewerPanel) {
         treeModel = new DefaultTreeModel(new DefaultMutableTreeNode());
         jTree = new JTree(treeModel);
         configureJTree(jTree);
@@ -107,18 +107,17 @@ public class FilesTree {
         return root;
     }
 
-
     public Component getJTree() {
         return jTree;
     }
 
     private void configureJTree(final JTree jTree) {
         jTree.setRootVisible(false);
-        jTree.setBackground(TabsFrame.ColorScheme.BACKGROUND);
+        jTree.setBackground(ColorScheme.BACKGROUND);
         DefaultTreeCellRenderer cellRenderer = (DefaultTreeCellRenderer) jTree.getCellRenderer();
-        cellRenderer.setBackground(TabsFrame.ColorScheme.BACKGROUND);
-        cellRenderer.setBackgroundNonSelectionColor(TabsFrame.ColorScheme.BACKGROUND);
-        cellRenderer.setTextNonSelectionColor(TabsFrame.ColorScheme.FOREGROUND_CYAN);
+        cellRenderer.setBackground(ColorScheme.BACKGROUND);
+        cellRenderer.setBackgroundNonSelectionColor(ColorScheme.BACKGROUND);
+        cellRenderer.setTextNonSelectionColor(ColorScheme.FOREGROUND_CYAN);
         cellRenderer.setFont(new Font("Menlo", Font.PLAIN, 18));
         jTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
         jTree.addTreeSelectionListener(new TreeSelectionListener() {

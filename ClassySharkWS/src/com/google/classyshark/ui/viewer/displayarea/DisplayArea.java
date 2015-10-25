@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package com.google.classyshark.ui.tabs.tabpanel.displayarea;
+package com.google.classyshark.ui.viewer.displayarea;
 
 import com.google.classyshark.translator.Translator;
 import com.google.classyshark.translator.java.Translator2Java;
-import com.google.classyshark.ui.tabs.TabsFrame.ColorScheme;
-import com.google.classyshark.ui.tabs.tabpanel.TabPanel;
+import com.google.classyshark.ui.ColorScheme;
+import com.google.classyshark.ui.viewer.ClassySharkPanel;
 import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -47,7 +47,7 @@ public class DisplayArea {
 
     private DisplayDataState displayDataState;
 
-    public DisplayArea(final TabPanel tabPanel) {
+    public DisplayArea(final ClassySharkPanel tabPanel) {
         jTextPane = new JTextPane();
         jTextPane.setEditable(false);
         jTextPane.setBackground(ColorScheme.BACKGROUND);

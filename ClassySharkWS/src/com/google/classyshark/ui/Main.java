@@ -16,10 +16,12 @@
 
 package com.google.classyshark.ui;
 
-import com.google.classyshark.ui.tabs.TabsFrame;
+import com.google.classyshark.ui.tabs.ClassySharkTabsFrame;
+import com.google.classyshark.ui.viewer.ClassySharkPanel;
 import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
+import javax.swing.JFrame;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
@@ -59,7 +61,16 @@ public class Main {
     }
 
     private static void buildAndShowClassySharkFrame(List<String> cmdLineArgs) {
-        TabsFrame frame = new TabsFrame("ClassyShark Browser", cmdLineArgs);
+
+        JFrame frame;
+
+        if(cmdLineArgs.size() >= 2) {
+           frame = new ClassySharkTabsFrame("ClassyShark Browser", cmdLineArgs);
+        } else {
+            frame = new JFrame();
+            frame.getContentPane().add(new ClassySharkPanel(null, 1));
+        }
+
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);

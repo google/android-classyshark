@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package com.google.classyshark.ui.tabs.tabpanel;
+package com.google.classyshark.ui.viewer;
 
 import com.google.classyshark.reducer.Reducer;
 import com.google.classyshark.translator.Translator;
 import com.google.classyshark.translator.TranslatorFactory;
-import com.google.classyshark.ui.tabs.TabsFrame;
-import com.google.classyshark.ui.tabs.tabpanel.displayarea.DisplayArea;
-import com.google.classyshark.ui.tabs.tabpanel.toolbar.ToolBar;
-import com.google.classyshark.ui.tabs.tabpanel.tree.FilesTree;
+import com.google.classyshark.ui.ColorScheme;
+import com.google.classyshark.ui.viewer.displayarea.DisplayArea;
+import com.google.classyshark.ui.viewer.toolbar.ToolBar;
+import com.google.classyshark.ui.viewer.tree.FilesTree;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.KeyEvent;
@@ -41,11 +41,12 @@ import javax.swing.filechooser.FileFilter;
 /**
  * individual tabpanel
  */
-public class TabPanel extends JPanel implements KeyListener {
+public class ClassySharkPanel extends JPanel implements KeyListener {
 
     private static final boolean IS_CLASSNAME_FROM_MOUSE_CLICK = true;
     private static final boolean VIEW_TOP_CLASS = true;
 
+    // TODO abstract out
     private final JTabbedPane jTabbedPane;
     private final int myIndexAtJTabbedPane;
 
@@ -61,7 +62,7 @@ public class TabPanel extends JPanel implements KeyListener {
     private File loadedFile;
     private List<String> displayedClassNames;
 
-    public TabPanel(JTabbedPane tabbedPane, int myIndex) {
+    public ClassySharkPanel(JTabbedPane tabbedPane, int myIndex) {
         super(false);
 
         BorderLayout borderLayout = new BorderLayout();
@@ -69,7 +70,7 @@ public class TabPanel extends JPanel implements KeyListener {
         jTabbedPane = tabbedPane;
         myIndexAtJTabbedPane = myIndex;
 
-        setBackground(TabsFrame.ColorScheme.BLACK);
+        setBackground(ColorScheme.BLACK);
 
         toolBar = new ToolBar(this);
         add(toolBar, BorderLayout.NORTH);
@@ -95,7 +96,7 @@ public class TabPanel extends JPanel implements KeyListener {
         add(jSplitPane, BorderLayout.CENTER);
     }
 
-    public TabPanel(File archive) {
+    public ClassySharkPanel(File archive) {
         this(null, 1);
         toolBar.setText("");
         updateUiAfterFileRead(archive);
@@ -139,12 +140,12 @@ public class TabPanel extends JPanel implements KeyListener {
         fc.setFileFilter(new FileFilter() {
             @Override
             public boolean accept(File f) {
-                return TabPanelUtils.acceptFile(f);
+                return PanelUtils.acceptFile(f);
             }
 
             @Override
             public String getDescription() {
-                return TabPanelUtils.getFileChooserDescription();
+                return PanelUtils.getFileChooserDescription();
             }
         });
 
@@ -212,7 +213,7 @@ public class TabPanel extends JPanel implements KeyListener {
     public void updateUiAfterFileRead(JTabbedPane tabbedPane,
                                       File resultFile,
                                       int myIndexAtTabbedPane) {
-        String tabName = TabPanelUtils.fitArchiveNameToTab(resultFile);
+        String tabName = PanelUtils.fitArchiveNameToTab(resultFile);
         if( jTabbedPane != null) {
             tabbedPane.setTitleAt(myIndexAtTabbedPane, tabName);
         }
@@ -338,7 +339,7 @@ public class TabPanel extends JPanel implements KeyListener {
 
     private void handleControlPress(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_S) {
-            TabPanelUtils.generateStubFile(translator);
+            PanelUtils.generateStubFile(translator);
             return;
         }
 
@@ -347,13 +348,13 @@ public class TabPanel extends JPanel implements KeyListener {
         }
 
         if (e.getKeyCode() == KeyEvent.VK_1) {
-            this.jTabbedPane.setSelectedIndex(0);
+           jTabbedPane.setSelectedIndex(0);
         } else if (e.getKeyCode() == KeyEvent.VK_2) {
-            this.jTabbedPane.setSelectedIndex(1);
+            jTabbedPane.setSelectedIndex(1);
         } else if (e.getKeyCode() == KeyEvent.VK_3) {
-            this.jTabbedPane.setSelectedIndex(2);
+            jTabbedPane.setSelectedIndex(2);
         } else if (e.getKeyCode() == KeyEvent.VK_4) {
-            this.jTabbedPane.setSelectedIndex(3);
+            jTabbedPane.setSelectedIndex(3);
         }
     }
 
@@ -366,10 +367,14 @@ public class TabPanel extends JPanel implements KeyListener {
     }
 
     public static void main(String[] args) {
-        TabPanel tabPanel = new TabPanel(new File(System.getProperty("user.home") +
-                "/Desktop/Scenarios/2 Samples/android.jar"));
+        File testFile = new File(System.getProperty("user.home") +
+                "/Desktop/Scenarios/2 Samples/android.jar");
 
-        JFrame frame = new JFrame("Test");
+
+        ClassySharkPanel tabPanel = new ClassySharkPanel(testFile);
+
+        JFrame frame = new JFrame(testFile.getName());
+
         frame.getContentPane().add(tabPanel);
         frame.pack();
         frame.setVisible(true);
