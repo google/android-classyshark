@@ -17,8 +17,10 @@
 package com.google.classyshark.translator.java.clazz;
 
 import com.google.classyshark.translator.java.dex.DexlibAdapter;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
-import java.util.Set;
+import java.util.List;
 
 /**
  * Data structure for handling fully qualified class dependencies
@@ -31,12 +33,14 @@ public class TypesToNamesMapper {
         full2types = new HashMap<>();
     }
 
-    public Set<String> getFullTypes() {
-        return full2types.keySet();
+    public List<String> getFullTypes() {
+        List result = new ArrayList(full2types.keySet());
+        Collections.sort(result);
+        return result;
     }
 
     public void addType(String type) {
-        if(type == null || type.isEmpty()) {
+        if (type == null || type.isEmpty()) {
             return;
         }
 
@@ -44,7 +48,7 @@ public class TypesToNamesMapper {
     }
 
     public String getType(String type) {
-        if(type == null || type.isEmpty()) {
+        if (type == null || type.isEmpty()) {
             return "";
         }
 
@@ -52,7 +56,7 @@ public class TypesToNamesMapper {
     }
 
     public String getTypeNull(String type) {
-        if(type == null || type.isEmpty()) {
+        if (type == null || type.isEmpty()) {
             return "";
         }
 
