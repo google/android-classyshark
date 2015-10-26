@@ -93,7 +93,10 @@ public class FilesTree {
         for (int i = 0; i < displayedClassNames.size(); i++) {
             String fullClassName = displayedClassNames.get(i);
             String pkg = fullClassName.substring(0, fullClassName.lastIndexOf('.'));
-            pkg = pkg.substring(0, pkg.lastIndexOf('.'));
+
+            if(pkg.lastIndexOf('.') > 0) {
+                pkg = pkg.substring(0, pkg.lastIndexOf('.'));
+            }
 
             if (lastPackage == null || !pkg.equals(lastPackage)) {
                 lastPackage = pkg;
