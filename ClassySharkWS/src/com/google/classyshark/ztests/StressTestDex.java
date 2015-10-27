@@ -29,7 +29,7 @@ import org.jf.dexlib2.iface.DexFile;
  * stress test for dex archive
  */
 public class StressTestDex {
-    public static void runAllClassesinDex(String jarCanonicalPath) throws Exception {
+    public static void runAllClassesInDex(String jarCanonicalPath) throws Exception {
         DexFile dexFile = ArchiveReader.get(new File(jarCanonicalPath));
         Set<? extends ClassDef> allClassesInDex = dexFile.getClasses();
 
@@ -46,6 +46,6 @@ public class StressTestDex {
         String sampleClassesDex = System.getProperty("user.home") +
                 "/Desktop/classes.dex";
 
-        runAllClassesinDex(sampleClassesDex);
+        runAllClassesInDex(sampleClassesDex);
     }
 }

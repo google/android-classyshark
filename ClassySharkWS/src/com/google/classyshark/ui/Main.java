@@ -16,15 +16,19 @@
 
 package com.google.classyshark.ui;
 
-import java.awt.*;
+import com.google.classyshark.ui.tabs.ClassySharkTabsFrame;
+import com.google.classyshark.ui.viewer.ClassySharkPanel;
+import java.awt.Color;
+import java.io.File;
 import java.util.Arrays;
 import java.util.List;
+import javax.swing.JFrame;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
 
 /**
- *  the driver class of the app
+ * the driver class of the app
  */
 public class Main {
 
@@ -58,9 +62,32 @@ public class Main {
     }
 
     private static void buildAndShowClassySharkFrame(List<String> cmdLineArgs) {
-        ClassySharkFrame frame = new ClassySharkFrame("ClassyShark Browser", cmdLineArgs);
+        JFrame frame;
+
+        if (isMultiTab(cmdLineArgs)) {
+            frame = new ClassySharkTabsFrame("ClassyShark", cmdLineArgs);
+        } else {
+            frame = new JFrame();
+            frame.setTitle("ClassyShark");
+            if (cmdLineArgs.size() == 1) {
+                frame.getContentPane().add(
+                        new ClassySharkPanel(frame, new File(cmdLineArgs.get(0))));
+            } else {
+                frame.getContentPane().add(new ClassySharkPanel(frame));
+            }
+        }
+
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
+    }
+
+    private static boolean isMultiTab(List<String> cmdLineArgs) {
+        if (cmdLineArgs.contains("-t")) {
+            return true;
+        }
+
+        boolean moreThanOneFile = (cmdLineArgs.size() >= 2);
+        return moreThanOneFile;
     }
 }

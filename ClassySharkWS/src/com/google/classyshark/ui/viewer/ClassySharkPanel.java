@@ -14,99 +14,74 @@
  * limitations under the License.
  */
 
-package com.google.classyshark.ui.tabs;
+package com.google.classyshark.ui.viewer;
 
-import com.google.classyshark.reducer.ArchiveReader;
 import com.google.classyshark.reducer.Reducer;
 import com.google.classyshark.translator.Translator;
 import com.google.classyshark.translator.TranslatorFactory;
-import com.google.classyshark.ui.ClassySharkFrame;
-import com.google.classyshark.ui.tabs.displayarea.DisplayArea;
-import com.google.classyshark.ui.tabs.displayarea.FileStubGenerator;
+import com.google.classyshark.ui.ColorScheme;
+import com.google.classyshark.ui.viewer.displayarea.DisplayArea;
+import com.google.classyshark.ui.viewer.toolbar.ToolBar;
+import com.google.classyshark.ui.viewer.tree.FilesTree;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
 import java.util.List;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
-import javax.swing.JTree;
 import javax.swing.SwingWorker;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
 import javax.swing.filechooser.FileFilter;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeCellRenderer;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreeNode;
-import javax.swing.tree.TreeSelectionModel;
 
 /**
- * individual tab
+ * individual ClassySharkPanel
  */
-public class TabPanel extends JPanel implements KeyListener {
+public class ClassySharkPanel extends JPanel implements KeyListener {
 
     private static final boolean IS_CLASSNAME_FROM_MOUSE_CLICK = true;
     private static final boolean VIEW_TOP_CLASS = true;
 
-    private final JTabbedPane jTabbedPane;
-    private final int myIndexAtJTabbedPane;
+    private JTabbedPane jTabbedPane;
+    private int myIndexAtJTabbedPane;
+    private JFrame jFrame;
 
-    private final ToolBar toolBar;
-    private final JSplitPane jSplitPane;
+    private ToolBar toolBar;
+    private JSplitPane jSplitPane;
     private int dividerLocation = 0;
-    private final DisplayArea displayArea;
-
-    private final DefaultTreeModel treeModel;
-    private final JTree jTree;
+    private DisplayArea displayArea;
+    private FilesTree filesTree;
 
     private Reducer reducer;
     private Translator translator;
-
     private boolean isDataLoaded = false;
     private File loadedFile;
-    private List<String> displayedClassNames;
+    private List<String> allClassesInArchive;
 
-    public TabPanel(JTabbedPane tabbedPane, int myIndex) {
+    public ClassySharkPanel(JTabbedPane tabbedPane, int myIndex) {
         super(false);
+        buildUI();
+        jTabbedPane = tabbedPane;
+        myIndexAtJTabbedPane = myIndex;
+    }
 
-        BorderLayout borderLayout = new BorderLayout();
-        this.setLayout(borderLayout);
-        this.jTabbedPane = tabbedPane;
-        this.myIndexAtJTabbedPane = myIndex;
+    public ClassySharkPanel(JFrame frame, File archive) {
+        super(false);
+        buildUI();
+        jFrame = frame;
+        toolBar.setText("");
+        updateUiAfterFileRead(archive);
+    }
 
-        setBackground(ClassySharkFrame.ColorScheme.BLACK);
-
-        toolBar = new ToolBar(this);
-        add(toolBar, BorderLayout.NORTH);
-
-        toolBar.addKeyListenerToTypingArea(this);
-        toolBar.setTypingArea();
-
-        displayArea = new DisplayArea(this);
-        JScrollPane rightScrollPane = new JScrollPane(displayArea.onAddComponentToPane());
-
-        treeModel = new DefaultTreeModel(new DefaultMutableTreeNode());
-        jTree = new JTree(treeModel);
-        configureJTree(jTree);
-
-        JScrollPane leftScrollPane = new JScrollPane(jTree);
-
-        jSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-        jSplitPane.setDividerSize(3);
-        jSplitPane.setPreferredSize(new Dimension(1000, 700));
-
-        jSplitPane.add(leftScrollPane, JSplitPane.LEFT);
-        jSplitPane.add(rightScrollPane, JSplitPane.RIGHT);
-        jSplitPane.getLeftComponent().setVisible(true);
-        jSplitPane.setDividerLocation(300);
-
-        add(jSplitPane, BorderLayout.CENTER);
+    public ClassySharkPanel(JFrame frame) {
+        super(false);
+        buildUI();
+        jFrame = frame;
+        toolBar.setText("");
     }
 
     @Override
@@ -147,16 +122,12 @@ public class TabPanel extends JPanel implements KeyListener {
         fc.setFileFilter(new FileFilter() {
             @Override
             public boolean accept(File f) {
-                if (f.isDirectory()) {
-                    return true;
-                } else {
-                    return ArchiveReader.isSupportedArchiveFile(f);
-                }
+                return PanelUtils.acceptFile(f);
             }
 
             @Override
             public String getDescription() {
-                return "dex, jar, apk, class";
+                return PanelUtils.getFileChooserDescription();
             }
         });
 
@@ -166,12 +137,12 @@ public class TabPanel extends JPanel implements KeyListener {
         toolBar.setText("");
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File resultFile = fc.getSelectedFile();
-            updateUiAfterFileRead(jTabbedPane, resultFile, myIndexAtJTabbedPane);
+            updateUiAfterFileRead(resultFile);
         }
     }
 
     public void onGoBackPressed() {
-        displayArea.displayAllClassesNames(displayedClassNames);
+        displayArea.displayAllClassesNames(allClassesInArchive);
         toolBar.setText("");
         reducer.reduce("");
     }
@@ -191,16 +162,6 @@ public class TabPanel extends JPanel implements KeyListener {
         fillDisplayArea(selectedLine, !VIEW_TOP_CLASS, !IS_CLASSNAME_FROM_MOUSE_CLICK);
     }
 
-    public void onSelectedImportFromMouseClick(String className) {
-        if (!displayArea.isDisplayingClassesList() && loadedFile.getName().endsWith("jar")) {
-            className += ".class";
-        }
-
-        if (reducer.getAllClassesNames().contains(className)) {
-            onSelectedClassName(className);
-        }
-    }
-
     public void onSelectedTypeClassFromMouseClick(String selectedClass) {
         for (String clazz : translator.getDependencies()) {
             if (clazz.contains(selectedClass)) {
@@ -217,21 +178,37 @@ public class TabPanel extends JPanel implements KeyListener {
         }
     }
 
+    public void onSelectedImportFromMouseClick(String className) {
+        if (!displayArea.isDisplayingClassesList() && loadedFile.getName().endsWith("jar")) {
+            className += ".class";
+        }
+
+        if (reducer.getAllClassesNames().contains(className)) {
+            onSelectedClassName(className);
+        }
+    }
+
     public void onSelectedClassName(String className) {
         fillDisplayArea(className, VIEW_TOP_CLASS, IS_CLASSNAME_FROM_MOUSE_CLICK);
     }
 
-    public void updateUiAfterFileRead(JTabbedPane tabbedPane, File resultFile,
-                                      int myIndexAtTabbedPane) {
-        String tabName = fitArchiveNameToTab(resultFile);
-        tabbedPane.setTitleAt(myIndexAtTabbedPane, tabName);
+    public void updateUiAfterFileRead(File resultFile) {
+        if (jTabbedPane != null) {
+            String tabName = PanelUtils.fitArchiveNameToTab(resultFile);
+            jTabbedPane.setTitleAt(myIndexAtJTabbedPane, tabName);
+        }
+
+        if (jFrame != null) {
+            jFrame.setTitle(resultFile.getName());
+        }
+
         loadAndFillDisplayArea(resultFile);
         isDataLoaded = true;
         toolBar.activateNavigationButtons();
-        jTree.setRootVisible(true);
+        filesTree.setVisibleRoot();
     }
 
-    public void changeLeftPaneVisibility(boolean visible) {
+    public void onChangeLeftPaneVisibility(boolean visible) {
         if (visible) {
             jSplitPane.setDividerLocation(dividerLocation);
         } else {
@@ -241,41 +218,54 @@ public class TabPanel extends JPanel implements KeyListener {
         jSplitPane.updateUI();
     }
 
-    private String fitArchiveNameToTab(File resultFile) {
-        String tabName = resultFile.getName();
+    private void buildUI() {
+        BorderLayout borderLayout = new BorderLayout();
+        setLayout(borderLayout);
 
-        if (tabName.length() > 7) {
-            tabName = tabName.substring(0, 7) + "...";
-        }
-        return tabName;
+        setBackground(ColorScheme.BLACK);
+
+        toolBar = new ToolBar(this);
+        add(toolBar, BorderLayout.NORTH);
+
+        toolBar.addKeyListenerToTypingArea(this);
+        toolBar.setTypingArea();
+
+        displayArea = new DisplayArea(this);
+        JScrollPane rightScrollPane = new JScrollPane(displayArea.onAddComponentToPane());
+
+        filesTree = new FilesTree(this);
+        JScrollPane leftScrollPane = new JScrollPane(filesTree.getJTree());
+
+        jSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+        jSplitPane.setDividerSize(3);
+        jSplitPane.setPreferredSize(new Dimension(1000, 700));
+
+        jSplitPane.add(leftScrollPane, JSplitPane.LEFT);
+        jSplitPane.add(rightScrollPane, JSplitPane.RIGHT);
+        jSplitPane.getLeftComponent().setVisible(true);
+        jSplitPane.setDividerLocation(300);
+
+        add(jSplitPane, BorderLayout.CENTER);
     }
 
     private void loadAndFillDisplayArea(final File file) {
-        TabPanel.this.loadedFile = file;
-        reducer = new Reducer(TabPanel.this.loadedFile);
+        loadedFile = file;
+        reducer = new Reducer(loadedFile);
 
         SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
             @Override
             protected Void doInBackground() throws Exception {
                 long start = System.currentTimeMillis();
-                displayedClassNames = reducer.reduce("");
+                allClassesInArchive = reducer.reduce("");
                 System.out.println("Archive Reading "
                         + (System.currentTimeMillis() - start) + " ms ");
                 return null;
             }
 
             protected void done() {
-                if (!displayedClassNames.isEmpty()) {
-                    TreeNode rootNode;
-                    if (loadedFile.getName().endsWith("dex") ||
-                            loadedFile.getName().endsWith("apk")) {
-                        rootNode = createJTreeModelAndroid(file.getName(), displayedClassNames);
-                    } else {
-                        rootNode = createJTreeModelClass(file.getName(), displayedClassNames);
-                    }
-
+                if (!allClassesInArchive.isEmpty()) {
+                    filesTree.fillArchive(loadedFile, allClassesInArchive);
                     displayArea.displaySharkey();
-                    treeModel.setRoot(rootNode);
                 } else {
                     displayArea.displayError();
                 }
@@ -283,55 +273,6 @@ public class TabPanel extends JPanel implements KeyListener {
         };
 
         worker.execute();
-    }
-
-    private TreeNode createJTreeModelAndroid(String fileName, List<String> displayedClassNames) {
-        DefaultMutableTreeNode root = new DefaultMutableTreeNode(fileName);
-        DefaultMutableTreeNode classes = new DefaultMutableTreeNode("classes");
-
-        String lastPackage = null;
-        DefaultMutableTreeNode packageNode = null;
-        for (int i = 0; i < displayedClassNames.size(); i++) {
-            String resName = displayedClassNames.get(i);
-            if (resName.equals("AndroidManifest.xml")) {
-                root.add(new DefaultMutableTreeNode(resName));
-            } else {
-                String pkg = resName.substring(0, resName.lastIndexOf('.'));
-                if (lastPackage == null || !pkg.equals(lastPackage)) {
-                    if (packageNode != null) {
-                        classes.add(packageNode);
-                    }
-                    lastPackage = pkg;
-                    packageNode = new DefaultMutableTreeNode(pkg);
-                }
-                packageNode.add(new DefaultMutableTreeNode(resName));
-            }
-        }
-        root.add(classes);
-        return root;
-    }
-
-    private TreeNode createJTreeModelClass(String fileName, List<String> displayedClassNames) {
-        DefaultMutableTreeNode root = new DefaultMutableTreeNode(fileName);
-        DefaultMutableTreeNode classes = new DefaultMutableTreeNode("classes");
-        String lastPackage = null;
-        DefaultMutableTreeNode packageNode = null;
-
-        for (int i = 0; i < displayedClassNames.size(); i++) {
-            String fullClassName = displayedClassNames.get(i);
-            String pkg = fullClassName.substring(0, fullClassName.lastIndexOf('.'));
-            pkg = pkg.substring(0, pkg.lastIndexOf('.'));
-
-            if (lastPackage == null || !pkg.equals(lastPackage)) {
-                lastPackage = pkg;
-                packageNode = new DefaultMutableTreeNode(pkg);
-                classes.add(packageNode);
-            }
-            packageNode.add(new DefaultMutableTreeNode(fullClassName));
-
-        }
-        root.add(classes);
-        return root;
     }
 
     private String processKeyPressWithTypedText(KeyEvent e, String text) {
@@ -407,41 +348,24 @@ public class TabPanel extends JPanel implements KeyListener {
     }
 
     private void handleControlPress(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_1) {
-            this.jTabbedPane.setSelectedIndex(0);
-        } else if (e.getKeyCode() == KeyEvent.VK_2) {
-            this.jTabbedPane.setSelectedIndex(1);
-        } else if (e.getKeyCode() == KeyEvent.VK_3) {
-            this.jTabbedPane.setSelectedIndex(2);
-        } else if (e.getKeyCode() == KeyEvent.VK_4) {
-            this.jTabbedPane.setSelectedIndex(3);
-        } else if (e.getKeyCode() == KeyEvent.VK_S) {
-            FileStubGenerator.generateStubFile(translator.getClassName(),
-                    translator.toString());
+        if (e.getKeyCode() == KeyEvent.VK_S) {
+            PanelUtils.generateStubFile(translator);
+            return;
         }
-    }
 
-    private void configureJTree(final JTree jTree) {
-        jTree.setRootVisible(false);
-        jTree.setBackground(ClassySharkFrame.ColorScheme.BACKGROUND);
-        DefaultTreeCellRenderer cellRenderer = (DefaultTreeCellRenderer) jTree.getCellRenderer();
-        cellRenderer.setBackground(ClassySharkFrame.ColorScheme.BACKGROUND);
-        cellRenderer.setBackgroundNonSelectionColor(ClassySharkFrame.ColorScheme.BACKGROUND);
-        cellRenderer.setTextNonSelectionColor(ClassySharkFrame.ColorScheme.FOREGROUND_CYAN);
-        cellRenderer.setFont(new Font("Menlo", Font.PLAIN, 18));
-        jTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
-        jTree.addTreeSelectionListener(new TreeSelectionListener() {
-            @Override
-            public void valueChanged(TreeSelectionEvent e) {
-                Object selection = jTree.getLastSelectedPathComponent();
-                if (selection == null) return;
+        if (jTabbedPane == null) {
+            return;
+        }
 
-                DefaultMutableTreeNode defaultMutableTreeNode = (DefaultMutableTreeNode) selection;
-                if (!defaultMutableTreeNode.isLeaf()) return;
-
-                onSelectedClassName((String) defaultMutableTreeNode.getUserObject());
-            }
-        });
+        if (e.getKeyCode() == KeyEvent.VK_1) {
+            jTabbedPane.setSelectedIndex(0);
+        } else if (e.getKeyCode() == KeyEvent.VK_2) {
+            jTabbedPane.setSelectedIndex(1);
+        } else if (e.getKeyCode() == KeyEvent.VK_3) {
+            jTabbedPane.setSelectedIndex(2);
+        } else if (e.getKeyCode() == KeyEvent.VK_4) {
+            jTabbedPane.setSelectedIndex(3);
+        }
     }
 
     private static boolean isOpenFile(KeyEvent e) {
@@ -450,5 +374,15 @@ public class TabPanel extends JPanel implements KeyListener {
 
     private static boolean isViewTopClassKeyPressed(KeyEvent e) {
         return (e.getKeyCode() == 39);
+    }
+
+    public static void main(String[] args) {
+        File testFile = new File(System.getProperty("user.home") +
+                "/Desktop/Scenarios/2 Samples/android.jar");
+        JFrame frame = new JFrame(testFile.getName());
+        ClassySharkPanel tabPanel = new ClassySharkPanel(frame, testFile);
+        frame.getContentPane().add(tabPanel);
+        frame.pack();
+        frame.setVisible(true);
     }
 }

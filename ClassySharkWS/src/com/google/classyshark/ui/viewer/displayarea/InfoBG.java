@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.classyshark.ui.tabs.displayarea;
+package com.google.classyshark.ui.viewer.displayarea;
 
 /**
  *  the info page
@@ -22,7 +22,7 @@ package com.google.classyshark.ui.tabs.displayarea;
 public class InfoBG {
 
     public static final String INFO =
-            "\n\n\t\t\tClassyShark ver. 2.8"
+            "\n\n\t\t\tClassyShark ver. 3.0"
                     + "\n\t            ========================"
                     + "\n\n\t\t\tMOUSE USAGE"
                     + "\n\t            ==============="
@@ -33,7 +33,7 @@ public class InfoBG {
                     + "\t\t\t\n5. Double click on import opens class, \nif the class is part of the "
                     + "loaded archive"
                     + "\t\t\t\n6. Mouse selection for command line removes the selected text"
-                    + "\t\t\t\n7. Mouse selection for text shows pop up to copy/paste"
+                    + "\t\t\t"
                     + "\n\n\t\t\tKEYBOARD USAGE"
                     + "\n\t            =================="
                     + "\t\t\t\n1. Can pass archives as command line arguments"

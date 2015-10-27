@@ -25,7 +25,6 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Is a function : (class name, archive file) --> class source, as list of tokens with tag
@@ -162,7 +161,7 @@ public class Translator2Java implements Translator {
     }
 
     private static void fillImports(TypesToNamesMapper namesMapper, List<ELEMENT> words) {
-        Set<String> imports = namesMapper.getFullTypes();
+        List<String> imports = namesMapper.getFullTypes();
         for (String importStr : imports) {
             words.add(new ELEMENT("\nimport ", TAG.MODIFIER));
             words.add(new ELEMENT(importStr + ";", TAG.IDENTIFIER));
