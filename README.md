@@ -4,7 +4,7 @@
 
 ## Introduction
 
-![](https://github.com/googlesamples/android-classyshark/blob/master/Resources/Main%20Shot.png)
+![](https://github.com/googlesamples/android-classyshark/blob/master/Resources/Intro.png)
 
 While developing apps we tend to think about dexs, jars, apks and classes as build/run time abstractions that just work. Most of the time this is true, however, when trying to debug runtime issues in large apps, things can sometimes get tricky.
 
@@ -46,9 +46,6 @@ When running this code we have a race condition, in FancyLibrary more than one t
 Let's say FancyLibrary is a popular open source project, so to find the problem we need to research the code and make sure we have an understanding, which code made its way to the jar in our Android project.
 
 Let's use ClassyShark, first let's fire up ClassyShark
-
-![](https://github.com/googlesamples/android-classyshark/blob/master/Resources/Get%20Started%20Open%20File.png)
-
 
 Double Click, opening the FancyLib.jar
 
