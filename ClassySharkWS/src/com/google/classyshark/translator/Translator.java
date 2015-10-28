@@ -28,7 +28,8 @@ public interface Translator {
      * TAG representing type
      */
     enum TAG {
-        MODIFIER, IDENTIFIER, ANNOTATION, DOCUMENT
+        MODIFIER, IDENTIFIER, ANNOTATION, DOCUMENT,
+        XML_TAG, XML_ATTR_NAME, XML_ATTR_VALUE, XML_CDATA, XML_COMMENT, XML_DEFAULT
     }
 
     /**

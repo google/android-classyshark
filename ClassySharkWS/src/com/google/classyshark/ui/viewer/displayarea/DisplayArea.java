@@ -20,6 +20,8 @@ import com.google.classyshark.translator.Translator;
 import com.google.classyshark.translator.java.Translator2Java;
 import com.google.classyshark.ui.ColorScheme;
 import com.google.classyshark.ui.viewer.ClassySharkPanel;
+
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -241,16 +243,31 @@ public class DisplayArea {
 
         try {
             for (Translator.ELEMENT e : elements) {
-                if (e.tag == Translator.TAG.MODIFIER) {
-                    StyleConstants.setForeground(style, ColorScheme.FOREGROUND_ORANGE);
-                } else if (e.tag == Translator.TAG.DOCUMENT) {
-                    StyleConstants.setForeground(style, ColorScheme.FOREGROUND_YELLOW);
-                } else if (e.tag == Translator.TAG.IDENTIFIER) {
-                    StyleConstants.setForeground(style, ColorScheme.FOREGROUND_CYAN);
-                } else if (e.tag == Translator.TAG.ANNOTATION) {
-                    StyleConstants.setForeground(style, ColorScheme.FOREGROUND_YELLOW_ANNOTATIONS);
+                switch (e.tag) {
+                    case MODIFIER:
+                        StyleConstants.setForeground(style, ColorScheme.FOREGROUND_ORANGE);
+                        break;
+                    case DOCUMENT:
+                        StyleConstants.setForeground(style, ColorScheme.FOREGROUND_YELLOW);
+                        break;
+                    case IDENTIFIER:
+                        StyleConstants.setForeground(style, ColorScheme.FOREGROUND_CYAN);
+                        break;
+                    case ANNOTATION:
+                        StyleConstants.setForeground(style, ColorScheme.FOREGROUND_YELLOW_ANNOTATIONS);
+                        break;
+                    case XML_TAG:
+                        StyleConstants.setForeground(style, ColorScheme.FOREGROUND_YELLOW);
+                        break;
+                    case XML_ATTR_NAME:
+                        StyleConstants.setForeground(style, ColorScheme.FOREGROUND_CYAN);
+                        break;
+                    case XML_ATTR_VALUE:
+                        StyleConstants.setForeground(style, ColorScheme.FOREGROUND_YELLOW_ANNOTATIONS);
+                        break;
+                    default:
+                        StyleConstants.setForeground(style, Color.LIGHT_GRAY);
                 }
-
                 doc.insertString(doc.getLength(), e.text, style);
 
             }

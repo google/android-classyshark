@@ -53,6 +53,7 @@ public class Translator2AndroidXml implements Translator {
     private List<String> fallBacklist;
 
     private boolean fallback = false;
+    private XmlHighlighter xmlHighlighter = new XmlHighlighter();
 
     public Translator2AndroidXml(File archiveFile) {
         this.archiveFile = archiveFile;
@@ -120,52 +121,7 @@ public class Translator2AndroidXml implements Translator {
     @Override
     public List<ELEMENT> getElementsList() {
         String formatted = prettyFormat(this.xml);
-        StringTokenizer st = new StringTokenizer(formatted, "\n");
-
-        while (st.hasMoreElements()) {
-            String currentFormattedXmlLine = st.nextElement().toString();
-
-            xmlCode.add(new ELEMENT("\n",
-                    TAG.DOCUMENT));
-
-            int indexTag = currentFormattedXmlLine.indexOf("<");
-
-            xmlCode.add(new ELEMENT(currentFormattedXmlLine.substring(0, indexTag),
-                    TAG.DOCUMENT));
-
-            String actualXmlTextLine = currentFormattedXmlLine.substring(indexTag);
-            int indexOfSpaceInsideXmlText = actualXmlTextLine.indexOf(" ");
-
-            xmlCode.add(new ELEMENT("<",
-                    TAG.IDENTIFIER));
-            if (indexOfSpaceInsideXmlText > 0) {
-                xmlCode.add(new ELEMENT(actualXmlTextLine.substring(1, indexOfSpaceInsideXmlText),
-                        TAG.DOCUMENT));
-
-                xmlCode.add(new ELEMENT(actualXmlTextLine.substring(indexOfSpaceInsideXmlText,
-                        actualXmlTextLine.length() - 1),
-                        TAG.IDENTIFIER));
-            } else {
-                xmlCode.add(new ELEMENT(currentFormattedXmlLine.substring(indexTag + 1,
-                        currentFormattedXmlLine.length() - 1),
-                        TAG.DOCUMENT));
-            }
-            xmlCode.add(new ELEMENT(">",
-                    TAG.IDENTIFIER));
-        }
-
-        if (xml.isEmpty() || fallback) {
-            xmlCode.add(new ELEMENT("The was a problem decoding the XML, showing all strings: ",
-                    TAG.DOCUMENT));
-            Collections.sort(fallBacklist);
-            for (String s : fallBacklist) {
-                if (!s.isEmpty()) {
-                    xmlCode.add(new ELEMENT("\n" + s, TAG.IDENTIFIER));
-                }
-            }
-        }
-
-        return this.xmlCode;
+        return xmlHighlighter.getElements(formatted);
     }
 
     @Override
