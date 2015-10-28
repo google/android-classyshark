@@ -22,6 +22,7 @@ import com.google.classyshark.ui.viewer.ClassySharkPanel;
 import java.awt.Component;
 import java.awt.Font;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
@@ -61,6 +62,7 @@ public class FilesTree {
     private TreeNode createJTreeModelAndroid(String fileName, List<String> displayedClassNames) {
         DefaultMutableTreeNode root = new DefaultMutableTreeNode(fileName);
         DefaultMutableTreeNode classes = new DefaultMutableTreeNode("classes");
+        List<DefaultMutableTreeNode> noPkgNodes = new ArrayList<>();
 
         String lastPackage = null;
         DefaultMutableTreeNode packageNode = null;
@@ -69,16 +71,23 @@ public class FilesTree {
             if (resName.equals("AndroidManifest.xml")) {
                 root.add(new DefaultMutableTreeNode(resName));
             } else {
-                String pkg = resName.substring(0, resName.lastIndexOf('.'));
-                if (lastPackage == null || !pkg.equals(lastPackage)) {
-                    if (packageNode != null) {
-                        classes.add(packageNode);
+                if (resName.lastIndexOf('.') >= 0) {
+                    String pkg = resName.substring(0, resName.lastIndexOf('.'));
+                    if (lastPackage == null || !pkg.equals(lastPackage)) {
+                        if (packageNode != null) {
+                            classes.add(packageNode);
+                        }
+                        lastPackage = pkg;
+                        packageNode = new DefaultMutableTreeNode(pkg);
                     }
-                    lastPackage = pkg;
-                    packageNode = new DefaultMutableTreeNode(pkg);
+                    packageNode.add(new DefaultMutableTreeNode(resName));
+                } else {
+                    noPkgNodes.add(new DefaultMutableTreeNode(resName));
                 }
-                packageNode.add(new DefaultMutableTreeNode(resName));
             }
+        }
+        for (DefaultMutableTreeNode node: noPkgNodes) {
+            classes.add(node);
         }
         root.add(classes);
         return root;
