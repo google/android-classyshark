@@ -42,6 +42,10 @@ public class XmlDecompressor {
     private static final int END_ELEMENT_TAG = 0x00100103;
     private static final int CDATA_TAG = 0x00100104;
     private static final int ATTRS_MARKER = 0x00140014;
+    private static final int RES_VALUE_TRUE = 0xffffffff;
+    private static final int RES_VALUE_FALSE = 0x00000000;
+    private static final int RES_REF_MARKER = 0x7f000000;
+
     private static char[] SPACE_FILL = new char[80];
 
     private static final int IDENT_SIZE = 2;
@@ -190,10 +194,22 @@ public class XmlDecompressor {
             if (appendNamespaces && attributeNamespaceIndex >= 0) {
                 sb.append(strings.get(attributeNamespaceIndex)).append(":");
             }
+
             String attributeName = strings.get(attributeNameIndex);
-            String attributeValue =
-                    attributeValueIndex != -1 ? strings.get(attributeValueIndex) :
-                            String.format("@res/0x%08X", attributeResourceId);
+            String attributeValue;
+            if (attributeValueIndex == -1) {
+                if (attributeResourceId == RES_VALUE_TRUE) {
+                    attributeValue = "true";
+                } else if (attributeResourceId == RES_VALUE_FALSE) {
+                    attributeValue = "false";
+                } else if (attributeResourceId < RES_REF_MARKER) {
+                    attributeValue = String.valueOf(attributeResourceId);
+                } else {
+                    attributeValue = String.format("@res/0x%08X", attributeResourceId);
+                }
+            } else  {
+                attributeValue = strings.get(attributeValueIndex);
+            }
             sb.append(attributeName).append("='").append(attributeValue).append("'");
         }
     }
