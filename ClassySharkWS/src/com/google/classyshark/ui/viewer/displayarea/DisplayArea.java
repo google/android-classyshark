@@ -23,6 +23,10 @@ import com.google.classyshark.ui.viewer.ClassySharkPanel;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Toolkit;
+import java.awt.datatransfer.StringSelection;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
@@ -107,6 +111,39 @@ public class DisplayArea {
             }
         });
 
+        jTextPane.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                Toolkit toolkit = Toolkit.getDefaultToolkit();
+                int ctrlModifier =  toolkit.getMenuShortcutKeyMask();
+
+                //check if the modifier: ctrl for linux, windows or command for mac is pressed
+                // with the'c' key
+                if (e.getKeyChar() == 'c' &&
+                        (e.getModifiers() & ctrlModifier) == ctrlModifier) {
+
+                    String copyText = jTextPane.getSelectedText();
+
+                    //if there is no selection, copy the entire text
+                    if (copyText == null) {
+                        copyText = jTextPane.getText();
+                    }
+
+                    //Add the text to the clipboard
+                    toolkit.getSystemClipboard().setContents(new StringSelection(copyText), null);
+                }
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+
+            }
+        });
         displaySharkey();
     }
 
