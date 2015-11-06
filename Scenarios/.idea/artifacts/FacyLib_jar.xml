@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="FacyLib.jar">
+    <output-path>$USER_HOME$/Desktop/</output-path>
+    <root id="archive" name="Scenarios.jar">
+      <element id="module-output" name="Scenarios" />
+    </root>
+  </artifact>
+</component>
