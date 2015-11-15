@@ -17,6 +17,7 @@
 package com.google.classyshark.translator;
 
 import com.google.classyshark.translator.java.Translator2Java;
+import com.google.classyshark.translator.virtual.DummyDexTranslator;
 import com.google.classyshark.translator.xml.Translator2AndroidXml;
 import java.io.File;
 
@@ -27,6 +28,11 @@ public class TranslatorFactory {
     public static Translator createTranslator(String className, File archiveFile) {
         if(className.endsWith(".xml")) {
             return new Translator2AndroidXml(archiveFile);
+        }
+
+        // TODO create dummydex
+        if (false) {
+           return new DummyDexTranslator();
         }
 
         return new Translator2Java(className, archiveFile);

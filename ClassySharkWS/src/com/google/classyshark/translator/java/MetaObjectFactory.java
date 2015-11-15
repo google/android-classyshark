@@ -17,13 +17,19 @@
 package com.google.classyshark.translator.java;
 
 import com.google.classyshark.reducer.ArchiveReader;
+import com.google.classyshark.reducer.Reducer;
 import com.google.classyshark.translator.java.clazz.asm.MetaObjectAsmClass;
 import com.google.classyshark.translator.java.clazz.reflect.ClassLoadingUtils;
 import com.google.classyshark.translator.java.clazz.reflect.MetaObjectClass;
 import com.google.classyshark.translator.java.dex.DexlibAdapter;
 import com.google.classyshark.translator.java.dex.MetaObjectDex;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.net.MalformedURLException;
+import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 import org.jf.dexlib2.iface.ClassDef;
 import org.jf.dexlib2.iface.DexFile;
 
@@ -81,10 +87,57 @@ public class MetaObjectFactory {
 
     private static MetaObject getMetaObjectFromApk(String className, File archiveFile) {
         MetaObject result;
+        File file = new File("classes.dex");
         try {
-            File classesDex =
-                    ArchiveReader.extractClassesDexFromApk(archiveFile.getAbsolutePath());
-            DexFile dexFile = ArchiveReader.get(classesDex);
+            ZipInputStream zipFile;
+
+            try {
+                zipFile = new ZipInputStream(new FileInputStream(
+                        archiveFile));
+
+                ZipEntry zipEntry;
+
+
+                int i = 0;
+                while (true) {
+                    zipEntry = zipFile.getNextEntry();
+
+                    if (zipEntry == null) {
+                        break;
+                    }
+
+                    if (zipEntry.getName().endsWith(".dex")) {
+                        file = new File("classes" + i + ".dex");
+                        file.createNewFile();
+                        i++;
+
+                        FileOutputStream fos =
+                                new FileOutputStream(file);
+                        byte[] bytes = new byte[1024];
+                        int length;
+                        while ((length = zipFile.read(bytes)) >= 0) {
+                            fos.write(bytes, 0, length);
+                        }
+
+                        fos.close();
+
+                        List<String> mm =
+                                Reducer.FormatStrategy.DEX.
+                                        fillAllClassesNames(file);
+                        if(mm.contains(className)) {
+                            break;
+                        }
+
+                    }
+                }
+                zipFile.close();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+
+            DexFile dexFile = ArchiveReader.get(file);
             ClassDef classDef = DexlibAdapter.getClassDefByName(className, dexFile);
             result = new MetaObjectDex(classDef);
         } catch (Exception e) {

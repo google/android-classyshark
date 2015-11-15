@@ -69,7 +69,7 @@ public class ArchiveReader {
 
     public static File extractClassesDexFromApk(String apkCanonicalPath) {
 
-        File file = new File("classes.dex");
+        File file = new File("classes0.dex");
         ZipInputStream zipFile;
 
         try {
