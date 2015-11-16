@@ -102,7 +102,7 @@ public class Reducer {
 
                     ZipEntry zipEntry;
 
-                    int i = 0;
+                    int dexIndex = 0;
                     while (true) {
                         zipEntry = zipFile.getNextEntry();
 
@@ -111,9 +111,8 @@ public class Reducer {
                         }
 
                         if (zipEntry.getName().endsWith(".dex")) {
-                            File file = new File("classes" + i + ".dex");
+                            File file = new File("classes" + dexIndex + ".dex");
                             file.createNewFile();
-                            i++;
 
                             FileOutputStream fos =
                                     new FileOutputStream(file);
@@ -129,10 +128,9 @@ public class Reducer {
                                     Reducer.FormatStrategy.DEX.
                                             fillAllClassesNames(file);
 
-                            // TODO dymmy entry
-                            int j = i - 1;
-                            result.add("classes" + j + ".dex");
+                            result.add("classes" + dexIndex + ".dex");
                             result.addAll(classesAtDex);
+                            dexIndex++;
                         }
                     }
                     zipFile.close();

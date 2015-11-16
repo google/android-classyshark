@@ -30,9 +30,6 @@ public class TranslatorFactory {
             return new Translator2AndroidXml(archiveFile);
         }
 
-        // TODO create dummydex
-        // TODO DexFile newDexFile = DexFileFactory.loadDexFile(binaryArchiveFile,
-        // TODO gets all the data 19 /*api level*/, true);
         if (className.endsWith(".dex")) {
            return new DexInfoTranslator(className, archiveFile);
         }
