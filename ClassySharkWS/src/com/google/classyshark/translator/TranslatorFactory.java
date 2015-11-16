@@ -17,7 +17,7 @@
 package com.google.classyshark.translator;
 
 import com.google.classyshark.translator.java.Translator2Java;
-import com.google.classyshark.translator.virtual.DummyDexTranslator;
+import com.google.classyshark.translator.dex.DexInfoTranslator;
 import com.google.classyshark.translator.xml.Translator2AndroidXml;
 import java.io.File;
 
@@ -31,8 +31,10 @@ public class TranslatorFactory {
         }
 
         // TODO create dummydex
-        if (false) {
-           return new DummyDexTranslator();
+        // TODO DexFile newDexFile = DexFileFactory.loadDexFile(binaryArchiveFile,
+        // TODO gets all the data 19 /*api level*/, true);
+        if (className.endsWith(".dex")) {
+           return new DexInfoTranslator(className, archiveFile);
         }
 
         return new Translator2Java(className, archiveFile);

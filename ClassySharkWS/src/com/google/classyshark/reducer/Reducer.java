@@ -125,12 +125,14 @@ public class Reducer {
 
                             fos.close();
 
-                            List<String> mm =
+                            List<String> classesAtDex =
                                     Reducer.FormatStrategy.DEX.
                                             fillAllClassesNames(file);
 
-                            result.add(zipEntry.getName().toUpperCase());
-                            result.addAll(mm);
+                            // TODO dymmy entry
+                            int j = i - 1;
+                            result.add("classes" + j + ".dex");
+                            result.addAll(classesAtDex);
                         }
                     }
                     zipFile.close();
