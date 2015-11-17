@@ -25,6 +25,9 @@ import java.util.List;
 import org.jf.dexlib2.dexbacked.DexBackedDexFile;
 import org.jf.dexlib2.iface.DexFile;
 
+/**
+ * Translator for the classes.dex entry
+ */
 public class DexInfoTranslator implements Translator {
     private String dexFileName;
     private List<ELEMENT> elements = new ArrayList<>();
