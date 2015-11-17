@@ -97,7 +97,6 @@ public class MetaObjectFactory {
 
                 ZipEntry zipEntry;
 
-
                 int i = 0;
                 while (true) {
                     zipEntry = zipFile.getNextEntry();
@@ -121,21 +120,18 @@ public class MetaObjectFactory {
 
                         fos.close();
 
-                        List<String> mm =
+                        List<String> classNamesInDex =
                                 Reducer.FormatStrategy.DEX.
                                         fillAllClassesNames(file);
-                        if(mm.contains(className)) {
+                        if(classNamesInDex.contains(className)) {
                             break;
                         }
-
                     }
                 }
                 zipFile.close();
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
 
             DexFile dexFile = ArchiveReader.get(file);
             ClassDef classDef = DexlibAdapter.getClassDefByName(className, dexFile);

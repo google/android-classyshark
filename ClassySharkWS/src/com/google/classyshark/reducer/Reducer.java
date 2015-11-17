@@ -86,7 +86,6 @@ public class Reducer {
                 return result;
             }
         },
-
         MULTI_DEX {
             @Override
             public List<String> fillAllClassesNames(File binaryArchiveFile)

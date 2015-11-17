@@ -70,6 +70,8 @@ public class FilesTree {
             String resName = displayedClassNames.get(i);
             if (resName.equals("AndroidManifest.xml")) {
                 root.add(new DefaultMutableTreeNode(resName));
+            } else if (resName.endsWith(".dex")) {
+                classes.add(new DefaultMutableTreeNode(resName));
             } else {
                 if (resName.lastIndexOf('.') >= 0) {
                     String pkg = resName.substring(0, resName.lastIndexOf('.'));
@@ -86,7 +88,7 @@ public class FilesTree {
                 }
             }
         }
-        for (DefaultMutableTreeNode node: noPkgNodes) {
+        for (DefaultMutableTreeNode node : noPkgNodes) {
             classes.add(node);
         }
         root.add(classes);
@@ -103,7 +105,7 @@ public class FilesTree {
             String fullClassName = displayedClassNames.get(i);
             String pkg = fullClassName.substring(0, fullClassName.lastIndexOf('.'));
 
-            if(pkg.lastIndexOf('.') > 0) {
+            if (pkg.lastIndexOf('.') > 0) {
                 pkg = pkg.substring(0, pkg.lastIndexOf('.'));
             }
 

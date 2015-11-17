@@ -44,7 +44,6 @@ public class DexInfoTranslator implements Translator {
     public void apply() {
         try {
             DexFile dxFile = ArchiveReader.get(new File(className));
-
             DexBackedDexFile dataPack = (DexBackedDexFile) dxFile;
 
             ELEMENT element = new ELEMENT("\nclasses: " + dataPack.getClassCount(), TAG.ANNOTATION);
@@ -57,11 +56,10 @@ public class DexInfoTranslator implements Translator {
             elements.add(element);
             element = new ELEMENT("\nfields: " + dataPack.getFieldCount(), TAG.ANNOTATION);
             elements.add(element);
-            element = new ELEMENT("\nmethods: " + dataPack.getMethodCount(), TAG.ANNOTATION);
+            element = new ELEMENT("\nmethods: " + dataPack.getMethodCount(), TAG.DOCUMENT);
             elements.add(element);
-
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
     }
 
