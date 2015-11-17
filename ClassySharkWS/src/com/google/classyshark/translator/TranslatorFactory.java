@@ -31,7 +31,7 @@ public class TranslatorFactory {
         }
 
         if (className.endsWith(".dex")) {
-           return new DexInfoTranslator(className, archiveFile);
+           return new DexInfoTranslator(className);
         }
 
         return new Translator2Java(className, archiveFile);

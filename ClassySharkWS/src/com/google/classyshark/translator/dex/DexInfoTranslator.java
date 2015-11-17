@@ -26,24 +26,22 @@ import org.jf.dexlib2.dexbacked.DexBackedDexFile;
 import org.jf.dexlib2.iface.DexFile;
 
 public class DexInfoTranslator implements Translator {
-    private final File archiveFile;
-    private String className;
+    private String dexFileName;
     private List<ELEMENT> elements = new ArrayList<>();
 
-    public DexInfoTranslator(String className, File archiveFile) {
-        this.className = className;
-        this.archiveFile = archiveFile;
+    public DexInfoTranslator(String dexFileName) {
+        this.dexFileName = dexFileName;
     }
 
     @Override
     public String getClassName() {
-        return className;
+        return dexFileName;
     }
 
     @Override
     public void apply() {
         try {
-            DexFile dxFile = ArchiveReader.get(new File(className));
+            DexFile dxFile = ArchiveReader.get(new File(dexFileName));
             DexBackedDexFile dataPack = (DexBackedDexFile) dxFile;
 
             ELEMENT element = new ELEMENT("\nclasses: " + dataPack.getClassCount(), TAG.ANNOTATION);
