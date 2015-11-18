@@ -10,6 +10,15 @@ While developing apps we tend to think about dexs, jars, apks and classes as bui
 
 With ClassyShark analyzing dependencies is a breeze. ClassyShark is fast and shows the right info (dependency classes, packages, methods and `AndroidManifest`) in no time. If your app is crashing or misbehaving at runtime and you’re not sure why then ClassyShark may be able to help you.
 
+## Use cases
+
+1. Multidex analysis (what goes to each classes.dex and dex limits)
+2. Dependency analysis
+3. Name collisions
+4. 3-rd party permissions
+5. Obfuscation analysis and tests
+6. Stubs generation for testing
+
 ## Downloads
 
 Grab the latest release from [here] (https://github.com/googlesamples/android-classyshark/releases).
@@ -82,10 +91,11 @@ Bottom line the FancyLib is not thread safe, however it was not documented anywh
 Clone this repository and import the `ClassySharkWS` folder in your favorite IDE.
 
 ## Features
-* Multi tabbed interface
+* Multidex
 * Apk/Dex/Jar/Class formats
 * Android manifest
 * Incremental/Camel/Fuzzy searches
+* Optional multi tab interface
 
 ## Dependencies
 * dexlib2 by jesusfreke
