@@ -15,9 +15,11 @@ With ClassyShark analyzing dependencies is a breeze. ClassyShark is fast and sho
 1. Multidex analysis (what goes to each classes.dex and dex limits)
 2. Dependency analysis
 3. Name collisions
-4. 3-rd party permissions
-5. Obfuscation analysis and tests
-6. Stubs generation for testing
+4. Missing dependencies
+5. Code size analysis
+6. 3-rd party permissions
+7. Obfuscation analysis and tests
+8. Stubs generation for testing
 
 ## Downloads
 
