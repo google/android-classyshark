@@ -67,45 +67,6 @@ public class ArchiveReader {
         return classes;
     }
 
-    public static File extractClassesDexFromApk(String apkCanonicalPath) {
-
-        File file = new File("classes.dex");
-        ZipInputStream zipFile;
-
-        try {
-            zipFile = new ZipInputStream(new FileInputStream(
-                    apkCanonicalPath));
-
-            ZipEntry zipEntry;
-
-            while (true) {
-                zipEntry = zipFile.getNextEntry();
-
-                if (zipEntry == null) {
-                    break;
-                }
-                if (zipEntry.getName().endsWith(".dex")) {
-
-                    FileOutputStream fos = new FileOutputStream(file);
-                    byte[] bytes = new byte[1024];
-                    int length;
-                    while ((length = zipFile.read(bytes)) >= 0) {
-                        fos.write(bytes, 0, length);
-                    }
-                    zipFile.close();
-                    fos.close();
-
-                    break;
-                }
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return file;
-    }
-
     public static class ByteArrayClassLoader extends ClassLoader {
         private final ByteBuffer bb;
 

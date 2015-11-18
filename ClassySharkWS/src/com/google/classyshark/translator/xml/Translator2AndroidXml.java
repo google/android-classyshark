@@ -17,7 +17,6 @@
 package com.google.classyshark.translator.xml;
 
 import com.google.classyshark.translator.Translator;
-
 import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
 import java.io.File;
