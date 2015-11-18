@@ -12,13 +12,13 @@ With ClassyShark analyzing dependencies is a breeze. ClassyShark is fast and sho
 
 ## Use cases
 
-1. Multidex analysis (what goes to each classes.dex and dex limits)
+1. Multidex analysis (content of each classes.dex and dex limits)
 2. Dependency analysis
-3. Name collisions
+3. Class name collisions
 4. Missing dependencies
 5. Code size analysis
-6. 3-rd party permissions
-7. Obfuscation analysis and tests
+6. Discover Android permissions for 3-rd party libraries
+7. Obfuscation analysis and testing
 8. Stubs generation for testing
 
 ## Downloads
