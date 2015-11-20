@@ -62,9 +62,8 @@ public class FilesTree {
     private TreeNode createJTreeModelAndroid(String fileName, List<String> displayedClassNames) {
         DefaultMutableTreeNode root = new DefaultMutableTreeNode(fileName);
         DefaultMutableTreeNode classes = new DefaultMutableTreeNode("classes");
+        DefaultMutableTreeNode currentClassesDex = classes;
         List<DefaultMutableTreeNode> noPkgNodes = new ArrayList<>();
-
-        DefaultMutableTreeNode current = classes;
 
         String lastPackage = null;
         DefaultMutableTreeNode packageNode = null;
@@ -73,14 +72,14 @@ public class FilesTree {
             if (resName.equals("AndroidManifest.xml")) {
                 root.add(new DefaultMutableTreeNode(resName));
             } else if (resName.endsWith(".dex")) {
-                current = new DefaultMutableTreeNode(resName);
-                classes.add(current);
+                currentClassesDex = new DefaultMutableTreeNode(resName);
+                classes.add(currentClassesDex);
             } else {
                 if (resName.lastIndexOf('.') >= 0) {
                     String pkg = resName.substring(0, resName.lastIndexOf('.'));
                     if (lastPackage == null || !pkg.equals(lastPackage)) {
                         if (packageNode != null) {
-                            current.add(packageNode);
+                            currentClassesDex.add(packageNode);
                         }
                         lastPackage = pkg;
                         packageNode = new DefaultMutableTreeNode(pkg);
@@ -92,7 +91,7 @@ public class FilesTree {
             }
         }
         for (DefaultMutableTreeNode node : noPkgNodes) {
-            current.add(node);
+            currentClassesDex.add(node);
         }
         root.add(classes);
         return root;
