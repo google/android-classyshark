@@ -20,7 +20,7 @@ With ClassyShark analyzing dependencies is a breeze. ClassyShark is fast and sho
 4. Missing dependencies
 5. Code size analysis
 6. Discover Android permissions for 3-rd party libraries
-7. Checking that proguard didn't stip usefull code
+7. Checking that proguard didn't strip usefull code
 8. Stubs generation for testing
 
 ## Downloads
