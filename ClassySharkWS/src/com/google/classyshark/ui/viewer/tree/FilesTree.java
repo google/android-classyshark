@@ -64,6 +64,8 @@ public class FilesTree {
         DefaultMutableTreeNode classes = new DefaultMutableTreeNode("classes");
         List<DefaultMutableTreeNode> noPkgNodes = new ArrayList<>();
 
+        DefaultMutableTreeNode current = classes;
+
         String lastPackage = null;
         DefaultMutableTreeNode packageNode = null;
         for (int i = 0; i < displayedClassNames.size(); i++) {
@@ -71,13 +73,14 @@ public class FilesTree {
             if (resName.equals("AndroidManifest.xml")) {
                 root.add(new DefaultMutableTreeNode(resName));
             } else if (resName.endsWith(".dex")) {
-                classes.add(new DefaultMutableTreeNode(resName));
+                current = new DefaultMutableTreeNode(resName);
+                classes.add(current);
             } else {
                 if (resName.lastIndexOf('.') >= 0) {
                     String pkg = resName.substring(0, resName.lastIndexOf('.'));
                     if (lastPackage == null || !pkg.equals(lastPackage)) {
                         if (packageNode != null) {
-                            classes.add(packageNode);
+                            current.add(packageNode);
                         }
                         lastPackage = pkg;
                         packageNode = new DefaultMutableTreeNode(pkg);
@@ -89,7 +92,7 @@ public class FilesTree {
             }
         }
         for (DefaultMutableTreeNode node : noPkgNodes) {
-            classes.add(node);
+            current.add(node);
         }
         root.add(classes);
         return root;
@@ -141,6 +144,13 @@ public class FilesTree {
                 if (selection == null) return;
 
                 DefaultMutableTreeNode defaultMutableTreeNode = (DefaultMutableTreeNode) selection;
+
+                if (selection.toString().endsWith(".dex")) {
+                    FilesTree.this.viewerPanel.onSelectedClassName(
+                            (String) defaultMutableTreeNode.getUserObject());
+                    return;
+                }
+
                 if (!defaultMutableTreeNode.isLeaf()) return;
 
                 if (FilesTree.this.viewerPanel != null) {
