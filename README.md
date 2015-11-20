@@ -52,9 +52,7 @@ When running this code we have a race condition, in FancyLibrary more than one t
 * thread T1 ==> wrote value
 * thread T2 ==> read value
 * thread T3 ==> read value
-* thread T4 ==> read value
-* thread T5 ==> read value
-* thread T6 ==> read value
+* ...
 
 Let's say FancyLibrary is a popular open source project, so to find the problem we need to research the code and make sure we have an understanding, which code made its way to the jar in our Android project.
 
@@ -87,12 +85,7 @@ private static synchronized void wrapLibrary(FancyLibrary fLib) {
    fLib.changeNumber();
 }
 ```
-Bottom line the FancyLib is not thread safe, however it was not documented anywhere.
-
-
-
-## Start developing
-Clone this repository and import the `ClassySharkWS` folder in your favorite IDE.
+Bottom line the FancyLib is possibly not thread safe, however it was not documented anywhere.
 
 ## Features
 * Multidex
@@ -100,6 +93,9 @@ Clone this repository and import the `ClassySharkWS` folder in your favorite IDE
 * Android manifest
 * Incremental/Camel/Fuzzy searches
 * Optional multi tab interface
+
+## Start developing
+Clone this repository and import the `ClassySharkWS` folder in your favorite IDE.
 
 ## Dependencies
 * dexlib2 by jesusfreke
