@@ -1,8 +1,10 @@
-# ClassyShark - Android executables browser
+# ClassyShark
 
 ### This is not an official Google product
 
 ## Introduction
+
+ClassyShark is a handy Android executables browser, having both Android and Desktop client. With ClassyShark you can open any APK/Zip/Class/Jar file and analyze the contents.
 
 ![](https://github.com/googlesamples/android-classyshark/blob/master/Resources/Intro.png)
 
@@ -18,7 +20,7 @@ With ClassyShark analyzing dependencies is a breeze. ClassyShark is fast and sho
 4. Missing dependencies
 5. Code size analysis
 6. Discover Android permissions for 3-rd party libraries
-7. Obfuscation analysis and testing
+7. Checking that proguard didn't stip usefull code
 8. Stubs generation for testing
 
 ## Downloads
