@@ -24,9 +24,10 @@ ClassyShark is a handy Android executables browser, having both Android and Desk
 * Duplicate libraries
 * Redundant libraries
 
-### Security
+### Security & Debugging
 * AndroidManifest inside production APK
 * Obfuscated code
+* Tracing method calls in obfuscated APK
 
 ## Downloads
 
