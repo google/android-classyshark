@@ -11,20 +11,20 @@ ClassyShark is a handy Android executables browser, having both Android and Desk
 ## Use cases
 
 ### Multidex
-1. Content of each classes.dex
-2. Dex counts: methods, classes, string etc'
-3. Code size analysis
+* Content of each classes.dex
+* Dex counts: methods, classes, string etc'
+* Code size analysis
 
 ### Dependencies
-1. Class name collisions 
-2. Checking that proguard didn't strip usefull code
-3. Missing dependencies
-4. Android permissions for 3-rd party libraries
+* Class name collisions 
+* Checking that proguard didn't strip usefull code
+* Missing dependencies
+* Android permissions for 3-rd party libraries
 
 ### Performance
-1. Slow libraries
-2. Duplicate libraries
-3. Redundant libraries
+* Slow libraries
+* Duplicate libraries
+* Redundant libraries
 
 ## Downloads
 
