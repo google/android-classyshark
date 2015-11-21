@@ -12,7 +12,7 @@ ClassyShark is a handy Android executables browser, having both Android and Desk
 
 ### Multidex
 * Content of each classes.dex
-* Dex counts: methods, classes, string etc'
+* Dex counts: methods, classes, strings etc'
 
 ### Performance
 * Slow libraries
