@@ -8,10 +8,6 @@ ClassyShark is a handy Android executables browser, having both Android and Desk
 
 ![](https://github.com/googlesamples/android-classyshark/blob/master/Resources/Intro.png)
 
-While developing apps we tend to think about dexs, jars, apks and classes as build/run time abstractions that just work. Most of the time this is true, however, when trying to debug runtime issues in large apps, things can sometimes get tricky.
-
-With ClassyShark analyzing dependencies is a breeze. ClassyShark is fast and shows the right info (dependency classes, packages, methods and `AndroidManifest`) in no time. If your app is crashing or misbehaving at runtime and you’re not sure why then ClassyShark may be able to help you.
-
 ## Use cases
 
 1. Multidex analysis (content of each classes.dex and dex limits)
@@ -26,6 +22,13 @@ With ClassyShark analyzing dependencies is a breeze. ClassyShark is fast and sho
 ## Downloads
 
 Grab the latest release from [here] (https://github.com/googlesamples/android-classyshark/releases).
+
+## Features
+* Multidex
+* Apk/Dex/Jar/Class formats
+* Android manifest
+* Incremental/Camel/Fuzzy searches
+* Optional multi tab interface
 
 ## Get started
 
@@ -66,7 +69,7 @@ We see, all the classes exactly as our app sees them. Let's head into FancyLibra
 
 ![](https://github.com/googlesamples/android-classyshark/blob/master/Resources/Get%20Started%20Class%20View.png)
 
-Now we see the problem, this class is not thread safe because of the variable declaration. One way to solve this is to wrap the access to the FancyLibrary inside synchronized block.
+Now we see the problem, this class is possibly not thread safe because of the variable declaration. One way to solve this is to wrap the access to the FancyLibrary inside synchronized block.
 
 ``` java
 final FancyLibrary fancyLibrary = new FancyLibrary();
@@ -86,13 +89,6 @@ private static synchronized void wrapLibrary(FancyLibrary fLib) {
 }
 ```
 Bottom line the FancyLib is possibly not thread safe, however it was not documented anywhere.
-
-## Features
-* Multidex
-* Apk/Dex/Jar/Class formats
-* Android manifest
-* Incremental/Camel/Fuzzy searches
-* Optional multi tab interface
 
 ## Start developing
 Clone this repository and import the `ClassySharkWS` folder in your favorite IDE.
