@@ -23,16 +23,9 @@ ClassyShark is a handy Android executables browser, having both Android and Desk
 
 Grab the latest release from [here] (https://github.com/googlesamples/android-classyshark/releases).
 
-## Features
-* Multidex
-* Apk/Dex/Jar/Class formats
-* Android manifest
-* Incremental/Camel/Fuzzy searches
-* Optional multi tab interface
+## Sample problem
 
-## Get started
-
-Let's examine the following simplified scenario. What if we have a main method that calls a FancyLibrary (simulated dependency). FancyLibrary is a simple Reader/Writer implementation, where a field is written once and accessed many times. Our app is using FancyLibrary, as a 3-rd party dependency. Here is our app's main code:
+What if we have a main method that calls a FancyLibrary (simulated dependency). FancyLibrary is a simple Reader/Writer implementation, where a field is written once and accessed many times. Here is our app's main code:
 
 ``` java
 final FancyLibrary fancyLibrary = new FancyLibrary();
@@ -57,7 +50,7 @@ When running this code we have a race condition, in FancyLibrary more than one t
 * thread T3 ==> read value
 * ...
 
-Let's say FancyLibrary is a popular open source project, so to find the problem we need to research the code and make sure we have an understanding, which code made its way to the jar in our Android project.
+FancyLibrary is a popular open source project, so to find the problem we need to research the code and make sure we have an understanding, which code made its way to the jar in our Android project.
 
 Let's use ClassyShark, first let's fire up ClassyShark
 
