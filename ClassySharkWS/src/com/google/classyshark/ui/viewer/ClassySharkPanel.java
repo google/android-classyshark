@@ -131,12 +131,13 @@ public class ClassySharkPanel extends JPanel implements KeyListener {
             }
         });
 
-        fc.setCurrentDirectory(new File(System.getProperty("user.home")));
+        fc.setCurrentDirectory(ClassySharkConfig.INSTANCE.getCurrentDirectory());
 
         int returnVal = fc.showOpenDialog(this);
         toolBar.setText("");
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File resultFile = fc.getSelectedFile();
+            ClassySharkConfig.INSTANCE.setCurrentDirectory(fc.getCurrentDirectory());
             updateUiAfterFileRead(resultFile);
         }
     }
