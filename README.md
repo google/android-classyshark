@@ -1,6 +1,6 @@
 # ClassyShark
 
-### This is not an official Google product
+This is not an official Google product
 
 ## Introduction
 
