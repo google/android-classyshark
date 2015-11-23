@@ -21,7 +21,8 @@ import com.google.classyshark.translator.Translator;
 import com.google.classyshark.translator.TranslatorFactory;
 import com.google.classyshark.ui.ColorScheme;
 import com.google.classyshark.ui.viewer.displayarea.DisplayArea;
-import com.google.classyshark.ui.viewer.toolbar.ToolBar;
+import com.google.classyshark.ui.viewer.toolbar.RecentFilesConfig;
+import com.google.classyshark.ui.viewer.toolbar.Toolbar;
 import com.google.classyshark.ui.viewer.tree.FilesTree;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -39,7 +40,7 @@ import javax.swing.SwingWorker;
 import javax.swing.filechooser.FileFilter;
 
 /**
- * individual ClassySharkPanel
+ * App controller and view
  */
 public class ClassySharkPanel extends JPanel implements KeyListener {
 
@@ -50,7 +51,7 @@ public class ClassySharkPanel extends JPanel implements KeyListener {
     private int myIndexAtJTabbedPane;
     private JFrame jFrame;
 
-    private ToolBar toolBar;
+    private Toolbar toolBar;
     private JSplitPane jSplitPane;
     private int dividerLocation = 0;
     private DisplayArea displayArea;
@@ -138,6 +139,7 @@ public class ClassySharkPanel extends JPanel implements KeyListener {
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File resultFile = fc.getSelectedFile();
             ClassySharkConfig.INSTANCE.setCurrentDirectory(fc.getCurrentDirectory());
+            RecentFilesConfig.INSTANCE.addArchive(resultFile.getName(), fc.getCurrentDirectory());
             updateUiAfterFileRead(resultFile);
         }
     }
@@ -152,11 +154,6 @@ public class ClassySharkPanel extends JPanel implements KeyListener {
         final String textFromTypingArea = toolBar.getText();
         fillDisplayArea(textFromTypingArea, VIEW_TOP_CLASS,
                 !IS_CLASSNAME_FROM_MOUSE_CLICK);
-    }
-
-    public void onShowInfoPressed() {
-        displayArea.displayInfo();
-        toolBar.setText("");
     }
 
     public void onChangedTextFromTypingArea(String selectedLine) {
@@ -193,6 +190,16 @@ public class ClassySharkPanel extends JPanel implements KeyListener {
         fillDisplayArea(className, VIEW_TOP_CLASS, IS_CLASSNAME_FROM_MOUSE_CLICK);
     }
 
+    public void onChangeLeftPaneVisibility(boolean visible) {
+        if (visible) {
+            jSplitPane.setDividerLocation(dividerLocation);
+        } else {
+            dividerLocation = jSplitPane.getDividerLocation();
+        }
+        jSplitPane.getLeftComponent().setVisible(visible);
+        jSplitPane.updateUI();
+    }
+
     public void updateUiAfterFileRead(File resultFile) {
         if (jTabbedPane != null) {
             String tabName = PanelUtils.fitArchiveNameToTab(resultFile);
@@ -209,23 +216,13 @@ public class ClassySharkPanel extends JPanel implements KeyListener {
         filesTree.setVisibleRoot();
     }
 
-    public void onChangeLeftPaneVisibility(boolean visible) {
-        if (visible) {
-            jSplitPane.setDividerLocation(dividerLocation);
-        } else {
-            dividerLocation = jSplitPane.getDividerLocation();
-        }
-        jSplitPane.getLeftComponent().setVisible(visible);
-        jSplitPane.updateUI();
-    }
-
     private void buildUI() {
         BorderLayout borderLayout = new BorderLayout();
         setLayout(borderLayout);
 
         setBackground(ColorScheme.BLACK);
 
-        toolBar = new ToolBar(this);
+        toolBar = new Toolbar(this);
         add(toolBar, BorderLayout.NORTH);
 
         toolBar.addKeyListenerToTypingArea(this);

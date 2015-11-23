@@ -64,3 +64,5 @@ Scenarios/out/production/Scenarios/META-INF/MANIFEST.MF
 *.html
 
 ClassySharkWS/classyshark.properties
+
+*.properties

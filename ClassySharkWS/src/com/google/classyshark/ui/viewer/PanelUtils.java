@@ -18,14 +18,16 @@ package com.google.classyshark.ui.viewer;
 
 import com.google.classyshark.reducer.ArchiveReader;
 import com.google.classyshark.translator.Translator;
-import com.google.classyshark.ui.viewer.displayarea.FileStubGenerator;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class PanelUtils {
     private PanelUtils(){}
 
     public static void generateStubFile(Translator translator) {
-        FileStubGenerator.generateStubFile(translator.getClassName(),
+        generateStubFile(translator.getClassName(),
                 translator.toString());
     }
 
@@ -41,12 +43,20 @@ public class PanelUtils {
         return "dex, jar, apk, class";
     }
 
-    protected static String fitArchiveNameToTab(File resultFile) {
+    public static String fitArchiveNameToTab(File resultFile) {
         String tabName = resultFile.getName();
 
         if (tabName.length() > 7) {
             tabName = tabName.substring(0, 7) + "...";
         }
         return tabName;
+    }
+
+    private static void generateStubFile(String className, String classBody) {
+        try {
+            Files.write(Paths.get("./" + className + ".java"), classBody.getBytes());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -45,7 +45,7 @@ import javax.swing.text.Utilities;
 public class DisplayArea {
 
     private enum DisplayDataState {
-        SHARKEY, INFO, CLASSES_LIST, INSIDE_CLASS, ERROR
+        SHARKEY, CLASSES_LIST, INSIDE_CLASS, ERROR
     }
 
     private final JTextPane jTextPane;
@@ -61,8 +61,7 @@ public class DisplayArea {
         jTextPane.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if(displayDataState == DisplayDataState.SHARKEY
-                   || displayDataState == DisplayDataState.INFO) {
+                if(displayDataState == DisplayDataState.SHARKEY) {
                     return;
                 }
 
@@ -145,26 +144,6 @@ public class DisplayArea {
             }
         });
         displaySharkey();
-    }
-
-    public void displayInfo() {
-        displayDataState = DisplayDataState.INFO;
-
-        clearText();
-        style = jTextPane.addStyle("STYLE", null);
-        Document doc = jTextPane.getStyledDocument();
-
-        try {
-            StyleConstants.setForeground(style, ColorScheme.FOREGROUND_CYAN);
-            StyleConstants.setFontSize(style, 16);
-            StyleConstants.setFontFamily(style, "Menlo");
-
-            doc.insertString(doc.getLength(), InfoBG.INFO, style);
-        } catch (BadLocationException e) {
-            e.printStackTrace();
-        }
-
-        jTextPane.setDocument(doc);
     }
 
     public Component onAddComponentToPane() {

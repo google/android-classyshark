@@ -23,6 +23,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
@@ -34,7 +35,7 @@ import javax.swing.border.LineBorder;
 /**
  * toolbar = buttons + command line
  */
-public class ToolBar extends JToolBar {
+public class Toolbar extends JToolBar {
 
     private final JTextField typingArea;
     private final ClassySharkPanel classySharkPanel;
@@ -42,10 +43,10 @@ public class ToolBar extends JToolBar {
     private JButton openBtn;
     private JButton viewBtn;
     private JButton backBtn;
-    private JButton infoBtn;
+    private JButton recentArchivesBtn;
     private JToggleButton leftPanelToggleBtn;
 
-    public ToolBar(final ClassySharkPanel classySharkPanel) {
+    public Toolbar(final ClassySharkPanel classySharkPanel) {
         super();
         UIManager.put("ToolBar.background", ColorScheme.BACKGROUND);
         UIManager.put("ToolBar.foreground", ColorScheme.BACKGROUND);
@@ -62,7 +63,7 @@ public class ToolBar extends JToolBar {
         openBtn = buildOpenButton();
         backBtn = buildBackButton();
         viewBtn = buildViewButton();
-        infoBtn = buildInfoButton();
+        recentArchivesBtn = buildRecentArchivesButton();
         leftPanelToggleBtn = buildLeftPanelToggleButton();
 
         this.setBackground(ColorScheme.BLACK);
@@ -72,7 +73,7 @@ public class ToolBar extends JToolBar {
         add(backBtn);
         add(viewBtn);
         add(typingArea);
-        add(infoBtn);
+        add(recentArchivesBtn);
 
         setFloatable(false);
 
@@ -199,21 +200,9 @@ public class ToolBar extends JToolBar {
         return result;
     }
 
-    private JButton buildInfoButton() {
-        JButton result = new JButton(" ? ");
-
-        result.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                classySharkPanel.onShowInfoPressed();
-            }
-        });
-
-        result.setBorderPainted(false);
-        result.setFocusPainted(true);
-        result.setForeground(ColorScheme.WHITE);
-        result.setBackground(ColorScheme.BLACK);
-
+    private JButton buildRecentArchivesButton() {
+        RecentArchivesButton result = new RecentArchivesButton();
+        result.setPanel(classySharkPanel);
         return result;
     }
 
