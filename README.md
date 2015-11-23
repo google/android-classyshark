@@ -4,29 +4,37 @@
 
 ## Introduction
 
-ClassyShark is a handy Android executables browser, having both Android and Desktop client. With ClassyShark you can open any APK/Zip/Class/Jar file and analyze the contents.
+ClassyShark is a handy browser for Android executables. It has clients for both Android (apk) and Desktop (jar). With ClassyShark you can open APK/Zip/Class/Jar files and analyze their contents.
 
 ![](https://github.com/googlesamples/android-classyshark/blob/master/Resources/Intro.png)
 
 ## Use cases
 
 ### Multidex
-* Content of each classes.dex
-* Dex counts: methods, classes, strings etc'
+Helps you understand the contents of [multidex](http://developer.android.com/tools/building/multidex.html) apps
+
+* Show the content of each classes.dex file
+* Show the dex counts for methods, classes, strings etc
 
 ### Performance
+Identify and understand performance problems including: 
+
 * Slow libraries
 * Duplicate libraries
 * Redundant libraries
 
 ### Security
+Identify security risks including: 
+
 * AndroidManifest inside production APK
-* Verifying Obfuscated code
+* Verifying obfuscated code
 
 ### Debugging
-* Class name collisions 
-* Missing/changed code due to Proguard obfuscation
-* Tracing method calls in obfuscated APK
+Helps you debug your app by allowing you to:
+
+* Show class name collisions 
+* Show missing and/or changed code due to Proguard obfuscation
+* Trace method calls in obfuscated APK
 
 ## Downloads
 
@@ -36,9 +44,9 @@ Grab the latest release from [here] (https://github.com/googlesamples/android-cl
 Clone this repository and import the `ClassySharkWS` folder in your favorite IDE.
 
 ## Dependencies
-* dexlib2 by jesusfreke
-* guava by Google
-* ASM by OW2
+* [dexlib2](https://github.com/JesusFreke/smali/tree/master/dexlib2) by jesusfreke
+* [guava](https://github.com/google/guava) by Google
+* [ASM](http://asm.ow2.org/) by OW2
 
 ## Support
 If you've found an error, please file an issue:
