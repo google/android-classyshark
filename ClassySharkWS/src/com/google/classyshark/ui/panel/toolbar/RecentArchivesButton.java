@@ -16,15 +16,15 @@
 
 package com.google.classyshark.ui.panel.toolbar;
 
-import com.google.classyshark.ui.panel.ColorScheme;
 import com.google.classyshark.ui.panel.ClassySharkPanel;
-import java.awt.Dimension;
+import com.google.classyshark.ui.panel.ColorScheme;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
@@ -32,7 +32,7 @@ import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 
 /**
- *  recent files button
+ * recent files button
  */
 public class RecentArchivesButton extends JButton {
 
@@ -41,7 +41,7 @@ public class RecentArchivesButton extends JButton {
 
     public RecentArchivesButton() {
         popup = new JPopupMenu();
-        popup.setPreferredSize(new Dimension(200, 100));
+        popup.setLayout(new BoxLayout(popup, BoxLayout.Y_AXIS));
         popup.addPopupMenuListener(new PopupPrintListener());
         buildPopup();
 
@@ -79,6 +79,7 @@ public class RecentArchivesButton extends JButton {
             public void actionPerformed(ActionEvent e) {
                 RecentArchivesConfig.INSTANCE.clear();
                 popup.removeAll();
+                popup.updateUI();
                 popup.add(clearRecentArchivesItem);
             }
         });
@@ -114,7 +115,9 @@ public class RecentArchivesButton extends JButton {
         }
 
         private void checkPopup(MouseEvent e) {
-            popup.show(RecentArchivesButton.this, e.getX() - 200, e.getY());
+            popup.show(RecentArchivesButton.this,
+                    e.getX() - (int) popup.getPreferredSize().getWidth(),
+                    e.getY());
         }
     }
 
