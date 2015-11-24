@@ -324,7 +324,7 @@ public class DisplayArea {
 
         try {
             StyleConstants.setForeground(style, ColorScheme.FOREGROUND_YELLOW);
-            StyleConstants.setFontSize(style, 16);
+            StyleConstants.setFontSize(style, 13);
             StyleConstants.setFontFamily(style, "Menlo");
 
             doc.insertString(doc.getLength(), SharkBG.SHARKEY, style);
