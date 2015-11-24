@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package com.google.classyshark.ui.viewer.displayarea;
+package com.google.classyshark.ui.panel.displayarea;
 
 import com.google.classyshark.translator.Translator;
 import com.google.classyshark.translator.java.Translator2Java;
-import com.google.classyshark.ui.ColorScheme;
-import com.google.classyshark.ui.viewer.ClassySharkPanel;
+import com.google.classyshark.ui.panel.ColorScheme;
+import com.google.classyshark.ui.panel.ClassySharkPanel;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -327,7 +327,7 @@ public class DisplayArea {
             StyleConstants.setFontSize(style, 16);
             StyleConstants.setFontFamily(style, "Menlo");
 
-            doc.insertString(doc.getLength(), "", style);
+            doc.insertString(doc.getLength(), SharkBG.SHARKEY, style);
         } catch (BadLocationException e) {
             e.printStackTrace();
         }

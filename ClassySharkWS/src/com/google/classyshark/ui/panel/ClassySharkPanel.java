@@ -14,16 +14,15 @@
  * limitations under the License.
  */
 
-package com.google.classyshark.ui.viewer;
+package com.google.classyshark.ui.panel;
 
 import com.google.classyshark.reducer.Reducer;
 import com.google.classyshark.translator.Translator;
 import com.google.classyshark.translator.TranslatorFactory;
-import com.google.classyshark.ui.ColorScheme;
-import com.google.classyshark.ui.viewer.displayarea.DisplayArea;
-import com.google.classyshark.ui.viewer.toolbar.RecentFilesConfig;
-import com.google.classyshark.ui.viewer.toolbar.Toolbar;
-import com.google.classyshark.ui.viewer.tree.FilesTree;
+import com.google.classyshark.ui.panel.displayarea.DisplayArea;
+import com.google.classyshark.ui.panel.toolbar.RecentArchivesConfig;
+import com.google.classyshark.ui.panel.toolbar.Toolbar;
+import com.google.classyshark.ui.panel.tree.FilesTree;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.KeyEvent;
@@ -35,7 +34,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
-import javax.swing.JTabbedPane;
 import javax.swing.SwingWorker;
 import javax.swing.filechooser.FileFilter;
 
@@ -114,23 +112,23 @@ public class ClassySharkPanel extends JPanel implements KeyListener {
         fc.setFileFilter(new FileFilter() {
             @Override
             public boolean accept(File f) {
-                return PanelUtils.acceptFile(f);
+                return ClassySharkPanelUtils.acceptFile(f);
             }
 
             @Override
             public String getDescription() {
-                return PanelUtils.getFileChooserDescription();
+                return ClassySharkPanelUtils.getFileChooserDescription();
             }
         });
 
-        fc.setCurrentDirectory(ClassySharkConfig.INSTANCE.getCurrentDirectory());
+        fc.setCurrentDirectory(CurrentFolderConfig.INSTANCE.getCurrentDirectory());
 
         int returnVal = fc.showOpenDialog(this);
         toolBar.setText("");
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File resultFile = fc.getSelectedFile();
-            ClassySharkConfig.INSTANCE.setCurrentDirectory(fc.getCurrentDirectory());
-            RecentFilesConfig.INSTANCE.addArchive(resultFile.getName(), fc.getCurrentDirectory());
+            CurrentFolderConfig.INSTANCE.setCurrentDirectory(fc.getCurrentDirectory());
+            RecentArchivesConfig.INSTANCE.addArchive(resultFile.getName(), fc.getCurrentDirectory());
             updateUiAfterFileRead(resultFile);
         }
     }
@@ -333,7 +331,7 @@ public class ClassySharkPanel extends JPanel implements KeyListener {
 
     private void handleControlPress(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_S) {
-            PanelUtils.generateStubFile(translator);
+            ClassySharkPanelUtils.generateStubFile(translator);
             return;
         }
     }

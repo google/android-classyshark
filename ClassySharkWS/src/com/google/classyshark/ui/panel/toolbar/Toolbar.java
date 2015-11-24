@@ -14,16 +14,15 @@
  * limitations under the License.
  */
 
-package com.google.classyshark.ui.viewer.toolbar;
+package com.google.classyshark.ui.panel.toolbar;
 
-import com.google.classyshark.ui.ColorScheme;
-import com.google.classyshark.ui.viewer.ClassySharkPanel;
+import com.google.classyshark.ui.panel.ColorScheme;
+import com.google.classyshark.ui.panel.ClassySharkPanel;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.File;
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;

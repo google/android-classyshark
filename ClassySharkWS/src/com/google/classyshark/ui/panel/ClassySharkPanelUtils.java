@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.classyshark.ui.viewer;
+package com.google.classyshark.ui.panel;
 
 import com.google.classyshark.reducer.ArchiveReader;
 import com.google.classyshark.translator.Translator;
@@ -23,8 +23,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-public class PanelUtils {
-    private PanelUtils(){}
+public class ClassySharkPanelUtils {
+    private ClassySharkPanelUtils(){}
 
     public static void generateStubFile(Translator translator) {
         generateStubFile(translator.getClassName(),

@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package com.google.classyshark.ui.viewer.toolbar;
+package com.google.classyshark.ui.panel.toolbar;
 
-import com.google.classyshark.ui.ColorScheme;
-import com.google.classyshark.ui.viewer.ClassySharkPanel;
+import com.google.classyshark.ui.panel.ColorScheme;
+import com.google.classyshark.ui.panel.ClassySharkPanel;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -62,7 +62,7 @@ public class RecentArchivesButton extends JButton {
         popup.removeAll();
         JMenuItem item;
 
-        for (String archiveName : RecentFilesConfig.INSTANCE.getRecentArchiveNames()) {
+        for (String archiveName : RecentArchivesConfig.INSTANCE.getRecentArchiveNames()) {
             item = new JMenuItem(archiveName);
             item.setFont(new Font("Menlo", Font.BOLD, 16));
             popup.add(item);
@@ -77,7 +77,7 @@ public class RecentArchivesButton extends JButton {
         clearRecentArchivesItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                RecentFilesConfig.INSTANCE.clear();
+                RecentArchivesConfig.INSTANCE.clear();
                 popup.removeAll();
                 popup.add(clearRecentArchivesItem);
             }
@@ -94,7 +94,7 @@ public class RecentArchivesButton extends JButton {
         @Override
         public void actionPerformed(ActionEvent e) {
             panel.updateUiAfterFileRead(
-                    new File(RecentFilesConfig.INSTANCE.getFilePath(archiveName),
+                    new File(RecentArchivesConfig.INSTANCE.getFilePath(archiveName),
                             archiveName));
             buildPopup();
         }

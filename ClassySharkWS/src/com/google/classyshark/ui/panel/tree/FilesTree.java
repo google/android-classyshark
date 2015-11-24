@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package com.google.classyshark.ui.viewer.tree;
+package com.google.classyshark.ui.panel.tree;
 
 import com.google.classyshark.reducer.Reducer;
-import com.google.classyshark.ui.ColorScheme;
-import com.google.classyshark.ui.viewer.ClassySharkPanel;
+import com.google.classyshark.ui.panel.ColorScheme;
+import com.google.classyshark.ui.panel.ClassySharkPanel;
 import java.awt.Component;
 import java.awt.Font;
 import java.io.File;

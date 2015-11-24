@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.classyshark.ui.viewer;
+package com.google.classyshark.ui.panel;
 
 import java.io.File;
 import java.io.FileReader;
@@ -24,7 +24,7 @@ import java.util.Properties;
 /**
  * Class that manages ClassyShark config
  */
-public enum ClassySharkConfig {
+public enum CurrentFolderConfig {
     INSTANCE;
 
     private static final String CLASSYSHARK_PROPERTIES = "classyshark.properties";

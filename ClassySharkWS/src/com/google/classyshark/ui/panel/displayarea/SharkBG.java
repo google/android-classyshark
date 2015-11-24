@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.classyshark.ui.viewer.displayarea;
+package com.google.classyshark.ui.panel.displayarea;
 
 /**
  *  the welcome ascii art image

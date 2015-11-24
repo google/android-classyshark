@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.classyshark.ui.viewer.toolbar;
+package com.google.classyshark.ui.panel.toolbar;
 
 import java.io.File;
 import java.io.FileReader;
@@ -28,7 +28,7 @@ import java.util.Properties;
 /**
  * Class that manages recent archives config
  */
-public enum RecentFilesConfig {
+public enum RecentArchivesConfig {
     INSTANCE;
 
     private static final String CLASSYSHARK_RECENTS = "classyshark_recents.properties";

@@ -16,7 +16,7 @@
 
 package com.google.classyshark.ui;
 
-import com.google.classyshark.ui.viewer.ClassySharkPanel;
+import com.google.classyshark.ui.panel.ClassySharkPanel;
 import java.awt.Color;
 import java.io.File;
 import java.util.Arrays;
