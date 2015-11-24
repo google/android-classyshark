@@ -16,7 +16,6 @@
 
 package com.google.classyshark.ui;
 
-import com.google.classyshark.ui.tabs.ClassySharkTabsFrame;
 import com.google.classyshark.ui.viewer.ClassySharkPanel;
 import java.awt.Color;
 import java.io.File;
@@ -64,30 +63,17 @@ public class Main {
     private static void buildAndShowClassySharkFrame(List<String> cmdLineArgs) {
         JFrame frame;
 
-        if (isMultiTab(cmdLineArgs)) {
-            frame = new ClassySharkTabsFrame("ClassyShark", cmdLineArgs);
+        frame = new JFrame();
+        frame.setTitle("ClassyShark");
+        if (cmdLineArgs.size() == 1) {
+            frame.getContentPane().add(
+                    new ClassySharkPanel(frame, new File(cmdLineArgs.get(0))));
         } else {
-            frame = new JFrame();
-            frame.setTitle("ClassyShark");
-            if (cmdLineArgs.size() == 1) {
-                frame.getContentPane().add(
-                        new ClassySharkPanel(frame, new File(cmdLineArgs.get(0))));
-            } else {
-                frame.getContentPane().add(new ClassySharkPanel(frame));
-            }
+            frame.getContentPane().add(new ClassySharkPanel(frame));
         }
 
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
-    }
-
-    private static boolean isMultiTab(List<String> cmdLineArgs) {
-        if (cmdLineArgs.contains("-t")) {
-            return true;
-        }
-
-        boolean moreThanOneFile = (cmdLineArgs.size() >= 2);
-        return moreThanOneFile;
     }
 }

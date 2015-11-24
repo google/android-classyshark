@@ -47,8 +47,6 @@ public class ClassySharkPanel extends JPanel implements KeyListener {
     private static final boolean IS_CLASSNAME_FROM_MOUSE_CLICK = true;
     private static final boolean VIEW_TOP_CLASS = true;
 
-    private JTabbedPane jTabbedPane;
-    private int myIndexAtJTabbedPane;
     private JFrame jFrame;
 
     private Toolbar toolBar;
@@ -62,13 +60,6 @@ public class ClassySharkPanel extends JPanel implements KeyListener {
     private boolean isDataLoaded = false;
     private File loadedFile;
     private List<String> allClassesInArchive;
-
-    public ClassySharkPanel(JTabbedPane tabbedPane, int myIndex) {
-        super(false);
-        buildUI();
-        jTabbedPane = tabbedPane;
-        myIndexAtJTabbedPane = myIndex;
-    }
 
     public ClassySharkPanel(JFrame frame, File archive) {
         super(false);
@@ -201,11 +192,6 @@ public class ClassySharkPanel extends JPanel implements KeyListener {
     }
 
     public void updateUiAfterFileRead(File resultFile) {
-        if (jTabbedPane != null) {
-            String tabName = PanelUtils.fitArchiveNameToTab(resultFile);
-            jTabbedPane.setTitleAt(myIndexAtJTabbedPane, tabName);
-        }
-
         if (jFrame != null) {
             jFrame.setTitle(resultFile.getName());
         }
@@ -349,20 +335,6 @@ public class ClassySharkPanel extends JPanel implements KeyListener {
         if (e.getKeyCode() == KeyEvent.VK_S) {
             PanelUtils.generateStubFile(translator);
             return;
-        }
-
-        if (jTabbedPane == null) {
-            return;
-        }
-
-        if (e.getKeyCode() == KeyEvent.VK_1) {
-            jTabbedPane.setSelectedIndex(0);
-        } else if (e.getKeyCode() == KeyEvent.VK_2) {
-            jTabbedPane.setSelectedIndex(1);
-        } else if (e.getKeyCode() == KeyEvent.VK_3) {
-            jTabbedPane.setSelectedIndex(2);
-        } else if (e.getKeyCode() == KeyEvent.VK_4) {
-            jTabbedPane.setSelectedIndex(3);
         }
     }
 

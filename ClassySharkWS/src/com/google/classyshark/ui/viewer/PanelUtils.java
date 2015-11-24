@@ -43,15 +43,6 @@ public class PanelUtils {
         return "dex, jar, apk, class";
     }
 
-    public static String fitArchiveNameToTab(File resultFile) {
-        String tabName = resultFile.getName();
-
-        if (tabName.length() > 7) {
-            tabName = tabName.substring(0, 7) + "...";
-        }
-        return tabName;
-    }
-
     private static void generateStubFile(String className, String classBody) {
         try {
             Files.write(Paths.get("./" + className + ".java"), classBody.getBytes());
