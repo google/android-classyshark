@@ -48,6 +48,12 @@ public class FilesTree {
     }
 
     public void fillArchive(File loadedFile, List<String> displayedClassNames) {
+        if(!loadedFile.getName().contains(".")) {
+            TreeNode rootNode = createEmptyJTreeModelClass();
+            treeModel.setRoot(rootNode);
+            return;
+        }
+
         TreeNode rootNode;
         if (loadedFile.getName().endsWith("dex") ||
                 loadedFile.getName().endsWith("apk")) {
@@ -121,6 +127,10 @@ public class FilesTree {
         }
         root.add(classes);
         return root;
+    }
+
+    private TreeNode createEmptyJTreeModelClass() {
+        return new DefaultMutableTreeNode("error loading archive");
     }
 
     public Component getJTree() {

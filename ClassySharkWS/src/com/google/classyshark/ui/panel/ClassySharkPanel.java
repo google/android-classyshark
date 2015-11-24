@@ -28,6 +28,7 @@ import java.awt.Dimension;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -245,12 +246,17 @@ public class ClassySharkPanel extends JPanel implements KeyListener {
             }
 
             protected void done() {
-                if (!allClassesInArchive.isEmpty()) {
-                    filesTree.fillArchive(loadedFile, allClassesInArchive);
-                    displayArea.displaySharkey();
-                } else {
+                if (allClassesInArchive.isEmpty()
+                    || (allClassesInArchive.size() == 1
+                        && allClassesInArchive.contains("AndroidManifest.xml"))) {
+
+                    filesTree.fillArchive(new File("XXXXX"), new ArrayList<String>());
                     displayArea.displayError();
+                    return;
                 }
+
+                filesTree.fillArchive(loadedFile, allClassesInArchive);
+                displayArea.displaySharkey();
             }
         };
 
