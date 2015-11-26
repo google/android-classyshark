@@ -45,7 +45,7 @@ public class ClassySharkPanelUtils {
 
     private static void generateStubFile(String className, String classBody) {
         try {
-            Files.write(Paths.get("./" + className + ".java"), classBody.getBytes());
+            Files.write(Paths.get("./" + className + ".dump.java"), classBody.getBytes());
         } catch (IOException e) {
             e.printStackTrace();
         }

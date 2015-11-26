@@ -28,6 +28,7 @@ import java.awt.Dimension;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JFileChooser;
@@ -176,6 +177,31 @@ public class ClassySharkPanel extends JPanel implements KeyListener {
         }
     }
 
+    public void onExportButtonPressed() {
+        SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
+            @Override
+            protected Void doInBackground() throws Exception {
+                List<String> arr = reducer.getAllClassesNames();
+                FileWriter writer = new FileWriter(loadedFile.getName() + "_dump.txt");
+                for(String str: arr) {
+                    writer.write("\n" + str);
+                }
+                writer.close();
+
+                writer = new FileWriter(translator.getClassName() + "_dump");
+                writer.write(translator.toString());
+                writer.close();
+
+                return null;
+            }
+
+            protected void done() {
+            }
+        };
+
+        worker.execute();
+    }
+
     public void onSelectedClassName(String className) {
         fillDisplayArea(className, VIEW_TOP_CLASS, IS_CLASSNAME_FROM_MOUSE_CLICK);
     }
@@ -247,9 +273,8 @@ public class ClassySharkPanel extends JPanel implements KeyListener {
 
             protected void done() {
                 if (allClassesInArchive.isEmpty()
-                    || (allClassesInArchive.size() == 1
+                        || (allClassesInArchive.size() == 1
                         && allClassesInArchive.contains("AndroidManifest.xml"))) {
-
                     filesTree.fillArchive(new File("XXXXX"), new ArrayList<String>());
                     displayArea.displayError();
                     return;

@@ -79,7 +79,6 @@ public class ArchiveReader {
         }
     }
 
-
     public static DexFile get(File binaryArchiveFile) throws Exception {
         // TODO optimize
         DexFile newDexFile = DexFileFactory.loadDexFile(binaryArchiveFile,

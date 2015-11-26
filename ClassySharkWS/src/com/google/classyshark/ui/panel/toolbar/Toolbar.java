@@ -42,6 +42,7 @@ public class Toolbar extends JToolBar {
     private JButton openBtn;
     private JButton viewBtn;
     private JButton backBtn;
+    private JButton exportButton;
     private JButton recentArchivesBtn;
     private JToggleButton leftPanelToggleBtn;
 
@@ -62,6 +63,7 @@ public class Toolbar extends JToolBar {
         openBtn = buildOpenButton();
         backBtn = buildBackButton();
         viewBtn = buildViewButton();
+        exportButton = buildExportButton();
         recentArchivesBtn = buildRecentArchivesButton();
         leftPanelToggleBtn = buildLeftPanelToggleButton();
 
@@ -72,6 +74,7 @@ public class Toolbar extends JToolBar {
         add(backBtn);
         add(viewBtn);
         add(typingArea);
+        add(exportButton);
         add(recentArchivesBtn);
 
         setFloatable(false);
@@ -116,6 +119,7 @@ public class Toolbar extends JToolBar {
     public void activateNavigationButtons() {
         viewBtn.setEnabled(true);
         backBtn.setEnabled(true);
+        exportButton.setEnabled(true);
     }
 
     private JTextField buildTypingArea() {
@@ -192,6 +196,26 @@ public class Toolbar extends JToolBar {
 
         result.setBorderPainted(false);
         result.setFocusPainted(true);
+        result.setForeground(ColorScheme.FOREGROUND_YELLOW);
+        result.setBackground(ColorScheme.BLACK);
+        result.setEnabled(false);
+
+        return result;
+    }
+
+    private JButton buildExportButton() {
+        JButton result = new JButton("\u2551");
+        result.setFont(new Font("Menlo", Font.PLAIN, 18));
+
+        result.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                classySharkPanel.onExportButtonPressed();
+            }
+        });
+
+        result.setToolTipText("Export");
+        result.setBorderPainted(false);
         result.setForeground(ColorScheme.FOREGROUND_YELLOW);
         result.setBackground(ColorScheme.BLACK);
         result.setEnabled(false);

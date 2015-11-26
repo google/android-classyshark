@@ -163,7 +163,8 @@ public class FilesTree {
                 if (!defaultMutableTreeNode.isLeaf()) return;
 
                 if (FilesTree.this.viewerPanel != null) {
-                    FilesTree.this.viewerPanel.onSelectedClassName((String) defaultMutableTreeNode.getUserObject());
+                    FilesTree.this.viewerPanel.onSelectedClassName(
+                            (String) defaultMutableTreeNode.getUserObject());
                 }
             }
         });
