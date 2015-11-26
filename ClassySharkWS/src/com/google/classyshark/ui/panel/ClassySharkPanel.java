@@ -82,11 +82,6 @@ public class ClassySharkPanel extends JPanel implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if (e.isControlDown()) {
-            handleControlPress(e);
-            return;
-        }
-
         if (!isDataLoaded) {
             openArchive();
             return;
@@ -358,13 +353,6 @@ public class ClassySharkPanel extends JPanel implements KeyListener {
         };
 
         worker.execute();
-    }
-
-    private void handleControlPress(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_S) {
-            ClassySharkPanelUtils.generateStubFile(translator);
-            return;
-        }
     }
 
     private static boolean isOpenFile(KeyEvent e) {

@@ -26,11 +26,6 @@ import java.nio.file.Paths;
 public class ClassySharkPanelUtils {
     private ClassySharkPanelUtils(){}
 
-    public static void generateStubFile(Translator translator) {
-        generateStubFile(translator.getClassName(),
-                translator.toString());
-    }
-
     public static boolean acceptFile(File f) {
         if (f.isDirectory()) {
             return true;
@@ -41,13 +36,5 @@ public class ClassySharkPanelUtils {
 
     public static String getFileChooserDescription() {
         return "dex, jar, apk, class";
-    }
-
-    private static void generateStubFile(String className, String classBody) {
-        try {
-            Files.write(Paths.get("./" + className + ".dump.java"), classBody.getBytes());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 }
