@@ -11,7 +11,6 @@ ClassySharkAndroid/.idea/
 ClassySharkAndroid/out/
 
 ClassySharkAndroid/tests/
-ClassySharkWS/Main-dex2jar.jar
 
 ClassySharkAndroid/app/app.iml
 
@@ -43,8 +42,6 @@ ClassySharkWS/ClassySharkWS.iml
 
 .idea/workspace.xml
 
-ClassySharkAndroid/app/src/main/res/layout/activity_source_viewer.xml
-
 ClassySharkWS/classes-dex2jar.jar
 
 *.dex
@@ -62,8 +59,6 @@ Scenarios/.idea/copyright/profiles_settings.xml
 Scenarios/out/production/Scenarios/META-INF/MANIFEST.MF
 
 *.html
-
-ClassySharkWS/classyshark.properties
 
 *.properties
 
