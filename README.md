@@ -35,6 +35,7 @@ Helps you debug your app by allowing you to:
 * Show class name collisions 
 * Show missing and/or changed code due to Proguard obfuscation
 * Trace method calls in obfuscated APK
+* Export archive data from ClassyShark to a text file
 
 ## Downloads
 
