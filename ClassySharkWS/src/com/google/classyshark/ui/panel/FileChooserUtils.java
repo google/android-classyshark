@@ -16,25 +16,29 @@
 
 package com.google.classyshark.ui.panel;
 
-import com.google.classyshark.reducer.ArchiveReader;
-import com.google.classyshark.translator.Translator;
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
-public class ClassySharkPanelUtils {
-    private ClassySharkPanelUtils(){}
+public class FileChooserUtils {
+    private FileChooserUtils(){}
 
     public static boolean acceptFile(File f) {
         if (f.isDirectory()) {
             return true;
         } else {
-            return ArchiveReader.isSupportedArchiveFile(f);
+            return isSupportedArchiveFile(f);
         }
     }
 
     public static String getFileChooserDescription() {
         return "dex, jar, apk, class";
     }
+
+    public static boolean isSupportedArchiveFile(File f) {
+        String filename = f.getName().toLowerCase();
+        return filename.endsWith(".dex")
+                || filename.endsWith(".jar")
+                || filename.endsWith(".apk")
+                || filename.endsWith(".class");
+    }
+
 }

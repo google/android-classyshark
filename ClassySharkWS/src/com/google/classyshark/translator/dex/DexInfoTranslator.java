@@ -16,7 +16,7 @@
 
 package com.google.classyshark.translator.dex;
 
-import com.google.classyshark.reducer.ArchiveReader;
+import com.google.classyshark.reducer.ArchiveFileReader;
 import com.google.classyshark.translator.Translator;
 import java.io.File;
 import java.util.ArrayList;
@@ -44,7 +44,7 @@ public class DexInfoTranslator implements Translator {
     @Override
     public void apply() {
         try {
-            DexFile dxFile = ArchiveReader.get(new File(dexFileName));
+            DexFile dxFile = ArchiveFileReader.loadDexFile(new File(dexFileName));
             DexBackedDexFile dataPack = (DexBackedDexFile) dxFile;
 
             ELEMENT element = new ELEMENT("\nclasses: " + dataPack.getClassCount(), TAG.ANNOTATION);

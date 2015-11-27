@@ -21,7 +21,6 @@ import com.google.classyshark.translator.Translator;
 import com.google.classyshark.translator.TranslatorFactory;
 import com.google.classyshark.ui.Main;
 import com.google.classyshark.ui.panel.displayarea.DisplayArea;
-import com.google.classyshark.ui.panel.displayarea.ExportFileWriter;
 import com.google.classyshark.ui.panel.toolbar.RecentArchivesConfig;
 import com.google.classyshark.ui.panel.toolbar.Toolbar;
 import com.google.classyshark.ui.panel.tree.FilesTree;
@@ -31,7 +30,6 @@ import java.awt.Dimension;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
-import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -117,12 +115,12 @@ public class ClassySharkPanel extends JPanel implements KeyListener {
         fc.setFileFilter(new FileFilter() {
             @Override
             public boolean accept(File f) {
-                return ClassySharkPanelUtils.acceptFile(f);
+                return FileChooserUtils.acceptFile(f);
             }
 
             @Override
             public String getDescription() {
-                return ClassySharkPanelUtils.getFileChooserDescription();
+                return FileChooserUtils.getFileChooserDescription();
             }
         });
 
@@ -184,9 +182,9 @@ public class ClassySharkPanel extends JPanel implements KeyListener {
         SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
             @Override
             protected Void doInBackground() throws Exception {
-                ExportFileWriter.writeAllClassNames(reducer, loadedFile);
-                ExportFileWriter.writeCurrentClass(translator);
-                ExportFileWriter.writeAllClassContents(reducer, loadedFile);
+                Export2FileWriter.writeAllClassNames(reducer, loadedFile);
+                Export2FileWriter.writeCurrentClass(translator);
+                Export2FileWriter.writeAllClassContents(reducer, loadedFile);
                 return null;
             }
 

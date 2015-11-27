@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.classyshark.ui.panel.displayarea;
+package com.google.classyshark.ui.panel;
 
 import com.google.classyshark.reducer.Reducer;
 import com.google.classyshark.translator.Translator;
@@ -25,9 +25,12 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * Export writer, to write the data that will be read with other editors/viewers
+ * Is a function : (reducer|translator) --> text file
  */
-public class ExportFileWriter {
+public class Export2FileWriter {
+
+    private Export2FileWriter() {
+    }
 
     public static void writeAllClassNames(Reducer reducer, File loadedFile)
             throws IOException {
@@ -69,7 +72,6 @@ public class ExportFileWriter {
         Reducer reducer = new Reducer(new File(allAndroid));
         reducer.reduce("");
 
-        writeAllClassContents(reducer,
-                new File(allAndroid));
+        writeAllClassContents(reducer, new File(allAndroid));
     }
 }

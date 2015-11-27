@@ -24,13 +24,13 @@ import java.net.URLClassLoader;
 /**
  * Helper method for class loading
  */
-public class ClassLoadingUtils {
+public class ClassUtils {
 
-    private ClassLoadingUtils() {
+    private ClassUtils() {
     }
 
     // TODO add logic when the className ends with .class
-    public static Class load(String jarAbsolutePath, String className) throws
+    public static Class loadClassFromJar(String jarAbsolutePath, String className) throws
             MalformedURLException, ClassNotFoundException {
         Class result;
         URL[] classLoaderUrls = new URL[]{new File(jarAbsolutePath).toURI().toURL()};

@@ -17,16 +17,10 @@
 package com.google.classyshark.reducer;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
-import org.jf.dexlib2.iface.ClassDef;
-import org.jf.dexlib2.iface.DexFile;
 
 /**
  * Is a function : (key, list of classes) --> list of classes, reduced by key
@@ -42,7 +36,7 @@ public class Reducer {
             public List<String> fillAllClassesNames(File binaryArchiveFile)
                     throws Exception {
                 List<String> result = new LinkedList<>();
-                result.add(ArchiveReader.loadClassFromClassFile(binaryArchiveFile).getName() + ".class");
+                result.add(ArchiveFileReader.loadClassFromClassFile(binaryArchiveFile).getName() + ".class");
                 return result;
             }
         },
@@ -52,7 +46,7 @@ public class Reducer {
                     throws Exception {
                 String fullPath = binaryArchiveFile.getPath();
                 List<String> result =
-                        ArchiveReader.readClassNamesFromJar(fullPath);
+                        ArchiveFileReader.readClassNamesFromJar(fullPath);
                 Collections.sort(result);
                 return result;
             }
@@ -61,12 +55,10 @@ public class Reducer {
             @Override
             public List<String> fillAllClassesNames(File binaryArchiveFile)
                     throws Exception {
-
                 List<String> result = MULTI_DEX.fillAllClassesNames(binaryArchiveFile);
 
                 // TODO add check for manifest
                 result.add(0, "AndroidManifest.xml");
-
                 return result;
             }
         },
@@ -74,71 +66,14 @@ public class Reducer {
             @Override
             public List<String> fillAllClassesNames(File binaryArchiveFile)
                     throws Exception {
-                DexFile dexFile = ArchiveReader.get(binaryArchiveFile);
-                List<String> result = new ArrayList<>();
-
-                for (ClassDef classDef : dexFile.getClasses()) {
-                    result.add(classDef.getType().replaceAll("/", ".").
-                            substring(1, classDef.getType().length() - 1));
-                }
-
-                Collections.sort(result);
-                return result;
+                return ArchiveFileReader.readClassNamesFromDex(binaryArchiveFile);
             }
         },
         MULTI_DEX {
             @Override
             public List<String> fillAllClassesNames(File binaryArchiveFile)
                     throws Exception {
-
-                List<String> result = new LinkedList<>();
-
-                ZipInputStream zipFile;
-
-                try {
-                    zipFile = new ZipInputStream(new FileInputStream(
-                            binaryArchiveFile));
-
-                    ZipEntry zipEntry;
-
-                    int dexIndex = 0;
-                    while (true) {
-                        zipEntry = zipFile.getNextEntry();
-
-                        if (zipEntry == null) {
-                            break;
-                        }
-
-                        if (zipEntry.getName().endsWith(".dex")) {
-                            File file = new File("classes" + dexIndex + ".dex");
-                            file.createNewFile();
-
-                            FileOutputStream fos =
-                                    new FileOutputStream(file);
-                            byte[] bytes = new byte[1024];
-                            int length;
-                            while ((length = zipFile.read(bytes)) >= 0) {
-                                fos.write(bytes, 0, length);
-                            }
-
-                            fos.close();
-
-                            List<String> classesAtDex =
-                                    Reducer.FormatStrategy.DEX.
-                                            fillAllClassesNames(file);
-
-                            result.add("classes" + dexIndex + ".dex");
-                            result.addAll(classesAtDex);
-                            dexIndex++;
-                        }
-                    }
-                    zipFile.close();
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                return result;
+                return ArchiveFileReader.readClassNamesFromMultidex(binaryArchiveFile);
             }
         };
 

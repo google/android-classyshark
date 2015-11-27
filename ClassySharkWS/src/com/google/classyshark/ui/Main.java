@@ -31,17 +31,13 @@ import javax.swing.WindowConstants;
  */
 public class Main {
 
+    private Main() {
+
+    }
+
     private static void setParamsForOtherPlatforms() throws Exception {
         UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
         UIManager.setLookAndFeel("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
-    }
-
-    public static void main(final String[] args) {
-        javax.swing.SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                buildAndShowClassySharkFrame(Arrays.asList(args));
-            }
-        });
     }
 
     public static void buildAndShowClassySharkFrame(List<String> cmdLineArgs) {
@@ -66,5 +62,13 @@ public class Main {
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
+    }
+
+    public static void main(final String[] args) {
+        javax.swing.SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                buildAndShowClassySharkFrame(Arrays.asList(args));
+            }
+        });
     }
 }
