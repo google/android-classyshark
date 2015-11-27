@@ -18,7 +18,7 @@ package com.google.classyshark.translator.java;
 
 import com.google.classyshark.translator.Translator;
 import com.google.classyshark.translator.TranslatorFactory;
-import com.google.classyshark.translator.java.clazz.TypesToNamesMapper;
+import com.google.classyshark.translator.java.clazz.QualifiedTypesMap;
 import com.google.classyshark.translator.java.clazz.reflect.MetaObjectClass;
 import java.io.File;
 import java.lang.reflect.Modifier;
@@ -33,7 +33,7 @@ public class Translator2Java implements Translator {
 
     private MetaObject metaObject;
     private List<ELEMENT> sourceCode;
-    private TypesToNamesMapper namesMapper;
+    private QualifiedTypesMap namesMapper;
 
     /**
      * used for testing
@@ -43,14 +43,14 @@ public class Translator2Java implements Translator {
     public Translator2Java(Class clazz) {
         this.metaObject = new MetaObjectClass(clazz);
         sourceCode = new ArrayList<>();
-        namesMapper = new TypesToNamesMapper();
+        namesMapper = new QualifiedTypesMap();
     }
 
     public Translator2Java(String className, File archiveFile) {
         this.metaObject =
                 MetaObjectFactory.buildMetaObject(className, archiveFile);
         sourceCode = new ArrayList<>();
-        namesMapper = new TypesToNamesMapper();
+        namesMapper = new QualifiedTypesMap();
     }
 
     @Override
@@ -160,7 +160,7 @@ public class Translator2Java implements Translator {
         fillMethods(methods, sourceCode, namesMapper);
     }
 
-    private static void fillImports(TypesToNamesMapper namesMapper, List<ELEMENT> words) {
+    private static void fillImports(QualifiedTypesMap namesMapper, List<ELEMENT> words) {
         List<String> imports = namesMapper.getFullTypes();
         for (String importStr : imports) {
             words.add(new ELEMENT("\nimport ", TAG.MODIFIER));
@@ -173,7 +173,7 @@ public class Translator2Java implements Translator {
     private static void fillClassDecl(MetaObject.InterfaceInfo[] interfaces,
                                       MetaObject metaObject,
                                       List<ELEMENT> words,
-                                      TypesToNamesMapper namesMapper) {
+                                      QualifiedTypesMap namesMapper) {
         MetaObject.AnnotationInfo[] annotations = metaObject.getAnnotations();
         for (MetaObject.AnnotationInfo annot : annotations) {
             words.add(new ELEMENT("@" + annot.annotationStr + " \n", TAG.ANNOTATION));
@@ -213,7 +213,7 @@ public class Translator2Java implements Translator {
 
     private static void fillFields(MetaObject.FieldInfo[] fields,
                                    List<ELEMENT> words,
-                                   TypesToNamesMapper namesMapper) {
+                                   QualifiedTypesMap namesMapper) {
         MetaObject.AnnotationInfo[] annotations;
         words.add(new ELEMENT("\n"
                 + "    //======================== F I E L D S ==================\n\n",
@@ -240,7 +240,7 @@ public class Translator2Java implements Translator {
 
     private static void fillCtors(MetaObject.ConstructorInfo[] constructors,
                                   MetaObject metaObject, List<ELEMENT> words,
-                                  TypesToNamesMapper namesMapper) {
+                                  QualifiedTypesMap namesMapper) {
         words.add(new ELEMENT("\n\n"
                 + "    //======================== C O N S T R U C T O R S ======\n\n",
                 TAG.DOCUMENT));
@@ -272,7 +272,7 @@ public class Translator2Java implements Translator {
 
     private static void fillMethods(MetaObject.MethodInfo[] methods,
                                     List<ELEMENT> words,
-                                    TypesToNamesMapper namesMapper) {
+                                    QualifiedTypesMap namesMapper) {
         MetaObject.AnnotationInfo[] annotations;
         words.add(new ELEMENT("\n"
                 + "    //======================== M E T H O D S ================\n\n",

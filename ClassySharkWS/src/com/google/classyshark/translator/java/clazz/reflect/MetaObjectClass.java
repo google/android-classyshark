@@ -18,7 +18,7 @@ package com.google.classyshark.translator.java.clazz.reflect;
 
 import com.google.classyshark.reducer.Reducer;
 import com.google.classyshark.translator.java.MetaObject;
-import com.google.classyshark.translator.java.clazz.TypesToNamesMapper;
+import com.google.classyshark.translator.java.clazz.QualifiedTypesMap;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -231,7 +231,7 @@ public class MetaObjectClass extends MetaObject {
         for (Type t : actualTypeArguments) {
             // TODO not sure in java generics spec
             // TODO are generic params evaluated with class params
-            result += TypesToNamesMapper.decodeAndStore(t.toString(), null) + ", ";
+            result += QualifiedTypesMap.decodeAndStore(t.toString(), null) + ", ";
         }
         result = result.substring(0, result.length() - 2) + ">";
         return result;

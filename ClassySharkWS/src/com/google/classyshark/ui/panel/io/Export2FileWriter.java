@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.classyshark.ui.panel;
+package com.google.classyshark.ui.panel.io;
 
 import com.google.classyshark.reducer.Reducer;
 import com.google.classyshark.translator.Translator;

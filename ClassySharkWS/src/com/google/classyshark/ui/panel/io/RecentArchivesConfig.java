@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.classyshark.ui.panel.toolbar;
+package com.google.classyshark.ui.panel.io;
 
 import java.io.File;
 import java.io.FileReader;

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.classyshark.ui.panel;
+package com.google.classyshark.ui.panel.io;
 
 import java.io.File;
 

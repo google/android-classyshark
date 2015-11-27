@@ -17,7 +17,6 @@
 package com.google.classyshark.ui;
 
 import com.google.classyshark.ui.panel.ClassySharkPanel;
-import java.awt.Color;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
@@ -32,7 +31,6 @@ import javax.swing.WindowConstants;
 public class Main {
 
     private Main() {
-
     }
 
     private static void setParamsForOtherPlatforms() throws Exception {

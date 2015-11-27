@@ -25,11 +25,11 @@ import java.util.List;
 /**
  * Data structure for handling fully qualified class dependencies
  */
-public class TypesToNamesMapper {
+public class QualifiedTypesMap {
 
     private HashMap<String, String> full2types;
 
-    public TypesToNamesMapper() {
+    public QualifiedTypesMap() {
         full2types = new HashMap<>();
     }
 

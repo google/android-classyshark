@@ -21,7 +21,10 @@ import com.google.classyshark.translator.Translator;
 import com.google.classyshark.translator.TranslatorFactory;
 import com.google.classyshark.ui.Main;
 import com.google.classyshark.ui.panel.displayarea.DisplayArea;
-import com.google.classyshark.ui.panel.toolbar.RecentArchivesConfig;
+import com.google.classyshark.ui.panel.io.CurrentFolderConfig;
+import com.google.classyshark.ui.panel.io.Export2FileWriter;
+import com.google.classyshark.ui.panel.io.FileChooserUtils;
+import com.google.classyshark.ui.panel.io.RecentArchivesConfig;
 import com.google.classyshark.ui.panel.toolbar.Toolbar;
 import com.google.classyshark.ui.panel.tree.FilesTree;
 import java.awt.BorderLayout;
@@ -267,7 +270,7 @@ public class ClassySharkPanel extends JPanel implements KeyListener {
             @Override
             protected void done() {
                 if (isArchiveError()) {
-                    filesTree.fillArchive(new File("XXXXX"), new ArrayList<String>());
+                    filesTree.fillArchive(new File("ERROR"), new ArrayList<String>());
                     displayArea.displayError();
                     return;
                 }
@@ -281,8 +284,7 @@ public class ClassySharkPanel extends JPanel implements KeyListener {
                 boolean noAndroidClasses = allClassesInArchive.size() == 1
                         && allClassesInArchive.contains("AndroidManifest.xml");
 
-                return noJavaClasses
-                        || noAndroidClasses;
+                return noJavaClasses || noAndroidClasses;
             }
         };
 
@@ -367,14 +369,5 @@ public class ClassySharkPanel extends JPanel implements KeyListener {
 
     private static boolean isViewTopClassKeyPressed(KeyEvent e) {
         return (e.getKeyCode() == 39);
-    }
-
-    public static void main(String[] args) {
-        List<String> files = new LinkedList<>();
-        String testFile = System.getProperty("user.home")
-                + "/Desktop/Scenarios/2 Samples/android.jar";
-        files.add(testFile);
-
-        Main.buildAndShowClassySharkFrame(files);
     }
 }
