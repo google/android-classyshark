@@ -74,14 +74,31 @@ public class MetaObjectFactory {
             return result;
         }
 
+        result = verifyLoadedClassAndBuildASMFallback(className, archiveFile, result, clazz);
+
+        return result;
+    }
+
+    private static MetaObject verifyLoadedClassAndBuildASMFallback(String className, File archiveFile, MetaObject result, Class clazz) {
         try {
             if (clazz.getFields() != null) {
+                result = new MetaObjectClass(clazz);
+            }
+
+            if (clazz.getMethods() != null) {
+                result = new MetaObjectClass(clazz);
+            }
+
+            if (clazz.getConstructors() != null) {
+                result = new MetaObjectClass(clazz);
+            }
+
+            if (clazz.getDeclaredMethods() != null) {
                 result = new MetaObjectClass(clazz);
             }
         } catch (NoClassDefFoundError e) {
             result = new MetaObjectAsmClass(className, archiveFile);
         }
-
         return result;
     }
 
