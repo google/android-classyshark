@@ -21,6 +21,7 @@ import com.google.classyshark.translator.Translator;
 import com.google.classyshark.translator.TranslatorFactory;
 import com.google.classyshark.ui.Main;
 import com.google.classyshark.ui.panel.displayarea.DisplayArea;
+import com.google.classyshark.ui.panel.displayarea.ExportFileWriter;
 import com.google.classyshark.ui.panel.toolbar.RecentArchivesConfig;
 import com.google.classyshark.ui.panel.toolbar.Toolbar;
 import com.google.classyshark.ui.panel.tree.FilesTree;
@@ -32,7 +33,6 @@ import java.awt.event.KeyListener;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import javax.swing.JFileChooser;
@@ -186,14 +186,18 @@ public class ClassySharkPanel extends JPanel implements KeyListener {
             protected Void doInBackground() throws Exception {
                 List<String> arr = reducer.getAllClassesNames();
                 FileWriter writer = new FileWriter(loadedFile.getName() + "_dump.txt");
-                for(String str: arr) {
+                for (String str : arr) {
                     writer.write("\n" + str);
                 }
                 writer.close();
 
+
+                // TODO problem here when there is no class loaded
                 writer = new FileWriter(translator.getClassName() + "_dump");
                 writer.write(translator.toString());
                 writer.close();
+
+                ExportFileWriter.writeExport(reducer, loadedFile);
 
                 return null;
             }
