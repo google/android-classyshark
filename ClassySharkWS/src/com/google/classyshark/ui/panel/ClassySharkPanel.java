@@ -19,17 +19,21 @@ package com.google.classyshark.ui.panel;
 import com.google.classyshark.reducer.Reducer;
 import com.google.classyshark.translator.Translator;
 import com.google.classyshark.translator.TranslatorFactory;
+import com.google.classyshark.ui.Main;
 import com.google.classyshark.ui.panel.displayarea.DisplayArea;
 import com.google.classyshark.ui.panel.toolbar.RecentArchivesConfig;
 import com.google.classyshark.ui.panel.toolbar.Toolbar;
 import com.google.classyshark.ui.panel.tree.FilesTree;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -37,6 +41,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.SwingWorker;
+import javax.swing.UIManager;
 import javax.swing.filechooser.FileFilter;
 
 /**
@@ -62,15 +67,18 @@ public class ClassySharkPanel extends JPanel implements KeyListener {
     private List<String> allClassesInArchive;
 
     public ClassySharkPanel(JFrame frame, File archive) {
-        super(false);
-        buildUI();
-        jFrame = frame;
-        toolBar.setText("");
+        this(frame);
+
         updateUiAfterFileRead(archive);
     }
 
     public ClassySharkPanel(JFrame frame) {
         super(false);
+
+        UIManager.put("swing.boldMetal", Boolean.FALSE);
+        UIManager.put("Button.select", Color.GRAY);
+        UIManager.put("ToggleButton.select", Color.GRAY);
+
         buildUI();
         jFrame = frame;
         toolBar.setText("");
@@ -230,7 +238,6 @@ public class ClassySharkPanel extends JPanel implements KeyListener {
 
         toolBar = new Toolbar(this);
         add(toolBar, BorderLayout.NORTH);
-
         toolBar.addKeyListenerToTypingArea(this);
         toolBar.setTypingArea();
 
@@ -266,6 +273,7 @@ public class ClassySharkPanel extends JPanel implements KeyListener {
                 return null;
             }
 
+            @Override
             protected void done() {
                 if (allClassesInArchive.isEmpty()
                         || (allClassesInArchive.size() == 1
@@ -364,12 +372,11 @@ public class ClassySharkPanel extends JPanel implements KeyListener {
     }
 
     public static void main(String[] args) {
-        File testFile = new File(System.getProperty("user.home") +
-                "/Desktop/Scenarios/2 Samples/android.jar");
-        JFrame frame = new JFrame(testFile.getName());
-        ClassySharkPanel tabPanel = new ClassySharkPanel(frame, testFile);
-        frame.getContentPane().add(tabPanel);
-        frame.pack();
-        frame.setVisible(true);
+        List<String> files = new LinkedList<>();
+        String testFile = System.getProperty("user.home")
+                + "/Desktop/Scenarios/2 Samples/android.jar";
+        files.add(testFile);
+
+        Main.buildAndShowClassySharkFrame(files);
     }
 }

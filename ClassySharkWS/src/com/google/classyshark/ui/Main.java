@@ -36,7 +36,15 @@ public class Main {
         UIManager.setLookAndFeel("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
     }
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
+        javax.swing.SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                buildAndShowClassySharkFrame(Arrays.asList(args));
+            }
+        });
+    }
+
+    public static void buildAndShowClassySharkFrame(List<String> cmdLineArgs) {
         try {
             UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
         } catch (UnsupportedLookAndFeelException | IllegalAccessException ex) {
@@ -47,24 +55,7 @@ public class Main {
             e.printStackTrace();
         }
 
-        final List<String> cmdLineArgs = Arrays.asList(args);
-
-        UIManager.put("swing.boldMetal", Boolean.FALSE);
-        UIManager.put("Button.select", Color.GRAY);
-        UIManager.put("ToggleButton.select", Color.GRAY);
-
-        javax.swing.SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                buildAndShowClassySharkFrame(cmdLineArgs);
-            }
-        });
-    }
-
-    private static void buildAndShowClassySharkFrame(List<String> cmdLineArgs) {
-        JFrame frame;
-
-        frame = new JFrame();
-        frame.setTitle("ClassyShark");
+        JFrame frame = new JFrame("ClassyShark");
         if (cmdLineArgs.size() == 1) {
             frame.getContentPane().add(
                     new ClassySharkPanel(frame, new File(cmdLineArgs.get(0))));
