@@ -182,7 +182,7 @@ public class FilesTree {
 
         Reducer reducer = new Reducer(test);
         reducer.reduce("");
-        filesTree.fillArchive(test, reducer.getAllClassesNames());
+        filesTree.fillArchive(test, reducer.getAllClassNames());
 
         JFrame frame = new JFrame("Test");
         JScrollPane scrolledTree = new JScrollPane(filesTree.getJTree());

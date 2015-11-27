@@ -61,13 +61,13 @@ public class ClassySharkPanel extends JPanel implements KeyListener {
     private Reducer reducer;
     private Translator translator;
     private boolean isDataLoaded = false;
-    private File loadedFile;
+    private File binaryArchive;
     private List<String> allClassesInArchive;
 
     public ClassySharkPanel(JFrame frame, File archive) {
         this(frame);
 
-        updateUiAfterFileRead(archive);
+        updateUiAfterArchiveRead(archive);
     }
 
     public ClassySharkPanel(JFrame frame) {
@@ -93,7 +93,7 @@ public class ClassySharkPanel extends JPanel implements KeyListener {
             return;
         }
 
-        if (isOpenFile(e)) {
+        if (isOpenArchive(e)) {
             openArchive();
             return;
         }
@@ -131,8 +131,9 @@ public class ClassySharkPanel extends JPanel implements KeyListener {
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File resultFile = fc.getSelectedFile();
             CurrentFolderConfig.INSTANCE.setCurrentDirectory(fc.getCurrentDirectory());
-            RecentArchivesConfig.INSTANCE.addArchive(resultFile.getName(), fc.getCurrentDirectory());
-            updateUiAfterFileRead(resultFile);
+            RecentArchivesConfig.INSTANCE.addArchive(resultFile.getName(),
+                    fc.getCurrentDirectory());
+            updateUiAfterArchiveRead(resultFile);
         }
     }
 
@@ -160,7 +161,7 @@ public class ClassySharkPanel extends JPanel implements KeyListener {
             }
         }
 
-        for (String clazz : reducer.getAllClassesNames()) {
+        for (String clazz : reducer.getAllClassNames()) {
             if (clazz.contains(selectedClass)) {
                 onSelectedImportFromMouseClick(clazz);
                 return;
@@ -169,11 +170,11 @@ public class ClassySharkPanel extends JPanel implements KeyListener {
     }
 
     public void onSelectedImportFromMouseClick(String className) {
-        if (!displayArea.isDisplayingClassesList() && loadedFile.getName().endsWith("jar")) {
+        if (!displayArea.isDisplayingClassNamesList() && binaryArchive.getName().endsWith("jar")) {
             className += ".class";
         }
 
-        if (reducer.getAllClassesNames().contains(className)) {
+        if (reducer.getAllClassNames().contains(className)) {
             onSelectedClassName(className);
         }
     }
@@ -182,9 +183,9 @@ public class ClassySharkPanel extends JPanel implements KeyListener {
         SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
             @Override
             protected Void doInBackground() throws Exception {
-                Export2FileWriter.writeAllClassNames(reducer, loadedFile);
+                Export2FileWriter.writeAllClassNames(reducer, binaryArchive);
                 Export2FileWriter.writeCurrentClass(translator);
-                Export2FileWriter.writeAllClassContents(reducer, loadedFile);
+                Export2FileWriter.writeAllClassContents(reducer, binaryArchive);
                 return null;
             }
 
@@ -209,12 +210,12 @@ public class ClassySharkPanel extends JPanel implements KeyListener {
         jSplitPane.updateUI();
     }
 
-    public void updateUiAfterFileRead(File resultFile) {
+    public void updateUiAfterArchiveRead(File binaryArchive) {
         if (jFrame != null) {
-            jFrame.setTitle(resultFile.getName());
+            jFrame.setTitle(binaryArchive.getName());
         }
 
-        loadAndFillDisplayArea(resultFile);
+        loadAndFillDisplayArea(binaryArchive);
         isDataLoaded = true;
         toolBar.activateNavigationButtons();
         filesTree.setVisibleRoot();
@@ -249,9 +250,9 @@ public class ClassySharkPanel extends JPanel implements KeyListener {
         add(jSplitPane, BorderLayout.CENTER);
     }
 
-    private void loadAndFillDisplayArea(final File file) {
-        loadedFile = file;
-        reducer = new Reducer(loadedFile);
+    private void loadAndFillDisplayArea(final File binaryArchive) {
+        this.binaryArchive = binaryArchive;
+        reducer = new Reducer(this.binaryArchive);
 
         SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
             @Override
@@ -265,16 +266,23 @@ public class ClassySharkPanel extends JPanel implements KeyListener {
 
             @Override
             protected void done() {
-                if (allClassesInArchive.isEmpty()
-                        || (allClassesInArchive.size() == 1
-                        && allClassesInArchive.contains("AndroidManifest.xml"))) {
+                if (isArchiveError()) {
                     filesTree.fillArchive(new File("XXXXX"), new ArrayList<String>());
                     displayArea.displayError();
                     return;
                 }
 
-                filesTree.fillArchive(loadedFile, allClassesInArchive);
+                filesTree.fillArchive(ClassySharkPanel.this.binaryArchive, allClassesInArchive);
                 displayArea.displaySharkey();
+            }
+
+            private boolean isArchiveError() {
+                boolean noJavaClasses = allClassesInArchive.isEmpty();
+                boolean noAndroidClasses = allClassesInArchive.size() == 1
+                        && allClassesInArchive.contains("AndroidManifest.xml");
+
+                return noJavaClasses
+                        || noAndroidClasses;
             }
         };
 
@@ -304,7 +312,7 @@ public class ClassySharkPanel extends JPanel implements KeyListener {
 
         SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
             private List<Translator.ELEMENT> displayedClassTokens;
-            private List<String> reducedClassesNames;
+            private List<String> reducedClassNames;
             private String className = "";
 
             @Override
@@ -316,10 +324,10 @@ public class ClassySharkPanel extends JPanel implements KeyListener {
                     className = reducer.getAutocompleteClassName();
                     displayedClassTokens = translateClass(className);
                 } else {
-                    reducedClassesNames = reducer.reduce(textFromTypingArea);
-                    if (reducedClassesNames.size() == 1) {
+                    reducedClassNames = reducer.reduce(textFromTypingArea);
+                    if (reducedClassNames.size() == 1) {
                         displayedClassTokens =
-                                translateClass(reducedClassesNames.get(0));
+                                translateClass(reducedClassNames.get(0));
                     }
                 }
                 return null;
@@ -331,12 +339,12 @@ public class ClassySharkPanel extends JPanel implements KeyListener {
                     toolBar.setText(className);
                     displayArea.displayClass(displayedClassTokens);
                 } else {
-                    if (reducedClassesNames.size() == 1) {
+                    if (reducedClassNames.size() == 1) {
                         displayArea.displayClass(displayedClassTokens);
-                    } else if (reducedClassesNames.size() == 0) {
+                    } else if (reducedClassNames.size() == 0) {
                         displayArea.displayError();
                     } else {
-                        displayArea.displayReducedClassesNames(reducedClassesNames,
+                        displayArea.displayReducedClassNames(reducedClassNames,
                                 textFromTypingArea);
                     }
                 }
@@ -344,7 +352,7 @@ public class ClassySharkPanel extends JPanel implements KeyListener {
 
             private List<Translator.ELEMENT> translateClass(String name) {
                 translator =
-                        TranslatorFactory.createTranslator(name, loadedFile);
+                        TranslatorFactory.createTranslator(name, binaryArchive);
                 translator.apply();
                 return translator.getElementsList();
             }
@@ -353,7 +361,7 @@ public class ClassySharkPanel extends JPanel implements KeyListener {
         worker.execute();
     }
 
-    private static boolean isOpenFile(KeyEvent e) {
+    private static boolean isOpenArchive(KeyEvent e) {
         return (e.getKeyCode() == 37);
     }
 

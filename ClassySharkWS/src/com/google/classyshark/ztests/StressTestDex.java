@@ -43,8 +43,7 @@ public class StressTestDex {
     }
 
     public static void main(String[] args) throws Exception {
-        String sampleClassesDex = System.getProperty("user.home") +
-                "/Desktop/classes.dex";
+        String sampleClassesDex = "classes1.dex";
 
         runAllClassesInDex(sampleClassesDex);
     }

@@ -81,13 +81,13 @@ public class Reducer {
                 throws Exception;
     }
 
-    private List<String> allClassesNames;
+    private List<String> allClassNames;
     private List<String> reducedClassNames;
     private final File binaryArchiveFile;
     private FormatStrategy formatStrategy = FormatStrategy.JAR;
 
     public Reducer(File file) {
-        allClassesNames = new ArrayList<>();
+        allClassNames = new ArrayList<>();
         reducedClassNames = new ArrayList<>();
         this.binaryArchiveFile = file;
 
@@ -110,7 +110,7 @@ public class Reducer {
             reducedClassNames.clear();
             return result;
         } else {
-            reducedClassNames = fuzzyReduceClasses(key, allClassesNames);
+            reducedClassNames = fuzzyReduceClassNames(key, allClassNames);
             result = reducedClassNames;
             return result;
         }
@@ -120,12 +120,12 @@ public class Reducer {
         List<String> result;
 
         try {
-            if (allClassesNames.isEmpty()) {
-                allClassesNames =
+            if (allClassNames.isEmpty()) {
+                allClassNames =
                         formatStrategy.fillAllClassesNames(binaryArchiveFile);
             }
 
-            result = allClassesNames;
+            result = allClassNames;
         } catch (Exception e) {
             result = new ArrayList<>();
         }
@@ -138,15 +138,15 @@ public class Reducer {
             return reducedClassNames.get(0);
         }
 
-        return allClassesNames.get(0);
+        return allClassNames.get(0);
     }
 
-    public List<String> getAllClassesNames() {
-        return Collections.unmodifiableList(allClassesNames);
+    public List<String> getAllClassNames() {
+        return Collections.unmodifiableList(allClassNames);
     }
 
-    private static List<String> fuzzyReduceClasses(String key,
-                                                   List<String> list) {
+    private static List<String> fuzzyReduceClassNames(String key,
+                                                      List<String> list) {
         List<String> result = new ArrayList<>();
 
         int foundEntryIndex;

@@ -150,8 +150,8 @@ public class DisplayArea {
         return this.jTextPane;
     }
 
-    public void displayReducedClassesNames(List<String> classNamesToShow,
-                                           String inputText) {
+    public void displayReducedClassNames(List<String> classNamesToShow,
+                                         String inputText) {
         displayDataState = DisplayDataState.CLASSES_LIST;
 
         clearText();
@@ -335,7 +335,7 @@ public class DisplayArea {
         jTextPane.setDocument(doc);
     }
 
-    public boolean isDisplayingClassesList() {
+    public boolean isDisplayingClassNamesList() {
         return displayDataState == DisplayDataState.CLASSES_LIST;
     }
 

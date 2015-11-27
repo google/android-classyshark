@@ -34,7 +34,7 @@ public class Export2FileWriter {
 
     public static void writeAllClassNames(Reducer reducer, File loadedFile)
             throws IOException {
-        List<String> arr = reducer.getAllClassesNames();
+        List<String> arr = reducer.getAllClassNames();
         FileWriter writer = new FileWriter(loadedFile.getName() + "_dump.txt");
         for (String str : arr) {
             writer.write("\n" + str);
@@ -55,7 +55,7 @@ public class Export2FileWriter {
     public static void writeAllClassContents(Reducer reducer, File loadedFile)
             throws IOException {
         FileWriter writer = new FileWriter("all_dump.txt");
-        for (String currentClass : reducer.getAllClassesNames()) {
+        for (String currentClass : reducer.getAllClassNames()) {
             Translator sourceGenerator = TranslatorFactory.createTranslator(currentClass,
                     loadedFile);
             sourceGenerator.apply();
