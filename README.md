@@ -38,7 +38,8 @@ Helps you debug your app by allowing you to:
 
 ## Downloads
 
-Grab the latest release from [here] (https://github.com/googlesamples/android-classyshark/releases).
+To run grab the latest jar from [here] (https://github.com/googlesamples/android-classyshark/releases).
+and type `java -jar ClassyShark.jar` 
 
 ## Start developing
 Clone this repository and import the `ClassySharkWS` folder in your favorite IDE.
