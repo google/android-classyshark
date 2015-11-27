@@ -19,7 +19,6 @@ package com.google.classyshark.ui.panel;
 import com.google.classyshark.reducer.Reducer;
 import com.google.classyshark.translator.Translator;
 import com.google.classyshark.translator.TranslatorFactory;
-import com.google.classyshark.ui.Main;
 import com.google.classyshark.ui.panel.displayarea.DisplayArea;
 import com.google.classyshark.ui.panel.io.CurrentFolderConfig;
 import com.google.classyshark.ui.panel.io.Export2FileWriter;
@@ -34,7 +33,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -69,17 +67,14 @@ public class ClassySharkPanel extends JPanel implements KeyListener {
 
     public ClassySharkPanel(JFrame frame, File archive) {
         this(frame);
-
         updateUiAfterArchiveRead(archive);
     }
 
     public ClassySharkPanel(JFrame frame) {
         super(false);
-
         UIManager.put("swing.boldMetal", Boolean.FALSE);
         UIManager.put("Button.select", Color.GRAY);
         UIManager.put("ToggleButton.select", Color.GRAY);
-
         buildUI();
         jFrame = frame;
         toolBar.setText("");
