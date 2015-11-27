@@ -6,7 +6,7 @@ This is not an official Google product
 
 ClassyShark is a handy browser for Android executables. It has clients for both Android (apk) and Desktop (jar). With ClassyShark you can open APK/Zip/Class/Jar files and analyze their contents.
 
-![](https://github.com/googlesamples/android-classyshark/blob/master/Resources/Intro.png)
+![Screen Flow Demo](https://github.com/google/android-classyshark/blob/master/Resources/ClassySharkAnimated.gif)
 
 ## Use cases
 
