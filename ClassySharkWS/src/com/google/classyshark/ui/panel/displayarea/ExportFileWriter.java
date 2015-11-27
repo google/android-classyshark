@@ -21,13 +21,36 @@ import com.google.classyshark.translator.Translator;
 import com.google.classyshark.translator.TranslatorFactory;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
+import java.util.List;
 
 /**
- * export writer
+ * Export writer, to write the data that will be read with other editors/viewers
  */
 public class ExportFileWriter {
 
-    public static void writeExport(Reducer reducer, File loadedFile) throws Exception {
+    public static void writeAllClassNames(Reducer reducer, File loadedFile)
+            throws IOException {
+        List<String> arr = reducer.getAllClassesNames();
+        FileWriter writer = new FileWriter(loadedFile.getName() + "_dump.txt");
+        for (String str : arr) {
+            writer.write("\n" + str);
+        }
+        writer.close();
+    }
+
+    public static void writeCurrentClass(Translator translator)
+            throws IOException {
+        FileWriter writer;
+        if (translator != null) {
+            writer = new FileWriter(translator.getClassName() + "_dump");
+            writer.write(translator.toString());
+            writer.close();
+        }
+    }
+
+    public static void writeAllClassContents(Reducer reducer, File loadedFile)
+            throws IOException {
         FileWriter writer = new FileWriter("all_dump.txt");
         for (String currentClass : reducer.getAllClassesNames()) {
             Translator sourceGenerator = TranslatorFactory.createTranslator(currentClass,
@@ -46,7 +69,7 @@ public class ExportFileWriter {
         Reducer reducer = new Reducer(new File(allAndroid));
         reducer.reduce("");
 
-        writeExport(reducer,
+        writeAllClassContents(reducer,
                 new File(allAndroid));
     }
 }

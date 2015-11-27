@@ -184,21 +184,9 @@ public class ClassySharkPanel extends JPanel implements KeyListener {
         SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
             @Override
             protected Void doInBackground() throws Exception {
-                List<String> arr = reducer.getAllClassesNames();
-                FileWriter writer = new FileWriter(loadedFile.getName() + "_dump.txt");
-                for (String str : arr) {
-                    writer.write("\n" + str);
-                }
-                writer.close();
-
-
-                // TODO problem here when there is no class loaded
-                writer = new FileWriter(translator.getClassName() + "_dump");
-                writer.write(translator.toString());
-                writer.close();
-
-                ExportFileWriter.writeExport(reducer, loadedFile);
-
+                ExportFileWriter.writeAllClassNames(reducer, loadedFile);
+                ExportFileWriter.writeCurrentClass(translator);
+                ExportFileWriter.writeAllClassContents(reducer, loadedFile);
                 return null;
             }
 
