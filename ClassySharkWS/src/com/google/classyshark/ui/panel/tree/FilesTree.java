@@ -110,8 +110,8 @@ public class FilesTree {
         DefaultMutableTreeNode packageNode = null;
 
         for (int i = 0; i < displayedClassNames.size(); i++) {
-            String fullClassName = displayedClassNames.get(i);
-            String pkg = fullClassName.substring(0, fullClassName.lastIndexOf('.'));
+            String fullClassFileName = displayedClassNames.get(i);
+            String pkg = fullClassFileName;
 
             if (pkg.lastIndexOf('.') > 0) {
                 pkg = pkg.substring(0, pkg.lastIndexOf('.'));
@@ -122,8 +122,7 @@ public class FilesTree {
                 packageNode = new DefaultMutableTreeNode(pkg);
                 classes.add(packageNode);
             }
-            packageNode.add(new DefaultMutableTreeNode(fullClassName));
-
+            packageNode.add(new DefaultMutableTreeNode(fullClassFileName));
         }
         root.add(classes);
         return root;

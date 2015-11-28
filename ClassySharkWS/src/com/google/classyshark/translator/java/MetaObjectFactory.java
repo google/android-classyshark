@@ -55,10 +55,9 @@ public class MetaObjectFactory {
 
     private static MetaObject getMetaObjectFromJar(String className, File archiveFile) {
         MetaObject result = null;
-        String trimmedName = className.substring(0, className.lastIndexOf('.'));
         Class clazz;
         try {
-            clazz = ClassUtils.loadClassFromJar(archiveFile.getPath(), trimmedName);
+            clazz = ClassUtils.loadClassFromJar(archiveFile.getPath(), className);
         } catch (ClassNotFoundException e) {
             clazz = Exception.class;
         } catch (MalformedURLException e) {

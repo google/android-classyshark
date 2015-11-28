@@ -52,14 +52,23 @@ public class ArchiveFileReader {
                 jarCanonicalPath));
         JarEntry jarEntry;
 
+        String formattedClassName;
+        String jarEntryName;
+
         while (true) {
             jarEntry = jarFile.getNextJarEntry();
 
             if (jarEntry == null) {
                 break;
             }
-            if (jarEntry.getName().endsWith(".class")) {
-                classes.add(jarEntry.getName().replaceAll("/", "\\."));
+
+            jarEntryName = jarEntry.getName();
+
+            if (jarEntryName.endsWith(".class")) {
+                formattedClassName = jarEntryName.replaceAll("/", "\\.");
+                formattedClassName =
+                        formattedClassName.substring(0, formattedClassName.lastIndexOf('.'));
+                classes.add(formattedClassName);
             }
         }
 

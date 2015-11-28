@@ -32,9 +32,11 @@ public class MetaObjectAsmClass extends MetaObject {
     ClassDetailsFiller classDetailsFiller;
 
     public MetaObjectAsmClass(String className, File archiveFile) {
+
+        String classFileName = className + ".class";
         try {
             byte[] bytes =
-                    ClassBytesFromJarExtractor.getBytes(className,
+                    ClassBytesFromJarExtractor.getBytes(classFileName,
                             archiveFile.getAbsolutePath());
 
             classDetailsFiller = new ClassDetailsFiller();
@@ -121,9 +123,9 @@ public class MetaObjectAsmClass extends MetaObject {
 
     public static void testCustomClass() throws Exception {
         final File testFile = new File(System.getProperty("user.home") +
-                "/Desktop/BytecodeViewer 2.9.8.jar");
-        String textClass = "jd.cli.Main.class";
-        MetaObjectAsmClass moac = new MetaObjectAsmClass(textClass, testFile);
+                "/Desktop/Scenarios/2 Samples/BytecodeViewer 2.9.8.jar");
+        String testClass = "jd.cli.Main";
+        MetaObjectAsmClass moac = new MetaObjectAsmClass(testClass, testFile);
         MethodInfo[] methods = moac.getDeclaredMethods();
         System.out.println(methods);
     }

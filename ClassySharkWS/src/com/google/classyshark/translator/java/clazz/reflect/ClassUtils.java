@@ -29,7 +29,6 @@ public class ClassUtils {
     private ClassUtils() {
     }
 
-    // TODO add logic when the className ends with .class
     public static Class loadClassFromJar(String jarAbsolutePath, String className) throws
             MalformedURLException, ClassNotFoundException {
         Class result;

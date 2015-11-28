@@ -168,10 +168,6 @@ public class ClassySharkPanel extends JPanel implements KeyListener {
     }
 
     public void onSelectedImportFromMouseClick(String className) {
-        if (!displayArea.isDisplayingClassNamesList() && binaryArchive.getName().endsWith("jar")) {
-            className += ".class";
-        }
-
         if (reducer.getAllClassNames().contains(className)) {
             onSelectedClassName(className);
         }
