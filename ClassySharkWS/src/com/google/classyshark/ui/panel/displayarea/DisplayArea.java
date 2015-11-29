@@ -336,10 +336,6 @@ public class DisplayArea {
         jTextPane.setDocument(doc);
     }
 
-    public boolean isDisplayingClassNamesList() {
-        return displayDataState == DisplayDataState.CLASSES_LIST;
-    }
-
     private void clearText() {
         jTextPane.setText(null);
     }
@@ -357,6 +353,7 @@ public class DisplayArea {
         da.displayClass(emitter.getElementsList());
 
         JFrame frame = new JFrame("Test");
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.getContentPane().add(da.onAddComponentToPane());
         frame.pack();
         frame.setVisible(true);

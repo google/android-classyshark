@@ -16,7 +16,6 @@
 
 package com.google.classyshark.ui.panel.toolbar;
 
-import com.google.classyshark.ui.panel.ClassySharkPanel;
 import com.google.classyshark.ui.panel.ColorScheme;
 import com.google.classyshark.ui.panel.io.RecentArchivesConfig;
 import java.awt.Font;

@@ -185,6 +185,7 @@ public class FilesTree {
 
         JFrame frame = new JFrame("Test");
         JScrollPane scrolledTree = new JScrollPane(filesTree.getJTree());
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().add(scrolledTree);
         frame.pack();
         frame.setVisible(true);

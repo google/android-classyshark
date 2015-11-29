@@ -23,8 +23,8 @@ import com.google.classyshark.ui.panel.displayarea.DisplayArea;
 import com.google.classyshark.ui.panel.io.CurrentFolderConfig;
 import com.google.classyshark.ui.panel.io.Export2FileWriter;
 import com.google.classyshark.ui.panel.io.FileChooserUtils;
-import com.google.classyshark.ui.panel.toolbar.KeyUtils;
 import com.google.classyshark.ui.panel.io.RecentArchivesConfig;
+import com.google.classyshark.ui.panel.toolbar.KeyUtils;
 import com.google.classyshark.ui.panel.toolbar.Toolbar;
 import com.google.classyshark.ui.panel.toolbar.ToolbarController;
 import com.google.classyshark.ui.panel.tree.FilesTree;
@@ -48,10 +48,8 @@ import javax.swing.filechooser.FileFilter;
 /**
  * App controller, general app structure MVM ==> Model - View - Mediator (this class)
  */
-public class ClassySharkPanel extends JPanel implements
-        ToolbarController,
-        ViewerController,
-        KeyListener {
+public class ClassySharkPanel extends JPanel
+        implements ToolbarController, ViewerController, KeyListener {
 
     private static final boolean IS_CLASSNAME_FROM_MOUSE_CLICK = true;
     private static final boolean VIEW_TOP_CLASS = true;
@@ -171,7 +169,8 @@ public class ClassySharkPanel extends JPanel implements
                 return null;
             }
 
-            protected void done() {}
+            protected void done() {
+            }
         };
 
         worker.execute();
@@ -313,8 +312,8 @@ public class ClassySharkPanel extends JPanel implements
     }
 
     private void fillDisplayArea(final String textFromTypingArea,
-                                final boolean viewTopClass,
-                                final boolean viewMouseClickedClass) {
+                                 final boolean viewTopClass,
+                                 final boolean viewMouseClickedClass) {
         toolbar.setTypingAreaCaret();
 
         SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {

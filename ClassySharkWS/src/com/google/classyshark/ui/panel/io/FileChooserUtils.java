@@ -33,12 +33,11 @@ public class FileChooserUtils {
         return "dex, jar, apk, class";
     }
 
-    public static boolean isSupportedArchiveFile(File f) {
+    private static boolean isSupportedArchiveFile(File f) {
         String filename = f.getName().toLowerCase();
         return filename.endsWith(".dex")
                 || filename.endsWith(".jar")
                 || filename.endsWith(".apk")
                 || filename.endsWith(".class");
     }
-
 }

@@ -247,19 +247,7 @@ public class Toolbar extends JToolBar {
     public static void main(String[] args) {
         JFrame frame = new JFrame("ClassyShark");
         Toolbar toolbar = new Toolbar(null);
-        toolbar.addKeyListenerToTypingArea(new KeyListener() {
-            @Override
-            public void keyTyped(KeyEvent e) {
-            }
-
-            @Override
-            public void keyPressed(KeyEvent e) {
-            }
-
-            @Override
-            public void keyReleased(KeyEvent e) {
-            }
-        });
+        toolbar.addKeyListenerToTypingArea(null);
 
         frame.getContentPane().add(toolbar);
 
