@@ -216,19 +216,30 @@ public class ClassySharkPanel extends JPanel implements
             return;
         }
 
-        // TODO inline method for business logic
-        // should be KeyUtils.isDelete ==> true remove char
-        // false & letter something else
-        // do another function here that gets current text and char and
-        // does manipulations
-
         final String textFromTypingArea =
-                KeyUtils.processKeyPressWithTypedText(e, toolbar.getText());
-
-        final boolean isViewTopClassKeyPressed = KeyUtils.isRightArrowPressed(e);
+                processKeyPressWithTypedText(e, toolbar.getText());
+        final boolean isViewTopClassKeyPressed = KeyUtils.isRightArrowPressed(e)
+                || KeyUtils.isCommandKeyPressed(e);
 
         fillDisplayArea(textFromTypingArea, isViewTopClassKeyPressed,
                 !ClassySharkPanel.IS_CLASSNAME_FROM_MOUSE_CLICK);
+    }
+
+    private static String processKeyPressWithTypedText(KeyEvent e, String text) {
+        String result = text;
+
+        if (KeyUtils.isDeletePressed(e)) {
+            if (!text.isEmpty()) {
+                result = text.substring(0, text.length() - 1);
+                return result;
+            }
+        }
+
+        if (KeyUtils.isLetterOrDigit(e)) {
+            result += e.getKeyChar();
+        }
+
+        return result;
     }
 
     @Override

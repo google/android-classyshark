@@ -26,20 +26,8 @@ public class KeyUtils {
     private KeyUtils() {
     }
 
-    public static String processKeyPressWithTypedText(KeyEvent e, String text) {
-        int code = e.getKeyCode();
-        String result = text;
-
-        // delete
-        if (code == 8) {
-            if (!text.isEmpty()) {
-                result = text.substring(0, text.length() - 1);
-            }
-        } else {
-            // TODO handle only letters
-            result += e.getKeyChar();
-        }
-        return result;
+    public static boolean isDeletePressed(KeyEvent e) {
+        return (e.getKeyCode() == 8);
     }
 
     public static boolean isLeftArrowPressed(KeyEvent e) {
@@ -50,4 +38,12 @@ public class KeyUtils {
         return (e.getKeyCode() == 39);
     }
 
+    public static boolean isCommandKeyPressed(KeyEvent e) {
+        return (e.getKeyCode() == 157);
+    }
+
+    public static boolean isLetterOrDigit(KeyEvent e) {
+        char eventChar = e.getKeyChar();
+        return Character.isLetterOrDigit(eventChar);
+    }
 }
