@@ -23,8 +23,10 @@ import com.google.classyshark.ui.panel.displayarea.DisplayArea;
 import com.google.classyshark.ui.panel.io.CurrentFolderConfig;
 import com.google.classyshark.ui.panel.io.Export2FileWriter;
 import com.google.classyshark.ui.panel.io.FileChooserUtils;
+import com.google.classyshark.ui.panel.toolbar.KeyUtils;
 import com.google.classyshark.ui.panel.io.RecentArchivesConfig;
 import com.google.classyshark.ui.panel.toolbar.Toolbar;
+import com.google.classyshark.ui.panel.toolbar.ToolbarController;
 import com.google.classyshark.ui.panel.tree.FilesTree;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -44,16 +46,16 @@ import javax.swing.UIManager;
 import javax.swing.filechooser.FileFilter;
 
 /**
- * App controller and view
+ * App controller
  */
-public class ClassySharkPanel extends JPanel implements KeyListener {
+public class ClassySharkPanel extends JPanel implements ToolbarController, ViewerController,
+        KeyListener {
 
     private static final boolean IS_CLASSNAME_FROM_MOUSE_CLICK = true;
     private static final boolean VIEW_TOP_CLASS = true;
 
-    private JFrame jFrame;
-
-    private Toolbar toolBar;
+    private JFrame parentFrame;
+    private Toolbar toolbar;
     private JSplitPane jSplitPane;
     private int dividerLocation = 0;
     private DisplayArea displayArea;
@@ -63,7 +65,7 @@ public class ClassySharkPanel extends JPanel implements KeyListener {
     private Translator translator;
     private boolean isDataLoaded = false;
     private File binaryArchive;
-    private List<String> allClassesInArchive;
+    private List<String> allClassNamesInArchive;
 
     public ClassySharkPanel(JFrame frame, File archive) {
         this(frame);
@@ -76,79 +78,8 @@ public class ClassySharkPanel extends JPanel implements KeyListener {
         UIManager.put("Button.select", Color.GRAY);
         UIManager.put("ToggleButton.select", Color.GRAY);
         buildUI();
-        jFrame = frame;
-        toolBar.setText("");
-    }
-
-    @Override
-    public void keyTyped(KeyEvent e) {
-    }
-
-    @Override
-    public void keyPressed(KeyEvent e) {
-        if (!isDataLoaded) {
-            openArchive();
-            return;
-        }
-
-        if (isOpenArchive(e)) {
-            openArchive();
-            return;
-        }
-
-        final String textFromTypingArea =
-                processKeyPressWithTypedText(e, toolBar.getText());
-        final boolean isViewTopClassKeyPressed = isViewTopClassKeyPressed(e);
-
-        fillDisplayArea(textFromTypingArea, isViewTopClassKeyPressed,
-                !IS_CLASSNAME_FROM_MOUSE_CLICK);
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e) {
-    }
-
-    public void openArchive() {
-        final JFileChooser fc = new JFileChooser();
-        fc.setFileFilter(new FileFilter() {
-            @Override
-            public boolean accept(File f) {
-                return FileChooserUtils.acceptFile(f);
-            }
-
-            @Override
-            public String getDescription() {
-                return FileChooserUtils.getFileChooserDescription();
-            }
-        });
-
-        fc.setCurrentDirectory(CurrentFolderConfig.INSTANCE.getCurrentDirectory());
-
-        int returnVal = fc.showOpenDialog(this);
-        toolBar.setText("");
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-            File resultFile = fc.getSelectedFile();
-            CurrentFolderConfig.INSTANCE.setCurrentDirectory(fc.getCurrentDirectory());
-            RecentArchivesConfig.INSTANCE.addArchive(resultFile.getName(),
-                    fc.getCurrentDirectory());
-            updateUiAfterArchiveRead(resultFile);
-        }
-    }
-
-    public void onGoBackPressed() {
-        displayArea.displayAllClassesNames(allClassesInArchive);
-        toolBar.setText("");
-        reducer.reduce("");
-    }
-
-    public void onViewTopClassPressed() {
-        final String textFromTypingArea = toolBar.getText();
-        fillDisplayArea(textFromTypingArea, VIEW_TOP_CLASS,
-                !IS_CLASSNAME_FROM_MOUSE_CLICK);
-    }
-
-    public void onChangedTextFromTypingArea(String selectedLine) {
-        fillDisplayArea(selectedLine, !VIEW_TOP_CLASS, !IS_CLASSNAME_FROM_MOUSE_CLICK);
+        parentFrame = frame;
+        toolbar.setText("");
     }
 
     public void onSelectedTypeClassFromMouseClick(String selectedClass) {
@@ -173,6 +104,58 @@ public class ClassySharkPanel extends JPanel implements KeyListener {
         }
     }
 
+    public void onSelectedClassName(String className) {
+        fillDisplayArea(className, VIEW_TOP_CLASS, IS_CLASSNAME_FROM_MOUSE_CLICK);
+    }
+
+    @Override
+    public void openArchive() {
+        final JFileChooser fc = new JFileChooser();
+        fc.setFileFilter(new FileFilter() {
+            @Override
+            public boolean accept(File f) {
+                return FileChooserUtils.acceptFile(f);
+            }
+
+            @Override
+            public String getDescription() {
+                return FileChooserUtils.getFileChooserDescription();
+            }
+        });
+
+        fc.setCurrentDirectory(CurrentFolderConfig.INSTANCE.getCurrentDirectory());
+
+        int returnVal = fc.showOpenDialog(this);
+        toolbar.setText("");
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File resultFile = fc.getSelectedFile();
+            CurrentFolderConfig.INSTANCE.setCurrentDirectory(fc.getCurrentDirectory());
+            RecentArchivesConfig.INSTANCE.addArchive(resultFile.getName(),
+                    fc.getCurrentDirectory());
+            updateUiAfterArchiveRead(resultFile);
+        }
+    }
+
+    @Override
+    public void onGoBackPressed() {
+        displayArea.displayAllClassesNames(allClassNamesInArchive);
+        toolbar.setText("");
+        reducer.reduce("");
+    }
+
+    @Override
+    public void onViewTopClassPressed() {
+        final String textFromTypingArea = toolbar.getText();
+        fillDisplayArea(textFromTypingArea, VIEW_TOP_CLASS,
+                !IS_CLASSNAME_FROM_MOUSE_CLICK);
+    }
+
+    @Override
+    public void onChangedTextFromTypingArea(String selectedLine) {
+        fillDisplayArea(selectedLine, !VIEW_TOP_CLASS, !IS_CLASSNAME_FROM_MOUSE_CLICK);
+    }
+
+    @Override
     public void onExportButtonPressed() {
         SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
             @Override
@@ -183,17 +166,13 @@ public class ClassySharkPanel extends JPanel implements KeyListener {
                 return null;
             }
 
-            protected void done() {
-            }
+            protected void done() {}
         };
 
         worker.execute();
     }
 
-    public void onSelectedClassName(String className) {
-        fillDisplayArea(className, VIEW_TOP_CLASS, IS_CLASSNAME_FROM_MOUSE_CLICK);
-    }
-
+    @Override
     public void onChangeLeftPaneVisibility(boolean visible) {
         if (visible) {
             jSplitPane.setDividerLocation(dividerLocation);
@@ -204,15 +183,51 @@ public class ClassySharkPanel extends JPanel implements KeyListener {
         jSplitPane.updateUI();
     }
 
+    @Override
     public void updateUiAfterArchiveRead(File binaryArchive) {
-        if (jFrame != null) {
-            jFrame.setTitle(binaryArchive.getName());
+        if (parentFrame != null) {
+            parentFrame.setTitle(binaryArchive.getName());
         }
 
         loadAndFillDisplayArea(binaryArchive);
         isDataLoaded = true;
-        toolBar.activateNavigationButtons();
+        toolbar.activateNavigationButtons();
         filesTree.setVisibleRoot();
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        if (!isDataLoaded) {
+            openArchive();
+            return;
+        }
+
+        if (KeyUtils.isLeftArrowPressed(e)) {
+            openArchive();
+            return;
+        }
+
+        // TODO inline method for business logic
+        // should be KeyUtils.isDelete ==> true remove char
+        // false & letter something else
+        // do another function here that gets current text and char and
+        // does manipulations
+
+        final String textFromTypingArea =
+                KeyUtils.processKeyPressWithTypedText(e, toolbar.getText());
+
+        final boolean isViewTopClassKeyPressed = KeyUtils.isRightArrowPressed(e);
+
+        fillDisplayArea(textFromTypingArea, isViewTopClassKeyPressed,
+                !ClassySharkPanel.IS_CLASSNAME_FROM_MOUSE_CLICK);
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
     }
 
     private void buildUI() {
@@ -221,10 +236,9 @@ public class ClassySharkPanel extends JPanel implements KeyListener {
 
         setBackground(ColorScheme.BLACK);
 
-        toolBar = new Toolbar(this);
-        add(toolBar, BorderLayout.NORTH);
-        toolBar.addKeyListenerToTypingArea(this);
-        toolBar.setTypingArea();
+        toolbar = new Toolbar(this);
+        add(toolbar, BorderLayout.NORTH);
+        toolbar.addKeyListenerToTypingArea(this);
 
         displayArea = new DisplayArea(this);
         JScrollPane rightScrollPane = new JScrollPane(displayArea.onAddComponentToPane());
@@ -252,7 +266,7 @@ public class ClassySharkPanel extends JPanel implements KeyListener {
             @Override
             protected Void doInBackground() throws Exception {
                 long start = System.currentTimeMillis();
-                allClassesInArchive = reducer.reduce("");
+                allClassNamesInArchive = reducer.reduce("");
                 System.out.println("Archive Reading "
                         + (System.currentTimeMillis() - start) + " ms ");
                 return null;
@@ -266,14 +280,14 @@ public class ClassySharkPanel extends JPanel implements KeyListener {
                     return;
                 }
 
-                filesTree.fillArchive(ClassySharkPanel.this.binaryArchive, allClassesInArchive);
+                filesTree.fillArchive(ClassySharkPanel.this.binaryArchive, allClassNamesInArchive);
                 displayArea.displaySharkey();
             }
 
             private boolean isArchiveError() {
-                boolean noJavaClasses = allClassesInArchive.isEmpty();
-                boolean noAndroidClasses = allClassesInArchive.size() == 1
-                        && allClassesInArchive.contains("AndroidManifest.xml");
+                boolean noJavaClasses = allClassNamesInArchive.isEmpty();
+                boolean noAndroidClasses = allClassNamesInArchive.size() == 1
+                        && allClassNamesInArchive.contains("AndroidManifest.xml");
 
                 return noJavaClasses || noAndroidClasses;
             }
@@ -282,26 +296,10 @@ public class ClassySharkPanel extends JPanel implements KeyListener {
         worker.execute();
     }
 
-    private String processKeyPressWithTypedText(KeyEvent e, String text) {
-        int code = e.getKeyCode();
-        String result = text;
-
-        // delete
-        if (code == 8) {
-            if (!text.isEmpty()) {
-                result = text.substring(0, text.length() - 1);
-            }
-        } else {
-            // TODO handle only letters
-            result += e.getKeyChar();
-        }
-        return result;
-    }
-
     private void fillDisplayArea(final String textFromTypingArea,
-                                 final boolean viewTopClass,
-                                 final boolean viewMouseClickedClass) {
-        toolBar.setTypingAreaCaret();
+                                final boolean viewTopClass,
+                                final boolean viewMouseClickedClass) {
+        toolbar.setTypingAreaCaret();
 
         SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
             private List<Translator.ELEMENT> displayedClassTokens;
@@ -329,7 +327,7 @@ public class ClassySharkPanel extends JPanel implements KeyListener {
             @Override
             protected void done() {
                 if (viewTopClass || viewMouseClickedClass) {
-                    toolBar.setText(className);
+                    toolbar.setText(className);
                     displayArea.displayClass(displayedClassTokens);
                 } else {
                     if (reducedClassNames.size() == 1) {
@@ -352,13 +350,5 @@ public class ClassySharkPanel extends JPanel implements KeyListener {
         };
 
         worker.execute();
-    }
-
-    private static boolean isOpenArchive(KeyEvent e) {
-        return (e.getKeyCode() == 37);
-    }
-
-    private static boolean isViewTopClassKeyPressed(KeyEvent e) {
-        return (e.getKeyCode() == 39);
     }
 }

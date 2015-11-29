@@ -21,6 +21,7 @@ import com.google.classyshark.translator.java.Translator2Java;
 import com.google.classyshark.ui.panel.ColorScheme;
 import com.google.classyshark.ui.panel.ClassySharkPanel;
 
+import com.google.classyshark.ui.panel.ViewerController;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Toolkit;
@@ -53,7 +54,7 @@ public class DisplayArea {
 
     private DisplayDataState displayDataState;
 
-    public DisplayArea(final ClassySharkPanel tabPanel) {
+    public DisplayArea(final ViewerController viewerController) {
         jTextPane = new JTextPane();
         jTextPane.setEditable(false);
         jTextPane.setBackground(ColorScheme.BACKGROUND);
@@ -82,10 +83,10 @@ public class DisplayArea {
                     System.out.println(selectedLine);
 
                     if (displayDataState == DisplayDataState.CLASSES_LIST) {
-                        tabPanel.onSelectedClassName(selectedLine);
+                        viewerController.onSelectedClassName(selectedLine);
                     } else if (displayDataState == DisplayDataState.INSIDE_CLASS) {
                         if (selectedLine.contains("import")) {
-                            tabPanel.onSelectedImportFromMouseClick(
+                            viewerController.onSelectedImportFromMouseClick(
                                     getClassNameFromImportStatement(selectedLine));
                         } else {
 
@@ -93,7 +94,7 @@ public class DisplayArea {
                             rowEnd = Utilities.getWordEnd(jTextPane, offset);
                             String word = jTextPane.getText().substring(rowStart, rowEnd);
 
-                            tabPanel.onSelectedTypeClassFromMouseClick(word);
+                            viewerController.onSelectedTypeClassFromMouseClick(word);
                         }
                     }
                 } catch (BadLocationException e1) {
