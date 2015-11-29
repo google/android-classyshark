@@ -46,9 +46,11 @@ import javax.swing.UIManager;
 import javax.swing.filechooser.FileFilter;
 
 /**
- * App controller
+ * App controller, general app structure MVM ==> Model - View - Mediator (this class)
  */
-public class ClassySharkPanel extends JPanel implements ToolbarController, ViewerController,
+public class ClassySharkPanel extends JPanel implements
+        ToolbarController,
+        ViewerController,
         KeyListener {
 
     private static final boolean IS_CLASSNAME_FROM_MOUSE_CLICK = true;
@@ -82,6 +84,7 @@ public class ClassySharkPanel extends JPanel implements ToolbarController, Viewe
         toolbar.setText("");
     }
 
+    @Override
     public void onSelectedTypeClassFromMouseClick(String selectedClass) {
         for (String clazz : translator.getDependencies()) {
             if (clazz.contains(selectedClass)) {
@@ -98,12 +101,14 @@ public class ClassySharkPanel extends JPanel implements ToolbarController, Viewe
         }
     }
 
+    @Override
     public void onSelectedImportFromMouseClick(String className) {
         if (reducer.getAllClassNames().contains(className)) {
             onSelectedClassName(className);
         }
     }
 
+    @Override
     public void onSelectedClassName(String className) {
         fillDisplayArea(className, VIEW_TOP_CLASS, IS_CLASSNAME_FROM_MOUSE_CLICK);
     }
