@@ -358,7 +358,7 @@ public class ClassySharkPanel extends JPanel
 
             private List<Translator.ELEMENT> translateClass(String name) {
                 translator =
-                        TranslatorFactory.createTranslator(name, binaryArchive);
+                        TranslatorFactory.createTranslator(name, binaryArchive, reducer);
                 translator.apply();
                 return translator.getElementsList();
             }

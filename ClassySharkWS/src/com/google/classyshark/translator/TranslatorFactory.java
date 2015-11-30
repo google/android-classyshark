@@ -16,6 +16,8 @@
 
 package com.google.classyshark.translator;
 
+import com.google.classyshark.reducer.Reducer;
+import com.google.classyshark.translator.jar.JarInfoTranslator;
 import com.google.classyshark.translator.java.Translator2Java;
 import com.google.classyshark.translator.dex.DexInfoTranslator;
 import com.google.classyshark.translator.xml.Translator2AndroidXml;
@@ -25,13 +27,23 @@ import java.io.File;
  *  Creates translators based on class names and archives
  */
 public class TranslatorFactory {
+
     public static Translator createTranslator(String className, File archiveFile) {
+        return createTranslator(className, archiveFile, null);
+    }
+
+    public static Translator createTranslator(String className, File archiveFile,
+                                              Reducer reducer) {
         if(className.endsWith(".xml")) {
             return new Translator2AndroidXml(archiveFile);
         }
 
         if (className.endsWith(".dex")) {
            return new DexInfoTranslator(className);
+        }
+
+        if (className.endsWith(".jar")) {
+            return new JarInfoTranslator(archiveFile, reducer);
         }
 
         return new Translator2Java(className, archiveFile);
