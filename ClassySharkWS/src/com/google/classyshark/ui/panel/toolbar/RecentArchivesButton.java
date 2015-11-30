@@ -16,7 +16,6 @@
 
 package com.google.classyshark.ui.panel.toolbar;
 
-import com.google.classyshark.ui.panel.ClassySharkPanel;
 import com.google.classyshark.ui.panel.ColorScheme;
 import com.google.classyshark.ui.panel.io.RecentArchivesConfig;
 import java.awt.Font;
@@ -38,7 +37,7 @@ import javax.swing.event.PopupMenuListener;
 public class RecentArchivesButton extends JButton {
 
     private JPopupMenu popup;
-    private ClassySharkPanel panel;
+    private ToolbarController panel;
 
     public RecentArchivesButton() {
         popup = new JPopupMenu();
@@ -55,7 +54,7 @@ public class RecentArchivesButton extends JButton {
         addMouseListener(new MousePopupListener());
     }
 
-    public void setPanel(ClassySharkPanel panel) {
+    public void setPanel(ToolbarController panel) {
         this.panel = panel;
     }
 

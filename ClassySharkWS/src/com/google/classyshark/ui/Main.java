@@ -16,7 +16,9 @@
 
 package com.google.classyshark.ui;
 
+import com.google.classyshark.reducer.Reducer;
 import com.google.classyshark.ui.panel.ClassySharkPanel;
+import com.google.classyshark.ui.panel.io.Export2FileWriter;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
@@ -62,11 +64,44 @@ public class Main {
         frame.setVisible(true);
     }
 
+    private static void processCommandLine(List<String> args) {
+        if (args.size() > 2) {
+            System.out.println("Too many arguments ==> java -jar ClassyShark.jar -dump FILE");
+            return;
+        }
+
+        if (args.get(0).equalsIgnoreCase("-dump")) {
+            System.out.println("Wrong -dump argument ==> java -jar ClassyShark.jar -dump FILE");
+            return;
+        }
+
+        File archiveFile = new File(args.get(1));
+        if (!archiveFile.exists()) {
+            System.out.println("File doesn't exist ==> java -jar ClassyShark.jar -dump FILE");
+            return;
+        }
+
+        Reducer reducer = new Reducer(archiveFile);
+        reducer.reduce("");
+
+        try {
+            Export2FileWriter.writeAllClassContents(reducer, archiveFile);
+        } catch (Exception e) {
+            System.out.println("Internal error - couldn't write file");
+        }
+    }
+
     public static void main(final String[] args) {
-        javax.swing.SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                buildAndShowClassySharkFrame(Arrays.asList(args));
-            }
-        });
+        final List<String> argsAsArray = Arrays.asList(args);
+
+        if (argsAsArray.isEmpty() || argsAsArray.size() == 1) {
+            javax.swing.SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    buildAndShowClassySharkFrame(argsAsArray);
+                }
+            });
+        } else {
+            processCommandLine(argsAsArray);
+        }
     }
 }

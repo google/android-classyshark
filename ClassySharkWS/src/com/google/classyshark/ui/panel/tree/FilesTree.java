@@ -18,7 +18,7 @@ package com.google.classyshark.ui.panel.tree;
 
 import com.google.classyshark.reducer.Reducer;
 import com.google.classyshark.ui.panel.ColorScheme;
-import com.google.classyshark.ui.panel.ClassySharkPanel;
+import com.google.classyshark.ui.panel.ViewerController;
 import java.awt.Component;
 import java.awt.Font;
 import java.io.File;
@@ -36,15 +36,15 @@ import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreeSelectionModel;
 
 public class FilesTree {
-    private final ClassySharkPanel viewerPanel;
+    private final ViewerController viewerController;
     private DefaultTreeModel treeModel = null;
     private JTree jTree = null;
 
-    public FilesTree(ClassySharkPanel viewerPanel) {
+    public FilesTree(ViewerController viewerPanel) {
         treeModel = new DefaultTreeModel(new DefaultMutableTreeNode());
         jTree = new JTree(treeModel);
         configureJTree(jTree);
-        this.viewerPanel = viewerPanel;
+        this.viewerController = viewerPanel;
     }
 
     public void fillArchive(File loadedFile, List<String> displayedClassNames) {
@@ -154,15 +154,21 @@ public class FilesTree {
                 DefaultMutableTreeNode defaultMutableTreeNode = (DefaultMutableTreeNode) selection;
 
                 if (selection.toString().endsWith(".dex")) {
-                    FilesTree.this.viewerPanel.onSelectedClassName(
+                    FilesTree.this.viewerController.onSelectedClassName(
+                            (String) defaultMutableTreeNode.getUserObject());
+                    return;
+                }
+
+                if (selection.toString().endsWith(".jar")) {
+                    FilesTree.this.viewerController.onSelectedClassName(
                             (String) defaultMutableTreeNode.getUserObject());
                     return;
                 }
 
                 if (!defaultMutableTreeNode.isLeaf()) return;
 
-                if (FilesTree.this.viewerPanel != null) {
-                    FilesTree.this.viewerPanel.onSelectedClassName(
+                if (FilesTree.this.viewerController != null) {
+                    FilesTree.this.viewerController.onSelectedClassName(
                             (String) defaultMutableTreeNode.getUserObject());
                 }
             }
@@ -185,6 +191,7 @@ public class FilesTree {
 
         JFrame frame = new JFrame("Test");
         JScrollPane scrolledTree = new JScrollPane(filesTree.getJTree());
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().add(scrolledTree);
         frame.pack();
         frame.setVisible(true);
