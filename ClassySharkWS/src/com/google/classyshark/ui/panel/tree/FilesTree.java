@@ -164,8 +164,7 @@ public class FilesTree {
                             (String) defaultMutableTreeNode.getUserObject());
                     return;
                 }
-
-
+                
                 if (!defaultMutableTreeNode.isLeaf()) return;
 
                 if (FilesTree.this.viewerController != null) {
