@@ -39,7 +39,7 @@ Helps you debug your app by allowing you to:
 
 ## Downloads
 
-To run, grab the latest jar from [here] (https://github.com/googlesamples/android-classyshark/releases)
+To run, grab the latest jar from [here] (https://github.com/google/android-classyshark/releases)
 and type `java -jar ClassyShark.jar`.
 
 ## Start developing
@@ -53,7 +53,7 @@ Clone this repository and import the `ClassySharkWS` folder in your favorite IDE
 ## Support
 If you've found an error, please file an issue:
 
-https://github.com/googlesamples/android-classyshark/issues
+https://github.com/google/android-classyshark/issues
 
 Patches are encouraged, and may be submitted by forking this project and
 submitting a pull request through GitHub.
