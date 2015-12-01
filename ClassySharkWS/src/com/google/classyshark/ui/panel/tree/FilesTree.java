@@ -24,6 +24,8 @@ import java.awt.Font;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
@@ -90,9 +92,9 @@ public class FilesTree {
                         lastPackage = pkg;
                         packageNode = new DefaultMutableTreeNode(pkg);
                     }
-                    packageNode.add(new DefaultMutableTreeNode(resName));
+                    packageNode.add(new DefaultMutableTreeNode(new NodeInfo(resName)));
                 } else {
-                    noPkgNodes.add(new DefaultMutableTreeNode(resName));
+                    noPkgNodes.add(new DefaultMutableTreeNode(new NodeInfo(resName)));
                 }
             }
         }
@@ -122,7 +124,7 @@ public class FilesTree {
                 packageNode = new DefaultMutableTreeNode(pkg);
                 classes.add(packageNode);
             }
-            packageNode.add(new DefaultMutableTreeNode(fullClassFileName));
+            packageNode.add(new DefaultMutableTreeNode(new NodeInfo(fullClassFileName)));
         }
         root.add(classes);
         return root;
@@ -153,7 +155,8 @@ public class FilesTree {
 
                 DefaultMutableTreeNode defaultMutableTreeNode = (DefaultMutableTreeNode) selection;
 
-                if (selection.toString().endsWith(".dex")) {
+                if (selection.toString().startsWith("classes") &&
+                        selection.toString().endsWith(".dex")) {
                     FilesTree.this.viewerController.onSelectedClassName(
                             (String) defaultMutableTreeNode.getUserObject());
                     return;
@@ -168,8 +171,14 @@ public class FilesTree {
                 if (!defaultMutableTreeNode.isLeaf()) return;
 
                 if (FilesTree.this.viewerController != null) {
-                    FilesTree.this.viewerController.onSelectedClassName(
-                            (String) defaultMutableTreeNode.getUserObject());
+
+                    if (defaultMutableTreeNode.getUserObject() instanceof String) {
+                        FilesTree.this.viewerController.onSelectedClassName(
+                                (String)defaultMutableTreeNode.getUserObject());
+                    } else {
+                        FilesTree.this.viewerController.onSelectedClassName(
+                                ((NodeInfo)defaultMutableTreeNode.getUserObject()).fullname);
+                    }
                 }
             }
         });
@@ -180,14 +189,19 @@ public class FilesTree {
     }
 
     public static void main(String[] args) {
-        File test = new File(System.getProperty("user.home") +
-                "/Desktop/Scenarios/2 Samples/android.jar");
+        //File test = new File(System.getProperty("user.home") +
+        //        "/Desktop/Scenarios/2 Samples/android.jar");
 
+        File test = new File("classes1.dex");
         FilesTree filesTree = new FilesTree(null);
 
         Reducer reducer = new Reducer(test);
         reducer.reduce("");
         filesTree.fillArchive(test, reducer.getAllClassNames());
+
+        for(String s : reducer.getAllClassNames()) {
+            System.out.println(NodeInfo.extractClassName(s));
+        }
 
         JFrame frame = new JFrame("Test");
         JScrollPane scrolledTree = new JScrollPane(filesTree.getJTree());
