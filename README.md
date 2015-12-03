@@ -29,6 +29,10 @@ Identify security risks including:
 * AndroidManifest inside production APK
 * Verifying obfuscated code
 
+### Command line export 
+Export and search generated data from your favorite editor
+`java -jar ClassyShark.jar -dump <FILE>`
+
 ### Debugging
 Helps you debug your app by allowing you to:
 
