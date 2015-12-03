@@ -52,11 +52,16 @@ public class Main {
         }
 
         JFrame frame = new JFrame("ClassyShark");
-        if (cmdLineArgs.size() == 1) {
+
+        if (cmdLineArgs.size() == 0) {
+            frame.getContentPane().add(new ClassySharkPanel(frame));
+        } else if (cmdLineArgs.size() == 1) {
             frame.getContentPane().add(
                     new ClassySharkPanel(frame, new File(cmdLineArgs.get(0))));
         } else {
-            frame.getContentPane().add(new ClassySharkPanel(frame));
+            frame.getContentPane().add(
+                    new ClassySharkPanel(frame, new File(cmdLineArgs.get(1)),
+                            cmdLineArgs.get(2)));
         }
 
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -64,7 +69,7 @@ public class Main {
         frame.setVisible(true);
     }
 
-    private static void processCommandLine(List<String> args) {
+    private static void workInShellMode(List<String> args) {
         if (args.size() > 2) {
             System.out.println("Too many arguments ==> java -jar ClassyShark.jar -dump FILE");
             return;
@@ -91,17 +96,22 @@ public class Main {
         }
     }
 
+    private static boolean isInUIMode(List<String> argsAsArray) {
+        return argsAsArray.isEmpty() || argsAsArray.size() == 1
+                || argsAsArray.get(0).equalsIgnoreCase("-open");
+    }
+
     public static void main(final String[] args) {
         final List<String> argsAsArray = Arrays.asList(args);
 
-        if (argsAsArray.isEmpty() || argsAsArray.size() == 1) {
+        if (isInUIMode(argsAsArray)) {
             javax.swing.SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
                     buildAndShowClassySharkFrame(argsAsArray);
                 }
             });
         } else {
-            processCommandLine(argsAsArray);
+            workInShellMode(argsAsArray);
         }
     }
 }

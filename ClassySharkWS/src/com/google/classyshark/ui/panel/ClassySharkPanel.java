@@ -67,6 +67,11 @@ public class ClassySharkPanel extends JPanel
     private File binaryArchive;
     private List<String> allClassNamesInArchive;
 
+    public ClassySharkPanel(JFrame frame, File archive, String fullyClassName) {
+        this(frame);
+        updateUiAfterArchiveRead(archive, fullyClassName);
+    }
+
     public ClassySharkPanel(JFrame frame, File archive) {
         this(frame);
         updateUiAfterArchiveRead(archive);
@@ -193,7 +198,18 @@ public class ClassySharkPanel extends JPanel
             parentFrame.setTitle(binaryArchive.getName());
         }
 
-        loadAndFillDisplayArea(binaryArchive);
+        loadAndFillDisplayArea(binaryArchive, null);
+        isDataLoaded = true;
+        toolbar.activateNavigationButtons();
+        filesTree.setVisibleRoot();
+    }
+
+    public void updateUiAfterArchiveRead(File binaryArchive, String className) {
+        if (parentFrame != null) {
+            parentFrame.setTitle(binaryArchive.getName());
+        }
+
+        loadAndFillDisplayArea(binaryArchive, className);
         isDataLoaded = true;
         toolbar.activateNavigationButtons();
         filesTree.setVisibleRoot();
@@ -273,7 +289,8 @@ public class ClassySharkPanel extends JPanel
         add(jSplitPane, BorderLayout.CENTER);
     }
 
-    private void loadAndFillDisplayArea(final File binaryArchive) {
+    private void loadAndFillDisplayArea(final File binaryArchive,
+                                        final String className) {
         this.binaryArchive = binaryArchive;
         reducer = new Reducer(this.binaryArchive);
 
@@ -296,7 +313,12 @@ public class ClassySharkPanel extends JPanel
                 }
 
                 filesTree.fillArchive(ClassySharkPanel.this.binaryArchive, allClassNamesInArchive);
-                displayArea.displaySharkey();
+
+                if(className != null) {
+                    onSelectedClassName(className);
+                } else {
+                    displayArea.displaySharkey();
+                }
             }
 
             private boolean isArchiveError() {
