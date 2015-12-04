@@ -67,9 +67,9 @@ public class ClassySharkPanel extends JPanel
     private File binaryArchive;
     private List<String> allClassNamesInArchive;
 
-    public ClassySharkPanel(JFrame frame, File archive, String fullyClassName) {
+    public ClassySharkPanel(JFrame frame, File archive, String fullClassName) {
         this(frame);
-        updateUiAfterArchiveRead(archive, fullyClassName);
+        updateUiAfterArchiveReadAndLoadClass(archive, fullClassName);
     }
 
     public ClassySharkPanel(JFrame frame, File archive) {
@@ -204,17 +204,6 @@ public class ClassySharkPanel extends JPanel
         filesTree.setVisibleRoot();
     }
 
-    public void updateUiAfterArchiveRead(File binaryArchive, String className) {
-        if (parentFrame != null) {
-            parentFrame.setTitle(binaryArchive.getName());
-        }
-
-        loadAndFillDisplayArea(binaryArchive, className);
-        isDataLoaded = true;
-        toolbar.activateNavigationButtons();
-        filesTree.setVisibleRoot();
-    }
-
     @Override
     public void keyTyped(KeyEvent e) {
     }
@@ -287,6 +276,17 @@ public class ClassySharkPanel extends JPanel
         jSplitPane.setDividerLocation(300);
 
         add(jSplitPane, BorderLayout.CENTER);
+    }
+
+    private void updateUiAfterArchiveReadAndLoadClass(File binaryArchive, String className) {
+        if (parentFrame != null) {
+            parentFrame.setTitle(binaryArchive.getName());
+        }
+
+        loadAndFillDisplayArea(binaryArchive, className);
+        isDataLoaded = true;
+        toolbar.activateNavigationButtons();
+        filesTree.setVisibleRoot();
     }
 
     private void loadAndFillDisplayArea(final File binaryArchive,
