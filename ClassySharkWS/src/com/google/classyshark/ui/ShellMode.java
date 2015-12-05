@@ -17,6 +17,8 @@
 package com.google.classyshark.ui;
 
 import com.google.classyshark.reducer.Reducer;
+import com.google.classyshark.translator.Translator;
+import com.google.classyshark.translator.TranslatorFactory;
 import com.google.classyshark.ui.panel.io.Export2FileWriter;
 import java.io.File;
 import java.util.List;
@@ -27,12 +29,15 @@ public class ShellMode {
     }
 
     public static void workInShellMode(List<String> args) {
-        if (args.size() > 2) {
-            System.out.println("Too many arguments ==> java -jar ClassyShark.jar -dump FILE");
-            return;
+        if (args.size() == 2) {
+            processFullDump(args);
+        } else {
+            processFileDump(args);
         }
+    }
 
-        if (args.get(0).equalsIgnoreCase("-dump")) {
+    private static void processFullDump(List<String> args) {
+        if (!args.get(0).equalsIgnoreCase("-dump")) {
             System.out.println("Wrong -dump argument ==> java -jar ClassyShark.jar -dump FILE");
             return;
         }
@@ -48,6 +53,34 @@ public class ShellMode {
 
         try {
             Export2FileWriter.writeAllClassContents(reducer, archiveFile);
+        } catch (Exception e) {
+            System.out.println("Internal error - couldn't write file");
+        }
+    }
+
+    private static void processFileDump(List<String> args) {
+        if (!args.get(0).equalsIgnoreCase("-dump")) {
+            System.out.println("Wrong -dump argument ==> java -jar ClassyShark.jar " +
+                    "-dump FILE full.class.name");
+            return;
+        }
+
+        File archiveFile = new File(args.get(1));
+        if (!archiveFile.exists()) {
+            System.out.println("File doesn't exist ==> java -jar ClassyShark.jar " +
+                    "-dump FILE full.class.name");
+            return;
+        }
+
+        Reducer reducer = new Reducer(archiveFile);
+        reducer.reduce("");
+
+        Translator translator =
+                TranslatorFactory.createTranslator(args.get(2), archiveFile, reducer);
+        translator.apply();
+
+        try {
+            Export2FileWriter.writeCurrentClass(translator);
         } catch (Exception e) {
             System.out.println("Internal error - couldn't write file");
         }
