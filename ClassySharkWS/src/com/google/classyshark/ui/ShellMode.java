@@ -23,6 +23,9 @@ import com.google.classyshark.ui.panel.io.Export2FileWriter;
 import java.io.File;
 import java.util.List;
 
+/**
+ * shell mode, for dumping data
+ */
 public class ShellMode {
 
     private ShellMode() {

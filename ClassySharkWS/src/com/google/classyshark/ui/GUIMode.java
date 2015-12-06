@@ -24,12 +24,15 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
 
-public class UIMode {
+/**
+ * UI mode that loads the GUI
+ */
+public class GUIMode {
 
-    private UIMode(){
+    private GUIMode(){
     }
 
-    public static void workInUIMode(final List<String> argsAsArray) {
+    public static void workInGUIMode(final List<String> argsAsArray) {
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 buildAndShowClassySharkFrame(argsAsArray);

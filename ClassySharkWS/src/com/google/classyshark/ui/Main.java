@@ -36,7 +36,7 @@ public class Main {
         final List<String> argsAsArray = Arrays.asList(args);
 
         if (isInUIMode(argsAsArray)) {
-            UIMode.workInUIMode(argsAsArray);
+            GUIMode.workInGUIMode(argsAsArray);
         } else {
             ShellMode.workInShellMode(argsAsArray);
         }
