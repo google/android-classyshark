@@ -80,7 +80,15 @@ public class ShellMode {
 
         Translator translator =
                 TranslatorFactory.createTranslator(args.get(2), archiveFile, reducer);
-        translator.apply();
+
+        try {
+            translator.apply();
+        }
+        catch (NullPointerException npe) {
+            System.out.println("Class doesn't exist in the archive");
+            return;
+        }
+
 
         try {
             Export2FileWriter.writeCurrentClass(translator);

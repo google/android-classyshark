@@ -27,7 +27,7 @@ public class Main {
     private Main() {
     }
 
-    private static boolean isInUIMode(List<String> argsAsArray) {
+    private static boolean isInGUIMode(List<String> argsAsArray) {
         return argsAsArray.isEmpty() || argsAsArray.size() == 1
                 || argsAsArray.get(0).equalsIgnoreCase("-open");
     }
@@ -35,7 +35,7 @@ public class Main {
     public static void main(final String[] args) {
         final List<String> argsAsArray = Arrays.asList(args);
 
-        if (isInUIMode(argsAsArray)) {
+        if (isInGUIMode(argsAsArray)) {
             GUIMode.workInGUIMode(argsAsArray);
         } else {
             ShellMode.workInShellMode(argsAsArray);
