@@ -328,6 +328,7 @@ public class DisplayArea {
             StyleConstants.setFontSize(style, 13);
             StyleConstants.setFontFamily(style, "Menlo");
 
+            doc.insertString(doc.getLength(), "\n\n\n\t\t\t There was a problem loading the class  ", style);
             doc.insertString(doc.getLength(), SharkBG.SHARKEY, style);
         } catch (BadLocationException e) {
             e.printStackTrace();
