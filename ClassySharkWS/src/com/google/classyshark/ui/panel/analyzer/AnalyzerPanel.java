@@ -101,11 +101,7 @@ public class AnalyzerPanel extends JPanel {
 
     public static void main(String[] args) {
         String userHome = System.getProperty("user.home");
-//        String fileName = userHome + "/Downloads/com.tumblr-14410007.apk";
-//        String fileName = userHome + "/Downloads/com.glidetalk.glideapp-203224.apk";
-//        String fileName = userHome + "/Downloads/com.whatsapp-450818.apk";
-//        String fileName = userHome + "/Downloads/ie.irishexaminer.mobile-23.apk";
-        String fileName = userHome + "/Downloads/br.com.buscape.MainPack-2015112512.apk";
+        String fileName = userHome + "/Downloads/test.apk";
 
         AnalyzerPanel panel = new AnalyzerPanel(new File(fileName));
         JFrame jFrame = new JFrame(fileName);
