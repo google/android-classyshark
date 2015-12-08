@@ -232,7 +232,7 @@ public class Toolbar extends JToolBar {
     }
 
     private JButton buildAnalyzerButton() {
-        JButton jButton = new JButton("#");
+        JButton jButton = new JButton("\u2697");
         jButton.setFont(new Font("Menlo", Font.PLAIN, 18));
 
         jButton.addActionListener(new ActionListener() {
