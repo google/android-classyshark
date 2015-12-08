@@ -16,6 +16,7 @@
 
 package com.google.classyshark.ui.panel;
 
+import com.google.classyshark.ui.panel.analyzer.AnalyzerPanel;
 import com.google.classyshark.reducer.Reducer;
 import com.google.classyshark.translator.Translator;
 import com.google.classyshark.translator.TranslatorFactory;
@@ -202,6 +203,15 @@ public class ClassySharkPanel extends JPanel
         isDataLoaded = true;
         toolbar.activateNavigationButtons();
         filesTree.setVisibleRoot();
+    }
+
+    @Override
+    public void startAnalyzer() {
+        JFrame analyzerFrame = new JFrame(binaryArchive.getName());
+        JPanel analyzerPanel = new AnalyzerPanel(binaryArchive);
+        analyzerFrame.getContentPane().add(analyzerPanel);
+        analyzerFrame.setSize(new Dimension(800, 600));
+        analyzerFrame.setVisible(true);
     }
 
     @Override

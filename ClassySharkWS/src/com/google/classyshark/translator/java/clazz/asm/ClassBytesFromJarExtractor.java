@@ -77,7 +77,7 @@ public class ClassBytesFromJarExtractor {
 
     public static void main(String[] args) {
         try {
-            byte[] bytes = getBytes("jd.cli.Main.class", System.getProperty("user.home") +
+            byte[] bytes = getBytes("jd.cli.AnalyzerPanel.class", System.getProperty("user.home") +
                     "/Desktop/BytecodeViewer.jar");
             System.out.println(bytesToHex(bytes));
         } catch (IOException e) {
