@@ -20,7 +20,6 @@ import com.google.classyshark.ui.panel.ColorScheme;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -47,6 +46,7 @@ public class Toolbar extends JToolBar {
     private JButton backBtn;
     private JButton exportButton;
     private JButton recentArchivesBtn;
+    private JButton analyzerBtn;
     private JToggleButton leftPanelToggleBtn;
 
     public Toolbar(final ToolbarController toolbarController) {
@@ -69,6 +69,7 @@ public class Toolbar extends JToolBar {
         exportButton = buildExportButton();
         recentArchivesBtn = buildRecentArchivesButton();
         leftPanelToggleBtn = buildLeftPanelToggleButton();
+        analyzerBtn = buildAnalyzerButton();
 
         this.setBackground(ColorScheme.BLACK);
 
@@ -78,6 +79,7 @@ public class Toolbar extends JToolBar {
         add(viewBtn);
         add(typingArea);
         add(exportButton);
+        add(analyzerBtn);
         add(recentArchivesBtn);
 
         setFloatable(false);
@@ -119,6 +121,7 @@ public class Toolbar extends JToolBar {
         viewBtn.setEnabled(true);
         backBtn.setEnabled(true);
         exportButton.setEnabled(true);
+        analyzerBtn.setEnabled(true);
     }
 
     private JTextField buildTypingArea() {
@@ -226,6 +229,26 @@ public class Toolbar extends JToolBar {
         RecentArchivesButton result = new RecentArchivesButton();
         result.setPanel(toolbarController);
         return result;
+    }
+
+    private JButton buildAnalyzerButton() {
+        JButton jButton = new JButton("\u2697");
+        jButton.setFont(new Font("Menlo", Font.PLAIN, 18));
+
+        jButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                toolbarController.startAnalyzer();
+            }
+        });
+
+        jButton.setToolTipText("Analyzer");
+        jButton.setBorderPainted(false);
+        jButton.setForeground(ColorScheme.FOREGROUND_YELLOW);
+        jButton.setBackground(ColorScheme.BLACK);
+        jButton.setEnabled(false);
+
+        return jButton;
     }
 
     private JToggleButton buildLeftPanelToggleButton() {

@@ -124,7 +124,7 @@ public class MetaObjectAsmClass extends MetaObject {
     public static void testCustomClass() throws Exception {
         final File testFile = new File(System.getProperty("user.home") +
                 "/Desktop/Scenarios/2 Samples/BytecodeViewer 2.9.8.jar");
-        String testClass = "jd.cli.Main";
+        String testClass = "jd.cli.AnalyzerPanel";
         MetaObjectAsmClass moac = new MetaObjectAsmClass(testClass, testFile);
         MethodInfo[] methods = moac.getDeclaredMethods();
         System.out.println(methods);

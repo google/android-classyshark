@@ -14,24 +14,22 @@
  * limitations under the License.
  */
 
-package com.google.classyshark.ui.panel.toolbar;
+package com.google.classyshark.analyzer;
 
-import java.io.File;
+public class ClassInfo {
+    private String packageName;
+    private int methodCount;
 
-public interface ToolbarController {
-    void onChangedTextFromTypingArea(String text);
+    public ClassInfo(String packageName, int methodCount) {
+        this.packageName = packageName;
+        this.methodCount = methodCount;
+    }
 
-    void openArchive();
+    public String getPackageName() {
+        return packageName;
+    }
 
-    void onGoBackPressed();
-
-    void onViewTopClassPressed();
-
-    void onExportButtonPressed();
-
-    void onChangeLeftPaneVisibility(boolean selected);
-
-    void updateUiAfterArchiveRead(File file);
-
-    void startAnalyzer();
+    public int getMethodCount() {
+        return methodCount;
+    }
 }
