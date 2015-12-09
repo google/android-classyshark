@@ -373,11 +373,6 @@ public class ClassySharkPanel extends JPanel
 
             @Override
             protected void done() {
-                if (displayedClassTokens == null) {
-                    displayArea.displayError();
-                    return;
-                }
-
                 if (viewTopClass || viewMouseClickedClass) {
                     toolbar.setText(className);
                     displayArea.displayClass(displayedClassTokens);
