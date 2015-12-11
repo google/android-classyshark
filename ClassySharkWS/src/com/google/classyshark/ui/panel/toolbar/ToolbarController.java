@@ -33,5 +33,4 @@ public interface ToolbarController {
 
     void updateUiAfterArchiveRead(File file);
 
-    void startAnalyzer();
 }

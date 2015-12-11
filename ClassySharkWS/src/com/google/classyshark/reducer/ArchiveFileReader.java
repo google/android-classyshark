@@ -99,8 +99,8 @@ public class ArchiveFileReader {
                 }
 
                 if (zipEntry.getName().endsWith(".dex")) {
-                    File file = new File("classes" + dexIndex + ".dex");
-                    file.createNewFile();
+                    File file = File.createTempFile("classes" + dexIndex,"dex");
+                    file.deleteOnExit();
 
                     FileOutputStream fos =
                             new FileOutputStream(file);

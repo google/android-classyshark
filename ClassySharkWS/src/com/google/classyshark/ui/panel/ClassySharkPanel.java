@@ -16,10 +16,10 @@
 
 package com.google.classyshark.ui.panel;
 
-import com.google.classyshark.ui.panel.analyzer.AnalyzerPanel;
 import com.google.classyshark.reducer.Reducer;
 import com.google.classyshark.translator.Translator;
 import com.google.classyshark.translator.TranslatorFactory;
+import com.google.classyshark.ui.panel.analyzer.AnalyzerPanel;
 import com.google.classyshark.ui.panel.displayarea.DisplayArea;
 import com.google.classyshark.ui.panel.io.CurrentFolderConfig;
 import com.google.classyshark.ui.panel.io.Export2FileWriter;
@@ -47,7 +47,6 @@ import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingWorker;
 import javax.swing.UIManager;
-import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileFilter;
 
 /**
@@ -98,8 +97,7 @@ public class ClassySharkPanel extends JPanel
         UIManager.put("TabbedPane.unselectedTabForeground", ColorScheme.FOREGROUND_CYAN);
         UIManager.put("TabbedPane.selectedForeground", ColorScheme.FOREGROUND_CYAN);
         UIManager.put("TabbedPane.tabInsets", new Insets(5, 10, 5, 10));
-        UIManager.put("TabbedPane.font", new Font("SansSerif", Font.PLAIN, 12));
-
+        UIManager.put("TabbedPane.font", new Font("SansSerif", Font.BOLD, 16));
 
         buildUI();
         parentFrame = frame;
@@ -225,15 +223,6 @@ public class ClassySharkPanel extends JPanel
     }
 
     @Override
-    public void startAnalyzer() {
-        JFrame analyzerFrame = new JFrame(binaryArchive.getName());
-        JPanel analyzerPanel = new AnalyzerPanel(binaryArchive);
-        analyzerFrame.getContentPane().add(analyzerPanel);
-        analyzerFrame.setSize(new Dimension(800, 600));
-        analyzerFrame.setVisible(true);
-    }
-
-    @Override
     public void keyTyped(KeyEvent e) {
     }
 
@@ -297,7 +286,7 @@ public class ClassySharkPanel extends JPanel
         jTabbedPane.setBackground(ColorScheme.BACKGROUND);
         JScrollPane leftScrollPane = new JScrollPane(filesTree.getJTree());
 
-        jTabbedPane.addTab("Dex", leftScrollPane);
+        jTabbedPane.addTab("Archive", leftScrollPane);
         analyzerPanel = new AnalyzerPanel();
         jTabbedPane.addTab("Packages", analyzerPanel);
 
@@ -350,7 +339,7 @@ public class ClassySharkPanel extends JPanel
 
                 filesTree.fillArchive(ClassySharkPanel.this.binaryArchive, allClassNamesInArchive);
 
-                if(className != null) {
+                if (className != null) {
                     onSelectedClassName(className);
                 } else {
                     displayArea.displaySharkey();
