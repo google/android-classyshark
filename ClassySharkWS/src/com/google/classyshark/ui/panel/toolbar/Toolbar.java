@@ -46,7 +46,6 @@ public class Toolbar extends JToolBar {
     private JButton backBtn;
     private JButton exportButton;
     private JButton recentArchivesBtn;
-    private JButton analyzerBtn;
     private JToggleButton leftPanelToggleBtn;
 
     public Toolbar(final ToolbarController toolbarController) {
@@ -69,7 +68,6 @@ public class Toolbar extends JToolBar {
         exportButton = buildExportButton();
         recentArchivesBtn = buildRecentArchivesButton();
         leftPanelToggleBtn = buildLeftPanelToggleButton();
-        analyzerBtn = buildAnalyzerButton();
 
         this.setBackground(ColorScheme.BLACK);
 
@@ -79,7 +77,6 @@ public class Toolbar extends JToolBar {
         add(viewBtn);
         add(typingArea);
         add(exportButton);
-        add(analyzerBtn);
         add(recentArchivesBtn);
 
         setFloatable(false);
@@ -121,7 +118,6 @@ public class Toolbar extends JToolBar {
         viewBtn.setEnabled(true);
         backBtn.setEnabled(true);
         exportButton.setEnabled(true);
-        analyzerBtn.setEnabled(true);
     }
 
     private JTextField buildTypingArea() {

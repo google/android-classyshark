@@ -26,6 +26,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.SwingWorker;
 import javax.swing.WindowConstants;
+import javax.swing.border.EmptyBorder;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
@@ -38,17 +39,27 @@ import java.io.File;
 
 public class AnalyzerPanel extends JPanel {
     private DefaultTreeModel treeModel;
+    private JTree jTree;
 
     public AnalyzerPanel(File file) throws HeadlessException {
+        this();
+        loadFile(file);
+    }
+
+    public AnalyzerPanel() throws HeadlessException {
         setup();
+    }
+
+    public void loadFile(File file) {
         new NodeWorker(file).execute();
     }
 
     private void setup() {
         this.setLayout(new BorderLayout());
         treeModel = new DefaultTreeModel(new DefaultMutableTreeNode(null));
-        JTree jTree = new JTree(treeModel);
+        jTree = new JTree(treeModel);
         jTree.setBackground(ColorScheme.BACKGROUND);
+        jTree.setRootVisible(false);
 
         DefaultTreeCellRenderer cellRenderer = (DefaultTreeCellRenderer) jTree.getCellRenderer();
         cellRenderer.setBackground(ColorScheme.BACKGROUND);
@@ -58,6 +69,7 @@ public class AnalyzerPanel extends JPanel {
         jTree.setCellRenderer(cellRenderer);
 
         JScrollPane jScrollPane = new JScrollPane(jTree);
+        this.setBorder(new EmptyBorder(0,0,0,0));
         this.add(jScrollPane, BorderLayout.CENTER);
     }
 
@@ -93,6 +105,7 @@ public class AnalyzerPanel extends JPanel {
             try {
                 TreeNode root = createDefaultMutableTreeNode(get());
                 treeModel.setRoot(root);
+                jTree.setRootVisible(true);
             } catch (Exception ex) {
 
             }
