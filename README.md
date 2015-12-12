@@ -42,7 +42,7 @@ Helps you debug your app by allowing you to:
 `java -jar ClassyShark.jar -dump <BINARY_FILE>`
 2. Export generated file from a specific class
 `java -jar ClassyShark.jar -dump <BINARY_FILE> <FULLY_QUALIFIED_CLASS_NAME>`
-3. Open ClassyShark and display specific class in the UI
+3. Open ClassyShark and display a specific class in the GUI
 `java -jar ClassyShark.jar -open <BINARY_FILE> <FULLY_QUALIFIED_CLASS_NAME>`
 
 ## Downloads
