@@ -29,10 +29,6 @@ Identify security risks including:
 * AndroidManifest inside production APK
 * Verifying obfuscated code
 
-### Command line export 
-Export and search generated data from your favorite editor
-`java -jar ClassyShark.jar -dump <FILE>`
-
 ### Debugging
 Helps you debug your app by allowing you to:
 
@@ -40,6 +36,14 @@ Helps you debug your app by allowing you to:
 * Show missing and/or changed code due to Proguard obfuscation
 * Trace method calls in obfuscated APK
 * Export archive data from ClassyShark to a text file
+
+## Command line 
+1. Export all generated data
+`java -jar ClassyShark.jar -dump <BINARY_FILE>`
+2. Export generated file from a specific class
+`java -jar ClassyShark.jar -dump <BINARY_FILE> <FULLY_QUALIFIED_CLASS_NAME>`
+3. Open ClassyShark and display specific class in the UI
+`java -jar ClassyShark.jar -open <BINARY_FILE> <FULLY_QUALIFIED_CLASS_NAME>`
 
 ## Downloads
 
