@@ -14,7 +14,7 @@ ClassyShark is a handy browser for Android executables. It has clients for both 
 Helps you understand the contents of [multidex](http://developer.android.com/tools/building/multidex.html) apps
 
 * Show the content of each classes.dex file
-* Show the dex counts for methods, classes, strings etc
+* Show the dex counts for packages, methods, classes, strings etc
 
 ### Performance
 Identify and understand performance problems including: 
