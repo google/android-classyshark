@@ -17,6 +17,7 @@
 package com.google.classyshark.gui.panel;
 
 import com.google.classyshark.silverghost.contentreader.ContentReader;
+import com.google.classyshark.silverghost.methodscounter.ClassNode;
 import com.google.classyshark.silverghost.reducer.Reducer;
 import com.google.classyshark.silverghost.translator.Translator;
 import com.google.classyshark.silverghost.translator.TranslatorFactory;
@@ -30,6 +31,8 @@ import com.google.classyshark.gui.panel.toolbar.KeyUtils;
 import com.google.classyshark.gui.panel.toolbar.Toolbar;
 import com.google.classyshark.gui.panel.toolbar.ToolbarController;
 import com.google.classyshark.gui.panel.tree.FilesTree;
+import com.google.classyshark.ui.panel.chart.RingChartPanel;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -226,6 +229,22 @@ public class ClassySharkPanel extends JPanel
         filesTree.setVisibleRoot();
     }
 
+    public void startAnalyzer() {
+        JFrame analyzerFrame = new JFrame(binaryArchive.getName());
+        JPanel analyzerPanel = new MethodsCountPanel(this, binaryArchive);
+        analyzerFrame.getContentPane().add(analyzerPanel);
+        analyzerFrame.setSize(new Dimension(800, 600));
+        analyzerFrame.setVisible(true);
+    }
+
+    @Override
+    public void onSelectedMethodCount(ClassNode rootNode) {
+        System.out.println("ble");
+        RingChartPanel ringChartPanel = new RingChartPanel();
+        ringChartPanel.setRootNode(rootNode);
+        jSplitPane.setRightComponent(ringChartPanel);
+    }
+
     @Override
     public void keyTyped(KeyEvent e) {
     }
@@ -291,7 +310,7 @@ public class ClassySharkPanel extends JPanel
         JScrollPane leftScrollPane = new JScrollPane(filesTree.getJTree());
 
         jTabbedPane.addTab("Archive", leftScrollPane);
-        methodsCountPanel = new MethodsCountPanel();
+        methodsCountPanel = new MethodsCountPanel(this);
         jTabbedPane.addTab("Packages", methodsCountPanel);
 
         jSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
