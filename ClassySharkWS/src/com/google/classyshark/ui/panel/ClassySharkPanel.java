@@ -299,7 +299,7 @@ public class ClassySharkPanel extends JPanel
 
         jTabbedPane.addTab("Dex", leftScrollPane);
         analyzerPanel = new AnalyzerPanel();
-        jTabbedPane.addTab("Counts", analyzerPanel);
+        jTabbedPane.addTab("Packages", analyzerPanel);
 
         jSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
         jSplitPane.setBackground(ColorScheme.BACKGROUND);
