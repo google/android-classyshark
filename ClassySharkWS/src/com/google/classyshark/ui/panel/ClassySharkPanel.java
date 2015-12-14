@@ -32,6 +32,8 @@ import com.google.classyshark.ui.panel.tree.FilesTree;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Insets;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
@@ -42,8 +44,10 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
+import javax.swing.JTabbedPane;
 import javax.swing.SwingWorker;
 import javax.swing.UIManager;
+import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileFilter;
 
 /**
@@ -58,6 +62,7 @@ public class ClassySharkPanel extends JPanel
     private JFrame parentFrame;
     private Toolbar toolbar;
     private JSplitPane jSplitPane;
+    private AnalyzerPanel analyzerPanel;
     private int dividerLocation = 0;
     private DisplayArea displayArea;
     private FilesTree filesTree;
@@ -83,6 +88,19 @@ public class ClassySharkPanel extends JPanel
         UIManager.put("swing.boldMetal", Boolean.FALSE);
         UIManager.put("Button.select", Color.GRAY);
         UIManager.put("ToggleButton.select", Color.GRAY);
+
+        UIManager.put("TabbedPane.contentAreaColor ", ColorScheme.LIGHT_GRAY);
+        UIManager.put("TabbedPane.selected", ColorScheme.BLACK);
+        UIManager.put("TabbedPane.background", ColorScheme.LIGHT_GRAY);
+        UIManager.put("TabbedPane.shadow", ColorScheme.FOREGROUND_CYAN);
+        UIManager.put("TabbedPane.darkShadow", ColorScheme.LIGHT_GRAY);
+        UIManager.put("TabbedPane.foreground", ColorScheme.FOREGROUND_CYAN);
+        UIManager.put("TabbedPane.unselectedTabForeground", ColorScheme.FOREGROUND_CYAN);
+        UIManager.put("TabbedPane.selectedForeground", ColorScheme.FOREGROUND_CYAN);
+        UIManager.put("TabbedPane.tabInsets", new Insets(5, 10, 5, 10));
+        UIManager.put("TabbedPane.font", new Font("SansSerif", Font.PLAIN, 12));
+
+
         buildUI();
         parentFrame = frame;
         toolbar.setText("");
@@ -195,6 +213,7 @@ public class ClassySharkPanel extends JPanel
 
     @Override
     public void updateUiAfterArchiveRead(File binaryArchive) {
+        analyzerPanel.loadFile(binaryArchive);
         if (parentFrame != null) {
             parentFrame.setTitle(binaryArchive.getName());
         }
@@ -274,13 +293,20 @@ public class ClassySharkPanel extends JPanel
         JScrollPane rightScrollPane = new JScrollPane(displayArea.onAddComponentToPane());
 
         filesTree = new FilesTree(this);
+        JTabbedPane jTabbedPane = new JTabbedPane();
+        jTabbedPane.setBackground(ColorScheme.BACKGROUND);
         JScrollPane leftScrollPane = new JScrollPane(filesTree.getJTree());
 
+        jTabbedPane.addTab("Dex", leftScrollPane);
+        analyzerPanel = new AnalyzerPanel();
+        jTabbedPane.addTab("Packages", analyzerPanel);
+
         jSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+        jSplitPane.setBackground(ColorScheme.BACKGROUND);
         jSplitPane.setDividerSize(3);
         jSplitPane.setPreferredSize(new Dimension(1000, 700));
 
-        jSplitPane.add(leftScrollPane, JSplitPane.LEFT);
+        jSplitPane.add(jTabbedPane, JSplitPane.LEFT);
         jSplitPane.add(rightScrollPane, JSplitPane.RIGHT);
         jSplitPane.getLeftComponent().setVisible(true);
         jSplitPane.setDividerLocation(300);
