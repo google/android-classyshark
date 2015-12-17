@@ -19,8 +19,6 @@ package com.google.classyshark.ui.panel.displayarea;
 import com.google.classyshark.translator.Translator;
 import com.google.classyshark.translator.java.Translator2Java;
 import com.google.classyshark.ui.panel.ColorScheme;
-import com.google.classyshark.ui.panel.ClassySharkPanel;
-
 import com.google.classyshark.ui.panel.ViewerController;
 import java.awt.Color;
 import java.awt.Component;
@@ -32,7 +30,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.StringTokenizer;
-import javax.swing.*;
+import javax.swing.JFrame;
+import javax.swing.JTextPane;
+import javax.swing.WindowConstants;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.Document;
@@ -41,7 +41,7 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.Utilities;
 
 /**
- *  the area to display lists of classes and individual class
+ * the area to display lists of classes and individual class
  */
 public class DisplayArea {
 
@@ -62,7 +62,7 @@ public class DisplayArea {
         jTextPane.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if(displayDataState == DisplayDataState.SHARKEY) {
+                if (displayDataState == DisplayDataState.SHARKEY) {
                     return;
                 }
 
@@ -82,18 +82,16 @@ public class DisplayArea {
                     String selectedLine = jTextPane.getText().substring(rowStart, rowEnd);
                     System.out.println(selectedLine);
 
-                    if (displayDataState == DisplayDataState.CLASSES_LIST) {
+                    if (displayDataState == DisplayDataState.CLASSES_LIST || selectedLine.endsWith(".dex")) {
                         viewerController.onSelectedClassName(selectedLine);
                     } else if (displayDataState == DisplayDataState.INSIDE_CLASS) {
                         if (selectedLine.contains("import")) {
                             viewerController.onSelectedImportFromMouseClick(
                                     getClassNameFromImportStatement(selectedLine));
                         } else {
-
                             rowStart = Utilities.getWordStart(jTextPane, offset);
                             rowEnd = Utilities.getWordEnd(jTextPane, offset);
                             String word = jTextPane.getText().substring(rowStart, rowEnd);
-
                             viewerController.onSelectedTypeClassFromMouseClick(word);
                         }
                     }
@@ -120,7 +118,7 @@ public class DisplayArea {
             @Override
             public void keyPressed(KeyEvent e) {
                 Toolkit toolkit = Toolkit.getDefaultToolkit();
-                int ctrlModifier =  toolkit.getMenuShortcutKeyMask();
+                int ctrlModifier = toolkit.getMenuShortcutKeyMask();
 
                 //check if the modifier: ctrl for linux, windows or command for mac is pressed
                 // with the'c' key

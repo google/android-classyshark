@@ -18,6 +18,7 @@ package com.google.classyshark.translator.dex;
 
 import com.google.classyshark.reducer.ArchiveFileReader;
 import com.google.classyshark.translator.Translator;
+import com.google.classyshark.translator.apk.ApkTranslator;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -35,6 +36,7 @@ import org.jf.dexlib2.iface.DexFile;
 public class DexInfoTranslator implements Translator {
     private File apkfile;
     private String dexFileName;
+    private int index;
     private List<ELEMENT> elements = new ArrayList<>();
 
     public DexInfoTranslator(String dexFileName, File apkfile) {
@@ -47,15 +49,67 @@ public class DexInfoTranslator implements Translator {
         return dexFileName;
     }
 
-    private static File extractClassesDex(String dexName, File apkFile) {
+    @Override
+    public void apply() {
+        try {
+            File classesDex = extractClassesDex(dexFileName, apkfile, this);
+
+            DexFile dxFile = ArchiveFileReader.loadDexFile(classesDex);
+            DexBackedDexFile dataPack = (DexBackedDexFile) dxFile;
+
+            ELEMENT element = new ELEMENT("\nclasses: " + dataPack.getClassCount(),
+                    TAG.ANNOTATION);
+            elements.add(element);
+            element = new ELEMENT("\nstrings: " + dataPack.getStringCount(), TAG.ANNOTATION);
+            elements.add(element);
+            element = new ELEMENT("\ntypes: " + dataPack.getTypeCount(), TAG.ANNOTATION);
+            elements.add(element);
+            element = new ELEMENT("\nprotos: " + dataPack.getProtoCount(), TAG.ANNOTATION);
+            elements.add(element);
+            element = new ELEMENT("\nfields: " + dataPack.getFieldCount(), TAG.ANNOTATION);
+            elements.add(element);
+            element = new ELEMENT("\nmethods: " + dataPack.getMethodCount(), TAG.DOCUMENT);
+            elements.add(element);
+
+            element = new ELEMENT("\n\nClasses with Native Calls\n", TAG.DOCUMENT);
+            elements.add(element);
+
+            ApkTranslator.DexData dexData = ApkTranslator.fillAnalysis(index,
+                    classesDex);
+
+            for (String nativeMethodsClass : dexData.nativeMethodsClasses) {
+                element = new ELEMENT(nativeMethodsClass + "\n", TAG.ANNOTATION);
+                elements.add(element);
+            }
+
+            element = new ELEMENT("\nClasses with Abstract Calls\n", TAG.DOCUMENT);
+            elements.add(element);
+
+            for (String abstractMethodsClass : dexData.abstractClasses) {
+                element = new ELEMENT(abstractMethodsClass + "\n", TAG.XML_ATTR_NAME);
+                elements.add(element);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public List<ELEMENT> getElementsList() {
+        return elements;
+    }
+
+    @Override
+    public List<String> getDependencies() {
+        return new LinkedList<>();
+    }
+
+    private static File extractClassesDex(String dexName, File apkFile, DexInfoTranslator diTranslator) {
         File file = new File("classes.dex");
         ZipInputStream zipFile;
         try {
-            zipFile = new ZipInputStream(new FileInputStream(
-                    apkFile));
-
+            zipFile = new ZipInputStream(new FileInputStream(apkFile));
             ZipEntry zipEntry;
-
             int i = 0;
             while (true) {
                 zipEntry = zipFile.getNextEntry();
@@ -81,6 +135,7 @@ public class DexInfoTranslator implements Translator {
                     fos.close();
 
                     if (dexName.equals(currentClassesDexName)) {
+                        diTranslator.index = i;
                         break;
                     }
                 }
@@ -90,42 +145,5 @@ public class DexInfoTranslator implements Translator {
             e.printStackTrace();
         }
         return file;
-    }
-
-
-    @Override
-    public void apply() {
-        try {
-
-            File classesDex = extractClassesDex(dexFileName, apkfile);
-
-            DexFile dxFile = ArchiveFileReader.loadDexFile(classesDex);
-            DexBackedDexFile dataPack = (DexBackedDexFile) dxFile;
-
-            ELEMENT element = new ELEMENT("\nclasses: " + dataPack.getClassCount(), TAG.ANNOTATION);
-            elements.add(element);
-            element = new ELEMENT("\nstrings: " + dataPack.getStringCount(), TAG.ANNOTATION);
-            elements.add(element);
-            element = new ELEMENT("\ntypes: " + dataPack.getTypeCount(), TAG.ANNOTATION);
-            elements.add(element);
-            element = new ELEMENT("\nprotos: " + dataPack.getProtoCount(), TAG.ANNOTATION);
-            elements.add(element);
-            element = new ELEMENT("\nfields: " + dataPack.getFieldCount(), TAG.ANNOTATION);
-            elements.add(element);
-            element = new ELEMENT("\nmethods: " + dataPack.getMethodCount(), TAG.DOCUMENT);
-            elements.add(element);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public List<ELEMENT> getElementsList() {
-        return elements;
-    }
-
-    @Override
-    public List<String> getDependencies() {
-        return new LinkedList<>();
     }
 }

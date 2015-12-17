@@ -20,11 +20,14 @@ import com.google.classyshark.translator.Translator;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.TreeSet;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -38,9 +41,8 @@ import org.ow2.asmdex.Opcodes;
  * Translator for the .apk entry
  */
 public class ApkTranslator implements Translator {
-
     private File archiveFile;
-    private APKAnalysis apkAnalysis;
+    private ApkAnalysis apkAnalysis;
     private List<ELEMENT> elements = new ArrayList<>();
 
     public ApkTranslator(File archiveFile) {
@@ -55,9 +57,29 @@ public class ApkTranslator implements Translator {
     @Override
     public void apply() {
         apkAnalysis = doInspect(archiveFile);
-        ELEMENT element = new ELEMENT("\nmethods: " + apkAnalysis.toString(),
-                TAG.ANNOTATION);
+
+        for (DexData dexData : apkAnalysis.dexes) {
+            ELEMENT element = new ELEMENT("\nclasses" + dexData.index + ".dex", TAG.DOCUMENT);
+            elements.add(element);
+
+            element = new ELEMENT("\nnative methods: "
+                    + dexData.nativeMethodsCount
+                    + "\nabstract methods: "
+                    + dexData.abstractMethodsCount + "\n",
+                    TAG.ANNOTATION);
+            elements.add(element);
+        }
+
+        ELEMENT element = new ELEMENT("\nNative Libraries\n",
+                TAG.DOCUMENT);
+
         elements.add(element);
+
+        Collections.sort(apkAnalysis.nativeLibs);
+        for (String nativeLib : apkAnalysis.nativeLibs) {
+            element = new ELEMENT(nativeLib, TAG.ANNOTATION);
+            elements.add(element);
+        }
     }
 
     @Override
@@ -70,14 +92,12 @@ public class ApkTranslator implements Translator {
         return new LinkedList<>();
     }
 
-    public String toString() {
-        return apkAnalysis.toString();
-    }
-
-    private static class DexData implements Comparable {
+    public static class DexData implements Comparable {
         public int index;
         public int nativeMethodsCount = 0;
         public int abstractMethodsCount = 0;
+        public Set<String> nativeMethodsClasses = new TreeSet<>();
+        public Set<String> abstractClasses = new TreeSet<>();
 
         public DexData(int index) {
             this.index = index;
@@ -89,7 +109,7 @@ public class ApkTranslator implements Translator {
                 return -1;
             }
 
-            return new Integer(this.index).compareTo(new Integer(((DexData) o).index));
+            return Integer.valueOf(index).compareTo(((DexData) o).index);
         }
 
         public String toString() {
@@ -97,45 +117,42 @@ public class ApkTranslator implements Translator {
                     "\nclasses" + index + ".dex"
                             + "\nnative methods: "
                             + nativeMethodsCount
-                            + nativeRecommendation()
                             + "\nabstract methods: "
                             + abstractMethodsCount
-                            + abstractRecommendation()
-                            + "\n\n";
-        }
-
-        private String abstractRecommendation() {
-            if (abstractMethodsCount > 0) {
-                return " too many abstract methods might cause LinearAlloc";
-            }
-
-            return "";
-        }
-
-        private String nativeRecommendation() {
-            if (nativeMethodsCount > 0) {
-                return " native methods in dexes - "
-                        + "check native methods calls to Java code in secondary"
-                        + " dexes (if you have)";
-            }
-
-            return "";
+                            + "\nclasses with native methods"
+                            + nativeMethodsClasses
+                            + "\nclasses with abstract methods"
+                            + abstractClasses;
         }
     }
 
-    private static class APKAnalysis {
+    public static DexData fillAnalysis(int dexIndex, File file) throws IOException {
+        DexData dexData = new DexData(dexIndex);
+
+        InputStream is = new FileInputStream(file);
+        ApplicationVisitor av = new ApkInspectVisitor(dexData);
+        ApplicationReader ar = new ApplicationReader(Opcodes.ASM4, is);
+        ar.accept(av, 0);
+
+        return dexData;
+    }
+
+    public String toString() {
+        return apkAnalysis.toString();
+    }
+
+    private static class ApkAnalysis {
         public List<String> nativeLibs = new ArrayList<>();
         public TreeSet<DexData> dexes = new TreeSet<>();
 
         public String toString() {
-            return dexes + "\n\n\n"
-                    + "Take a look at native libs, make sure you don't miss anything \n"
+            return dexes + "\n\n"
                     + nativeLibs;
         }
     }
 
-    private static APKAnalysis doInspect(File binaryArchiveFile) {
-        APKAnalysis result = new APKAnalysis();
+    private static ApkAnalysis doInspect(File binaryArchiveFile) {
+        ApkAnalysis result = new ApkAnalysis();
 
         try {
             ZipInputStream zipFile = new ZipInputStream(new FileInputStream(
@@ -165,12 +182,7 @@ public class ApkTranslator implements Translator {
 
                     fos.close();
 
-                    DexData dexData = new DexData(dexIndex);
-                    result.dexes.add(dexData);
-                    InputStream is = new FileInputStream(file);
-                    ApplicationVisitor av = new ApkInspectVisitor(dexData);
-                    ApplicationReader ar = new ApplicationReader(Opcodes.ASM4, is);
-                    ar.accept(av, 0);
+                    result.dexes.add(fillAnalysis(dexIndex, file));
 
                     dexIndex++;
                 } else {
@@ -199,7 +211,11 @@ public class ApkTranslator implements Translator {
         public ClassVisitor visitClass(int access, String name, String[] signature,
                                        String superName, String[] interfaces) {
 
+            final String mName = name;
+
             return new ClassVisitor(Opcodes.ASM4) {
+                private String className = mName.replaceAll("\\/", "\\.").substring(1, mName.length() - 1);
+
                 @Override
                 public void visit(int version, int access, String name, String[] signature,
                                   String superName, String[] interfaces) {
@@ -211,9 +227,11 @@ public class ApkTranslator implements Translator {
                                                  String[] signature, String[] exceptions) {
                     if (Modifier.isNative(access)) {
                         dexData.nativeMethodsCount++;
+                        dexData.nativeMethodsClasses.add(this.className);
                     }
                     if (Modifier.isAbstract(access)) {
                         dexData.abstractMethodsCount++;
+                        dexData.abstractClasses.add(this.className);
                     }
 
                     return super.visitMethod(access, name, desc, signature, exceptions);
