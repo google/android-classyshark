@@ -18,10 +18,15 @@ package com.google.classyshark.translator.dex;
 
 import com.google.classyshark.reducer.ArchiveFileReader;
 import com.google.classyshark.translator.Translator;
+import com.google.classyshark.translator.apk.ApkTranslator;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 import org.jf.dexlib2.dexbacked.DexBackedDexFile;
 import org.jf.dexlib2.iface.DexFile;
 
@@ -29,10 +34,13 @@ import org.jf.dexlib2.iface.DexFile;
  * Translator for the classes.dex entry
  */
 public class DexInfoTranslator implements Translator {
+    private File apkfile;
     private String dexFileName;
+    private int index;
     private List<ELEMENT> elements = new ArrayList<>();
 
-    public DexInfoTranslator(String dexFileName) {
+    public DexInfoTranslator(String dexFileName, File apkfile) {
+        this.apkfile = apkfile;
         this.dexFileName = dexFileName;
     }
 
@@ -44,10 +52,13 @@ public class DexInfoTranslator implements Translator {
     @Override
     public void apply() {
         try {
-            DexFile dxFile = ArchiveFileReader.loadDexFile(new File(dexFileName));
+            File classesDex = extractClassesDex(dexFileName, apkfile, this);
+
+            DexFile dxFile = ArchiveFileReader.loadDexFile(classesDex);
             DexBackedDexFile dataPack = (DexBackedDexFile) dxFile;
 
-            ELEMENT element = new ELEMENT("\nclasses: " + dataPack.getClassCount(), TAG.ANNOTATION);
+            ELEMENT element = new ELEMENT("\nclasses: " + dataPack.getClassCount(),
+                    TAG.ANNOTATION);
             elements.add(element);
             element = new ELEMENT("\nstrings: " + dataPack.getStringCount(), TAG.ANNOTATION);
             elements.add(element);
@@ -59,6 +70,25 @@ public class DexInfoTranslator implements Translator {
             elements.add(element);
             element = new ELEMENT("\nmethods: " + dataPack.getMethodCount(), TAG.DOCUMENT);
             elements.add(element);
+
+            element = new ELEMENT("\n\nClasses with Native Calls\n", TAG.DOCUMENT);
+            elements.add(element);
+
+            ApkTranslator.DexData dexData = ApkTranslator.fillAnalysis(index,
+                    classesDex);
+
+            for (String nativeMethodsClass : dexData.nativeMethodsClasses) {
+                element = new ELEMENT(nativeMethodsClass + "\n", TAG.ANNOTATION);
+                elements.add(element);
+            }
+
+            element = new ELEMENT("\nClasses with Abstract Calls\n", TAG.DOCUMENT);
+            elements.add(element);
+
+            for (String abstractMethodsClass : dexData.abstractClasses) {
+                element = new ELEMENT(abstractMethodsClass + "\n", TAG.XML_ATTR_NAME);
+                elements.add(element);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -72,5 +102,48 @@ public class DexInfoTranslator implements Translator {
     @Override
     public List<String> getDependencies() {
         return new LinkedList<>();
+    }
+
+    private static File extractClassesDex(String dexName, File apkFile, DexInfoTranslator diTranslator) {
+        File file = new File("classes.dex");
+        ZipInputStream zipFile;
+        try {
+            zipFile = new ZipInputStream(new FileInputStream(apkFile));
+            ZipEntry zipEntry;
+            int i = 0;
+            while (true) {
+                zipEntry = zipFile.getNextEntry();
+
+                if (zipEntry == null) {
+                    break;
+                }
+
+                if (zipEntry.getName().endsWith(".dex")) {
+                    String currentClassesDexName = "classes" + i + ".dex";
+                    file = File.createTempFile("classes" + i, "dex");
+                    file.deleteOnExit();
+                    i++;
+
+                    FileOutputStream fos =
+                            new FileOutputStream(file);
+                    byte[] bytes = new byte[1024];
+                    int length;
+                    while ((length = zipFile.read(bytes)) >= 0) {
+                        fos.write(bytes, 0, length);
+                    }
+
+                    fos.close();
+
+                    if (dexName.equals(currentClassesDexName)) {
+                        diTranslator.index = i;
+                        break;
+                    }
+                }
+            }
+            zipFile.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return file;
     }
 }

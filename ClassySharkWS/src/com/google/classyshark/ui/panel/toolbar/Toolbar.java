@@ -227,26 +227,6 @@ public class Toolbar extends JToolBar {
         return result;
     }
 
-    private JButton buildAnalyzerButton() {
-        JButton jButton = new JButton("\u2697");
-        jButton.setFont(new Font("Menlo", Font.PLAIN, 18));
-
-        jButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                toolbarController.startAnalyzer();
-            }
-        });
-
-        jButton.setToolTipText("Analyzer");
-        jButton.setBorderPainted(false);
-        jButton.setForeground(ColorScheme.FOREGROUND_YELLOW);
-        jButton.setBackground(ColorScheme.BLACK);
-        jButton.setEnabled(false);
-
-        return jButton;
-    }
-
     private JToggleButton buildLeftPanelToggleButton() {
         final JToggleButton jToggleButton = new JToggleButton("\u2592", true);
         jToggleButton.setBorderPainted(false);

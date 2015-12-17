@@ -168,6 +168,12 @@ public class FilesTree {
                     return;
                 }
 
+                if (selection.toString().endsWith(".apk")) {
+                    FilesTree.this.viewerController.onSelectedClassName(
+                            (String) defaultMutableTreeNode.getUserObject());
+                    return;
+                }
+
                 if (!defaultMutableTreeNode.isLeaf()) return;
 
                 if (FilesTree.this.viewerController != null) {

@@ -46,8 +46,8 @@ public class Multidex {
                 }
 
                 if (zipEntry.getName().endsWith(".dex")) {
-                    file = new File("classes" + i + ".dex");
-                    file.createNewFile();
+                    file = File.createTempFile("classes" + i, "dex");
+                    file.deleteOnExit();
                     i++;
 
                     FileOutputStream fos =

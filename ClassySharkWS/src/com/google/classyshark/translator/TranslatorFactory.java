@@ -17,6 +17,7 @@
 package com.google.classyshark.translator;
 
 import com.google.classyshark.reducer.Reducer;
+import com.google.classyshark.translator.apk.ApkTranslator;
 import com.google.classyshark.translator.jar.JarInfoTranslator;
 import com.google.classyshark.translator.java.Translator2Java;
 import com.google.classyshark.translator.dex.DexInfoTranslator;
@@ -33,17 +34,25 @@ public class TranslatorFactory {
     }
 
     public static Translator createTranslator(String className, File archiveFile,
-                                              Reducer reducer) {
+                                                 Reducer reducer) {
         if(className.endsWith(".xml")) {
             return new Translator2AndroidXml(archiveFile);
         }
 
         if (className.endsWith(".dex")) {
-           return new DexInfoTranslator(className);
+           return new DexInfoTranslator(className, archiveFile);
         }
 
         if (className.endsWith(".jar")) {
             return new JarInfoTranslator(archiveFile, reducer);
+        }
+
+        if (className.endsWith(".jar")) {
+            return new JarInfoTranslator(archiveFile, reducer);
+        }
+
+        if (className.endsWith(".apk")) {
+            return new ApkTranslator(archiveFile);
         }
 
         return new Translator2Java(className, archiveFile);
