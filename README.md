@@ -36,6 +36,8 @@ Identify security risks including:
 `java -jar ClassyShark.jar -dump <BINARY_FILE> <FULLY_QUALIFIED_CLASS_NAME>`
 3. Open ClassyShark and display a specific class in the GUI
 `java -jar ClassyShark.jar -open <BINARY_FILE> <FULLY_QUALIFIED_CLASS_NAME>`
+4. Inspect APK
+`java -jar ClassyShark.jar -inspect <YOUR_APK.apk>`
 
 ## Downloads
 
@@ -49,6 +51,7 @@ Clone this repository and import the `ClassySharkWS` folder in your favorite IDE
 * [dexlib2](https://github.com/JesusFreke/smali/tree/master/dexlib2) by jesusfreke
 * [guava](https://github.com/google/guava) by Google
 * [ASM](http://asm.ow2.org/) by OW2
+* [ASMDEX] (http://asm.ow2.org/asmdex-index.html) by OW2
 
 ## Support
 If you've found an error, please file an issue:
