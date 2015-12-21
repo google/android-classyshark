@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.classyshark.analyzer;
+package com.google.classyshark.treewalker.methodsperpackage;
 
 import java.util.HashMap;
 import java.util.Map;

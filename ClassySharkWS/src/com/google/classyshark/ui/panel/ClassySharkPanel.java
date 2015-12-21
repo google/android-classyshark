@@ -19,7 +19,7 @@ package com.google.classyshark.ui.panel;
 import com.google.classyshark.reducer.Reducer;
 import com.google.classyshark.translator.Translator;
 import com.google.classyshark.translator.TranslatorFactory;
-import com.google.classyshark.ui.panel.analyzer.AnalyzerPanel;
+import com.google.classyshark.ui.panel.methodscount.MethodsCountPanel;
 import com.google.classyshark.ui.panel.displayarea.DisplayArea;
 import com.google.classyshark.ui.panel.io.CurrentFolderConfig;
 import com.google.classyshark.ui.panel.io.Export2FileWriter;
@@ -61,7 +61,7 @@ public class ClassySharkPanel extends JPanel
     private JFrame parentFrame;
     private Toolbar toolbar;
     private JSplitPane jSplitPane;
-    private AnalyzerPanel analyzerPanel;
+    private MethodsCountPanel methodsCountPanel;
     private int dividerLocation = 0;
     private DisplayArea displayArea;
     private FilesTree filesTree;
@@ -211,7 +211,7 @@ public class ClassySharkPanel extends JPanel
 
     @Override
     public void updateUiAfterArchiveRead(File binaryArchive) {
-        analyzerPanel.loadFile(binaryArchive);
+        methodsCountPanel.loadFile(binaryArchive);
         if (parentFrame != null) {
             parentFrame.setTitle(binaryArchive.getName());
         }
@@ -287,8 +287,8 @@ public class ClassySharkPanel extends JPanel
         JScrollPane leftScrollPane = new JScrollPane(filesTree.getJTree());
 
         jTabbedPane.addTab("Archive", leftScrollPane);
-        analyzerPanel = new AnalyzerPanel();
-        jTabbedPane.addTab("Packages", analyzerPanel);
+        methodsCountPanel = new MethodsCountPanel();
+        jTabbedPane.addTab("Packages", methodsCountPanel);
 
         jSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
         jSplitPane.setBackground(ColorScheme.BACKGROUND);

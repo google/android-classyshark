@@ -306,7 +306,7 @@ public class DisplayArea {
             StyleConstants.setFontSize(style, 13);
             StyleConstants.setFontFamily(style, "Menlo");
 
-            doc.insertString(doc.getLength(), SharkBG.SHARKEY, style);
+            doc.insertString(doc.getLength(), ChristmasBG.SHARKEY, style);
         } catch (BadLocationException e) {
             e.printStackTrace();
         }

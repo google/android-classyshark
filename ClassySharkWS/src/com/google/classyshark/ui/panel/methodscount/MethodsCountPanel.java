@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package com.google.classyshark.ui.panel.analyzer;
+package com.google.classyshark.ui.panel.methodscount;
 
-import com.google.classyshark.analyzer.Analyzer;
-import com.google.classyshark.analyzer.Node;
+import com.google.classyshark.treewalker.methodsperpackage.Analyzer;
+import com.google.classyshark.treewalker.methodsperpackage.Node;
 import com.google.classyshark.ui.panel.ColorScheme;
 
 import javax.swing.JFrame;
@@ -37,16 +37,16 @@ import java.awt.Font;
 import java.awt.HeadlessException;
 import java.io.File;
 
-public class AnalyzerPanel extends JPanel {
+public class MethodsCountPanel extends JPanel {
     private DefaultTreeModel treeModel;
     private JTree jTree;
 
-    public AnalyzerPanel(File file) throws HeadlessException {
+    public MethodsCountPanel(File file) throws HeadlessException {
         this();
         loadFile(file);
     }
 
-    public AnalyzerPanel() throws HeadlessException {
+    public MethodsCountPanel() throws HeadlessException {
         setup();
     }
 
@@ -116,7 +116,7 @@ public class AnalyzerPanel extends JPanel {
         String userHome = System.getProperty("user.home");
         String fileName = userHome + "/Downloads/test.apk";
 
-        AnalyzerPanel panel = new AnalyzerPanel(new File(fileName));
+        MethodsCountPanel panel = new MethodsCountPanel(new File(fileName));
         JFrame jFrame = new JFrame(fileName);
         jFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         jFrame.getContentPane().add(panel);

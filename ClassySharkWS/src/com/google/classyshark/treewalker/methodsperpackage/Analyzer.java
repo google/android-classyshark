@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.classyshark.analyzer;
+package com.google.classyshark.treewalker.methodsperpackage;
 
 import com.google.classyshark.reducer.ArchiveFileReader;
 import org.jf.dexlib2.iface.ClassDef;
