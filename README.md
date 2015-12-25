@@ -4,7 +4,7 @@ This is not an official Google product
 
 ## Introduction
 
-ClassyShark is a handy browser for Android executables. It has clients for both Android (apk) and Desktop (jar). With ClassyShark you can open APK/Zip/Class/Jar files and analyze their contents.
+ClassyShark is a handy browser for Android executables. It has clients for both Android (apk) and Desktop (jar). With ClassyShark you can open APK/Dex/Jar/Class files and analyze their contents.
 
 ![Screen Flow Demo](https://github.com/google/android-classyshark/blob/master/Resources/ClassySharkAnimated.gif)
 
@@ -23,11 +23,11 @@ Identify and understand performance problems including:
 * Duplicate libraries
 * Redundant libraries
 
-### Security
-Identify security risks including: 
+### Native Code (JNI)
+Troublshoot JNI problems including: 
 
-* AndroidManifest inside production APK
-* Verifying obfuscated code
+* Identifying missing native libraries
+* Browsing native methods per classes.dex
 
 ## Command line 
 1. Export all generated data to a text file
@@ -51,7 +51,7 @@ Clone this repository and import the `ClassySharkWS` folder in your favorite IDE
 * [dexlib2](https://github.com/JesusFreke/smali/tree/master/dexlib2) by jesusfreke
 * [guava](https://github.com/google/guava) by Google
 * [ASM](http://asm.ow2.org/) by OW2
-* [ASMDEX] (http://asm.ow2.org/asmdex-index.html) by OW2
+* [ASMDEX](http://asm.ow2.org/asmdex-index.html) by OW2
 
 ## Support
 If you've found an error, please file an issue:
