@@ -23,7 +23,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -32,6 +31,7 @@ public class ApkReader implements BinaryContentReader {
 
     private File binaryArchive;
     private List<String> allClassNames = new ArrayList<>();
+    private List<ContentReader.Component> components = new ArrayList<>();
 
     public ApkReader(File binaryArchive) {
         this.binaryArchive = binaryArchive;
@@ -39,7 +39,7 @@ public class ApkReader implements BinaryContentReader {
 
     @Override
     public void read() {
-        allClassNames = readClassNamesFromMultidex(binaryArchive);
+        readClassNamesFromMultidex(binaryArchive, allClassNames, components);
 
         // TODO add check for manifest
         allClassNames.add(6, "AndroidManifest.xml");
@@ -53,14 +53,13 @@ public class ApkReader implements BinaryContentReader {
     @Override
     public List<ContentReader.Component> getComponents() {
         // TODO add manifest here
-        return new ArrayList<>();
+        return components;
     }
 
-    public static List<String> readClassNamesFromMultidex(File binaryArchiveFile) {
-        List<String> result = new LinkedList<>();
-
+    private static void readClassNamesFromMultidex(File binaryArchiveFile,
+                                                   List<String> classNames,
+                                                   List<ContentReader.Component> components) {
         ZipInputStream zipFile;
-
         try {
             zipFile = new ZipInputStream(new FileInputStream(
                     binaryArchiveFile));
@@ -92,9 +91,14 @@ public class ApkReader implements BinaryContentReader {
                     List<String> classesAtDex =
                             DexReader.readClassNamesFromDex(binaryArchiveFile);
 
-                    result.add("classes" + dexIndex + ".dex");
-                    result.addAll(classesAtDex);
+                    classNames.add("classes" + dexIndex + ".dex");
+                    classNames.addAll(classesAtDex);
                     dexIndex++;
+                }
+                if (zipEntry.getName().startsWith("lib")) {
+                    components.add(
+                            new ContentReader.Component(zipEntry.getName(),
+                                    ContentReader.ARCHIVE_COMPONENT.NATIVE_LIBRARY));
                 }
             }
             zipFile.close();
@@ -102,7 +106,5 @@ public class ApkReader implements BinaryContentReader {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        return result;
     }
 }

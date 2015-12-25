@@ -37,7 +37,13 @@ public class ContentReader {
         ANDROID_MANIFEST, NATIVE_LIBRARY;
     }
 
-    public class Component {
+    public static class Component {
+
+        public Component(String name, ARCHIVE_COMPONENT component) {
+            this.name = name;
+            this.component = component;
+        }
+
         public String name;
         public ARCHIVE_COMPONENT component;
     }
@@ -73,5 +79,9 @@ public class ContentReader {
     public List<String> getAllClassNames() {
         // TODO add wrong state exception if read wasn't called
         return Collections.unmodifiableList(allClassNames);
+    }
+
+    public List<Component> getAllComponents() {
+        return formatReader.getComponents();
     }
 }

@@ -17,9 +17,9 @@
 package com.google.classyshark.ui.panel.tree;
 
 import com.google.classyshark.contentreader.ContentReader;
-import com.google.classyshark.ui.panel.reducer.Reducer;
 import com.google.classyshark.ui.panel.ColorScheme;
 import com.google.classyshark.ui.panel.ViewerController;
+import com.google.classyshark.ui.panel.reducer.Reducer;
 import java.awt.Component;
 import java.awt.Font;
 import java.io.File;
@@ -48,8 +48,8 @@ public class FilesTree {
         this.viewerController = viewerPanel;
     }
 
-    public void fillArchive(File loadedFile, List<String> displayedClassNames) {
-        if(!loadedFile.getName().contains(".")) {
+    public void fillArchive(File loadedFile, List<String> displayedClassNames, List<ContentReader.Component> allComponets) {
+        if (!loadedFile.getName().contains(".")) {
             TreeNode rootNode = createEmptyJTreeModelClass();
             treeModel.setRoot(rootNode);
             return;
@@ -58,15 +58,22 @@ public class FilesTree {
         TreeNode rootNode;
         if (loadedFile.getName().endsWith("dex") ||
                 loadedFile.getName().endsWith("apk")) {
-            rootNode = createJTreeModelAndroid(loadedFile.getName(), displayedClassNames);
+            rootNode = createJTreeModelAndroid(loadedFile.getName(),
+                    displayedClassNames,
+                    allComponets
+            );
         } else {
-            rootNode = createJTreeModelClass(loadedFile.getName(), displayedClassNames);
+            rootNode = createJTreeModelClass(loadedFile.getName(),
+                    displayedClassNames,
+                    allComponets);
         }
 
         treeModel.setRoot(rootNode);
     }
 
-    private TreeNode createJTreeModelAndroid(String fileName, List<String> displayedClassNames) {
+    private TreeNode createJTreeModelAndroid(String fileName,
+                                             List<String> displayedClassNames,
+                                             List<ContentReader.Component> allComponents) {
         DefaultMutableTreeNode root = new DefaultMutableTreeNode(fileName);
         DefaultMutableTreeNode classes = new DefaultMutableTreeNode("classes");
         DefaultMutableTreeNode currentClassesDex = classes;
@@ -101,10 +108,27 @@ public class FilesTree {
             currentClassesDex.add(node);
         }
         root.add(classes);
+
+        fillComponents(root, allComponents);
+
         return root;
     }
 
-    private TreeNode createJTreeModelClass(String fileName, List<String> displayedClassNames) {
+    // TODO currently support native libs only
+    private void fillComponents(DefaultMutableTreeNode root,
+                                List<ContentReader.Component> allComponents) {
+        if(!allComponents.isEmpty()) {
+            DefaultMutableTreeNode libs = new DefaultMutableTreeNode("libs");
+
+            for(ContentReader.Component comp : allComponents) {
+                libs.add(new DefaultMutableTreeNode(comp.name));
+            }
+
+            root.add(libs);
+        }
+    }
+
+    private TreeNode createJTreeModelClass(String fileName, List<String> displayedClassNames, List<ContentReader.Component> allComponets) {
         DefaultMutableTreeNode root = new DefaultMutableTreeNode(fileName);
         DefaultMutableTreeNode classes = new DefaultMutableTreeNode("classes");
         String lastPackage = null;
@@ -173,16 +197,22 @@ public class FilesTree {
                     return;
                 }
 
+                if (selection.toString().endsWith(".so")) {
+                    FilesTree.this.viewerController.onSelectedClassName(
+                            (String) defaultMutableTreeNode.getUserObject());
+                    return;
+                }
+
                 if (!defaultMutableTreeNode.isLeaf()) return;
 
                 if (FilesTree.this.viewerController != null) {
 
                     if (defaultMutableTreeNode.getUserObject() instanceof String) {
                         FilesTree.this.viewerController.onSelectedClassName(
-                                (String)defaultMutableTreeNode.getUserObject());
+                                (String) defaultMutableTreeNode.getUserObject());
                     } else {
                         FilesTree.this.viewerController.onSelectedClassName(
-                                ((NodeInfo)defaultMutableTreeNode.getUserObject()).fullname);
+                                ((NodeInfo) defaultMutableTreeNode.getUserObject()).fullname);
                     }
                 }
             }
@@ -204,9 +234,9 @@ public class FilesTree {
         loader.load();
         Reducer reducer = new Reducer(loader.getAllClassNames());
         reducer.reduce("");
-        filesTree.fillArchive(test, reducer.getAllClassNames());
+        filesTree.fillArchive(test, reducer.getAllClassNames(), loader.getAllComponents());
 
-        for(String s : reducer.getAllClassNames()) {
+        for (String s : reducer.getAllClassNames()) {
             System.out.println(NodeInfo.extractClassName(s));
         }
 

@@ -16,6 +16,7 @@
 
 package com.google.classyshark.translator;
 
+import com.google.classyshark.translator.elf.ElfTranslator;
 import com.google.classyshark.ui.panel.reducer.Reducer;
 import com.google.classyshark.translator.apk.ApkTranslator;
 import com.google.classyshark.translator.jar.JarInfoTranslator;
@@ -49,6 +50,10 @@ public class TranslatorFactory {
 
         if (className.endsWith(".apk")) {
             return new ApkTranslator(archiveFile);
+        }
+
+        if (className.endsWith(".so")) {
+            return new ElfTranslator(archiveFile);
         }
 
         return new Translator2Java(className, archiveFile);

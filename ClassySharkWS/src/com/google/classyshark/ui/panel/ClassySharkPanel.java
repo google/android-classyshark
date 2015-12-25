@@ -335,12 +335,14 @@ public class ClassySharkPanel extends JPanel
             @Override
             protected void done() {
                 if (isArchiveError()) {
-                    filesTree.fillArchive(new File("ERROR"), new ArrayList<String>());
+                    filesTree.fillArchive(new File("ERROR"), new ArrayList<String>(), loader.getAllComponents());
                     displayArea.displayError();
                     return;
                 }
 
-                filesTree.fillArchive(ClassySharkPanel.this.binaryArchive, allClassNamesInArchive);
+                filesTree.fillArchive(ClassySharkPanel.this.binaryArchive,
+                        allClassNamesInArchive,
+                        loader.getAllComponents());
 
                 if (className != null) {
                     onSelectedClassName(className);
