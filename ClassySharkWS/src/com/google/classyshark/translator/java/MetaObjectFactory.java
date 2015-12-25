@@ -16,7 +16,7 @@
 
 package com.google.classyshark.translator.java;
 
-import com.google.classyshark.reducer.ArchiveFileReader;
+import com.google.classyshark.contentreader.dex.DexlibLoader;
 import com.google.classyshark.translator.java.clazz.asm.MetaObjectAsmClass;
 import com.google.classyshark.translator.java.clazz.reflect.ClassUtils;
 import com.google.classyshark.translator.java.clazz.reflect.MetaObjectClass;
@@ -111,7 +111,7 @@ public class MetaObjectFactory {
     private static MetaObject getMetaObjectFromDex(String className, File archiveFile) {
         MetaObject result;
         try {
-            DexFile dexFile = ArchiveFileReader.loadDexFile(archiveFile);
+            DexFile dexFile = DexlibLoader.loadDexFile(archiveFile);
             ClassDef classDef = DexlibAdapter.getClassDefByName(className, dexFile);
             result = new MetaObjectDex(classDef);
         } catch (Exception e) {

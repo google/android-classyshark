@@ -14,30 +14,60 @@
  * limitations under the License.
  */
 
-package com.google.classyshark.translator.java.dex;
+package com.google.classyshark.contentreader.apk;
 
+import com.google.classyshark.contentreader.BinaryContentReader;
+import com.google.classyshark.contentreader.ContentReader;
 import com.google.classyshark.contentreader.dex.DexReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-public class Multidex {
-    private Multidex() {
+public class ApkReader implements BinaryContentReader {
+
+    private File binaryArchive;
+    private List<String> allClassNames = new ArrayList<>();
+
+    public ApkReader(File binaryArchive) {
+        this.binaryArchive = binaryArchive;
     }
 
-    public static File extractClassesDexWithClass(String className, File apkFile) {
-        File file = new File("classes.dex");
+    @Override
+    public void read() {
+        allClassNames = readClassNamesFromMultidex(binaryArchive);
+
+        // TODO add check for manifest
+        allClassNames.add(6, "AndroidManifest.xml");
+    }
+
+    @Override
+    public List<String> getClassNames() {
+        return allClassNames;
+    }
+
+    @Override
+    public List<ContentReader.Component> getComponents() {
+        // TODO add manifest here
+        return new ArrayList<>();
+    }
+
+    public static List<String> readClassNamesFromMultidex(File binaryArchiveFile) {
+        List<String> result = new LinkedList<>();
+
         ZipInputStream zipFile;
+
         try {
             zipFile = new ZipInputStream(new FileInputStream(
-                    apkFile));
+                    binaryArchiveFile));
 
             ZipEntry zipEntry;
 
-            int i = 0;
+            int dexIndex = 0;
             while (true) {
                 zipEntry = zipFile.getNextEntry();
 
@@ -46,9 +76,8 @@ public class Multidex {
                 }
 
                 if (zipEntry.getName().endsWith(".dex")) {
-                    file = File.createTempFile("classes" + i, "dex");
+                    File file = File.createTempFile("classes" + dexIndex, "dex");
                     file.deleteOnExit();
-                    i++;
 
                     FileOutputStream fos =
                             new FileOutputStream(file);
@@ -60,17 +89,20 @@ public class Multidex {
 
                     fos.close();
 
-                    List<String> classNamesInDex =
-                            DexReader.readClassNamesFromDex(file);
-                    if (classNamesInDex.contains(className)) {
-                        break;
-                    }
+                    List<String> classesAtDex =
+                            DexReader.readClassNamesFromDex(binaryArchiveFile);
+
+                    result.add("classes" + dexIndex + ".dex");
+                    result.addAll(classesAtDex);
+                    dexIndex++;
                 }
             }
             zipFile.close();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return file;
+
+        return result;
     }
 }

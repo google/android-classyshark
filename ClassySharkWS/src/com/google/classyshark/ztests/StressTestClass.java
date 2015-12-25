@@ -16,7 +16,7 @@
 
 package com.google.classyshark.ztests;
 
-import com.google.classyshark.reducer.ArchiveFileReader;
+import com.google.classyshark.contentreader.jar.JarReader;
 import com.google.classyshark.translator.Translator;
 import com.google.classyshark.translator.TranslatorFactory;
 import java.io.File;
@@ -27,8 +27,8 @@ import java.util.List;
  */
 public class StressTestClass {
     public static void runAllClassesInArchive(String jarCanonicalPath) throws Exception {
-        List<String> allStuff = ArchiveFileReader.readClassNamesFromJar(
-                jarCanonicalPath);
+        List<String> allStuff = JarReader.readClassNamesFromJar(
+                new File(jarCanonicalPath));
 
         for (String currentClass : allStuff) {
             Translator sourceGenerator = TranslatorFactory.createTranslator(currentClass,

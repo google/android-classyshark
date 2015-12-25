@@ -330,7 +330,7 @@ public class Translator2Java implements Translator {
 
     public static void testJar() {
         final File testFile = new File(System.getProperty("user.home") + "/Desktop/" + "ClassyShark.jar");
-        String textClass = "com.google.classyshark.reducer.Reducer.class";
+        String textClass = "com.google.classyshark.ui.panel.reducer.Reducer.class";
         Translator sourceGenerator = TranslatorFactory.createTranslator(textClass, testFile);
         sourceGenerator.apply();
 
@@ -346,7 +346,7 @@ public class Translator2Java implements Translator {
     public static void testCustomClass() {
         final File testFile = new File(System.getProperty("user.home") + "/Desktop/Scenarios/3 Class/Reducer.class");
         //String textClass = "com.apisolutions.classysharkandroid.dex.DexLoaderBuilder";
-        String textClass = "com.google.classyshark.reducer.Reducer.class";
+        String textClass = "com.google.classyshark.ui.panel.reducer.Reducer.class";
         Translator sourceGenerator = TranslatorFactory.createTranslator(textClass, testFile);
         sourceGenerator.apply();
 
@@ -356,7 +356,7 @@ public class Translator2Java implements Translator {
     public static void testInnerClass() {
         //
         final File testFile = new File(System.getProperty("user.home") + "/Desktop/Scenarios/3 Class/Reducer$1.class");
-        String textClass = "com.google.classyshark.reducer.Reducer$1.class";
+        String textClass = "com.google.classyshark.ui.panel.reducer.Reducer$1.class";
         Translator sourceGenerator = TranslatorFactory.createTranslator(textClass, testFile);
         sourceGenerator.apply();
 

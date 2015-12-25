@@ -16,7 +16,8 @@
 
 package com.google.classyshark.ui.panel.io;
 
-import com.google.classyshark.reducer.Reducer;
+import com.google.classyshark.contentreader.ContentReader;
+import com.google.classyshark.ui.panel.reducer.Reducer;
 import com.google.classyshark.translator.Translator;
 import com.google.classyshark.translator.TranslatorFactory;
 import java.io.File;
@@ -25,7 +26,7 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * Is a function : (reducer|translator) --> text file
+ * Is a function : (contentreader|translator) --> text file
  */
 public class Export2FileWriter {
 
@@ -69,7 +70,10 @@ public class Export2FileWriter {
         String allAndroid = System.getProperty("user.home") +
                 "/Desktop/Scenarios/2 Samples/android.jar";
 
-        Reducer reducer = new Reducer(new File(allAndroid));
+        ContentReader loader = new ContentReader(new File(allAndroid));
+        loader.load();
+
+        Reducer reducer = new Reducer(loader.getAllClassNames());
         reducer.reduce("");
 
         writeAllClassContents(reducer, new File(allAndroid));

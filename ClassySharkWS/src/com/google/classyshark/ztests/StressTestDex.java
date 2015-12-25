@@ -16,7 +16,7 @@
 
 package com.google.classyshark.ztests;
 
-import com.google.classyshark.reducer.ArchiveFileReader;
+import com.google.classyshark.contentreader.dex.DexlibLoader;
 import com.google.classyshark.translator.Translator;
 import com.google.classyshark.translator.TranslatorFactory;
 import com.google.classyshark.translator.java.dex.DexlibAdapter;
@@ -30,7 +30,7 @@ import org.jf.dexlib2.iface.DexFile;
  */
 public class StressTestDex {
     public static void runAllClassesInDex(String jarCanonicalPath) throws Exception {
-        DexFile dexFile = ArchiveFileReader.loadDexFile(new File(jarCanonicalPath));
+        DexFile dexFile = DexlibLoader.loadDexFile(new File(jarCanonicalPath));
         Set<? extends ClassDef> allClassesInDex = dexFile.getClasses();
 
         for (ClassDef currentClass : allClassesInDex) {

@@ -16,7 +16,8 @@
 
 package com.google.classyshark.ui.panel.tree;
 
-import com.google.classyshark.reducer.Reducer;
+import com.google.classyshark.contentreader.ContentReader;
+import com.google.classyshark.ui.panel.reducer.Reducer;
 import com.google.classyshark.ui.panel.ColorScheme;
 import com.google.classyshark.ui.panel.ViewerController;
 import java.awt.Component;
@@ -24,8 +25,6 @@ import java.awt.Font;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
@@ -201,7 +200,9 @@ public class FilesTree {
         File test = new File("classes1.dex");
         FilesTree filesTree = new FilesTree(null);
 
-        Reducer reducer = new Reducer(test);
+        ContentReader loader = new ContentReader(test);
+        loader.load();
+        Reducer reducer = new Reducer(loader.getAllClassNames());
         reducer.reduce("");
         filesTree.fillArchive(test, reducer.getAllClassNames());
 

@@ -16,7 +16,7 @@
 
 package com.google.classyshark.translator.jar;
 
-import com.google.classyshark.reducer.Reducer;
+import com.google.classyshark.ui.panel.reducer.Reducer;
 import com.google.classyshark.translator.Translator;
 import java.io.File;
 import java.text.DecimalFormat;

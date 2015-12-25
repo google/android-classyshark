@@ -16,7 +16,7 @@
 
 package com.google.classyshark.translator;
 
-import com.google.classyshark.reducer.Reducer;
+import com.google.classyshark.ui.panel.reducer.Reducer;
 import com.google.classyshark.translator.apk.ApkTranslator;
 import com.google.classyshark.translator.jar.JarInfoTranslator;
 import com.google.classyshark.translator.java.Translator2Java;
@@ -41,10 +41,6 @@ public class TranslatorFactory {
 
         if (className.endsWith(".dex")) {
            return new DexInfoTranslator(className, archiveFile);
-        }
-
-        if (className.endsWith(".jar")) {
-            return new JarInfoTranslator(archiveFile, reducer);
         }
 
         if (className.endsWith(".jar")) {

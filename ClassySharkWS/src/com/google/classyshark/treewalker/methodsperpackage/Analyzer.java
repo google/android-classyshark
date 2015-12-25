@@ -16,7 +16,7 @@
 
 package com.google.classyshark.treewalker.methodsperpackage;
 
-import com.google.classyshark.reducer.ArchiveFileReader;
+import com.google.classyshark.contentreader.dex.DexlibLoader;
 import org.jf.dexlib2.iface.ClassDef;
 import org.jf.dexlib2.iface.DexFile;
 import org.jf.dexlib2.iface.Method;
@@ -51,7 +51,7 @@ public class Analyzer {
                 }
 
                 try {
-                    DexFile dxFile = ArchiveFileReader.loadDexFile(tempFile);
+                    DexFile dxFile = DexlibLoader.loadDexFile(tempFile);
 
                     Set<? extends ClassDef> classSet = dxFile.getClasses();
                     for (ClassDef o: classSet) {
