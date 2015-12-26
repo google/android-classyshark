@@ -18,8 +18,12 @@ package com.google.classyshark.translator.elf;
 
 import com.google.classyshark.translator.Translator;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 public class ElfTranslator implements Translator {
 
@@ -49,5 +53,44 @@ public class ElfTranslator implements Translator {
     @Override
     public List<String> getDependencies() {
         return new LinkedList<>();
+    }
+
+    private static File extractElf(String elfName,
+                                   File apkFile) {
+        File file = new File("classes.dex");
+        ZipInputStream zipFile;
+        try {
+            zipFile = new ZipInputStream(new FileInputStream(apkFile));
+            ZipEntry zipEntry;
+
+            while (true) {
+                zipEntry = zipFile.getNextEntry();
+
+                if (zipEntry == null) {
+                    break;
+                }
+
+                if (zipEntry.getName().equals(elfName)) {
+                    file = File.createTempFile(elfName, "so");
+                    file.deleteOnExit();
+
+                    FileOutputStream fos =
+                            new FileOutputStream(file);
+                    byte[] bytes = new byte[1024];
+                    int length;
+                    while ((length = zipFile.read(bytes)) >= 0) {
+                        fos.write(bytes, 0, length);
+                    }
+
+                    fos.close();
+
+                    break;
+                }
+            }
+            zipFile.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return file;
     }
 }
