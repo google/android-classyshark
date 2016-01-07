@@ -46,5 +46,5 @@ class SharkBG {
               + "               ii!                             '*YMWM,                        \n"
               + "               I'                                  \"YM\n"
               + "\n\n\n\thttp://www.retrojunkie.com/asciiart/animals/sharks.htm"
-                      + "\n\n\n\tClassyShark ver. 4.1";
+                      + "\n\n\n\tClassyShark ver. 5.0";
 }

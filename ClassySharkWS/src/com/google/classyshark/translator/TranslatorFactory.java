@@ -20,9 +20,9 @@ import com.google.classyshark.translator.elf.ElfTranslator;
 import com.google.classyshark.ui.panel.reducer.Reducer;
 import com.google.classyshark.translator.apk.ApkTranslator;
 import com.google.classyshark.translator.jar.JarInfoTranslator;
-import com.google.classyshark.translator.java.Translator2Java;
+import com.google.classyshark.translator.java.JavaTranslator;
 import com.google.classyshark.translator.dex.DexInfoTranslator;
-import com.google.classyshark.translator.xml.Translator2AndroidXml;
+import com.google.classyshark.translator.xml.AndroidXmlTranslator;
 import java.io.File;
 
 /**
@@ -37,7 +37,7 @@ public class TranslatorFactory {
     public static Translator createTranslator(String className, File archiveFile,
                                                  Reducer reducer) {
         if(className.endsWith(".xml")) {
-            return new Translator2AndroidXml(archiveFile);
+            return new AndroidXmlTranslator(archiveFile);
         }
 
         if (className.endsWith(".dex")) {
@@ -53,9 +53,9 @@ public class TranslatorFactory {
         }
 
         if (className.endsWith(".so")) {
-            return new ElfTranslator(archiveFile);
+            return new ElfTranslator(className, archiveFile);
         }
 
-        return new Translator2Java(className, archiveFile);
+        return new JavaTranslator(className, archiveFile);
     }
 }

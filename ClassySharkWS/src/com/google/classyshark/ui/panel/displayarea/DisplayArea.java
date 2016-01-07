@@ -17,7 +17,7 @@
 package com.google.classyshark.ui.panel.displayarea;
 
 import com.google.classyshark.translator.Translator;
-import com.google.classyshark.translator.java.Translator2Java;
+import com.google.classyshark.translator.java.JavaTranslator;
 import com.google.classyshark.ui.panel.ColorScheme;
 import com.google.classyshark.ui.panel.ViewerController;
 import java.awt.Color;
@@ -306,7 +306,7 @@ public class DisplayArea {
             StyleConstants.setFontSize(style, 13);
             StyleConstants.setFontFamily(style, "Menlo");
 
-            doc.insertString(doc.getLength(), ChristmasBG.SHARKEY, style);
+            doc.insertString(doc.getLength(), SharkBG.SHARKEY, style);
         } catch (BadLocationException e) {
             e.printStackTrace();
         }
@@ -346,7 +346,7 @@ public class DisplayArea {
     public static void main(String[] args) {
         DisplayArea da = new DisplayArea(null);
 
-        Translator emitter = new Translator2Java(StringTokenizer.class);
+        Translator emitter = new JavaTranslator(StringTokenizer.class);
         emitter.apply();
 
         da.displayClass(emitter.getElementsList());

@@ -24,13 +24,19 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+import nl.lxtreme.binutils.elf.Elf;
 
 public class ElfTranslator implements Translator {
 
     private File archiveFile;
+    private String elfName;
+    private String dependencies;
+    private StringBuilder dynamicSymbols;
 
-    public ElfTranslator(File archiveFile) {
+    public ElfTranslator(String className, File archiveFile) {
         this.archiveFile = archiveFile;
+        this.elfName = className;
+        dynamicSymbols = new StringBuilder();
     }
 
     @Override
@@ -40,13 +46,34 @@ public class ElfTranslator implements Translator {
 
     @Override
     public void apply() {
+        dependencies = "";
+        File resource = extractElf(elfName, archiveFile);
 
+        try {
+            Elf dependenciesReader = new Elf(resource);
+            List<String> libraryDependencies = dependenciesReader.getSharedDependencies();
+            for (String dependency : libraryDependencies) {
+                dependencies += "    -- " + dependency + "\n";
+            }
+
+            ElfReader dynamicSymbolsReader = ElfReader.read(resource);
+            for (String dynVal : dynamicSymbolsReader.getDynamicSymbols()) {
+                dynamicSymbols.append("    --  " + dynVal + "\n");
+            }
+
+        } catch (Exception e) {
+
+        }
     }
 
     @Override
     public List<ELEMENT> getElementsList() {
         LinkedList<ELEMENT> result = new LinkedList<>();
-        result.add(new ELEMENT("Stay tuned implementing", TAG.ANNOTATION));
+        result.add(new ELEMENT("Native Dependencies\n\n", TAG.DOCUMENT));
+        result.add(new ELEMENT(this.dependencies, TAG.ANNOTATION));
+
+        result.add(new ELEMENT("\n\n\n\nDynamic Symbols\n\n", TAG.DOCUMENT));
+        result.add(new ELEMENT(this.dynamicSymbols.toString(), TAG.ANNOTATION));
         return result;
     }
 
@@ -55,6 +82,9 @@ public class ElfTranslator implements Translator {
         return new LinkedList<>();
     }
 
+
+    // TODO currently support only dexes, here is how to do for jar
+    // TODO https://github.com/adamheinrich/native-utils/blob/master/NativeUtils.java
     private static File extractElf(String elfName,
                                    File apkFile) {
         File file = new File("classes.dex");
@@ -83,7 +113,6 @@ public class ElfTranslator implements Translator {
                     }
 
                     fos.close();
-
                     break;
                 }
             }

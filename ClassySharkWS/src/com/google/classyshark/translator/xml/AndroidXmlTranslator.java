@@ -36,7 +36,7 @@ import java.util.zip.ZipFile;
  * There is a bug that some manifests can't be shown, added a fallback case to display
  * all strings
  */
-public class Translator2AndroidXml implements Translator {
+public class AndroidXmlTranslator implements Translator {
 
     private final File archiveFile;
     private String xml;
@@ -44,7 +44,7 @@ public class Translator2AndroidXml implements Translator {
     private XmlHighlighter xmlHighlighter = new XmlHighlighter();
     private XmlDecompressor xmlDecompressor = new XmlDecompressor();
 
-    public Translator2AndroidXml(File archiveFile) {
+    public AndroidXmlTranslator(File archiveFile) {
         this.archiveFile = archiveFile;
     }
 
@@ -126,7 +126,7 @@ public class Translator2AndroidXml implements Translator {
     public static void main(String[] args) throws Exception {
         String archiveName = System.getProperty("user.home") +
                 "/Desktop/Scenarios/2 Samples/app-debug.apk";
-        Translator2AndroidXml t2ax = new Translator2AndroidXml(new File(archiveName));
+        AndroidXmlTranslator t2ax = new AndroidXmlTranslator(new File(archiveName));
         t2ax.apply();
         System.out.print(t2ax.toString());
     }

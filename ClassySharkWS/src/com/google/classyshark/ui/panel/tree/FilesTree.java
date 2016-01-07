@@ -24,6 +24,8 @@ import java.awt.Component;
 import java.awt.Font;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
@@ -120,6 +122,14 @@ public class FilesTree {
         if(!allComponents.isEmpty()) {
             DefaultMutableTreeNode libs = new DefaultMutableTreeNode("libs");
 
+            Collections.sort(allComponents, new Comparator<ContentReader.Component>() {
+                @Override
+                public int compare(ContentReader.Component o1,
+                                   ContentReader.Component o2) {
+                    return o1.name.compareTo(o2.name);
+                }
+            });
+
             for(ContentReader.Component comp : allComponents) {
                 libs.add(new DefaultMutableTreeNode(comp.name));
             }
@@ -150,6 +160,8 @@ public class FilesTree {
             packageNode.add(new DefaultMutableTreeNode(new NodeInfo(fullClassFileName)));
         }
         root.add(classes);
+
+        fillComponents(root, allComponets);
         return root;
     }
 

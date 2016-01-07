@@ -30,6 +30,7 @@ public class JarReader implements BinaryContentReader {
 
     private File binaryArchive;
     private List<String> allClassNames = new ArrayList<>();
+    private List<ContentReader.Component> components = new ArrayList<>();
 
     public JarReader(File binaryArchive) {
         this.binaryArchive = binaryArchive;
@@ -39,7 +40,7 @@ public class JarReader implements BinaryContentReader {
     public void read() {
         try {
             allClassNames =
-                    readClassNamesFromJar(binaryArchive);
+                    readClassNamesFromJar(binaryArchive, components);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -54,10 +55,11 @@ public class JarReader implements BinaryContentReader {
 
     @Override
     public List<ContentReader.Component> getComponents() {
-        return new ArrayList<>();
+        return this.components;
     }
 
-    public static List<String> readClassNamesFromJar(File jarFile)
+    public static List<String> readClassNamesFromJar(File jarFile,
+                                                     List<ContentReader.Component> components)
             throws Exception {
 
         List<String> classes = new ArrayList<>();
@@ -83,6 +85,15 @@ public class JarReader implements BinaryContentReader {
                 formattedClassName =
                         formattedClassName.substring(0, formattedClassName.lastIndexOf('.'));
                 classes.add(formattedClassName);
+            }
+
+            // native libs in jar
+            // TODO add checking
+            if (jarEntry.getName().startsWith("resources") &&
+                    jarEntry.getName().startsWith(".so")) {
+                components.add(
+                        new ContentReader.Component(jarEntry.getName(),
+                                ContentReader.ARCHIVE_COMPONENT.NATIVE_LIBRARY));
             }
         }
 
