@@ -45,7 +45,13 @@ To run, grab the latest jar from [here] (https://github.com/google/android-class
 and type `java -jar ClassyShark.jar`.
 
 ## Start developing
-Clone this repository and import the `ClassySharkWS` folder in your favorite IDE.
+### Android
+
+Clone this repository and import the `ClassySharkAndroid` folder in Android Studio.
+
+### Desktop
+
+Clone this repository and import the `ClassySharkWS` folder in your favorite IDE. For IDE - indepdendent builds I use [RetroBuild](https://github.com/borisf/RetroBuild) fast jar export and build system.
 
 ## Dependencies
 * [dexlib2](https://github.com/JesusFreke/smali/tree/master/dexlib2) by jesusfreke
