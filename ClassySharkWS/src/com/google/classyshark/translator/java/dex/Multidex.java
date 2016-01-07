@@ -16,7 +16,7 @@
 
 package com.google.classyshark.translator.java.dex;
 
-import com.google.classyshark.reducer.ArchiveFileReader;
+import com.google.classyshark.contentreader.dex.DexReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -61,7 +61,7 @@ public class Multidex {
                     fos.close();
 
                     List<String> classNamesInDex =
-                            ArchiveFileReader.readClassNamesFromDex(file);
+                            DexReader.readClassNamesFromDex(file);
                     if (classNamesInDex.contains(className)) {
                         break;
                     }

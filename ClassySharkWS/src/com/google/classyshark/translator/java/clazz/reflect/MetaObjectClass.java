@@ -16,7 +16,7 @@
 
 package com.google.classyshark.translator.java.clazz.reflect;
 
-import com.google.classyshark.reducer.Reducer;
+import com.google.classyshark.ui.panel.reducer.Reducer;
 import com.google.classyshark.translator.java.MetaObject;
 import com.google.classyshark.translator.java.clazz.QualifiedTypesMap;
 import java.lang.annotation.Annotation;

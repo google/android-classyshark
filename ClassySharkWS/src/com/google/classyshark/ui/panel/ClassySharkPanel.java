@@ -16,7 +16,8 @@
 
 package com.google.classyshark.ui.panel;
 
-import com.google.classyshark.reducer.Reducer;
+import com.google.classyshark.contentreader.ContentReader;
+import com.google.classyshark.ui.panel.reducer.Reducer;
 import com.google.classyshark.translator.Translator;
 import com.google.classyshark.translator.TranslatorFactory;
 import com.google.classyshark.ui.panel.methodscount.MethodsCountPanel;
@@ -317,13 +318,15 @@ public class ClassySharkPanel extends JPanel
     private void loadAndFillDisplayArea(final File binaryArchive,
                                         final String className) {
         this.binaryArchive = binaryArchive;
-        reducer = new Reducer(this.binaryArchive);
+        final ContentReader loader = new ContentReader(this.binaryArchive);
 
         SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
             @Override
             protected Void doInBackground() throws Exception {
                 long start = System.currentTimeMillis();
-                allClassNamesInArchive = reducer.reduce("");
+                loader.load();
+                allClassNamesInArchive = loader.getAllClassNames();
+                reducer = new Reducer(allClassNamesInArchive);
                 System.out.println("Archive Reading "
                         + (System.currentTimeMillis() - start) + " ms ");
                 return null;
@@ -332,12 +335,14 @@ public class ClassySharkPanel extends JPanel
             @Override
             protected void done() {
                 if (isArchiveError()) {
-                    filesTree.fillArchive(new File("ERROR"), new ArrayList<String>());
+                    filesTree.fillArchive(new File("ERROR"), new ArrayList<String>(), loader.getAllComponents());
                     displayArea.displayError();
                     return;
                 }
 
-                filesTree.fillArchive(ClassySharkPanel.this.binaryArchive, allClassNamesInArchive);
+                filesTree.fillArchive(ClassySharkPanel.this.binaryArchive,
+                        allClassNamesInArchive,
+                        loader.getAllComponents());
 
                 if (className != null) {
                     onSelectedClassName(className);

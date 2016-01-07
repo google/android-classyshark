@@ -14,23 +14,39 @@
  * limitations under the License.
  */
 
-package com.google.classyshark.ztests;
+package com.google.classyshark.translator.java;
 
-import com.google.classyshark.reducer.ArchiveFileReader;
+import com.google.classyshark.contentreader.ContentReader;
+import com.google.classyshark.contentreader.dex.DexlibLoader;
+import com.google.classyshark.contentreader.jar.JarReader;
 import com.google.classyshark.translator.Translator;
 import com.google.classyshark.translator.TranslatorFactory;
 import com.google.classyshark.translator.java.dex.DexlibAdapter;
 import java.io.File;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 import org.jf.dexlib2.iface.ClassDef;
 import org.jf.dexlib2.iface.DexFile;
 
 /**
- * stress test for dex archive
+ * Stress test for classes
  */
-public class StressTestDex {
+public class StressTest {
+    public static void runAllClassesInJar(String jarCanonicalPath) throws Exception {
+        List<String> allStuff = JarReader.readClassNamesFromJar(
+                new File(jarCanonicalPath), new LinkedList<ContentReader.Component>());
+
+        for (String currentClass : allStuff) {
+            Translator sourceGenerator = TranslatorFactory.createTranslator(currentClass,
+                    new File(jarCanonicalPath));
+            sourceGenerator.apply();
+            System.out.println(sourceGenerator.toString());
+        }
+    }
+
     public static void runAllClassesInDex(String jarCanonicalPath) throws Exception {
-        DexFile dexFile = ArchiveFileReader.loadDexFile(new File(jarCanonicalPath));
+        DexFile dexFile = DexlibLoader.loadDexFile(new File(jarCanonicalPath));
         Set<? extends ClassDef> allClassesInDex = dexFile.getClasses();
 
         for (ClassDef currentClass : allClassesInDex) {
@@ -43,8 +59,9 @@ public class StressTestDex {
     }
 
     public static void main(String[] args) throws Exception {
-        String sampleClassesDex = "classes1.dex";
+        String allAndroid = System.getProperty("user.home") +
+                "/Desktop/Scenarios/2 Samples/android.jar";
 
-        runAllClassesInDex(sampleClassesDex);
+        runAllClassesInJar(allAndroid);
     }
 }

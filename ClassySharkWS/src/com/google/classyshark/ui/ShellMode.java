@@ -16,7 +16,8 @@
 
 package com.google.classyshark.ui;
 
-import com.google.classyshark.reducer.Reducer;
+import com.google.classyshark.contentreader.ContentReader;
+import com.google.classyshark.ui.panel.reducer.Reducer;
 import com.google.classyshark.translator.Translator;
 import com.google.classyshark.translator.TranslatorFactory;
 import com.google.classyshark.translator.apk.ApkTranslator;
@@ -59,7 +60,9 @@ public class ShellMode {
             return;
         }
 
-        Reducer reducer = new Reducer(archiveFile);
+        ContentReader loader = new ContentReader(archiveFile);
+        loader.load();
+        Reducer reducer = new Reducer(loader.getAllClassNames());
         reducer.reduce("");
 
         try {
@@ -83,8 +86,9 @@ public class ShellMode {
             return;
         }
 
-        Reducer reducer = new Reducer(archiveFile);
-        reducer.reduce("");
+        ContentReader loader = new ContentReader(archiveFile);
+        loader.load();
+        Reducer reducer = new Reducer(loader.getAllClassNames());
 
         Translator translator =
                 TranslatorFactory.createTranslator(args.get(2), archiveFile, reducer);
