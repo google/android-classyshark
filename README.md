@@ -23,11 +23,16 @@ Identify and understand performance problems including:
 * Duplicate libraries
 * Redundant libraries
 
-### Native Code (JNI)
+### JNI & Native Code
 Troublshoot JNI problems including: 
 
 * Identifying missing native libraries
 * Browsing native methods per classes.dex
+
+Troublshoot native code problems including:
+* Checking native depedendencies 
+* Checking dynamic symbols
+
 
 ## Command line 
 1. Export all generated data to a text file
