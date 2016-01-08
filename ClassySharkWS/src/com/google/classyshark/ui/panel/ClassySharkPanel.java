@@ -17,9 +17,9 @@
 package com.google.classyshark.ui.panel;
 
 import com.google.classyshark.contentreader.ContentReader;
-import com.google.classyshark.ui.panel.reducer.Reducer;
-import com.google.classyshark.translator.Translator;
-import com.google.classyshark.translator.TranslatorFactory;
+import com.google.classyshark.silverghost.reducer.Reducer;
+import com.google.classyshark.silverghost.translator.Translator;
+import com.google.classyshark.silverghost.translator.TranslatorFactory;
 import com.google.classyshark.ui.panel.methodscount.MethodsCountPanel;
 import com.google.classyshark.ui.panel.displayarea.DisplayArea;
 import com.google.classyshark.ui.panel.io.CurrentFolderConfig;

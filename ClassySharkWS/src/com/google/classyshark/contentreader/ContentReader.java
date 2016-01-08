@@ -34,7 +34,7 @@ public class ContentReader {
      * components that are part of jar & apk
      */
     public enum ARCHIVE_COMPONENT {
-        ANDROID_MANIFEST, NATIVE_LIBRARY;
+        ANDROID_MANIFEST, NATIVE_LIBRARY
     }
 
     public static class Component {

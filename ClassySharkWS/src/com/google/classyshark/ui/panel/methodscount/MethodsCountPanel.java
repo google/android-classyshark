@@ -16,8 +16,8 @@
 
 package com.google.classyshark.ui.panel.methodscount;
 
-import com.google.classyshark.treewalker.methodsperpackage.Analyzer;
-import com.google.classyshark.treewalker.methodsperpackage.Node;
+import com.google.classyshark.silverghost.methodsperpackage.Analyzer;
+import com.google.classyshark.silverghost.methodsperpackage.Node;
 import com.google.classyshark.ui.panel.ColorScheme;
 
 import javax.swing.JFrame;

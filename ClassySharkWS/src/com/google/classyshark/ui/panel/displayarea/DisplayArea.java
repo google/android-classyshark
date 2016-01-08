@@ -16,8 +16,8 @@
 
 package com.google.classyshark.ui.panel.displayarea;
 
-import com.google.classyshark.translator.Translator;
-import com.google.classyshark.translator.java.JavaTranslator;
+import com.google.classyshark.silverghost.translator.Translator;
+import com.google.classyshark.silverghost.translator.java.JavaTranslator;
 import com.google.classyshark.ui.panel.ColorScheme;
 import com.google.classyshark.ui.panel.ViewerController;
 import java.awt.Color;

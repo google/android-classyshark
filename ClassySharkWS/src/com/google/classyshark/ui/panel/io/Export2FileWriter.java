@@ -17,9 +17,9 @@
 package com.google.classyshark.ui.panel.io;
 
 import com.google.classyshark.contentreader.ContentReader;
-import com.google.classyshark.ui.panel.reducer.Reducer;
-import com.google.classyshark.translator.Translator;
-import com.google.classyshark.translator.TranslatorFactory;
+import com.google.classyshark.silverghost.reducer.Reducer;
+import com.google.classyshark.silverghost.translator.Translator;
+import com.google.classyshark.silverghost.translator.TranslatorFactory;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
