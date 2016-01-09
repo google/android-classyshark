@@ -16,7 +16,7 @@
 
 package com.google.classyshark;
 
-import com.google.classyshark.cli.ShellMode;
+import com.google.classyshark.cli.CliMode;
 import com.google.classyshark.gui.GUIMode;
 import java.util.Arrays;
 import java.util.List;
@@ -40,7 +40,7 @@ public class Main {
         if (isInGUIMode(argsAsArray)) {
             GUIMode.workInGUIMode(argsAsArray);
         } else {
-            ShellMode.workInShellMode(argsAsArray);
+            CliMode.workInShellMode(argsAsArray);
         }
     }
 }

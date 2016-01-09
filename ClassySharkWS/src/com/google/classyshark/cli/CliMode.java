@@ -28,9 +28,9 @@ import java.util.List;
 /**
  * shell mode
  */
-public class ShellMode {
+public class CliMode {
 
-    private ShellMode() {
+    private CliMode() {
     }
 
     public static void workInShellMode(List<String> args) {
