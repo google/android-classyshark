@@ -16,9 +16,9 @@
 
 package com.google.classyshark.silverghost.translator.java;
 
-import com.google.classyshark.contentreader.ContentReader;
-import com.google.classyshark.contentreader.dex.DexlibLoader;
-import com.google.classyshark.contentreader.jar.JarReader;
+import com.google.classyshark.silverghost.contentreader.ContentReader;
+import com.google.classyshark.silverghost.contentreader.dex.DexlibLoader;
+import com.google.classyshark.silverghost.contentreader.jar.JarReader;
 import com.google.classyshark.silverghost.translator.Translator;
 import com.google.classyshark.silverghost.translator.TranslatorFactory;
 import com.google.classyshark.silverghost.translator.java.dex.DexlibAdapter;

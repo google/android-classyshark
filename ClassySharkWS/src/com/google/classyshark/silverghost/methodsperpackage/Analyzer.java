@@ -16,7 +16,7 @@
 
 package com.google.classyshark.silverghost.methodsperpackage;
 
-import com.google.classyshark.contentreader.dex.DexlibLoader;
+import com.google.classyshark.silverghost.contentreader.dex.DexlibLoader;
 import org.jf.dexlib2.iface.ClassDef;
 import org.jf.dexlib2.iface.DexFile;
 import org.jf.dexlib2.iface.Method;

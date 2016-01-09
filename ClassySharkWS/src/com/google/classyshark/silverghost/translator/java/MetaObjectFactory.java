@@ -16,7 +16,7 @@
 
 package com.google.classyshark.silverghost.translator.java;
 
-import com.google.classyshark.contentreader.dex.DexlibLoader;
+import com.google.classyshark.silverghost.contentreader.dex.DexlibLoader;
 import com.google.classyshark.silverghost.translator.java.clazz.asm.MetaObjectAsmClass;
 import com.google.classyshark.silverghost.translator.java.clazz.reflect.ClassUtils;
 import com.google.classyshark.silverghost.translator.java.clazz.reflect.MetaObjectClass;

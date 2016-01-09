@@ -16,7 +16,7 @@
 
 package com.google.classyshark.silverghost.translator.java.dex;
 
-import com.google.classyshark.contentreader.dex.DexReader;
+import com.google.classyshark.silverghost.contentreader.dex.DexReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
