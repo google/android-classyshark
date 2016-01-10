@@ -56,7 +56,7 @@ Clone this repository and import the `ClassySharkAndroid` folder in Android Stud
 
 ### Desktop
 
-Clone this repository and import the `ClassySharkWS` folder in your favorite IDE. For IDE - indepdendent builds I use [RetroBuild](https://github.com/borisf/RetroBuild) fast jar export and build system.
+Clone this repository and import the `ClassySharkWS` folder in your favorite IDE. For releases  [RetroBuild](https://github.com/borisf/RetroBuild) fast jar export and build system is used.
 
 ## Dependencies
 * [dexlib2](https://github.com/JesusFreke/smali/tree/master/dexlib2) by jesusfreke
