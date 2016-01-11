@@ -15,6 +15,7 @@ Helps you understand the contents of [multidex](http://developer.android.com/too
 
 * Show the content of each classes.dex file
 * Show the dex counts for packages, methods, classes, strings etc
+* Show method count for jars (to measure the dex cost of that jar)
 
 ### Performance
 Identify and understand performance problems including: 
