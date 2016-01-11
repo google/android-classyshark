@@ -27,12 +27,12 @@ import javax.swing.WindowConstants;
 /**
  * UI mode that loads the GUI
  */
-public class GUIMode {
+public class GuiMode {
 
-    private GUIMode(){
+    private GuiMode(){
     }
 
-    public static void workInGUIMode(final List<String> argsAsArray) {
+    public static void with(final List<String> argsAsArray) {
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 buildAndShowClassySharkFrame(argsAsArray);

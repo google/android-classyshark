@@ -186,9 +186,11 @@ public class ClassySharkPanel extends JPanel
         SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
             @Override
             protected Void doInBackground() throws Exception {
-                Export2FileWriter.writeAllClassNames(reducer, binaryArchive);
+                Export2FileWriter.writeAllClassNames(reducer.getAllClassNames(),
+                        binaryArchive);
                 Export2FileWriter.writeCurrentClass(translator);
-                Export2FileWriter.writeAllClassContents(reducer, binaryArchive);
+                Export2FileWriter.writeAllClassContents(reducer.getAllClassNames(),
+                        binaryArchive);
                 return null;
             }
 

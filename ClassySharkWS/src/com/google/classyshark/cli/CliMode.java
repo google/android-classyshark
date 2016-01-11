@@ -26,14 +26,14 @@ import java.io.File;
 import java.util.List;
 
 /**
- * shell mode
+ * Command line mode
  */
 public class CliMode {
 
     private CliMode() {
     }
 
-    public static void workInShellMode(List<String> args) {
+    public static void with(List<String> args) {
         if (args.get(0).equalsIgnoreCase("-dump")) {
             if (args.size() == 2) {
                 processFullDump(args);
@@ -62,11 +62,9 @@ public class CliMode {
 
         ContentReader loader = new ContentReader(archiveFile);
         loader.load();
-        Reducer reducer = new Reducer(loader.getAllClassNames());
-        reducer.reduce("");
 
         try {
-            Export2FileWriter.writeAllClassContents(reducer, archiveFile);
+            Export2FileWriter.writeAllClassContents(loader.getAllClassNames(), archiveFile);
         } catch (Exception e) {
             System.out.println("Internal error - couldn't write file");
         }

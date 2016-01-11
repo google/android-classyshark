@@ -33,11 +33,10 @@ public class Export2FileWriter {
     private Export2FileWriter() {
     }
 
-    public static void writeAllClassNames(Reducer reducer, File loadedFile)
+    public static void writeAllClassNames(List<String> allClassNames, File loadedFile)
             throws IOException {
-        List<String> arr = reducer.getAllClassNames();
         FileWriter writer = new FileWriter(loadedFile.getName() + "_dump.txt");
-        for (String str : arr) {
+        for (String str : allClassNames) {
             writer.write("\n" + str);
         }
         writer.close();
@@ -53,14 +52,14 @@ public class Export2FileWriter {
         }
     }
 
-    public static void writeAllClassContents(Reducer reducer, File loadedFile)
+    public static void writeAllClassContents(List<String> allClassNames, File loadedFile)
             throws IOException {
         FileWriter writer = new FileWriter("all_dump.txt");
-        for (String currentClass : reducer.getAllClassNames()) {
-            Translator sourceGenerator = TranslatorFactory.createTranslator(currentClass,
+        for (String currentClass : allClassNames) {
+            Translator translator = TranslatorFactory.createTranslator(currentClass,
                     loadedFile);
-            sourceGenerator.apply();
-            writer.write(sourceGenerator.toString());
+            translator.apply();
+            writer.write(translator.toString());
         }
         writer.close();
     }
@@ -73,9 +72,6 @@ public class Export2FileWriter {
         ContentReader loader = new ContentReader(new File(allAndroid));
         loader.load();
 
-        Reducer reducer = new Reducer(loader.getAllClassNames());
-        reducer.reduce("");
-
-        writeAllClassContents(reducer, new File(allAndroid));
+        writeAllClassContents(loader.getAllClassNames(), new File(allAndroid));
     }
 }
