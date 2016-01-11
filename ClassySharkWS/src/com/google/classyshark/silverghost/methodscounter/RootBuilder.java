@@ -14,25 +14,67 @@
  * limitations under the License.
  */
 
-package com.google.classyshark.silverghost.methodsperpackage;
+package com.google.classyshark.silverghost.methodscounter;
 
 import com.google.classyshark.silverghost.contentreader.dex.DexlibLoader;
-import org.jf.dexlib2.iface.ClassDef;
-import org.jf.dexlib2.iface.DexFile;
-import org.jf.dexlib2.iface.Method;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Enumeration;
 import java.util.Set;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+import org.apache.bcel.classfile.ClassParser;
+import org.apache.bcel.classfile.JavaClass;
+import org.jf.dexlib2.iface.ClassDef;
+import org.jf.dexlib2.iface.DexFile;
+import org.jf.dexlib2.iface.Method;
 
-public class Analyzer {
-    public Node analyze(File file ){
-        Node rootNode = new Node(file.getName());
+/**
+ *
+ */
+public class RootBuilder {
+    public ClassNode fillClassesWithMethods(File file) {
+        if (file.getName().endsWith("jar")) {
+            return fillFromJar(file);
+        }
+        return fillFromDex(file);
+    }
 
+    public ClassNode fillClassesWithMethods(String fileName) {
+        return fillClassesWithMethods(new File(fileName));
+    }
+
+    private ClassNode fillFromJar(File file) {
+        ClassNode rootNode = new ClassNode(file.getName());
+        try {
+            JarFile theJar = new JarFile(file);
+            Enumeration<? extends JarEntry> en = theJar.entries();
+
+            while (en.hasMoreElements()) {
+                JarEntry entry = en.nextElement();
+                if (entry.getName().endsWith(".class")) {
+                    ClassParser cp = new ClassParser(
+                            theJar.getInputStream(entry), entry.getName());
+                    JavaClass jc = cp.parse();
+                    ClassInfo classInfo = new ClassInfo(jc.getClassName(),
+                            jc.getMethods().length);
+                    rootNode.add(classInfo);
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Error reading file: " + file + ". " + e.getMessage());
+            e.printStackTrace(System.err);
+        }
+
+        return rootNode;
+    }
+
+    private ClassNode fillFromDex(File file) {
+        ClassNode rootNode = new ClassNode(file.getName());
         try (ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream(file))) {
             ZipEntry zipEntry;
             byte[] buffer = new byte[1024];
@@ -43,6 +85,8 @@ public class Analyzer {
 
                 System.out.println("Parsing " + zipEntry.getName());
                 File tempFile = File.createTempFile("classyshark", "dex");
+
+                tempFile.deleteOnExit();
                 try (FileOutputStream fout = new FileOutputStream(tempFile)) {
                     int read;
                     while ((read = zipInputStream.read(buffer)) > 0) {
@@ -54,7 +98,7 @@ public class Analyzer {
                     DexFile dxFile = DexlibLoader.loadDexFile(tempFile);
 
                     Set<? extends ClassDef> classSet = dxFile.getClasses();
-                    for (ClassDef o: classSet) {
+                    for (ClassDef o : classSet) {
                         int methodCount = 0;
                         for (Method method : o.getMethods()) {
                             methodCount++;
@@ -76,9 +120,5 @@ public class Analyzer {
             ex.printStackTrace(System.err);
         }
         return rootNode;
-    }
-
-    public Node analyze(String fileName) {
-        return analyze(new File(fileName));
     }
 }

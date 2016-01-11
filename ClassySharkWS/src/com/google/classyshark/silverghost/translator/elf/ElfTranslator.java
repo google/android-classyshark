@@ -57,7 +57,7 @@ public class ElfTranslator implements Translator {
             Elf dependenciesReader = new Elf(resource);
             List<String> libraryDependencies = dependenciesReader.getSharedDependencies();
             for (String dependency : libraryDependencies) {
-                dependencies += "    -- " + dependency + "\n";
+                dependencies += "    " + dependency + "\n";
             }
 
             ElfReader dynamicSymbolsReader = ElfReader.read(resource);

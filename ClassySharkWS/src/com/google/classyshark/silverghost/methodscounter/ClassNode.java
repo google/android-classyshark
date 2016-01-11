@@ -14,24 +14,24 @@
  * limitations under the License.
  */
 
-package com.google.classyshark.silverghost.methodsperpackage;
+package com.google.classyshark.silverghost.methodscounter;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class Node {
-    private Map<String, Node> childNodes = new HashMap<>();
+public class ClassNode {
+    private Map<String, ClassNode> childNodes = new HashMap<>();
     private String key;
     private int methodCount = 0;
 
-    public Node(String key) {
+    public ClassNode(String key) {
         this.key = key;
     }
 
-    public Node() {
+    public ClassNode() {
     }
 
-    public Map<String, Node> getChildNodes() {
+    public Map<String, ClassNode> getChildNodes() {
         return childNodes;
     }
 
@@ -55,9 +55,9 @@ public class Node {
             return;
         }
 
-        Node child = childNodes.get(packages[currentPost]);
+        ClassNode child = childNodes.get(packages[currentPost]);
         if (child == null) {
-            child = new Node();
+            child = new ClassNode();
             child.key = packages[currentPost];
             childNodes.put(packages[currentPost], child);
         }

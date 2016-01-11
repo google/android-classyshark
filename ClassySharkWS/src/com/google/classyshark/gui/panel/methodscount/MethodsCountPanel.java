@@ -16,8 +16,8 @@
 
 package com.google.classyshark.gui.panel.methodscount;
 
-import com.google.classyshark.silverghost.methodsperpackage.Analyzer;
-import com.google.classyshark.silverghost.methodsperpackage.Node;
+import com.google.classyshark.silverghost.methodscounter.RootBuilder;
+import com.google.classyshark.silverghost.methodscounter.ClassNode;
 import com.google.classyshark.gui.panel.ColorScheme;
 
 import javax.swing.JFrame;
@@ -73,21 +73,21 @@ public class MethodsCountPanel extends JPanel {
         this.add(jScrollPane, BorderLayout.CENTER);
     }
 
-    private void addNodes(Node parent, DefaultMutableTreeNode jTreeParent) {
-        for (Node n: parent.getChildNodes().values()) {
+    private void addNodes(ClassNode parent, DefaultMutableTreeNode jTreeParent) {
+        for (ClassNode n: parent.getChildNodes().values()) {
             DefaultMutableTreeNode newJTreeNode = new DefaultMutableTreeNode(n);
             jTreeParent.add(newJTreeNode);
             addNodes(n, newJTreeNode);
         }
     }
 
-    private DefaultMutableTreeNode createDefaultMutableTreeNode(Node rootNode) {
+    private DefaultMutableTreeNode createDefaultMutableTreeNode(ClassNode rootNode) {
         DefaultMutableTreeNode jTreeRootNode = new DefaultMutableTreeNode(rootNode);
         addNodes(rootNode, jTreeRootNode);
         return jTreeRootNode;
     }
 
-    class NodeWorker extends SwingWorker<Node, Void> {
+    class NodeWorker extends SwingWorker<ClassNode, Void> {
         private File file;
 
         public NodeWorker(File file) {
@@ -95,9 +95,9 @@ public class MethodsCountPanel extends JPanel {
         }
 
         @Override
-        protected Node doInBackground() throws Exception {
-            Analyzer analyzer = new Analyzer();
-            return analyzer.analyze(file);
+        protected ClassNode doInBackground() throws Exception {
+            RootBuilder analyzer = new RootBuilder();
+            return analyzer.fillClassesWithMethods(file);
         }
 
         @Override
