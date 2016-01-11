@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.classyshark.silverghost.methodsperpackage;
+package com.google.classyshark.silverghost.methodscounter;
 
 public class ClassInfo {
     private String packageName;

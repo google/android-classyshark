@@ -17,7 +17,7 @@
 package com.google.classyshark;
 
 import com.google.classyshark.cli.CliMode;
-import com.google.classyshark.gui.GUIMode;
+import com.google.classyshark.gui.GuiMode;
 import java.util.Arrays;
 import java.util.List;
 
@@ -29,7 +29,7 @@ public class Main {
     private Main() {
     }
 
-    private static boolean isInGUIMode(List<String> argsAsArray) {
+    private static boolean isGui(List<String> argsAsArray) {
         return argsAsArray.isEmpty() || argsAsArray.size() == 1
                 || argsAsArray.get(0).equalsIgnoreCase("-open");
     }
@@ -37,10 +37,10 @@ public class Main {
     public static void main(final String[] args) {
         final List<String> argsAsArray = Arrays.asList(args);
 
-        if (isInGUIMode(argsAsArray)) {
-            GUIMode.workInGUIMode(argsAsArray);
+        if (isGui(argsAsArray)) {
+            GuiMode.with(argsAsArray);
         } else {
-            CliMode.workInShellMode(argsAsArray);
+            CliMode.with(argsAsArray);
         }
     }
 }

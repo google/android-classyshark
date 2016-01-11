@@ -116,7 +116,6 @@ public class FilesTree {
         return root;
     }
 
-    // TODO currently support native libs only
     private void fillComponents(DefaultMutableTreeNode root,
                                 List<ContentReader.Component> allComponents) {
         if(!allComponents.isEmpty()) {
@@ -131,7 +130,9 @@ public class FilesTree {
             });
 
             for(ContentReader.Component comp : allComponents) {
-                libs.add(new DefaultMutableTreeNode(comp.name));
+                if(comp.component.equals(ContentReader.ARCHIVE_COMPONENT.NATIVE_LIBRARY)) {
+                    libs.add(new DefaultMutableTreeNode(comp.name));
+                }
             }
 
             root.add(libs);
