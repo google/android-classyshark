@@ -65,6 +65,7 @@ Clone this repository and import the `ClassySharkWS` folder in your favorite IDE
 * [ASM](http://asm.ow2.org/) by OW2
 * [ASMDEX](http://asm.ow2.org/asmdex-index.html) by OW2
 * [java-binutils](https://github.com/jawi/java-binutils) by jawi
+* [BCEL](https://commons.apache.org/proper/commons-bcel) by Apache
 
 ## Support
 If you've found an error, please file an issue:
