@@ -17,7 +17,6 @@
 package com.google.classyshark.silverghost.translator.java;
 
 import com.google.classyshark.silverghost.contentreader.dex.DexlibLoader;
-import com.google.classyshark.silverghost.contentreader.jar.JarReader;
 import com.google.classyshark.silverghost.translator.java.clazz.asm.MetaObjectAsmClass;
 import com.google.classyshark.silverghost.translator.java.clazz.reflect.ClassUtils;
 import com.google.classyshark.silverghost.translator.java.clazz.reflect.MetaObjectClass;
@@ -36,7 +35,7 @@ import org.jf.dexlib2.iface.ClassDef;
 import org.jf.dexlib2.iface.DexFile;
 
 /**
- * Factory for creating meta-objects by the format (class/dex)
+ * Factory for creating meta-objects to represent Java's data
  */
 public class MetaObjectFactory {
     private MetaObjectFactory() {
@@ -55,8 +54,7 @@ public class MetaObjectFactory {
             result = getMetaObjectFromApk(className, archiveFile);
         } else if (archiveFile.getName().toLowerCase().endsWith(".aar")) {
             result = getMetaObjectFromAar(className, archiveFile);
-        }
-        else {
+        } else {
             result = new MetaObjectClass(Exception.class);
         }
 

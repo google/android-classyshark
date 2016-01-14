@@ -58,12 +58,13 @@ public class AarReader implements BinaryContentReader {
                         out.write(buffer, 0, len);
                     }
                     out.close();
-                    this.allClassNames.addAll(JarReader.readClassNamesFromJar(file, this.components));
+                    allClassNames.addAll(
+                            JarReader.readClassNamesFromJar(file, this.components));
                     break;
                 }
 
                 if (ze.getName().equals("AndroidManifest.xml")) {
-                    this.allClassNames.add("AndroidManifest.xml");
+                    allClassNames.add("AndroidManifest.xml");
                 }
             }
         } catch (Exception e) {

@@ -16,9 +16,9 @@
 
 package com.google.classyshark.gui.panel.tree;
 
-import com.google.classyshark.silverghost.contentreader.ContentReader;
 import com.google.classyshark.gui.panel.ColorScheme;
 import com.google.classyshark.gui.panel.ViewerController;
+import com.google.classyshark.silverghost.contentreader.ContentReader;
 import com.google.classyshark.silverghost.reducer.Reducer;
 import java.awt.Component;
 import java.awt.Font;
@@ -63,8 +63,8 @@ public class FilesTree {
     }
 
     private TreeNode createTreeModel(File loadedFile,
-                                    List<String> displayedClassNames,
-                                    List<ContentReader.Component> allComponets) {
+                                     List<String> displayedClassNames,
+                                     List<ContentReader.Component> allComponets) {
         TreeNode rootNode;
         if (loadedFile.getName().endsWith("dex")
                 || loadedFile.getName().endsWith("apk")
@@ -126,7 +126,7 @@ public class FilesTree {
 
     private void fillComponents(DefaultMutableTreeNode root,
                                 List<ContentReader.Component> allComponents) {
-        if(!allComponents.isEmpty()) {
+        if (!allComponents.isEmpty()) {
             DefaultMutableTreeNode libs = new DefaultMutableTreeNode("libs");
 
             Collections.sort(allComponents, new Comparator<ContentReader.Component>() {
@@ -137,8 +137,8 @@ public class FilesTree {
                 }
             });
 
-            for(ContentReader.Component comp : allComponents) {
-                if(comp.component.equals(ContentReader.ARCHIVE_COMPONENT.NATIVE_LIBRARY)) {
+            for (ContentReader.Component comp : allComponents) {
+                if (comp.component.equals(ContentReader.ARCHIVE_COMPONENT.NATIVE_LIBRARY)) {
                     libs.add(new DefaultMutableTreeNode(comp.name));
                 }
             }
@@ -223,8 +223,6 @@ public class FilesTree {
                             (String) defaultMutableTreeNode.getUserObject());
                     return;
                 }
-
-                // TODO add aar
 
                 if (!defaultMutableTreeNode.isLeaf()) return;
 
