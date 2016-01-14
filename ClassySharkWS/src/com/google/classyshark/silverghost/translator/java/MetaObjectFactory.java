@@ -17,14 +17,21 @@
 package com.google.classyshark.silverghost.translator.java;
 
 import com.google.classyshark.silverghost.contentreader.dex.DexlibLoader;
+import com.google.classyshark.silverghost.contentreader.jar.JarReader;
 import com.google.classyshark.silverghost.translator.java.clazz.asm.MetaObjectAsmClass;
 import com.google.classyshark.silverghost.translator.java.clazz.reflect.ClassUtils;
 import com.google.classyshark.silverghost.translator.java.clazz.reflect.MetaObjectClass;
 import com.google.classyshark.silverghost.translator.java.dex.DexlibAdapter;
 import com.google.classyshark.silverghost.translator.java.dex.MetaObjectDex;
 import com.google.classyshark.silverghost.translator.java.dex.Multidex;
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.net.MalformedURLException;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 import org.jf.dexlib2.iface.ClassDef;
 import org.jf.dexlib2.iface.DexFile;
 
@@ -46,11 +53,44 @@ public class MetaObjectFactory {
             result = getMetaObjectFromDex(className, archiveFile);
         } else if (archiveFile.getName().toLowerCase().endsWith(".apk")) {
             result = getMetaObjectFromApk(className, archiveFile);
-        } else {
+        } else if (archiveFile.getName().toLowerCase().endsWith(".aar")) {
+            result = getMetaObjectFromAar(className, archiveFile);
+        }
+        else {
             result = new MetaObjectClass(Exception.class);
         }
 
         return result;
+    }
+
+    private static MetaObject getMetaObjectFromAar(String className, File archiveFile) {
+        try {
+            File file = File.createTempFile("classes", "jar");
+            file.deleteOnExit();
+
+            OutputStream out = new FileOutputStream(file);
+            FileInputStream fin = new FileInputStream(archiveFile);
+            BufferedInputStream bin = new BufferedInputStream(fin);
+            ZipInputStream zin = new ZipInputStream(bin);
+            ZipEntry ze;
+            while ((ze = zin.getNextEntry()) != null) {
+                if (ze.getName().endsWith(".jar")) {
+                    byte[] buffer = new byte[8192];
+                    int len;
+                    while ((len = zin.read(buffer)) != -1) {
+                        out.write(buffer, 0, len);
+                    }
+                    out.close();
+
+                    MetaObject result = getMetaObjectFromJar(className, file);
+                    return result;
+                }
+            }
+        } catch (Exception e) {
+
+        }
+
+        return new MetaObjectClass(Exception.class);
     }
 
     private static MetaObject getMetaObjectFromJar(String className, File archiveFile) {

@@ -56,10 +56,19 @@ public class FilesTree {
             treeModel.setRoot(rootNode);
             return;
         }
+        TreeNode rootNode = createTreeModel(loadedFile, displayedClassNames, allComponets);
 
+
+        treeModel.setRoot(rootNode);
+    }
+
+    private TreeNode createTreeModel(File loadedFile,
+                                    List<String> displayedClassNames,
+                                    List<ContentReader.Component> allComponets) {
         TreeNode rootNode;
-        if (loadedFile.getName().endsWith("dex") ||
-                loadedFile.getName().endsWith("apk")) {
+        if (loadedFile.getName().endsWith("dex")
+                || loadedFile.getName().endsWith("apk")
+                || loadedFile.getName().endsWith("aar")) {
             rootNode = createJTreeModelAndroid(loadedFile.getName(),
                     displayedClassNames,
                     allComponets
@@ -69,8 +78,7 @@ public class FilesTree {
                     displayedClassNames,
                     allComponets);
         }
-
-        treeModel.setRoot(rootNode);
+        return rootNode;
     }
 
     private TreeNode createJTreeModelAndroid(String fileName,
@@ -215,6 +223,8 @@ public class FilesTree {
                             (String) defaultMutableTreeNode.getUserObject());
                     return;
                 }
+
+                // TODO add aar
 
                 if (!defaultMutableTreeNode.isLeaf()) return;
 

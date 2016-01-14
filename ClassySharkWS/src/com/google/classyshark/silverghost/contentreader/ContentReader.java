@@ -16,6 +16,7 @@
 
 package com.google.classyshark.silverghost.contentreader;
 
+import com.google.classyshark.silverghost.contentreader.aar.AarReader;
 import com.google.classyshark.silverghost.contentreader.apk.ApkReader;
 import com.google.classyshark.silverghost.contentreader.clazz.ClazzReader;
 import com.google.classyshark.silverghost.contentreader.dex.DexReader;
@@ -60,7 +61,10 @@ public class ContentReader {
             formatReader = new DexReader(binaryArchive);
         } else if (binaryArchive.getName().toLowerCase().endsWith(".apk")) {
             formatReader = new ApkReader(binaryArchive);
-        } else {
+        } if (binaryArchive.getName().toLowerCase().endsWith(".aar")) {
+            formatReader = new AarReader(binaryArchive);
+        }
+        else {
             formatReader = new ClazzReader(binaryArchive);
         }
     }

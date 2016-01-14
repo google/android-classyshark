@@ -62,7 +62,8 @@ public class AndroidXmlTranslator implements Translator {
             long size;
 
             if (archiveFile.getName().endsWith(".apk")
-                    || archiveFile.getName().endsWith(".zip")) {
+                    || archiveFile.getName().endsWith(".zip")
+                    || archiveFile.getName().endsWith(".aar")) {
                 zip = new ZipFile(archiveFile);
                 ZipEntry mft = zip.getEntry("AndroidManifest.xml");
                 size = mft.getSize();

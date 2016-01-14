@@ -56,6 +56,11 @@ public class TranslatorFactory {
             return new ElfTranslator(className, archiveFile);
         }
 
+        if (className.endsWith(".aar")) {
+            // TODO add here aar handler
+            //return new ElfTranslator(className, archiveFile);
+        }
+
         return new JavaTranslator(className, archiveFile);
     }
 }
