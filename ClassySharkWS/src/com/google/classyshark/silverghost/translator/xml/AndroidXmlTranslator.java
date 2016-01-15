@@ -77,14 +77,19 @@ public class AndroidXmlTranslator implements Translator {
                 throw new IOException("File larger than " + Integer.MAX_VALUE + " bytes not supported");
             }
 
-            bout = new ByteArrayOutputStream((int)size);
+            bout = new ByteArrayOutputStream((int) size);
             byte[] buffer = new byte[1024];
             int bytesRead;
             while ((bytesRead = is.read(buffer)) > 0) {
-                bout.write(buffer, 0 , bytesRead);
+                bout.write(buffer, 0, bytesRead);
             }
 
-            this.xml = xmlDecompressor.decompressXml(bout.toByteArray());
+            if (archiveFile.getName().endsWith(".aar")) {
+                this.xml = bout.toString();
+            } else {
+                this.xml = xmlDecompressor.decompressXml(bout.toByteArray());
+            }
+
         } catch (Exception e) {
             System.err.println("Error reading AndroidManifext.xml " + e.getMessage());
             e.printStackTrace(System.err);

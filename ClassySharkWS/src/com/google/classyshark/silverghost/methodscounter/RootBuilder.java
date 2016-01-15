@@ -54,13 +54,14 @@ public class RootBuilder {
 
     private ClassNode fillFromAar(File file) {
         try {
-            File file1 = File.createTempFile("classes", "jar");
-            file.deleteOnExit();
+            File tempFile = File.createTempFile("classes", "jar");
+            tempFile.deleteOnExit();
 
-            OutputStream out = new FileOutputStream(file1);
             FileInputStream fin = new FileInputStream(file);
             BufferedInputStream bin = new BufferedInputStream(fin);
             ZipInputStream zin = new ZipInputStream(bin);
+            OutputStream out = new FileOutputStream(tempFile);
+
             ZipEntry ze;
             while ((ze = zin.getNextEntry()) != null) {
                 if (ze.getName().endsWith(".jar")) {
@@ -70,7 +71,9 @@ public class RootBuilder {
                         out.write(buffer, 0, len);
                     }
                     out.close();
-                    return fillFromJar(file1);
+                    zin.closeEntry();
+                    zin.close();
+                    return fillFromJar(tempFile);
                 }
             }
         } catch (Exception e) {
