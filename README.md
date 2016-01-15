@@ -10,19 +10,23 @@ ClassyShark is a handy browser for Android executables. It has clients for both 
 
 ## Use cases
 
+### Android Binary Formats 
+Browse all Android & Java binary formats  
+
+* Jar
+* Class
+* Dex
+* Apk
+* Aar
+* Elf (native code)
+* Android manifest
+
 ### Multidex
-Helps you understand the contents of [multidex](http://developer.android.com/tools/building/multidex.html) apps
+Understand the contents of [multidex](http://developer.android.com/tools/building/multidex.html) apps
 
 * Show the content of each classes.dex file
 * Show the dex counts for packages, methods, classes, strings etc
 * Show method count for jars (to measure the dex cost of that jar)
-
-### Performance
-Identify and understand performance problems including: 
-
-* Slow libraries
-* Duplicate libraries
-* Redundant libraries
 
 ### JNI & Native Code
 Troublshoot JNI problems including: 
