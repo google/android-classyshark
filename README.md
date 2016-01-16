@@ -11,7 +11,7 @@ ClassyShark is a handy browser for Android executables. It has clients for both 
 ## Use cases
 
 ### Android Binary Formats 
-Browse all Android & Java binary formats  
+Browse all Android & Java binary formats both as standalone and as part of your APK  
 
 * Jar
 * Class
