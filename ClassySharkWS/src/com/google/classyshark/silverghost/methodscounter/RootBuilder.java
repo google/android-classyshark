@@ -17,10 +17,12 @@
 package com.google.classyshark.silverghost.methodscounter;
 
 import com.google.classyshark.silverghost.contentreader.dex.DexlibLoader;
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Enumeration;
 import java.util.Set;
 import java.util.jar.JarEntry;
@@ -38,7 +40,9 @@ import org.jf.dexlib2.iface.Method;
  */
 public class RootBuilder {
     public ClassNode fillClassesWithMethods(File file) {
-        if (file.getName().endsWith("jar")) {
+        if (file.getName().endsWith("aar")) {
+            return fillFromAar(file);
+        } else if (file.getName().endsWith("jar")) {
             return fillFromJar(file);
         }
         return fillFromDex(file);
@@ -47,6 +51,38 @@ public class RootBuilder {
     public ClassNode fillClassesWithMethods(String fileName) {
         return fillClassesWithMethods(new File(fileName));
     }
+
+    private ClassNode fillFromAar(File file) {
+        try {
+            File tempFile = File.createTempFile("classes", "jar");
+            tempFile.deleteOnExit();
+
+            FileInputStream fin = new FileInputStream(file);
+            BufferedInputStream bin = new BufferedInputStream(fin);
+            ZipInputStream zin = new ZipInputStream(bin);
+            OutputStream out = new FileOutputStream(tempFile);
+
+            ZipEntry ze;
+            while ((ze = zin.getNextEntry()) != null) {
+                if (ze.getName().endsWith(".jar")) {
+                    byte[] buffer = new byte[8192];
+                    int len;
+                    while ((len = zin.read(buffer)) != -1) {
+                        out.write(buffer, 0, len);
+                    }
+                    out.close();
+                    zin.closeEntry();
+                    zin.close();
+                    return fillFromJar(tempFile);
+                }
+            }
+        } catch (Exception e) {
+
+        }
+
+        return new ClassNode("");
+    }
+
 
     private ClassNode fillFromJar(File file) {
         ClassNode rootNode = new ClassNode(file.getName());

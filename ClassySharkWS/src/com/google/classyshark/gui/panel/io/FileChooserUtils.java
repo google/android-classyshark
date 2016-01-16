@@ -30,7 +30,7 @@ public class FileChooserUtils {
     }
 
     public static String getFileChooserDescription() {
-        return "dex, jar, apk, class";
+        return "dex, jar, apk, class, aar";
     }
 
     private static boolean isSupportedArchiveFile(File f) {
@@ -38,6 +38,7 @@ public class FileChooserUtils {
         return filename.endsWith(".dex")
                 || filename.endsWith(".jar")
                 || filename.endsWith(".apk")
-                || filename.endsWith(".class");
+                || filename.endsWith(".class")
+                || filename.endsWith(".aar");
     }
 }
