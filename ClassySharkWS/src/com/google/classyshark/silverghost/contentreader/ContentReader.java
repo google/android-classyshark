@@ -61,10 +61,9 @@ public class ContentReader {
             formatReader = new DexReader(binaryArchive);
         } else if (binaryArchive.getName().toLowerCase().endsWith(".apk")) {
             formatReader = new ApkReader(binaryArchive);
-        } if (binaryArchive.getName().toLowerCase().endsWith(".aar")) {
+        } else if (binaryArchive.getName().toLowerCase().endsWith(".aar")) {
             formatReader = new AarReader(binaryArchive);
-        }
-        else {
+        } else {
             formatReader = new ClazzReader(binaryArchive);
         }
     }
