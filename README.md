@@ -4,7 +4,7 @@ This is not an official Google product
 
 ## Introduction
 
-ClassyShark is a handy browser for Android executables. It has clients for both Android (apk) and Desktop (jar). With ClassyShark you can open APK/Dex/Jar/Class files and analyze their contents.
+ClassyShark is a standalone tool for Android developers. It can reliably browse any Android executable and show important info such as class interfaces and members, dex counts and dependencies. The browser supports multiple formats including libraries (.dex, .aar, .so), executables (.apk, .jar, .class) and AndroidManifest (.xml).
 
 ![Screen Flow Demo](https://github.com/google/android-classyshark/blob/master/Resources/Intro.png)
 
@@ -13,13 +13,8 @@ ClassyShark is a handy browser for Android executables. It has clients for both 
 ### Apk Content
 Browse all Android & Java executable files both as standalone or as part of your APK  
 
-* Jar
-* Class
-* Dex
-* Apk
-* Aar
-* Elf (native code)
-* Android manifest
+* Verify that the business crucial data is properly obfuscated
+* Identify all your app dependencies, both Java and native
 
 ### Multidex
 Understand the contents of [multidex](http://developer.android.com/tools/building/multidex.html) apps
