@@ -11,7 +11,7 @@ ClassyShark is a standalone tool for Android developers. It can reliably browse 
 ## Use cases
 
 ### Apk Content
-Browse all Android & Java executable files both as standalone or as part of your APK  
+Understand the contents of your APK
 
 * Verify that the business crucial data is properly obfuscated
 * Identify all your app dependencies, both Java and native
