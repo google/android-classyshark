@@ -35,13 +35,14 @@ Troublshoot native code problems including:
 
 
 ## Command line 
-1. Export all generated data to a text file
+1. Open APK `java -jar ClassyShark.jar <YOUR_APK.apk>`
+2. Export all generated data to a text file
 `java -jar ClassyShark.jar -dump <BINARY_FILE>`
-2. Export generated file from a specific class to a text file
+3. Export generated file from a specific class to a text file
 `java -jar ClassyShark.jar -dump <BINARY_FILE> <FULLY_QUALIFIED_CLASS_NAME>`
-3. Open ClassyShark and display a specific class in the GUI
+4. Open ClassyShark and display a specific class in the GUI
 `java -jar ClassyShark.jar -open <BINARY_FILE> <FULLY_QUALIFIED_CLASS_NAME>`
-4. Inspect APK
+5. Inspect APK
 `java -jar ClassyShark.jar -inspect <YOUR_APK.apk>`
 
 ## Downloads
