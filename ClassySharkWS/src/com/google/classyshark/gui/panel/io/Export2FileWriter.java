@@ -20,6 +20,7 @@ import com.google.classyshark.silverghost.contentreader.ContentReader;
 import com.google.classyshark.silverghost.reducer.Reducer;
 import com.google.classyshark.silverghost.translator.Translator;
 import com.google.classyshark.silverghost.translator.TranslatorFactory;
+import com.google.classyshark.silverghost.translator.dex.DexStringsDumper;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -62,6 +63,15 @@ public class Export2FileWriter {
             writer.write(translator.toString());
         }
         writer.close();
+    }
+
+    public static void writeAllDexStringTables(File archiveFile) throws Exception {
+        if(archiveFile.getName().endsWith(".dex")) {
+            return;
+        }
+
+        List<String> allStrings = DexStringsDumper.dumpStrings(archiveFile);
+        DexStringsDumper.writeAllStrings(new File("all_strings.txt"), allStrings);
     }
 
     public static void main(String[] args) throws Exception {

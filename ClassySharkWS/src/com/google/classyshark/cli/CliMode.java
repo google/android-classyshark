@@ -40,10 +40,28 @@ public class CliMode {
             } else {
                 processFileDump(args);
             }
+        } else if (args.get(0).equalsIgnoreCase("-stringdump")) {
+            processStringsDump(args);
         }
         else {
             processApk(args);
         }
+    }
+
+    private static void processStringsDump(List<String> args) {
+        File archiveFile = new File(args.get(1));
+        if (!archiveFile.exists()) {
+            System.out.println("File doesn't exist ==> "
+                    + "java -jar ClassyShark.jar -dump FILE");
+            return;
+        }
+
+        try {
+            Export2FileWriter.writeAllDexStringTables(archiveFile);
+        } catch (Exception e) {
+            System.out.println("Internal error - couldn't write file");
+        }
+
     }
 
     private static void processFullDump(List<String> args) {
@@ -64,6 +82,7 @@ public class CliMode {
         loader.load();
 
         try {
+
             Export2FileWriter.writeAllClassContents(loader.getAllClassNames(), archiveFile);
         } catch (Exception e) {
             System.out.println("Internal error - couldn't write file");
@@ -127,7 +146,6 @@ public class CliMode {
         }
 
         Translator translator = new ApkTranslator(archiveFile);
-
         translator.apply();
 
         System.out.print(translator);

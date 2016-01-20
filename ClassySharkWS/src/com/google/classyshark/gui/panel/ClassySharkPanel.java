@@ -191,6 +191,7 @@ public class ClassySharkPanel extends JPanel
                 Export2FileWriter.writeCurrentClass(translator);
                 Export2FileWriter.writeAllClassContents(reducer.getAllClassNames(),
                         binaryArchive);
+                Export2FileWriter.writeAllDexStringTables(binaryArchive);
                 return null;
             }
 
