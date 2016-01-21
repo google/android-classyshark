@@ -30,8 +30,7 @@ public class Main {
     }
 
     private static boolean isGui(List<String> argsAsArray) {
-        return argsAsArray.isEmpty() || argsAsArray.size() == 1
-                || argsAsArray.get(0).equalsIgnoreCase("-open");
+        return argsAsArray.isEmpty() || argsAsArray.get(0).equalsIgnoreCase("-open");
     }
 
     public static void main(final String[] args) {

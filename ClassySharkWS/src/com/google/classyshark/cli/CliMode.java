@@ -34,27 +34,41 @@ public class CliMode {
     }
 
     public static void with(List<String> args) {
+        File archiveFile = new File(args.get(1));
+        if (!archiveFile.exists()) {
+            System.err.println("File doesn't exist ==> "
+                    + archiveFile);
+            return;
+        }
+
+        // TODO string switch, under 20 optimal
+
+        final String operand = commandName.toLowerCase();
+        switch(lcName) {
+            case "command1":
+                return obj.Command1( arg );
+            case "command2":
+                return obj.Command2( arg );
+
+        }
+
+
         if (args.get(0).equalsIgnoreCase("-dump")) {
             if (args.size() == 2) {
-                processFullDump(args);
+                dumpApk(args);
             } else {
-                processFileDump(args);
+                dumpClassFromApk(args);
             }
         } else if (args.get(0).equalsIgnoreCase("-stringdump")) {
-            processStringsDump(args);
+            dumpStrings(args);
         }
         else {
             processApk(args);
         }
     }
 
-    private static void processStringsDump(List<String> args) {
-        File archiveFile = new File(args.get(1));
-        if (!archiveFile.exists()) {
-            System.out.println("File doesn't exist ==> "
-                    + "java -jar ClassyShark.jar -dump FILE");
-            return;
-        }
+    private static void dumpStrings(List<String> args) {
+
 
         try {
             Export2FileWriter.writeAllDexStringTables(archiveFile);
@@ -64,7 +78,7 @@ public class CliMode {
 
     }
 
-    private static void processFullDump(List<String> args) {
+    private static void dumpApk(List<String> args) {
         if (!args.get(0).equalsIgnoreCase("-dump")) {
             System.out.println("Wrong -dump argument ==> "
                     + "java -jar ClassyShark.jar -dump FILE");
@@ -89,7 +103,7 @@ public class CliMode {
         }
     }
 
-    private static void processFileDump(List<String> args) {
+    private static void dumpClassFromApk(List<String> args) {
         if (!args.get(0).equalsIgnoreCase("-dump")) {
             System.out.println("Wrong -dump argument ==> java -jar ClassyShark.jar "
                     + "-dump FILE full.class.name");
