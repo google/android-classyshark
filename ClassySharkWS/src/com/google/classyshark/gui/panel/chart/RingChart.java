@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.classyshark.ui.panel.chart;
+package com.google.classyshark.gui.panel.chart;
 
 import com.google.classyshark.silverghost.methodscounter.ClassNode;
 
@@ -25,6 +25,8 @@ import java.awt.Graphics2D;
 import java.awt.Stroke;
 import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
@@ -60,6 +62,12 @@ public class RingChart {
         int y = (height - r) / 2;
 
         List<ClassNode> nodes = new ArrayList<>(rootNode.getChildNodes().values());
+        Collections.sort(nodes, new Comparator<ClassNode>() {
+            @Override
+            public int compare(ClassNode o1, ClassNode o2) {
+                return Integer.compare(o2.getMethodCount(), o1.getMethodCount());
+            }
+        });
         Iterator<ClassNode> it = nodes.iterator();
         while (it.hasNext()) {
             ClassNode node = it.next();
@@ -81,7 +89,6 @@ public class RingChart {
             g2d.setColor(Color.BLACK);
             g2d.drawArc(x, y, r, r, nodeStartAngle, nodeEndAngle - nodeStartAngle);
 
-
             //Render Lines between angles
             AffineTransform saved = g2d.getTransform();
             int cx = width / 2;
@@ -89,7 +96,7 @@ public class RingChart {
             g2d.translate(cx, cy);
 
             double rads = Math.toRadians(nodeEndAngle);
-            int py = (int)Math.round(Math.sin(rads) * (r / 2))* -1;
+            int py = (int)Math.round(Math.sin(rads) * (r / 2)) * -1;
             int px = (int)Math.round(Math.cos(rads) * (r / 2));
 
             g2d.setStroke(lineStroke);

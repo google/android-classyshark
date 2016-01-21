@@ -75,7 +75,6 @@ public class MethodsCountPanel extends JPanel {
         jTree.addTreeSelectionListener(new TreeSelectionListener() {
             @Override
             public void valueChanged(TreeSelectionEvent e) {
-                System.out.println("Tree Clicked");
                 Object selection = jTree.getLastSelectedPathComponent();
 
                 DefaultMutableTreeNode defaultMutableTreeNode = (DefaultMutableTreeNode)selection;
@@ -122,6 +121,9 @@ public class MethodsCountPanel extends JPanel {
                 TreeNode root = createDefaultMutableTreeNode(get());
                 treeModel.setRoot(root);
                 jTree.setRootVisible(true);
+
+                viewerController.onSelectedMethodCount(
+                        (ClassNode)((DefaultMutableTreeNode)root).getUserObject());
             } catch (Exception ex) {
 
             }

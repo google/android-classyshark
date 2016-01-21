@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.classyshark.ui.panel.chart;
+package com.google.classyshark.gui.panel.chart;
 
 import com.google.classyshark.gui.panel.ColorScheme;
 import com.google.classyshark.silverghost.methodscounter.ClassNode;

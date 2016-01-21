@@ -31,7 +31,7 @@ import com.google.classyshark.gui.panel.toolbar.KeyUtils;
 import com.google.classyshark.gui.panel.toolbar.Toolbar;
 import com.google.classyshark.gui.panel.toolbar.ToolbarController;
 import com.google.classyshark.gui.panel.tree.FilesTree;
-import com.google.classyshark.ui.panel.chart.RingChartPanel;
+import com.google.classyshark.gui.panel.chart.RingChartPanel;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -75,6 +75,7 @@ public class ClassySharkPanel extends JPanel
     private boolean isDataLoaded = false;
     private File binaryArchive;
     private List<String> allClassNamesInArchive;
+    private RingChartPanel ringChartPanel = new RingChartPanel();
 
     public ClassySharkPanel(JFrame frame, File archive, String fullClassName) {
         this(frame);
@@ -229,18 +230,8 @@ public class ClassySharkPanel extends JPanel
         filesTree.setVisibleRoot();
     }
 
-    public void startAnalyzer() {
-        JFrame analyzerFrame = new JFrame(binaryArchive.getName());
-        JPanel analyzerPanel = new MethodsCountPanel(this, binaryArchive);
-        analyzerFrame.getContentPane().add(analyzerPanel);
-        analyzerFrame.setSize(new Dimension(800, 600));
-        analyzerFrame.setVisible(true);
-    }
-
     @Override
     public void onSelectedMethodCount(ClassNode rootNode) {
-        System.out.println("ble");
-        RingChartPanel ringChartPanel = new RingChartPanel();
         ringChartPanel.setRootNode(rootNode);
         jSplitPane.setRightComponent(ringChartPanel);
     }
