@@ -48,10 +48,13 @@ public class CliMode {
                 } else {
                     dumpClassFromApk(args);
                 }
+                break;
             case "-stringdump":
                 dumpStrings(args);
+                break;
             case "-inspect":
                 processApk(args);
+                break;
             default:
                 System.err.println("wrong operand ==> " + operand);
         }
@@ -70,7 +73,8 @@ public class CliMode {
         loader.load();
 
         try {
-            Export2FileWriter.writeAllClassContents(loader.getAllClassNames(), new File(args.get(1)));
+            Export2FileWriter.writeAllClassContents(loader.getAllClassNames(),
+                    new File(args.get(1)));
         } catch (Exception e) {
             System.out.println("Internal error - couldn't write file");
         }
@@ -82,7 +86,8 @@ public class CliMode {
         Reducer reducer = new Reducer(loader.getAllClassNames());
 
         Translator translator =
-                TranslatorFactory.createTranslator(args.get(2), new File(args.get(1)), reducer);
+                TranslatorFactory.createTranslator(args.get(2),
+                        new File(args.get(1)), reducer);
 
         try {
             translator.apply();
@@ -100,14 +105,13 @@ public class CliMode {
 
     private static void processApk(List<String> args) {
         if (!new File(args.get(1)).getName().endsWith(".apk")) {
-            System.out.println("Not an apk file ==> java -jar ClassyShark.jar " +
-                    "-inspect APK_FILE");
+            System.out.println("Not an apk file ==> " +
+                    "java -jar ClassyShark.jar " + "-inspect APK_FILE");
             return;
         }
 
         Translator translator = new ApkTranslator(new File(args.get(1)));
         translator.apply();
-
         System.out.print(translator);
     }
 }
