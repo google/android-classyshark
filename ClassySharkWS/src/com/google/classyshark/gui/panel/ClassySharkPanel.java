@@ -17,7 +17,6 @@
 package com.google.classyshark.gui.panel;
 
 import com.google.classyshark.silverghost.contentreader.ContentReader;
-import com.google.classyshark.silverghost.methodscounter.ClassNode;
 import com.google.classyshark.silverghost.reducer.Reducer;
 import com.google.classyshark.silverghost.translator.Translator;
 import com.google.classyshark.silverghost.translator.TranslatorFactory;
@@ -31,8 +30,6 @@ import com.google.classyshark.gui.panel.toolbar.KeyUtils;
 import com.google.classyshark.gui.panel.toolbar.Toolbar;
 import com.google.classyshark.gui.panel.toolbar.ToolbarController;
 import com.google.classyshark.gui.panel.tree.FilesTree;
-import com.google.classyshark.gui.panel.chart.RingChartPanel;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -75,7 +72,6 @@ public class ClassySharkPanel extends JPanel
     private boolean isDataLoaded = false;
     private File binaryArchive;
     private List<String> allClassNamesInArchive;
-    private RingChartPanel ringChartPanel = new RingChartPanel();
 
     public ClassySharkPanel(JFrame frame, File archive, String fullClassName) {
         this(frame);
@@ -231,12 +227,6 @@ public class ClassySharkPanel extends JPanel
     }
 
     @Override
-    public void onSelectedMethodCount(ClassNode rootNode) {
-        ringChartPanel.setRootNode(rootNode);
-        jSplitPane.setRightComponent(ringChartPanel);
-    }
-
-    @Override
     public void keyTyped(KeyEvent e) {
     }
 
@@ -301,7 +291,7 @@ public class ClassySharkPanel extends JPanel
         JScrollPane leftScrollPane = new JScrollPane(filesTree.getJTree());
 
         jTabbedPane.addTab("Archive", leftScrollPane);
-        methodsCountPanel = new MethodsCountPanel(this);
+        methodsCountPanel = new MethodsCountPanel();
         jTabbedPane.addTab("Packages", methodsCountPanel);
 
         jSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);

@@ -16,14 +16,10 @@
 
 package com.google.classyshark.gui.panel;
 
-import com.google.classyshark.silverghost.methodscounter.ClassNode;
-
 public interface ViewerController {
     void onSelectedClassName(String className);
 
     void onSelectedImportFromMouseClick(String classNameFromImportStatement);
 
     void onSelectedTypeClassFromMouseClick(String word);
-
-    void onSelectedMethodCount(ClassNode rootNode);
 }
