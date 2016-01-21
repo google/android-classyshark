@@ -16,6 +16,7 @@
 
 package com.google.classyshark.gui.panel.methodscount;
 
+import com.google.classyshark.gui.panel.ViewerController;
 import com.google.classyshark.silverghost.methodscounter.RootBuilder;
 import com.google.classyshark.silverghost.methodscounter.ClassNode;
 import com.google.classyshark.gui.panel.ColorScheme;
@@ -27,6 +28,8 @@ import javax.swing.JTree;
 import javax.swing.SwingWorker;
 import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
@@ -40,13 +43,15 @@ import java.io.File;
 public class MethodsCountPanel extends JPanel {
     private DefaultTreeModel treeModel;
     private JTree jTree;
+    private ViewerController viewerController;
 
-    public MethodsCountPanel(File file) throws HeadlessException {
-        this();
+    public MethodsCountPanel(ViewerController viewerController, File file) throws HeadlessException {
+        this(viewerController);
         loadFile(file);
     }
 
-    public MethodsCountPanel() throws HeadlessException {
+    public MethodsCountPanel(ViewerController viewerController) throws HeadlessException {
+        this.viewerController = viewerController;
         setup();
     }
 
@@ -67,6 +72,16 @@ public class MethodsCountPanel extends JPanel {
         cellRenderer.setTextNonSelectionColor(ColorScheme.FOREGROUND_CYAN);
         cellRenderer.setFont(new Font("Menlo", Font.PLAIN, 18));
         jTree.setCellRenderer(cellRenderer);
+        jTree.addTreeSelectionListener(new TreeSelectionListener() {
+            @Override
+            public void valueChanged(TreeSelectionEvent e) {
+                Object selection = jTree.getLastSelectedPathComponent();
+
+                DefaultMutableTreeNode defaultMutableTreeNode = (DefaultMutableTreeNode)selection;
+                ClassNode node = (ClassNode) defaultMutableTreeNode.getUserObject();
+                viewerController.onSelectedMethodCount(node);
+            }
+        });
 
         JScrollPane jScrollPane = new JScrollPane(jTree);
         this.setBorder(new EmptyBorder(0,0,0,0));
@@ -106,6 +121,9 @@ public class MethodsCountPanel extends JPanel {
                 TreeNode root = createDefaultMutableTreeNode(get());
                 treeModel.setRoot(root);
                 jTree.setRootVisible(true);
+
+                viewerController.onSelectedMethodCount(
+                        (ClassNode)((DefaultMutableTreeNode)root).getUserObject());
             } catch (Exception ex) {
 
             }
@@ -116,7 +134,28 @@ public class MethodsCountPanel extends JPanel {
         String userHome = System.getProperty("user.home");
         String fileName = userHome + "/Downloads/test.apk";
 
-        MethodsCountPanel panel = new MethodsCountPanel(new File(fileName));
+        MethodsCountPanel panel = new MethodsCountPanel(new ViewerController() {
+            @Override
+            public void onSelectedClassName(String className) {
+
+            }
+
+            @Override
+            public void onSelectedImportFromMouseClick(String classNameFromImportStatement) {
+
+            }
+
+            @Override
+            public void onSelectedTypeClassFromMouseClick(String word) {
+
+            }
+
+            @Override
+            public void onSelectedMethodCount(ClassNode rootNode) {
+
+            }
+
+        }, new File(fileName));
         JFrame jFrame = new JFrame(fileName);
         jFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         jFrame.getContentPane().add(panel);
