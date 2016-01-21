@@ -16,12 +16,12 @@
 
 package com.google.classyshark.cli;
 
+import com.google.classyshark.gui.panel.io.Export2FileWriter;
 import com.google.classyshark.silverghost.contentreader.ContentReader;
 import com.google.classyshark.silverghost.reducer.Reducer;
 import com.google.classyshark.silverghost.translator.Translator;
 import com.google.classyshark.silverghost.translator.TranslatorFactory;
 import com.google.classyshark.silverghost.translator.apk.ApkTranslator;
-import com.google.classyshark.gui.panel.io.Export2FileWriter;
 import java.io.File;
 import java.util.List;
 
@@ -36,98 +36,57 @@ public class CliMode {
     public static void with(List<String> args) {
         File archiveFile = new File(args.get(1));
         if (!archiveFile.exists()) {
-            System.err.println("File doesn't exist ==> "
-                    + archiveFile);
+            System.err.println("File doesn't exist ==> " + archiveFile);
             return;
         }
 
-        // TODO string switch, under 20 optimal
-
-        final String operand = commandName.toLowerCase();
-        switch(lcName) {
-            case "command1":
-                return obj.Command1( arg );
-            case "command2":
-                return obj.Command2( arg );
-
-        }
-
-
-        if (args.get(0).equalsIgnoreCase("-dump")) {
-            if (args.size() == 2) {
-                dumpApk(args);
-            } else {
-                dumpClassFromApk(args);
-            }
-        } else if (args.get(0).equalsIgnoreCase("-stringdump")) {
-            dumpStrings(args);
-        }
-        else {
-            processApk(args);
+        final String operand = args.get(0).toLowerCase();
+        switch (operand) {
+            case "-dump":
+                if (args.size() == 2) {
+                    dumpApk(args);
+                } else {
+                    dumpClassFromApk(args);
+                }
+            case "-stringdump":
+                dumpStrings(args);
+            case "-inspect":
+                processApk(args);
+            default:
+                System.err.println("wrong operand ==> " + operand);
         }
     }
 
     private static void dumpStrings(List<String> args) {
-
-
         try {
-            Export2FileWriter.writeAllDexStringTables(archiveFile);
+            Export2FileWriter.writeAllDexStringTables(new File(args.get(1)));
         } catch (Exception e) {
             System.out.println("Internal error - couldn't write file");
         }
-
     }
 
     private static void dumpApk(List<String> args) {
-        if (!args.get(0).equalsIgnoreCase("-dump")) {
-            System.out.println("Wrong -dump argument ==> "
-                    + "java -jar ClassyShark.jar -dump FILE");
-            return;
-        }
-
-        File archiveFile = new File(args.get(1));
-        if (!archiveFile.exists()) {
-            System.out.println("File doesn't exist ==> "
-                    + "java -jar ClassyShark.jar -dump FILE");
-            return;
-        }
-
-        ContentReader loader = new ContentReader(archiveFile);
+        ContentReader loader = new ContentReader(new File(args.get(1)));
         loader.load();
 
         try {
-
-            Export2FileWriter.writeAllClassContents(loader.getAllClassNames(), archiveFile);
+            Export2FileWriter.writeAllClassContents(loader.getAllClassNames(), new File(args.get(1)));
         } catch (Exception e) {
             System.out.println("Internal error - couldn't write file");
         }
     }
 
     private static void dumpClassFromApk(List<String> args) {
-        if (!args.get(0).equalsIgnoreCase("-dump")) {
-            System.out.println("Wrong -dump argument ==> java -jar ClassyShark.jar "
-                    + "-dump FILE full.class.name");
-            return;
-        }
-
-        File archiveFile = new File(args.get(1));
-        if (!archiveFile.exists()) {
-            System.out.println("File doesn't exist ==> java -jar ClassyShark.jar "
-                    + "-dump FILE full.class.name");
-            return;
-        }
-
-        ContentReader loader = new ContentReader(archiveFile);
+        ContentReader loader = new ContentReader(new File(args.get(1)));
         loader.load();
         Reducer reducer = new Reducer(loader.getAllClassNames());
 
         Translator translator =
-                TranslatorFactory.createTranslator(args.get(2), archiveFile, reducer);
+                TranslatorFactory.createTranslator(args.get(2), new File(args.get(1)), reducer);
 
         try {
             translator.apply();
-        }
-        catch (NullPointerException npe) {
+        } catch (NullPointerException npe) {
             System.out.println("Class doesn't exist in the archive");
             return;
         }
@@ -140,26 +99,13 @@ public class CliMode {
     }
 
     private static void processApk(List<String> args) {
-        if (!args.get(0).equalsIgnoreCase("-inspect")) {
-            System.out.println("Wrong -inspect argument ==> java -jar ClassyShark.jar " +
-                    "-inspect APK_FILE");
-            return;
-        }
-
-        File archiveFile = new File(args.get(1));
-        if (!archiveFile.exists()) {
-            System.out.println("File doesn't exist ==> java -jar ClassyShark.jar " +
-                    "-inspect APK_FILE");
-            return;
-        }
-
-        if (!archiveFile.getName().endsWith(".apk")) {
+        if (!new File(args.get(1)).getName().endsWith(".apk")) {
             System.out.println("Not an apk file ==> java -jar ClassyShark.jar " +
                     "-inspect APK_FILE");
             return;
         }
 
-        Translator translator = new ApkTranslator(archiveFile);
+        Translator translator = new ApkTranslator(new File(args.get(1)));
         translator.apply();
 
         System.out.print(translator);
