@@ -48,9 +48,12 @@ public class GuiMode {
     private static void buildAndShowClassySharkFrame(List<String> cmdLineArgs) {
         try {
             UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
-        } catch (UnsupportedLookAndFeelException | IllegalAccessException | ClassNotFoundException
-                | InstantiationException ex) {
+        } catch (UnsupportedLookAndFeelException | IllegalAccessException ex) {
             ex.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
         }
 
         JFrame frame = new JFrame("ClassyShark");
