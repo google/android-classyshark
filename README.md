@@ -35,7 +35,7 @@ Troublshoot native code problems including:
 
 
 ## Command line 
-1. Open APK `java -jar ClassyShark.jar <YOUR_APK.apk>`
+1. Open APK `java -jar ClassyShark.jar -open <YOUR_APK.apk>`
 2. Export all generated data to a text file
 `java -jar ClassyShark.jar -dump <BINARY_FILE>`
 3. Export generated file from a specific class to a text file
