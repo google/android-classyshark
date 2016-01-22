@@ -25,17 +25,17 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
 
 /**
- * UI mode that loads the GUI
+ * GUI mode
  */
 public class GuiMode {
 
-    private GuiMode(){
+    private GuiMode() {
     }
 
     public static void with(final List<String> argsAsArray) {
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                buildAndShowClassySharkFrame(argsAsArray);
+                buildAndShowClassyShark(argsAsArray);
             }
         });
     }
@@ -45,7 +45,7 @@ public class GuiMode {
         UIManager.setLookAndFeel("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
     }
 
-    private static void buildAndShowClassySharkFrame(List<String> cmdLineArgs) {
+    private static void buildAndShowClassyShark(List<String> cmdLineArgs) {
         try {
             UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
         } catch (UnsupportedLookAndFeelException | IllegalAccessException ex) {
@@ -56,21 +56,36 @@ public class GuiMode {
             e.printStackTrace();
         }
 
-        JFrame frame = new JFrame("ClassyShark");
-
-        if (cmdLineArgs.size() == 0) {
-            frame.getContentPane().add(new ClassySharkPanel(frame));
-        } else if (cmdLineArgs.size() == 1) {
-            frame.getContentPane().add(
-                    new ClassySharkPanel(frame, new File(cmdLineArgs.get(0))));
-        } else {
-            frame.getContentPane().add(
-                    new ClassySharkPanel(frame, new File(cmdLineArgs.get(1)),
-                            cmdLineArgs.get(2)));
-        }
-
+        JFrame frame = buildClassySharkFrame(cmdLineArgs);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
+    }
+
+    private static JFrame buildClassySharkFrame(List<String> cmdLineArgs) {
+        JFrame result = new JFrame("ClassyShark");
+
+        // no arguments
+        if (cmdLineArgs.size() == 0) {
+            result.getContentPane().add(new ClassySharkPanel(result));
+            return result;
+        }
+
+        // only archive
+        if (cmdLineArgs.size() == 2) {
+            result.getContentPane().add(
+                    new ClassySharkPanel(result, new File(cmdLineArgs.get(1))));
+            return result;
+        }
+
+        // archive and a class file
+        if (cmdLineArgs.size() == 3) {
+            result.getContentPane().add(
+                    new ClassySharkPanel(result, new File(cmdLineArgs.get(1)),
+                            cmdLineArgs.get(2)));
+            return result;
+        }
+
+        return result;
     }
 }
