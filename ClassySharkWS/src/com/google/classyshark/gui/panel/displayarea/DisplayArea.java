@@ -16,6 +16,7 @@
 
 package com.google.classyshark.gui.panel.displayarea;
 
+import com.google.classyshark.gui.panel.displayarea.doodles.Doodle;
 import com.google.classyshark.silverghost.translator.Translator;
 import com.google.classyshark.silverghost.translator.java.JavaTranslator;
 import com.google.classyshark.gui.panel.ColorScheme;
@@ -306,7 +307,7 @@ public class DisplayArea {
             StyleConstants.setFontSize(style, 13);
             StyleConstants.setFontFamily(style, "Menlo");
 
-            doc.insertString(doc.getLength(), SharkBG.SHARKEY, style);
+            doc.insertString(doc.getLength(), Doodle.get(), style);
         } catch (BadLocationException e) {
             e.printStackTrace();
         }
@@ -327,7 +328,7 @@ public class DisplayArea {
             StyleConstants.setFontFamily(style, "Menlo");
 
             doc.insertString(doc.getLength(), "\n\n\n\t\t\t There was a problem loading the class  ", style);
-            doc.insertString(doc.getLength(), SharkBG.SHARKEY, style);
+            doc.insertString(doc.getLength(), Doodle.get(), style);
         } catch (BadLocationException e) {
             e.printStackTrace();
         }
