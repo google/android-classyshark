@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.classyshark.gui.panel.displayarea;
+package com.google.classyshark.gui.panel.displayarea.doodles;
 
 /**
  *  the welcome ascii art image
