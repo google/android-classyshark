@@ -53,16 +53,20 @@ public class Export2FileWriter {
         }
     }
 
-    public static void writeAllClassContents(List<String> allClassNames, File loadedFile)
+    public static void writeManifest(File loadedFile)
             throws IOException {
-        FileWriter writer = new FileWriter("all_dump.txt");
-        for (String currentClass : allClassNames) {
-            Translator translator = TranslatorFactory.createTranslator(currentClass,
-                    loadedFile);
+
+        FileWriter writer;
+        if (loadedFile.getName().endsWith(".apk")) {
+
+            Translator translator =
+                    TranslatorFactory.createTranslator("AndroidManifest.xml", loadedFile);
             translator.apply();
+
+            writer = new FileWriter(translator.getClassName() + "_dump");
             writer.write(translator.toString());
+            writer.close();
         }
-        writer.close();
     }
 
     public static void writeAllDexStringTables(File archiveFile) throws Exception {
@@ -82,6 +86,6 @@ public class Export2FileWriter {
         ContentReader loader = new ContentReader(new File(allAndroid));
         loader.load();
 
-        writeAllClassContents(loader.getAllClassNames(), new File(allAndroid));
+        writeAllClassNames(loader.getAllClassNames(), new File(allAndroid));
     }
 }
