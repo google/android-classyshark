@@ -10,28 +10,37 @@ ClassyShark is a standalone tool for Android developers. It can reliably browse 
 
 ## Use cases
 
-### Apk Content
+### Obfuscation
 Understand the contents of your APK
 
 * Verify that the business crucial data is properly obfuscated
+* Troubleshoot Proguard mis configs (various -keep* flags)
+* Analyze obfuscated stack traces
+
+### Dependencies
+Understand and manage your APK dependencies
+
 * Identify all your app dependencies, both Java and native
+* Identify test depeendencies
+* Generate stub testing classes
 
 ### Multidex
 Understand the contents of [multidex](http://developer.android.com/tools/building/multidex.html) apps
 
-* Show the content of each classes.dex file
-* Show the dex counts for packages, methods, classes, strings etc
-* Show method count for jars (to measure the dex cost of that jar)
+* Browse the content of each classes.dex file
+* See the dex counts for packages, methods, classes, strings etc
+* See method count for jars (to measure the dex cost of that jar)
+* Dump dex string tables
 
-### JNI & Native Code
+### Native Code
 Troublshoot JNI problems including: 
 
-* Identifying missing native libraries
-* Browsing native methods per classes.dex
+* Identify missing native libraries
+* Browse native methods per classes.dex
 
 Troublshoot native code problems including:
-* Checking native depedendencies 
-* Checking dynamic symbols
+* See native depedendencies 
+* See dynamic symbols
 
 
 ## Command line 
