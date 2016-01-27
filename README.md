@@ -18,7 +18,7 @@ Understand the contents of your APK
 * Analyze obfuscated stack traces
 
 ### Dependencies
-Understand and manage your APK dependencies
+Manage your APK dependencies
 
 * Identify all your app dependencies, both Java and native
 * Identify test depeendencies
