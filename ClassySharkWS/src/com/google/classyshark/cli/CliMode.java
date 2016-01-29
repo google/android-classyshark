@@ -18,7 +18,6 @@ package com.google.classyshark.cli;
 
 import com.google.classyshark.gui.panel.io.Export2FileWriter;
 import com.google.classyshark.silverghost.contentreader.ContentReader;
-import com.google.classyshark.gui.panel.reducer.Reducer;
 import com.google.classyshark.silverghost.translator.Translator;
 import com.google.classyshark.silverghost.translator.TranslatorFactory;
 import com.google.classyshark.silverghost.translator.apk.ApkTranslator;

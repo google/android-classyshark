@@ -23,6 +23,7 @@ import com.google.classyshark.silverghost.translator.java.JavaTranslator;
 import com.google.classyshark.silverghost.translator.dex.DexInfoTranslator;
 import com.google.classyshark.silverghost.translator.xml.AndroidXmlTranslator;
 import java.io.File;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -31,7 +32,7 @@ import java.util.List;
 public class TranslatorFactory {
 
     public static Translator createTranslator(String className, File archiveFile) {
-        return createTranslator(className, archiveFile, null);
+        return createTranslator(className, archiveFile, new LinkedList<String>());
     }
 
     public static Translator createTranslator(String className, File archiveFile,
