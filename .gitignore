@@ -1,11 +1,4 @@
 
-ClassySharkWS/.idea/
-
-ClassySharkWS/out/
-
-ClassySharkWS/tests/
-
-
 ClassySharkAndroid/.idea/
 
 ClassySharkAndroid/out/
@@ -26,37 +19,13 @@ ClassySharkAndroid/gradlew.bat
 
 ClassySharkWS/ClassySharkWS.iml
 
-.idea/.name
+ClassySharkWS/.idea/
 
-.idea/ClassySharkSpy.iml
-
-.idea/compiler.xml
-
-.idea/copyright/profiles_settings.xml
-
-.idea/misc.xml
-
-.idea/modules.xml
-
-.idea/vcs.xml
-
-.idea/workspace.xml
-
-ClassySharkWS/classes-dex2jar.jar
+ClassySharkWS/out/
 
 *.dex
 
-ClassySharkWS/*.java
-
-Scenarios/.idea/*.*
-
 *.class
-
-Scenarios/.idea/artifacts/Scenarios_jar.xml
-
-Scenarios/.idea/copyright/profiles_settings.xml
-
-Scenarios/out/production/Scenarios/META-INF/MANIFEST.MF
 
 *.html
 
