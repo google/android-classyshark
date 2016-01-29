@@ -16,7 +16,7 @@
 
 package com.google.classyshark.silverghost.translator.java.clazz.reflect;
 
-import com.google.classyshark.silverghost.reducer.Reducer;
+import com.google.classyshark.gui.panel.reducer.Reducer;
 import com.google.classyshark.silverghost.translator.java.MetaObject;
 import com.google.classyshark.silverghost.translator.java.clazz.QualifiedTypesMap;
 import java.lang.annotation.Annotation;

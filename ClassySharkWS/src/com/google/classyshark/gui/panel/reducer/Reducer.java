@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.classyshark.silverghost.reducer;
+package com.google.classyshark.gui.panel.reducer;
 
 import java.util.ArrayList;
 import java.util.Collections;

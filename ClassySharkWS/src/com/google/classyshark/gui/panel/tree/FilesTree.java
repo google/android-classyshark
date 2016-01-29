@@ -19,7 +19,7 @@ package com.google.classyshark.gui.panel.tree;
 import com.google.classyshark.gui.panel.ColorScheme;
 import com.google.classyshark.gui.panel.ViewerController;
 import com.google.classyshark.silverghost.contentreader.ContentReader;
-import com.google.classyshark.silverghost.reducer.Reducer;
+import com.google.classyshark.gui.panel.reducer.Reducer;
 import java.awt.Component;
 import java.awt.Font;
 import java.io.File;

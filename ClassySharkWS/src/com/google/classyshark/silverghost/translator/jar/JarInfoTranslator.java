@@ -16,7 +16,7 @@
 
 package com.google.classyshark.silverghost.translator.jar;
 
-import com.google.classyshark.silverghost.reducer.Reducer;
+import com.google.classyshark.gui.panel.reducer.Reducer;
 import com.google.classyshark.silverghost.translator.Translator;
 import java.io.File;
 import java.text.DecimalFormat;
@@ -30,12 +30,12 @@ import java.util.List;
 public class JarInfoTranslator implements Translator {
 
     private final File jarArchive;
-    private final Reducer reducer;
+    private final List<String> allClassNames    ;
     private List<ELEMENT> elements = new ArrayList<>();
 
-    public JarInfoTranslator(File jarArchive, Reducer reducer) {
+    public JarInfoTranslator(File jarArchive, List<String> allClassNames) {
         this.jarArchive = jarArchive;
-        this.reducer = reducer;
+        this.allClassNames = allClassNames;
     }
 
     @Override
@@ -46,7 +46,7 @@ public class JarInfoTranslator implements Translator {
     @Override
     public void apply() {
         ELEMENT element =
-                new ELEMENT("\nclasses: " + reducer.getAllClassNames().size(), TAG.ANNOTATION);
+                new ELEMENT("\nclasses: " + allClassNames.size(), TAG.ANNOTATION);
         elements.add(element);
         element =
                 new ELEMENT("\nsize: " + readableFileSize(jarArchive.length()), TAG.ANNOTATION);

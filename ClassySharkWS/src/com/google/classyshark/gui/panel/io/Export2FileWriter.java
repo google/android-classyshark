@@ -17,7 +17,6 @@
 package com.google.classyshark.gui.panel.io;
 
 import com.google.classyshark.silverghost.contentreader.ContentReader;
-import com.google.classyshark.silverghost.reducer.Reducer;
 import com.google.classyshark.silverghost.translator.Translator;
 import com.google.classyshark.silverghost.translator.TranslatorFactory;
 import com.google.classyshark.silverghost.translator.dex.DexStringsDumper;

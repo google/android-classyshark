@@ -17,13 +17,13 @@
 package com.google.classyshark.silverghost.translator;
 
 import com.google.classyshark.silverghost.translator.elf.ElfTranslator;
-import com.google.classyshark.silverghost.reducer.Reducer;
 import com.google.classyshark.silverghost.translator.apk.ApkTranslator;
 import com.google.classyshark.silverghost.translator.jar.JarInfoTranslator;
 import com.google.classyshark.silverghost.translator.java.JavaTranslator;
 import com.google.classyshark.silverghost.translator.dex.DexInfoTranslator;
 import com.google.classyshark.silverghost.translator.xml.AndroidXmlTranslator;
 import java.io.File;
+import java.util.List;
 
 /**
  *  Creates translators based on class names and archives
@@ -35,7 +35,7 @@ public class TranslatorFactory {
     }
 
     public static Translator createTranslator(String className, File archiveFile,
-                                                 Reducer reducer) {
+                                              List<String> allClassNames) {
         if(className.endsWith(".xml")) {
             return new AndroidXmlTranslator(archiveFile);
         }
@@ -45,7 +45,7 @@ public class TranslatorFactory {
         }
 
         if (className.endsWith(".jar")) {
-            return new JarInfoTranslator(archiveFile, reducer);
+            return new JarInfoTranslator(archiveFile, allClassNames);
         }
 
         if (className.endsWith(".apk")) {

@@ -17,7 +17,7 @@
 package com.google.classyshark.gui.panel;
 
 import com.google.classyshark.silverghost.contentreader.ContentReader;
-import com.google.classyshark.silverghost.reducer.Reducer;
+import com.google.classyshark.gui.panel.reducer.Reducer;
 import com.google.classyshark.silverghost.translator.Translator;
 import com.google.classyshark.silverghost.translator.TranslatorFactory;
 import com.google.classyshark.gui.panel.methodscount.MethodsCountPanel;
@@ -373,21 +373,21 @@ public class ClassySharkPanel extends JPanel
         SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
             private List<Translator.ELEMENT> displayedClassTokens;
             private List<String> reducedClassNames;
-            private String className = "";
+            private String entryName = "";
 
             @Override
             protected Void doInBackground() throws Exception {
                 if (viewMouseClickedClass) {
-                    className = textFromTypingArea;
-                    displayedClassTokens = translateClass(className);
+                    entryName = textFromTypingArea;
+                    displayedClassTokens = translateEntry(entryName);
                 } else if (viewTopClass) {
-                    className = reducer.getAutocompleteClassName();
-                    displayedClassTokens = translateClass(className);
+                    entryName = reducer.getAutocompleteClassName();
+                    displayedClassTokens = translateEntry(entryName);
                 } else {
                     reducedClassNames = reducer.reduce(textFromTypingArea);
                     if (reducedClassNames.size() == 1) {
                         displayedClassTokens =
-                                translateClass(reducedClassNames.get(0));
+                                translateEntry(reducedClassNames.get(0));
                     }
                 }
                 return null;
@@ -396,7 +396,7 @@ public class ClassySharkPanel extends JPanel
             @Override
             protected void done() {
                 if (viewTopClass || viewMouseClickedClass) {
-                    toolbar.setText(className);
+                    toolbar.setText(entryName);
                     displayArea.displayClass(displayedClassTokens);
                 } else {
                     if (reducedClassNames.size() == 1) {
@@ -410,9 +410,9 @@ public class ClassySharkPanel extends JPanel
                 }
             }
 
-            private List<Translator.ELEMENT> translateClass(String name) {
+            private List<Translator.ELEMENT> translateEntry(String name) {
                 translator =
-                        TranslatorFactory.createTranslator(name, binaryArchive, reducer);
+                        TranslatorFactory.createTranslator(name, binaryArchive, reducer.getAllClassNames());
                 translator.apply();
                 return translator.getElementsList();
             }

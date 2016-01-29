@@ -18,7 +18,7 @@ package com.google.classyshark.cli;
 
 import com.google.classyshark.gui.panel.io.Export2FileWriter;
 import com.google.classyshark.silverghost.contentreader.ContentReader;
-import com.google.classyshark.silverghost.reducer.Reducer;
+import com.google.classyshark.gui.panel.reducer.Reducer;
 import com.google.classyshark.silverghost.translator.Translator;
 import com.google.classyshark.silverghost.translator.TranslatorFactory;
 import com.google.classyshark.silverghost.translator.apk.ApkTranslator;
@@ -86,11 +86,10 @@ public class CliMode {
     private static void dumpClassFromApk(List<String> args) {
         ContentReader loader = new ContentReader(new File(args.get(1)));
         loader.load();
-        Reducer reducer = new Reducer(loader.getAllClassNames());
 
         Translator translator =
                 TranslatorFactory.createTranslator(args.get(2),
-                        new File(args.get(1)), reducer);
+                        new File(args.get(1)), loader.getAllClassNames());
 
         try {
             translator.apply();
