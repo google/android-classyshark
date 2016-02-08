@@ -23,6 +23,7 @@ Manage your APK dependencies
 * Identify all your app dependencies, both Java and native
 * Identify test depeendencies
 * Generate stub testing classes
+* Checking hidden APIs
 
 ### Multidex
 Understand the contents of [multidex](http://developer.android.com/tools/building/multidex.html) apps

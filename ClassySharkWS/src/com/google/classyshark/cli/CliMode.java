@@ -62,6 +62,7 @@ public class CliMode {
     private static void dumpStrings(List<String> args) {
         try {
             Export2FileWriter.writeAllDexStringTables(new File(args.get(1)));
+            Export2FileWriter.writeAllMethodNames(new File(args.get(1)));
         } catch (Exception e) {
             System.out.println("Internal error - couldn't write file");
         }

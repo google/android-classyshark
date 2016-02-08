@@ -19,6 +19,7 @@ package com.google.classyshark.gui.panel.io;
 import com.google.classyshark.silverghost.contentreader.ContentReader;
 import com.google.classyshark.silverghost.translator.Translator;
 import com.google.classyshark.silverghost.translator.TranslatorFactory;
+import com.google.classyshark.silverghost.translator.dex.DexMethodsDumper;
 import com.google.classyshark.silverghost.translator.dex.DexStringsDumper;
 import java.io.File;
 import java.io.FileWriter;
@@ -75,6 +76,15 @@ public class Export2FileWriter {
 
         List<String> allStrings = DexStringsDumper.dumpStrings(archiveFile);
         DexStringsDumper.writeAllStrings(new File("all_strings.txt"), allStrings);
+    }
+
+    public static void writeAllMethodNames(File archiveFile) {
+        if(archiveFile.getName().endsWith(".dex")) {
+            return;
+        }
+
+        List<String> allMethods = DexMethodsDumper.dumpMethods(archiveFile);
+        DexMethodsDumper.writeAllMethods(new File("all_methods.txt"), allMethods);
     }
 
     public static void main(String[] args) throws Exception {
