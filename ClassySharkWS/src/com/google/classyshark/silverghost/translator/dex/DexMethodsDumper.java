@@ -163,6 +163,9 @@ public class DexMethodsDumper {
                 @Override
                 public MethodVisitor visitMethod(int access, String name, String desc,
                                                  String[] signature, String[] exceptions) {
+
+                    // class format (XYZ)R
+                    // dex format RXYZ
                     StringBuilder builder = new StringBuilder();
                     builder.append(Modifier.toString(access));
 
