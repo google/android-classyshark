@@ -54,7 +54,7 @@ Troublshoot native code problems including:
 `java -jar ClassyShark.jar -open <BINARY_FILE> <FULLY_QUALIFIED_CLASS_NAME>`
 5. Inspect APK
 `java -jar ClassyShark.jar -inspect <YOUR_APK.apk>`
-6. Dump all strings (combined classes.dex string tables) from your APK
+6. Dump all strings (combined classes.dex string and method tables) from your APK
 `java -jar ClassyShark.jar -stringdump <YOUR_APK.apk>`
 
 ## Downloads
