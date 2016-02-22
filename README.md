@@ -6,43 +6,8 @@ This is not an official Google product
 
 ClassyShark is a standalone tool for Android developers. It can reliably browse any Android executable and show important info such as class interfaces and members, dex counts and dependencies. The browser supports multiple formats including libraries (.dex, .aar, .so), executables (.apk, .jar, .class) and AndroidManifest (.xml).
 
-![Screen Flow Demo](https://github.com/google/android-classyshark/blob/master/Resources/Intro.png)
-
-## Use cases
-
-### Obfuscation
-Understand the contents of your APK
-
-* Verify that the business crucial data is properly obfuscated
-* Troubleshoot Proguard mis configs (various -keep* flags)
-* Analyze obfuscated stack traces
-
-### Dependencies
-Manage your APK dependencies
-
-* Identify all your app dependencies, both Java and native
-* Identify test depeendencies
-* Generate stub testing classes
-* Checking hidden APIs
-
-### Multidex
-Understand the contents of [multidex](http://developer.android.com/tools/building/multidex.html) apps
-
-* Browse the content of each classes.dex file
-* See the dex counts for packages, methods, classes, strings etc
-* See method count for jars (to measure the dex cost of that jar)
-* Dump dex string tables
-
-### Native Code
-Troublshoot JNI problems including: 
-
-* Identify missing native libraries
-* Browse native methods per classes.dex
-
-Troublshoot native code problems including:
-* See native depedendencies 
-* See dynamic symbols
-
+## Learn more
+www.classyshark.com
 
 ## Command line 
 1. Open APK `java -jar ClassyShark.jar -open <YOUR_APK.apk>`
