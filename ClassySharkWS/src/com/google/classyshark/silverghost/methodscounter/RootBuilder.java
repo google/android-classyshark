@@ -44,8 +44,10 @@ public class RootBuilder {
             return fillFromAar(file);
         } else if (file.getName().endsWith("jar")) {
             return fillFromJar(file);
+        } else if (file.getName().endsWith("dex")) {
+            return fillFromDex(file);
         }
-        return fillFromDex(file);
+        return fillFromApk(file);
     }
 
     public ClassNode fillClassesWithMethods(String fileName) {
@@ -109,7 +111,35 @@ public class RootBuilder {
         return rootNode;
     }
 
+    private void fillFromDex(File file, ClassNode rootNode) {
+        try {
+            DexFile dxFile = DexlibLoader.loadDexFile(file);
+
+            Set<? extends ClassDef> classSet = dxFile.getClasses();
+            for (ClassDef o : classSet) {
+                int methodCount = 0;
+                for (Method method : o.getMethods()) {
+                    methodCount++;
+                }
+
+                String translatedClassName = o.getType().replaceAll("\\/", "\\.").substring(1, o.getType().length() - 1);
+                ClassInfo classInfo = new ClassInfo(translatedClassName, methodCount);
+                rootNode.add(classInfo);
+            }
+
+        } catch (Exception ex) {
+            System.err.println("Error parsing Dexfile: " + file.getName() + ": " + ex.getMessage());
+            ex.printStackTrace(System.err);
+        }
+    }
+
     private ClassNode fillFromDex(File file) {
+        ClassNode rootNode = new ClassNode(file.getName());
+        fillFromDex(file, rootNode);
+        return rootNode;
+    }
+
+    private ClassNode fillFromApk(File file) {
         ClassNode rootNode = new ClassNode(file.getName());
         try (ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream(file))) {
             ZipEntry zipEntry;
@@ -129,27 +159,7 @@ public class RootBuilder {
                         fout.write(buffer, 0, read);
                     }
                 }
-
-                try {
-                    DexFile dxFile = DexlibLoader.loadDexFile(tempFile);
-
-                    Set<? extends ClassDef> classSet = dxFile.getClasses();
-                    for (ClassDef o : classSet) {
-                        int methodCount = 0;
-                        for (Method method : o.getMethods()) {
-                            methodCount++;
-                        }
-
-                        String translatedClassName = o.getType().replaceAll("\\/", "\\.").substring(1, o.getType().length() - 1);
-                        ClassInfo classInfo = new ClassInfo(translatedClassName, methodCount);
-                        rootNode.add(classInfo);
-                    }
-
-                } catch (Exception ex) {
-                    System.err.println("Error parsing Dexfile: " + zipEntry.getName() + ": " + ex.getMessage());
-                    ex.printStackTrace(System.err);
-                }
-
+                fillFromDex(tempFile, rootNode);
             }
         } catch (IOException ex) {
             System.err.println("Error reading file: " + file + ". " + ex.getMessage());

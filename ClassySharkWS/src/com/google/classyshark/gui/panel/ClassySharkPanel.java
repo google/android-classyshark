@@ -16,20 +16,34 @@
 
 package com.google.classyshark.gui.panel;
 
-import com.google.classyshark.silverghost.contentreader.ContentReader;
-import com.google.classyshark.gui.panel.reducer.Reducer;
-import com.google.classyshark.silverghost.translator.Translator;
-import com.google.classyshark.silverghost.translator.TranslatorFactory;
-import com.google.classyshark.gui.panel.methodscount.MethodsCountPanel;
+import com.google.classyshark.gui.panel.chart.RingChartPanel;
 import com.google.classyshark.gui.panel.displayarea.DisplayArea;
 import com.google.classyshark.gui.panel.io.CurrentFolderConfig;
 import com.google.classyshark.gui.panel.io.Export2FileWriter;
 import com.google.classyshark.gui.panel.io.FileChooserUtils;
 import com.google.classyshark.gui.panel.io.RecentArchivesConfig;
+import com.google.classyshark.gui.panel.methodscount.MethodsCountPanel;
+import com.google.classyshark.gui.panel.reducer.Reducer;
 import com.google.classyshark.gui.panel.toolbar.KeyUtils;
 import com.google.classyshark.gui.panel.toolbar.Toolbar;
 import com.google.classyshark.gui.panel.toolbar.ToolbarController;
 import com.google.classyshark.gui.panel.tree.FilesTree;
+import com.google.classyshark.silverghost.contentreader.ContentReader;
+import com.google.classyshark.silverghost.methodscounter.ClassNode;
+import com.google.classyshark.silverghost.translator.Translator;
+import com.google.classyshark.silverghost.translator.TranslatorFactory;
+
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JTabbedPane;
+import javax.swing.SwingWorker;
+import javax.swing.UIManager;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.filechooser.FileFilter;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -40,15 +54,6 @@ import java.awt.event.KeyListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.JTabbedPane;
-import javax.swing.SwingWorker;
-import javax.swing.UIManager;
-import javax.swing.filechooser.FileFilter;
 
 /**
  * App controller, general app structure MVM ==> Model - View - Mediator (this class)
@@ -72,6 +77,7 @@ public class ClassySharkPanel extends JPanel
     private boolean isDataLoaded = false;
     private File binaryArchive;
     private List<String> allClassNamesInArchive;
+    private RingChartPanel ringChartPanel = new RingChartPanel();
 
     public ClassySharkPanel(JFrame frame, File archive, String fullClassName) {
         this(frame);
@@ -189,7 +195,8 @@ public class ClassySharkPanel extends JPanel
                 Export2FileWriter.writeAllClassNames(reducer.getAllClassNames(),
                         binaryArchive);
                 Export2FileWriter.writeCurrentClass(translator);
-                Export2FileWriter.writeManifest(binaryArchive);
+                Export2FileWriter.writeAllClassNames(reducer.getAllClassNames(),
+                        binaryArchive);
                 Export2FileWriter.writeAllDexStringTables(binaryArchive);
                 return null;
             }
@@ -214,7 +221,6 @@ public class ClassySharkPanel extends JPanel
 
     @Override
     public void updateUiAfterArchiveRead(File binaryArchive) {
-        methodsCountPanel.loadFile(binaryArchive);
         if (parentFrame != null) {
             parentFrame.setTitle(binaryArchive.getName());
         }
@@ -223,6 +229,12 @@ public class ClassySharkPanel extends JPanel
         isDataLoaded = true;
         toolbar.activateNavigationButtons();
         filesTree.setVisibleRoot();
+        methodsCountPanel.loadFile(binaryArchive);
+    }
+
+    @Override
+    public void onSelectedMethodCount(ClassNode rootNode) {
+        ringChartPanel.setRootNode(rootNode);
     }
 
     @Override
@@ -282,7 +294,7 @@ public class ClassySharkPanel extends JPanel
         toolbar.addKeyListenerToTypingArea(this);
 
         displayArea = new DisplayArea(this);
-        JScrollPane rightScrollPane = new JScrollPane(displayArea.onAddComponentToPane());
+        final JScrollPane rightScrollPane = new JScrollPane(displayArea.onAddComponentToPane());
 
         filesTree = new FilesTree(this);
         JTabbedPane jTabbedPane = new JTabbedPane();
@@ -290,8 +302,23 @@ public class ClassySharkPanel extends JPanel
         JScrollPane leftScrollPane = new JScrollPane(filesTree.getJTree());
 
         jTabbedPane.addTab("Archive", leftScrollPane);
-        methodsCountPanel = new MethodsCountPanel();
+        methodsCountPanel = new MethodsCountPanel(this);
         jTabbedPane.addTab("Packages", methodsCountPanel);
+
+        jTabbedPane.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                int dividerLocation = jSplitPane.getDividerLocation();
+                JTabbedPane jTabbedPane = (JTabbedPane)e.getSource();
+                if (jTabbedPane.getSelectedIndex() == 0) {
+                    jSplitPane.setRightComponent(rightScrollPane);
+                } else {
+                    jSplitPane.setRightComponent(ringChartPanel);
+                }
+                jSplitPane.setDividerLocation(dividerLocation);
+
+            }
+        });
 
         jSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
         jSplitPane.setBackground(ColorScheme.BACKGROUND);
@@ -315,6 +342,7 @@ public class ClassySharkPanel extends JPanel
         isDataLoaded = true;
         toolbar.activateNavigationButtons();
         filesTree.setVisibleRoot();
+        methodsCountPanel.loadFile(binaryArchive);
     }
 
     private void loadAndFillDisplayArea(final File binaryArchive,
@@ -373,21 +401,21 @@ public class ClassySharkPanel extends JPanel
         SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
             private List<Translator.ELEMENT> displayedClassTokens;
             private List<String> reducedClassNames;
-            private String entryName = "";
+            private String className = "";
 
             @Override
             protected Void doInBackground() throws Exception {
                 if (viewMouseClickedClass) {
-                    entryName = textFromTypingArea;
-                    displayedClassTokens = translateEntry(entryName);
+                    className = textFromTypingArea;
+                    displayedClassTokens = translateClass(className);
                 } else if (viewTopClass) {
-                    entryName = reducer.getAutocompleteClassName();
-                    displayedClassTokens = translateEntry(entryName);
+                    className = reducer.getAutocompleteClassName();
+                    displayedClassTokens = translateClass(className);
                 } else {
                     reducedClassNames = reducer.reduce(textFromTypingArea);
                     if (reducedClassNames.size() == 1) {
                         displayedClassTokens =
-                                translateEntry(reducedClassNames.get(0));
+                                translateClass(reducedClassNames.get(0));
                     }
                 }
                 return null;
@@ -396,7 +424,7 @@ public class ClassySharkPanel extends JPanel
             @Override
             protected void done() {
                 if (viewTopClass || viewMouseClickedClass) {
-                    toolbar.setText(entryName);
+                    toolbar.setText(className);
                     displayArea.displayClass(displayedClassTokens);
                 } else {
                     if (reducedClassNames.size() == 1) {
@@ -410,9 +438,10 @@ public class ClassySharkPanel extends JPanel
                 }
             }
 
-            private List<Translator.ELEMENT> translateEntry(String name) {
+            private List<Translator.ELEMENT> translateClass(String name) {
                 translator =
-                        TranslatorFactory.createTranslator(name, binaryArchive, reducer.getAllClassNames());
+                        TranslatorFactory.createTranslator(
+                                name, binaryArchive, reducer.getAllClassNames());
                 translator.apply();
                 return translator.getElementsList();
             }
