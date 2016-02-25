@@ -22,8 +22,8 @@ package com.google.classyshark.gui.panel.displayarea.doodles;
 class SharkBG {
       public static final String SHARKEY =
               "\n\n\n\n"
+                      + "\t\t\t www.classyshark.com"
                       + "\n\n\n\n"
-                      + ""
                       + "                                     _,,                                   ,dW\n"
                       + "                                   ,iSMP                                  JIl;\n"
                       + "                                  sPT1Y'                                 JWS:'\n"
@@ -46,5 +46,6 @@ class SharkBG {
                       + "               ii!                             '*YMWM,                        \n"
                       + "               I'                                  \"YM\n"
                       + "\n\n\n\thttp://www.retrojunkie.com/asciiart/animals/sharks.htm"
-                      + "\n\n\n\tClassyShark ver. 5.5 powered by SilverGhost";
+                      + "\n\n\n\tClassyShark ver. 5.6 powered by SilverGhost";
+
 }
