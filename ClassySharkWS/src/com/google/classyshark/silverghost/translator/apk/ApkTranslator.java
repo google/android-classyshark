@@ -16,11 +16,11 @@
 
 package com.google.classyshark.silverghost.translator.apk;
 
+import com.google.classyshark.silverghost.contentreader.dex.DexlibLoader;
 import com.google.classyshark.silverghost.translator.Translator;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -31,6 +31,8 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+import org.jf.dexlib2.dexbacked.DexBackedDexFile;
+import org.jf.dexlib2.iface.DexFile;
 import org.ow2.asmdex.ApplicationReader;
 import org.ow2.asmdex.ApplicationVisitor;
 import org.ow2.asmdex.ClassVisitor;
@@ -62,10 +64,13 @@ public class ApkTranslator implements Translator {
             ELEMENT element = new ELEMENT("\nclasses" + dexData.index + ".dex", TAG.DOCUMENT);
             elements.add(element);
 
-            element = new ELEMENT("\nnative methods: "
-                    + dexData.nativeMethodsCount
-                    + "\nabstract methods: "
-                    + dexData.abstractMethodsCount + "\n",
+            element = new ELEMENT(
+                    "\nall methods: "
+                            + dexData.allMethods
+                            + "\nnative methods: "
+                            + dexData.nativeMethodsCount
+                            + "\nabstract methods: "
+                            + dexData.abstractMethodsCount + "\n",
                     TAG.ANNOTATION);
             elements.add(element);
         }
@@ -98,6 +103,7 @@ public class ApkTranslator implements Translator {
         public int abstractMethodsCount = 0;
         public Set<String> nativeMethodsClasses = new TreeSet<>();
         public Set<String> abstractClasses = new TreeSet<>();
+        public int allMethods = 0;
 
         public DexData(int index) {
             this.index = index;
@@ -126,7 +132,7 @@ public class ApkTranslator implements Translator {
         }
     }
 
-    public static DexData fillAnalysis(int dexIndex, File file) throws IOException {
+    public static DexData fillAnalysis(int dexIndex, File file) throws Exception {
         DexData dexData = new DexData(dexIndex);
 
         InputStream is = new FileInputStream(file);
@@ -134,6 +140,12 @@ public class ApkTranslator implements Translator {
         ApplicationReader ar = new ApplicationReader(Opcodes.ASM4, is);
         ar.accept(av, 0);
 
+        try {
+            DexFile dxFile = DexlibLoader.loadDexFile(file);
+            DexBackedDexFile dataPack = (DexBackedDexFile) dxFile;
+            dexData.allMethods = dataPack.getMethodCount();
+        } catch (Exception e) {
+        }
         return dexData;
     }
 

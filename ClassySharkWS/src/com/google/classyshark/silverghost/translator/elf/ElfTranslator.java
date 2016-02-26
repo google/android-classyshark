@@ -20,6 +20,7 @@ package com.google.classyshark.silverghost.translator.elf;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.text.DecimalFormat;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -27,12 +28,15 @@ import java.util.zip.ZipInputStream;
 import nl.lxtreme.binutils.elf.Elf;
 import com.google.classyshark.silverghost.translator.Translator;
 
+import static com.google.classyshark.silverghost.translator.jar.JarInfoTranslator.readableFileSize;
+
 /**
  * translator for the elf binary format
  */
 public class ElfTranslator implements Translator {
 
     private File archiveFile;
+    private File resource;
     private String elfName;
     private String dependencies;
     private StringBuilder dynamicSymbols;
@@ -51,7 +55,7 @@ public class ElfTranslator implements Translator {
     @Override
     public void apply() {
         dependencies = "";
-        File resource = extractElf(elfName, archiveFile);
+        resource = extractElf(elfName, archiveFile);
 
         try {
             Elf dependenciesReader = new Elf(resource);
@@ -73,7 +77,11 @@ public class ElfTranslator implements Translator {
     @Override
     public List<ELEMENT> getElementsList() {
         LinkedList<ELEMENT> result = new LinkedList<>();
-        result.add(new ELEMENT("Native Dependencies\n\n", TAG.DOCUMENT));
+
+        result.add(new ELEMENT("File size - ", TAG.DOCUMENT));
+        result.add(new ELEMENT(readableFileSize(resource.length()), TAG.ANNOTATION));
+
+        result.add(new ELEMENT("\n\nNative Dependencies\n\n", TAG.DOCUMENT));
         result.add(new ELEMENT(this.dependencies, TAG.ANNOTATION));
 
         result.add(new ELEMENT("\n\n\n\nDynamic Symbols\n\n", TAG.DOCUMENT));
@@ -85,7 +93,6 @@ public class ElfTranslator implements Translator {
     public List<String> getDependencies() {
         return new LinkedList<>();
     }
-
 
     // TODO currently support only dexes, here is how to do for jar
     // TODO https://github.com/adamheinrich/native-utils/blob/master/NativeUtils.java
