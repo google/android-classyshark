@@ -19,10 +19,12 @@ package com.google.classyshark.gui.panel.chart;
 import com.google.classyshark.gui.panel.ColorScheme;
 import com.google.classyshark.silverghost.methodscounter.ClassNode;
 
+import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.Stroke;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
@@ -147,10 +149,15 @@ public class RingChart {
     }
 
     public void render(int width, int height, ClassNode rootNode, Graphics g) {
-        image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 
         Graphics2D imageG2d = (Graphics2D)image.getGraphics();
         defaultStroke = imageG2d.getStroke();
+        imageG2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+        imageG2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+        imageG2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+        imageG2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        imageG2d.setComposite(AlphaComposite.Src);
         imageG2d.setColor(ColorScheme.BACKGROUND);
         imageG2d.fillRect(0, 0, width, height);
 
