@@ -77,7 +77,7 @@ public class ClassySharkPanel extends JPanel
     private boolean isDataLoaded = false;
     private File binaryArchive;
     private List<String> allClassNamesInArchive;
-    private RingChartPanel ringChartPanel = new RingChartPanel();
+    private RingChartPanel ringChartPanel;
 
     public ClassySharkPanel(JFrame frame, File archive, String fullClassName) {
         this(frame);
@@ -289,6 +289,8 @@ public class ClassySharkPanel extends JPanel
 
         setBackground(ColorScheme.BLACK);
 
+        ringChartPanel = new RingChartPanel(this);
+
         toolbar = new Toolbar(this);
         add(toolbar, BorderLayout.NORTH);
         toolbar.addKeyListenerToTypingArea(this);
@@ -305,19 +307,16 @@ public class ClassySharkPanel extends JPanel
         methodsCountPanel = new MethodsCountPanel(this);
         jTabbedPane.addTab("Packages", methodsCountPanel);
 
-        jTabbedPane.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                int dividerLocation = jSplitPane.getDividerLocation();
-                JTabbedPane jTabbedPane = (JTabbedPane)e.getSource();
-                if (jTabbedPane.getSelectedIndex() == 0) {
-                    jSplitPane.setRightComponent(rightScrollPane);
-                } else {
-                    jSplitPane.setRightComponent(ringChartPanel);
-                }
-                jSplitPane.setDividerLocation(dividerLocation);
-
+        jTabbedPane.addChangeListener(e -> {
+            int dividerLocation1 = jSplitPane.getDividerLocation();
+            JTabbedPane jTabbedPane1 = (JTabbedPane)e.getSource();
+            if (jTabbedPane1.getSelectedIndex() == 0) {
+                jSplitPane.setRightComponent(rightScrollPane);
+            } else {
+                jSplitPane.setRightComponent(ringChartPanel);
             }
+            jSplitPane.setDividerLocation(dividerLocation1);
+
         });
 
         jSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
