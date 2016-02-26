@@ -20,15 +20,30 @@ import com.google.classyshark.gui.panel.ColorScheme;
 import com.google.classyshark.silverghost.methodscounter.ClassNode;
 
 import javax.swing.JPanel;
+import javax.swing.ToolTipManager;
 import javax.swing.border.EmptyBorder;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
 
 public class RingChartPanel extends JPanel {
-    private static final int MARGIN = 20;
-
     private RingChart ringChart = new RingChart();
     private ClassNode rootNode;
+
+    public RingChartPanel() {
+        super();
+        ToolTipManager.sharedInstance().registerComponent(this);
+    }
+
+    @Override
+    public String getToolTipText(MouseEvent e) {
+        int x = e.getX();
+        int y = e.getY();
+        ClassNode classNode = ringChart.getClassNodeAt(x, y);
+        if (classNode == null) return null;
+        return classNode.getKey() + ": " + classNode.getMethodCount();
+    }
 
     public void setRootNode(ClassNode rootNode) {
         this.rootNode = rootNode;
@@ -37,11 +52,8 @@ public class RingChartPanel extends JPanel {
 
     @Override
     public void paint(Graphics g) {
-        g.setColor(ColorScheme.BACKGROUND);
-        g.fillRect(0, 0, getWidth(), getHeight());
-        g.translate(MARGIN, MARGIN);
         if (rootNode != null) {
-            ringChart.render(getWidth() - MARGIN * 2, getHeight() - MARGIN * 2, rootNode, g);
+            ringChart.render(getWidth(), getHeight(), rootNode, g);
         }
     }
 }

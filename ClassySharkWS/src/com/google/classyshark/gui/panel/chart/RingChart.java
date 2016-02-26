@@ -16,6 +16,7 @@
 
 package com.google.classyshark.gui.panel.chart;
 
+import com.google.classyshark.gui.panel.ColorScheme;
 import com.google.classyshark.silverghost.methodscounter.ClassNode;
 
 import java.awt.BasicStroke;
@@ -24,13 +25,18 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Stroke;
 import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class RingChart {
+    private static final int MARGIN = 20;
     private static final int DEFAULT_MAX_DEPTH = 2;
+    private Color OTHERS_COLOR = Color.GRAY;
     private static final Color[] PALETTE = new Color[]{
             new Color(0x5DA5DA),
             new Color(0xFAA43A),
@@ -129,6 +135,8 @@ public class RingChart {
     private int maxDepth;
     private Stroke lineStroke = new BasicStroke(3);
     private Stroke defaultStroke;
+    private Map<Integer, ClassNode> colorClassNodeMap = new HashMap<>();
+    private BufferedImage image;
 
     public RingChart() {
         this(DEFAULT_MAX_DEPTH);
@@ -139,10 +147,27 @@ public class RingChart {
     }
 
     public void render(int width, int height, ClassNode rootNode, Graphics g) {
-        int size = Math.min(width, height);
-        Graphics2D g2d = (Graphics2D)g;
-        defaultStroke = g2d.getStroke();
-        renderNode(width, height, size, 0, 360, rootNode, g2d, 1, PALETTE);
+        image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+
+        Graphics2D imageG2d = (Graphics2D)image.getGraphics();
+        defaultStroke = imageG2d.getStroke();
+        imageG2d.setColor(ColorScheme.BACKGROUND);
+        imageG2d.fillRect(0, 0, width, height);
+
+        int graphWidth = width - MARGIN * 2;
+        int graphHeight = height - MARGIN * 2;
+        imageG2d.translate(MARGIN, MARGIN);
+        int size = Math.min(graphWidth, graphHeight);
+        renderNode(graphWidth, graphHeight, size, 0, 360, rootNode, imageG2d, 1, PALETTE);
+        imageG2d.dispose();
+
+        g.drawImage(image, 0, 0, null);
+        g.dispose();
+    }
+
+    public ClassNode getClassNodeAt(int x, int y) {
+        int color = image.getRGB(x,y);
+        return colorClassNodeMap.get(color);
     }
 
     private void renderNode(int width, int height, int radius, int startAngle, int endAngle,
@@ -178,10 +203,14 @@ public class RingChart {
             } else if (currentColor == pallete.length - 1) {
                 nodeEndAngle = endAngle;
                 title = "Others";
-                color = Color.GRAY;
+                color = OTHERS_COLOR;
             } else {
                 nodeEndAngle = (int) ((double) node.getMethodCount()
                         / rootNode.getMethodCount() * angleSize + nodeEndAngle);
+            }
+
+            if (color != OTHERS_COLOR) {
+                colorClassNodeMap.put(color.getRGB(), node);
             }
 
             if (depth < maxDepth && currentColor != pallete.length - 1) {
