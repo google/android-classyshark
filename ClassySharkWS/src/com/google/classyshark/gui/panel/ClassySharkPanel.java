@@ -307,16 +307,18 @@ public class ClassySharkPanel extends JPanel
         methodsCountPanel = new MethodsCountPanel(this);
         jTabbedPane.addTab("Packages", methodsCountPanel);
 
-        jTabbedPane.addChangeListener(e -> {
-            int dividerLocation1 = jSplitPane.getDividerLocation();
-            JTabbedPane jTabbedPane1 = (JTabbedPane)e.getSource();
-            if (jTabbedPane1.getSelectedIndex() == 0) {
-                jSplitPane.setRightComponent(rightScrollPane);
-            } else {
-                jSplitPane.setRightComponent(ringChartPanel);
+        jTabbedPane.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                int dividerLocation1 = jSplitPane.getDividerLocation();
+                JTabbedPane jTabbedPane1 = (JTabbedPane)e.getSource();
+                if (jTabbedPane1.getSelectedIndex() == 0) {
+                    jSplitPane.setRightComponent(rightScrollPane);
+                } else {
+                    jSplitPane.setRightComponent(ringChartPanel);
+                }
+                jSplitPane.setDividerLocation(dividerLocation1);
             }
-            jSplitPane.setDividerLocation(dividerLocation1);
-
         });
 
         jSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);

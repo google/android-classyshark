@@ -30,7 +30,7 @@ public class RingChartPanel extends JPanel {
     private ViewerController viewerController;
     private ClassNode rootNode;
 
-    public RingChartPanel(ViewerController viewerController) {
+    public RingChartPanel(final ViewerController viewerController) {
         super();
         this.viewerController = viewerController;
         ToolTipManager.sharedInstance().registerComponent(this);
