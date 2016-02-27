@@ -16,24 +16,56 @@
 
 package com.google.classyshark.gui.panel.chart;
 
-import com.google.classyshark.gui.panel.ColorScheme;
+import com.google.classyshark.gui.panel.ViewerController;
 import com.google.classyshark.silverghost.methodscounter.ClassNode;
 
 import javax.swing.JPanel;
 import javax.swing.ToolTipManager;
-import javax.swing.border.EmptyBorder;
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseListener;
 
 public class RingChartPanel extends JPanel {
     private RingChart ringChart = new RingChart();
+    private ViewerController viewerController;
     private ClassNode rootNode;
 
-    public RingChartPanel() {
+    public RingChartPanel(ViewerController viewerController) {
         super();
+        this.viewerController = viewerController;
         ToolTipManager.sharedInstance().registerComponent(this);
+        this.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                ClassNode classNode = ringChart.getClassNodeAt(e.getX(), e.getY());
+                if (classNode == null) {
+                    return;
+                }
+                if (classNode.getChildNodes() != null && !classNode.getChildNodes().isEmpty()) {
+                    viewerController.onSelectedMethodCount(classNode);
+                }
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+
+            }
+        });
     }
 
     @Override
