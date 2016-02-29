@@ -131,7 +131,6 @@ public class RingChart {
                 new Color(0x8F8F8F),
                 new Color(0x999999)
             }
-
     };
 
     private int maxDepth;
@@ -139,6 +138,7 @@ public class RingChart {
     private Stroke defaultStroke;
     private Map<Integer, ClassNode> colorClassNodeMap = new HashMap<>();
     private BufferedImage image;
+    private ClassNode selectedNode;
 
     public RingChart() {
         this(DEFAULT_MAX_DEPTH);
@@ -146,6 +146,14 @@ public class RingChart {
 
     public RingChart(int maxDepth) {
         this.maxDepth = maxDepth;
+    }
+
+    public void setSelectedNode(ClassNode selectedNode) {
+        this.selectedNode = selectedNode;
+    }
+
+    public ClassNode getSelectedNode() {
+        return selectedNode;
     }
 
     public void render(int width, int height, ClassNode rootNode, Graphics g) {
@@ -216,6 +224,10 @@ public class RingChart {
                         / rootNode.getMethodCount() * angleSize + nodeEndAngle);
             }
 
+            if (selectedNode != null && node == selectedNode) {
+                color = getHighlightColor(color);
+            }
+
             if (color != OTHERS_COLOR) {
                 colorClassNodeMap.put(color.getRGB(), node);
             }
@@ -259,6 +271,12 @@ public class RingChart {
             currentNode++;
             currentColor++;
         }
+    }
+
+    private Color getHighlightColor(Color color) {
+        float hsbVals[] = Color.RGBtoHSB(
+                color.getRed(), color.getGreen(), color.getBlue(), null);
+        return Color.getHSBColor(hsbVals[0], hsbVals[1] * 0.7f, hsbVals[2]);
     }
 }
 
