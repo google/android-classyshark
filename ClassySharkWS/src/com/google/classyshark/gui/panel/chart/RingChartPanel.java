@@ -24,16 +24,36 @@ import javax.swing.ToolTipManager;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 
 public class RingChartPanel extends JPanel {
     private RingChart ringChart = new RingChart();
-    private ViewerController viewerController;
     private ClassNode rootNode;
 
     public RingChartPanel(final ViewerController viewerController) {
         super();
-        this.viewerController = viewerController;
         ToolTipManager.sharedInstance().registerComponent(this);
+
+        this.addMouseMotionListener(new MouseMotionListener() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+            }
+
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                ClassNode prevSelectedNode = ringChart.getSelectedNode();
+                ClassNode currSelectedNode = ringChart.getClassNodeAt(e.getX(), e.getY());
+                if (currSelectedNode == null && prevSelectedNode == null) {
+                    return;
+                }
+
+                if (currSelectedNode == null || !currSelectedNode.equals(prevSelectedNode)) {
+                    ringChart.setSelectedNode(currSelectedNode);
+                    repaint();
+                }
+            }
+        });
+
         this.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
