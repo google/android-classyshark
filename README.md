@@ -10,17 +10,7 @@ ClassyShark is a standalone tool for Android developers. It can reliably browse 
 www.classyshark.com
 
 ## Command line 
-1. Open APK `java -jar ClassyShark.jar -open <YOUR_APK.apk>`
-2. Export all generated data to a text file
-`java -jar ClassyShark.jar -dump <BINARY_FILE>`
-3. Export generated file from a specific class to a text file
-`java -jar ClassyShark.jar -dump <BINARY_FILE> <FULLY_QUALIFIED_CLASS_NAME>`
-4. Open ClassyShark and display a specific class in the GUI
-`java -jar ClassyShark.jar -open <BINARY_FILE> <FULLY_QUALIFIED_CLASS_NAME>`
-5. Inspect APK
-`java -jar ClassyShark.jar -inspect <YOUR_APK.apk>`
-6. Dump all strings (combined classes.dex string and method tables) from your APK
-`java -jar ClassyShark.jar -stringdump <YOUR_APK.apk>`
+[Command line reference] (https://github.com/google/android-classyshark/blob/master/CommandLine.pdf)
 
 ## Downloads
 
