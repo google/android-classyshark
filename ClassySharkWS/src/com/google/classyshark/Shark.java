@@ -28,21 +28,29 @@ import java.util.List;
 /**
  * The ClassyShark API usually used by build & continues integration toolchains
  */
-public class API {
+public class Shark {
+
+    private File archiveFile;
+
+    private Shark(File archiveFile) {
+        this.archiveFile = archiveFile;
+    }
+
+    public static Shark with(File archiveFile) {
+        return new Shark(archiveFile);
+    }
 
     /**
-     *
-     * @param archive jar/apk
      * @param className class name to generate such as "com.bumptech.glide.request.target.BaseTarget"
      * @return
      */
-    public static String getGeneratedClass(File archive, String className) {
+    public String getGeneratedClass(String className) {
         String result;
-        ContentReader loader = new ContentReader(archive);
+        ContentReader loader = new ContentReader(archiveFile);
         loader.load();
 
         Translator translator =
-                TranslatorFactory.createTranslator(className, archive,
+                TranslatorFactory.createTranslator(className, archiveFile,
                         loader.getAllClassNames());
         try {
             translator.apply();
@@ -55,68 +63,61 @@ public class API {
     }
 
     /**
-     *
-     * @param archive jar/apk
      * @return list of class names
      */
-    public static List<String> getAllClassNames(File archive) {
-        ContentReader loader = new ContentReader(archive);
+    public List<String> getAllClassNames() {
+        ContentReader loader = new ContentReader(archiveFile);
         loader.load();
         return loader.getAllClassNames();
     }
 
     /**
-     *
-     * @param apk apk
      * @return manifest
      */
-    public static String getManifest(File apk) {
-        if (!apk.getName().endsWith(".apk")) {
+    public String getManifest() {
+        if (!archiveFile.getName().endsWith(".apk")) {
             return new String();
         }
         Translator translator =
-                TranslatorFactory.createTranslator("AndroidManifest.xml", apk);
+                TranslatorFactory.createTranslator("AndroidManifest.xml", archiveFile);
         translator.apply();
         return translator.toString();
     }
 
     /**
-     *
-     * @param apk apk
      * @return all methods
      */
-    public static List<String> getAllMethods(File apk) {
-        if (!apk.getName().endsWith(".apk")) {
+    public List<String> getAllMethods() {
+        if (!archiveFile.getName().endsWith(".apk")) {
             return new LinkedList<>();
         }
-        List<String> allMethods = DexMethodsDumper.dumpMethods(apk);
+        List<String> allMethods = DexMethodsDumper.dumpMethods(archiveFile);
         return allMethods;
     }
 
     /**
-     *
-     * @param apk apk
      * @return all strings from all string tables
      */
-    public static List<String> getAllStrings(File apk) {
-        if (!apk.getName().endsWith(".apk")) {
+    public List<String> getAllStrings() {
+        if (!archiveFile.getName().endsWith(".apk")) {
             return new LinkedList<>();
         }
 
-        List<String> allStrings = DexStringsDumper.dumpStrings(apk);
+        List<String> allStrings = DexStringsDumper.dumpStrings(archiveFile);
         return allStrings;
     }
 
     public static void main(String[] args) {
         File apk =
-                new File( "/Users/bfarber/Desktop/Scenarios/4 APKs/"
+                new File("/Users/bfarber/Desktop/Scenarios/4 APKs/"
                         + "com.google.samples.apps.iosched-333.apk");
+        Shark shark = Shark.with(apk);
 
-        System.out.println(API.getGeneratedClass(apk,
-                "com.bumptech.glide.request.target.BaseTarget"));
-        System.out.println(API.getAllClassNames(apk));
-        System.out.println(API.getManifest(apk));
-        System.out.println(API.getAllMethods(apk));
-        System.out.println(API.getAllStrings(apk));
+        System.out.println(
+                shark.getGeneratedClass("com.bumptech.glide.request.target.BaseTarget"));
+        System.out.println(shark.getAllClassNames());
+        System.out.println(shark.getManifest());
+        System.out.println(shark.getAllMethods());
+        System.out.println(shark.getAllStrings());
     }
 }
