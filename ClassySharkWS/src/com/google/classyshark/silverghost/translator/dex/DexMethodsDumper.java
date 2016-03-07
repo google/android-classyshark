@@ -98,18 +98,6 @@ public class DexMethodsDumper {
         return result;
     }
 
-    public static void writeAllMethods(File file, List<String> allStrings) {
-        try {
-            FileWriter writer = new FileWriter(file);
-            for (String str : allStrings) {
-                writer.write(str);
-            }
-            writer.close();
-        } catch (IOException ioe) {
-
-        }
-    }
-
     private static class ApkInspectVisitor extends ApplicationVisitor {
         private List<String> methodsList;
 
@@ -185,7 +173,7 @@ public class DexMethodsDumper {
                         builder.append(ApkInspectVisitor.getDecName(pType.toString()));
                     }
 
-                    builder.append(")\n");
+                    builder.append(")");
                     methodsList.add(builder.toString());
 
                     return super.visitMethod(access, name, desc, signature, exceptions);

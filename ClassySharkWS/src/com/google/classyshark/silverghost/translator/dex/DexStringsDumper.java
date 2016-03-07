@@ -20,9 +20,6 @@ import com.google.classyshark.silverghost.contentreader.dex.DexlibLoader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.RandomAccessFile;
-import java.nio.ByteBuffer;
-import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -83,24 +80,10 @@ public class DexStringsDumper {
         return allStrings;
     }
 
-    public static void writeAllStrings(File to, List<String> allStrings) throws Exception {
-        byte[] buffer = "                                                       \n".getBytes();
-
-        FileChannel rwChannel = new RandomAccessFile(to, "rw").getChannel();
-        ByteBuffer wrBuf = rwChannel.map(FileChannel.MapMode.READ_WRITE, 0, allStrings.size() * buffer.length);
-        for (int i = 0; i < allStrings.size(); i++) {
-            wrBuf.put(allStrings.get(i).getBytes());
-        }
-
-        rwChannel.close();
-    }
-
     public static void main(String[] args) throws Exception {
         String apkFile = System.getProperty("user.home") +
-                "/Desktop/Scenarios/4 APKs/com.android.chrome-52311111.apk";
+                "/Desktop/Scenarios/4 APKs/com.google.samples.apps.iosched-333.apk";
 
         List<String> allStrings = dumpStrings(new File(apkFile));
-        writeAllStrings(new File(System.getProperty("user.home") +
-                "/Desktop/allStrings.txt"), allStrings);
     }
 }

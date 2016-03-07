@@ -16,7 +16,7 @@
 
 package com.google.classyshark.cli;
 
-import com.google.classyshark.gui.panel.io.Export2FileWriter;
+import com.google.classyshark.silverghost.exporter.Exporter;
 import com.google.classyshark.silverghost.contentreader.ContentReader;
 import com.google.classyshark.silverghost.translator.Translator;
 import com.google.classyshark.silverghost.translator.TranslatorFactory;
@@ -41,71 +41,58 @@ public class CliMode {
 
         final String operand = args.get(0).toLowerCase();
         switch (operand) {
-            case "-dump":
+            case "-export":
                 if (args.size() == 2) {
-                    dumpApk(args);
+                    exportArchive(args);
                 } else {
-                    dumpClassFromApk(args);
+                    exportClassFromApk(args);
                 }
                 break;
-            case "-stringdump":
-                dumpStrings(args);
-                break;
             case "-inspect":
-                processApk(args);
+                inspectApk(args);
                 break;
             default:
                 System.err.println("wrong operand ==> " + operand);
         }
     }
 
-    private static void dumpStrings(List<String> args) {
-        try {
-            Export2FileWriter.writeAllDexStringTables(new File(args.get(1)));
-            Export2FileWriter.writeAllMethodNames(new File(args.get(1)));
-        } catch (Exception e) {
-            System.out.println("Internal error - couldn't write file");
-        }
-    }
-
-    private static void dumpApk(List<String> args) {
-        ContentReader loader = new ContentReader(new File(args.get(1)));
+    private static void exportArchive(List<String> args) {
+        File apk = new File(args.get(1));
+        ContentReader loader = new ContentReader(apk);
         loader.load();
 
         try {
-            File binaryArchive = new File(args.get(1));
-            Export2FileWriter.writeAllClassNames(loader.getAllClassNames(),
-                    binaryArchive);
-            Export2FileWriter.writeManifest(binaryArchive);
-            Export2FileWriter.writeAllDexStringTables(binaryArchive);
+            Exporter.writeArchive(apk, loader.getAllClassNames());
         } catch (Exception e) {
             System.out.println("Internal error - couldn't write file");
         }
     }
 
-    private static void dumpClassFromApk(List<String> args) {
-        ContentReader loader = new ContentReader(new File(args.get(1)));
+    private static void exportClassFromApk(List<String> args) {
+        File apk = new File(args.get(1));
+        String className = args.get(2);
+
+        ContentReader loader = new ContentReader(apk);
         loader.load();
 
         Translator translator =
-                TranslatorFactory.createTranslator(args.get(2),
-                        new File(args.get(1)), loader.getAllClassNames());
-
+                TranslatorFactory.createTranslator(className, apk,
+                        loader.getAllClassNames());
         try {
             translator.apply();
         } catch (NullPointerException npe) {
-            System.out.println("Class doesn't exist in the archive");
+            System.out.println("Class doesn't exist in the writeArchive");
             return;
         }
 
         try {
-            Export2FileWriter.writeCurrentClass(translator);
+            Exporter.writeCurrentClass(translator);
         } catch (Exception e) {
             System.out.println("Internal error - couldn't write file");
         }
     }
 
-    private static void processApk(List<String> args) {
+    private static void inspectApk(List<String> args) {
         if (!new File(args.get(1)).getName().endsWith(".apk")) {
             System.out.println("Not an apk file ==> " +
                     "java -jar ClassyShark.jar " + "-inspect APK_FILE");
