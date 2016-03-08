@@ -19,7 +19,7 @@ package com.google.classyshark.gui.panel;
 import com.google.classyshark.gui.panel.chart.RingChartPanel;
 import com.google.classyshark.gui.panel.displayarea.DisplayArea;
 import com.google.classyshark.gui.panel.io.CurrentFolderConfig;
-import com.google.classyshark.gui.panel.io.Export2FileWriter;
+import com.google.classyshark.silverghost.exporter.Exporter;
 import com.google.classyshark.gui.panel.io.FileChooserUtils;
 import com.google.classyshark.gui.panel.io.RecentArchivesConfig;
 import com.google.classyshark.gui.panel.methodscount.MethodsCountPanel;
@@ -192,12 +192,8 @@ public class ClassySharkPanel extends JPanel
         SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
             @Override
             protected Void doInBackground() throws Exception {
-                Export2FileWriter.writeAllClassNames(reducer.getAllClassNames(),
-                        binaryArchive);
-                Export2FileWriter.writeCurrentClass(translator);
-                Export2FileWriter.writeAllClassNames(reducer.getAllClassNames(),
-                        binaryArchive);
-                Export2FileWriter.writeAllDexStringTables(binaryArchive);
+                Exporter.writeCurrentClass(translator);
+                Exporter.writeArchive(binaryArchive, reducer.getAllClassNames());
                 return null;
             }
 

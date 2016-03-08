@@ -338,29 +338,27 @@ public class JavaTranslator implements Translator {
     }
 
     public static void testSystemClass() {
-        Translator emitter = new JavaTranslator(Enum.class);
-        emitter.apply();
-        System.out.print(emitter);
+        Translator translator = new JavaTranslator(Enum.class);
+        translator.apply();
+        System.out.print(translator);
     }
 
     public static void testCustomClass() {
         final File testFile = new File(System.getProperty("user.home") + "/Desktop/Scenarios/3 Class/Reducer.class");
-        //String textClass = "com.apisolutions.classysharkandroid.dex.DexLoaderBuilder";
         String textClass = "com.google.classyshark.gui.panel.reducer.Reducer.class";
-        Translator sourceGenerator = TranslatorFactory.createTranslator(textClass, testFile);
-        sourceGenerator.apply();
+        Translator translator = TranslatorFactory.createTranslator(textClass, testFile);
+        translator.apply();
 
-        System.out.println(sourceGenerator.toString());
+        System.out.println(translator.toString());
     }
 
     public static void testInnerClass() {
-        //
         final File testFile = new File(System.getProperty("user.home") + "/Desktop/Scenarios/3 Class/Reducer$1.class");
         String textClass = "com.google.classyshark.gui.panel.reducer.Reducer$1.class";
-        Translator sourceGenerator = TranslatorFactory.createTranslator(textClass, testFile);
-        sourceGenerator.apply();
+        Translator translator = TranslatorFactory.createTranslator(textClass, testFile);
+        translator.apply();
 
-        System.out.println(sourceGenerator.toString());
+        System.out.println(translator.toString());
     }
 
     public static void main(String[] args) throws Exception {

@@ -219,6 +219,7 @@ public class DisplayArea {
             e.printStackTrace();
         }
 
+        // TODO not sure, remove the line below
         jTextPane.setDocument(blank);
 
         System.out.println("UI update " + (System.currentTimeMillis() - start) + " ms");
@@ -250,6 +251,8 @@ public class DisplayArea {
         jTextPane.setDocument(doc);
     }
 
+    // TODO add here logic fo highlighter
+    // TODO by adding flag to Translator.ELEMENT
     public void displayClass(List<Translator.ELEMENT> elements) {
         displayDataState = DisplayDataState.INSIDE_CLASS;
         clearText();
