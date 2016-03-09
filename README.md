@@ -13,7 +13,7 @@ www.classyshark.com
 [Command line reference] (https://github.com/google/android-classyshark/blob/master/CommandLine.pdf)
 
 ### ClassyShark APIs (as jar)
-Look [here] (https://github.com/borisf/classyshark-sample-plugin) how use rich ClassyShark APIs as part of your build or integation pipeline.
+The following [sample] (https://github.com/borisf/classyshark-sample-plugin) shows how to use ClassyShark APIs in your build or integration process
 
 ### Downloads
 
