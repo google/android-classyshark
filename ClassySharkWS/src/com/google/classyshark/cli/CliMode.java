@@ -16,8 +16,8 @@
 
 package com.google.classyshark.cli;
 
-import com.google.classyshark.silverghost.exporter.Exporter;
 import com.google.classyshark.silverghost.contentreader.ContentReader;
+import com.google.classyshark.silverghost.exporter.Exporter;
 import com.google.classyshark.silverghost.translator.Translator;
 import com.google.classyshark.silverghost.translator.TranslatorFactory;
 import com.google.classyshark.silverghost.translator.apk.ApkTranslator;
@@ -29,13 +29,26 @@ import java.util.List;
  */
 public class CliMode {
 
+    private static final String ERROR_MESSAGE = "Usage: java -jar ClassyShark.jar [-options] <archive> [args...]\n" +
+            "           (to execute a ClassyShark on binary archive jar/apk/dex/class)\n" +
+            "where options include:\n" +
+            "    -open\t  open an archive\n" +
+            "    -export\t  export to file \n" +
+            "    -inspect  experimental prints apk analysis" +
+            "\nwhere args is an optional classname\n";
+
     private CliMode() {
     }
 
     public static void with(List<String> args) {
+        if (args.size() < 2) {
+            System.err.println("missing command line arguments " + "\n\n\n" + ERROR_MESSAGE);
+            return;
+        }
+
         File archiveFile = new File(args.get(1));
         if (!archiveFile.exists()) {
-            System.err.println("File doesn't exist ==> " + archiveFile);
+            System.err.println("File doesn't exist ==> " + archiveFile + "\n\n\n" + ERROR_MESSAGE);
             return;
         }
 
@@ -52,7 +65,7 @@ public class CliMode {
                 inspectApk(args);
                 break;
             default:
-                System.err.println("wrong operand ==> " + operand);
+                System.err.println("wrong operand ==> " + operand + "\n\n\n" + ERROR_MESSAGE);
         }
     }
 
@@ -64,7 +77,7 @@ public class CliMode {
         try {
             Exporter.writeArchive(apk, loader.getAllClassNames());
         } catch (Exception e) {
-            System.out.println("Internal error - couldn't write file");
+            System.err.println("Internal error - couldn't write file" + "\n\n\n" + ERROR_MESSAGE);
         }
     }
 
@@ -81,21 +94,22 @@ public class CliMode {
         try {
             translator.apply();
         } catch (NullPointerException npe) {
-            System.out.println("Class doesn't exist in the writeArchive");
+            System.err.println("Class doesn't exist in the writeArchive" + "\n\n\n" +
+                    ERROR_MESSAGE);
             return;
         }
 
         try {
             Exporter.writeCurrentClass(translator);
         } catch (Exception e) {
-            System.out.println("Internal error - couldn't write file");
+            System.err.println("Internal error - couldn't write file" + "\n\n\n" + ERROR_MESSAGE);
         }
     }
 
     private static void inspectApk(List<String> args) {
         if (!new File(args.get(1)).getName().endsWith(".apk")) {
-            System.out.println("Not an apk file ==> " +
-                    "java -jar ClassyShark.jar " + "-inspect APK_FILE");
+            System.err.println("Not an apk file ==> " +
+                    "java -jar ClassyShark.jar " + "-inspect APK_FILE" + "\n\n\n" + ERROR_MESSAGE);
             return;
         }
 

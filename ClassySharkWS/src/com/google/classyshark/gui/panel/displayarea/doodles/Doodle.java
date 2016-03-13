@@ -18,6 +18,6 @@ package com.google.classyshark.gui.panel.displayarea.doodles;
 
 public class Doodle {
     public static String get() {
-        return SharkBG.SHARKEY;
+        return SanFranBG.SHARKEY;
     }
 }
