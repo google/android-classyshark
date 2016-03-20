@@ -1,0 +1,15 @@
+*.class
+
+.idea/.name
+
+*.xml
+
+classyshark-sample-plugin.iml
+
+Sample/.idea/.name
+
+SampleGradle/.gradle/
+
+*.jar
+
+*.iml
