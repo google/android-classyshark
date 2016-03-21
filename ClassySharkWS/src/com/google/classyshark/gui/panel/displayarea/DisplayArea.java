@@ -16,6 +16,7 @@
 
 package com.google.classyshark.gui.panel.displayarea;
 
+import com.google.classyshark.gui.panel.FileTransferHandler;
 import com.google.classyshark.gui.panel.displayarea.doodles.Doodle;
 import com.google.classyshark.silverghost.translator.Translator;
 import com.google.classyshark.silverghost.translator.java.JavaTranslator;
@@ -57,6 +58,10 @@ public class DisplayArea {
 
     public DisplayArea(final ViewerController viewerController) {
         jTextPane = new JTextPane();
+
+        jTextPane.setDragEnabled(true);
+        jTextPane.setTransferHandler(new FileTransferHandler(viewerController));
+
         jTextPane.setEditable(false);
         jTextPane.setBackground(ColorScheme.BACKGROUND);
 

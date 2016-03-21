@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Google, Inc.
+ * Copyright 2016 Google, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,14 +16,8 @@
 
 package com.google.classyshark.gui.panel;
 
-import com.google.classyshark.silverghost.methodscounter.ClassNode;
+import java.io.File;
 
-public interface ViewerController extends ArchiveDisplayer {
-    void onSelectedClassName(String className);
-
-    void onSelectedImportFromMouseClick(String classNameFromImportStatement);
-
-    void onSelectedTypeClassFromMouseClick(String word);
-
-    void onSelectedMethodCount(ClassNode rootNode);
+public interface ArchiveDisplayer {
+    void showArchive(File file);
 }

@@ -16,17 +16,19 @@
 
 package com.google.classyshark.gui.panel.methodscount;
 
-import com.google.classyshark.gui.panel.ViewerController;
-import com.google.classyshark.silverghost.methodscounter.RootBuilder;
-import com.google.classyshark.silverghost.methodscounter.ClassNode;
 import com.google.classyshark.gui.panel.ColorScheme;
-
-import javax.swing.JFrame;
+import com.google.classyshark.gui.panel.FileTransferHandler;
+import com.google.classyshark.gui.panel.ViewerController;
+import com.google.classyshark.silverghost.methodscounter.ClassNode;
+import com.google.classyshark.silverghost.methodscounter.RootBuilder;
+import java.awt.BorderLayout;
+import java.awt.Font;
+import java.awt.HeadlessException;
+import java.io.File;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.SwingWorker;
-import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
@@ -34,11 +36,6 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.HeadlessException;
-import java.io.File;
 
 public class MethodsCountPanel extends JPanel {
     private DefaultTreeModel treeModel;
@@ -85,6 +82,9 @@ public class MethodsCountPanel extends JPanel {
         JScrollPane jScrollPane = new JScrollPane(jTree);
         this.setBorder(new EmptyBorder(0,0,0,0));
         this.add(jScrollPane, BorderLayout.CENTER);
+
+        jTree.setDragEnabled(true);
+        jTree.setTransferHandler(new FileTransferHandler(viewerController));
     }
 
     private void addNodes(ClassNode parent, DefaultMutableTreeNode jTreeParent) {

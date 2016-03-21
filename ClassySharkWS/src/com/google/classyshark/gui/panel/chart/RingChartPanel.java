@@ -16,6 +16,7 @@
 
 package com.google.classyshark.gui.panel.chart;
 
+import com.google.classyshark.gui.panel.FileTransferHandler;
 import com.google.classyshark.gui.panel.ViewerController;
 import com.google.classyshark.silverghost.methodscounter.ClassNode;
 
@@ -86,6 +87,8 @@ public class RingChartPanel extends JPanel {
 
             }
         });
+
+        setTransferHandler(new FileTransferHandler(viewerController));
     }
 
     @Override

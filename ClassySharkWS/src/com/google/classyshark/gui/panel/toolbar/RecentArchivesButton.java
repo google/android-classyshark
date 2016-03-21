@@ -94,7 +94,7 @@ public class RecentArchivesButton extends JButton {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            panel.updateUiAfterArchiveRead(
+            panel.showArchive(
                     new File(RecentArchivesConfig.INSTANCE.getFilePath(archiveName),
                             archiveName));
             buildPopup();
