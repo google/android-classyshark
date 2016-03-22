@@ -19,5 +19,5 @@ package com.google.classyshark.gui.panel;
 import java.io.File;
 
 public interface ArchiveDisplayer {
-    void showArchive(File file);
+    void displayArchive(File file);
 }

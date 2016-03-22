@@ -86,7 +86,7 @@ public class ClassySharkPanel extends JPanel
 
     public ClassySharkPanel(JFrame frame, File archive) {
         this(frame);
-        showArchive(archive);
+        displayArchive(archive);
     }
 
     public ClassySharkPanel(JFrame frame) {
@@ -164,7 +164,7 @@ public class ClassySharkPanel extends JPanel
             CurrentFolderConfig.INSTANCE.setCurrentDirectory(fc.getCurrentDirectory());
             RecentArchivesConfig.INSTANCE.addArchive(resultFile.getName(),
                     fc.getCurrentDirectory());
-            showArchive(resultFile);
+            displayArchive(resultFile);
         }
     }
 
@@ -216,7 +216,7 @@ public class ClassySharkPanel extends JPanel
     }
 
     @Override
-    public void showArchive(File binaryArchive) {
+    public void displayArchive(File binaryArchive) {
         if (parentFrame != null) {
             parentFrame.setTitle(binaryArchive.getName());
         }

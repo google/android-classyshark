@@ -17,7 +17,6 @@
 package com.google.classyshark.gui.panel;
 
 import com.google.classyshark.gui.panel.io.CurrentFolderConfig;
-import com.google.classyshark.gui.panel.io.FileChooserUtils;
 import com.google.classyshark.gui.panel.io.RecentArchivesConfig;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.UnsupportedFlavorException;
@@ -31,10 +30,10 @@ import static com.google.classyshark.gui.panel.io.FileChooserUtils.isSupportedAr
 
 public class FileTransferHandler extends TransferHandler {
 
-    private final ArchiveDisplayer archiveViewer;
+    private final ArchiveDisplayer archiveDisplayer;
 
     public FileTransferHandler(ArchiveDisplayer archiveViewer) {
-        this.archiveViewer = archiveViewer;
+        this.archiveDisplayer = archiveViewer;
     }
 
     public int getSourceActions(JComponent c) {
@@ -61,7 +60,7 @@ public class FileTransferHandler extends TransferHandler {
                     CurrentFolderConfig.INSTANCE.setCurrentDirectory(file.getParentFile());
                     RecentArchivesConfig.INSTANCE.addArchive(file.getName(),
                             file.getParentFile());
-                    archiveViewer.showArchive(file);
+                    archiveDisplayer.displayArchive(file);
                 }
             }
 
