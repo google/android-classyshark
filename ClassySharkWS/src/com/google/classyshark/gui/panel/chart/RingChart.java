@@ -134,8 +134,6 @@ public class RingChart {
     };
 
     private int maxDepth;
-    private Stroke lineStroke = new BasicStroke(3);
-    private Stroke defaultStroke;
     private Map<Integer, ClassNode> colorClassNodeMap = new HashMap<>();
     private BufferedImage image;
     private ClassNode selectedNode;
@@ -160,7 +158,6 @@ public class RingChart {
         image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 
         Graphics2D imageG2d = (Graphics2D)image.getGraphics();
-        defaultStroke = imageG2d.getStroke();
         imageG2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         imageG2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
         imageG2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
@@ -190,6 +187,7 @@ public class RingChart {
         if (rootNode.getChildNodes().isEmpty()) {
             return;
         }
+
         int nodeStartAngle;
         int nodeEndAngle = startAngle;
         int angleSize = endAngle - startAngle;
@@ -213,15 +211,16 @@ public class RingChart {
             String title = node.getKey();
             Color color = pallete[currentColor];
 
+            nodeEndAngle = (int) ((double) node.getMethodCount()
+                    / rootNode.getMethodCount() * angleSize + nodeEndAngle);
+
             if (currentNode == nodes.size() - 1) {
                 nodeEndAngle = endAngle;
-            } else if (currentColor == pallete.length - 1) {
+            } else if (currentColor == pallete.length - 1 || 360 - nodeEndAngle < 5) {
+                currentColor = pallete.length - 1;
                 nodeEndAngle = endAngle;
                 title = "Others";
                 color = OTHERS_COLOR;
-            } else {
-                nodeEndAngle = (int) ((double) node.getMethodCount()
-                        / rootNode.getMethodCount() * angleSize + nodeEndAngle);
             }
 
             if (selectedNode != null && node == selectedNode) {
@@ -254,9 +253,7 @@ public class RingChart {
             int py = (int)Math.round(Math.sin(rads) * (r / 2)) * -1;
             int px = (int)Math.round(Math.cos(rads) * (r / 2));
 
-            g2d.setStroke(lineStroke);
             g2d.drawLine(0, 0, px, py);
-            g2d.setStroke(defaultStroke);
 
             //Render text
             int r2 = (radius / maxDepth) * (depth - 1);
