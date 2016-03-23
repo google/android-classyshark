@@ -16,9 +16,9 @@
 
 package com.google.classyshark.gui.panel.toolbar;
 
-import java.io.File;
+import com.google.classyshark.gui.panel.ArchiveDisplayer;
 
-public interface ToolbarController {
+public interface ToolbarController extends ArchiveDisplayer {
     void onChangedTextFromTypingArea(String text);
 
     void openArchive();
@@ -30,7 +30,4 @@ public interface ToolbarController {
     void onExportButtonPressed();
 
     void onChangeLeftPaneVisibility(boolean selected);
-
-    void updateUiAfterArchiveRead(File file);
-
 }

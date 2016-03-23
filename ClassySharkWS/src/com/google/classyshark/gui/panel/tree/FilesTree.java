@@ -17,6 +17,7 @@
 package com.google.classyshark.gui.panel.tree;
 
 import com.google.classyshark.gui.panel.ColorScheme;
+import com.google.classyshark.gui.panel.FileTransferHandler;
 import com.google.classyshark.gui.panel.ViewerController;
 import com.google.classyshark.silverghost.contentreader.ContentReader;
 import com.google.classyshark.gui.panel.reducer.Reducer;
@@ -44,10 +45,12 @@ public class FilesTree {
     private JTree jTree = null;
 
     public FilesTree(ViewerController viewerPanel) {
+        this.viewerController = viewerPanel;
         treeModel = new DefaultTreeModel(new DefaultMutableTreeNode());
         jTree = new JTree(treeModel);
+        jTree.setDragEnabled(true);
+        jTree.setTransferHandler(new FileTransferHandler(viewerController));
         configureJTree(jTree);
-        this.viewerController = viewerPanel;
     }
 
     public void fillArchive(File loadedFile, List<String> displayedClassNames, List<ContentReader.Component> allComponets) {
@@ -57,8 +60,6 @@ public class FilesTree {
             return;
         }
         TreeNode rootNode = createTreeModel(loadedFile, displayedClassNames, allComponets);
-
-
         treeModel.setRoot(rootNode);
     }
 
