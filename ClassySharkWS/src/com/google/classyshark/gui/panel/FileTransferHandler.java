@@ -32,8 +32,8 @@ public class FileTransferHandler extends TransferHandler {
 
     private final ArchiveDisplayer archiveDisplayer;
 
-    public FileTransferHandler(ArchiveDisplayer archiveViewer) {
-        this.archiveDisplayer = archiveViewer;
+    public FileTransferHandler(ArchiveDisplayer archiveDisplayer) {
+        this.archiveDisplayer = archiveDisplayer;
     }
 
     public int getSourceActions(JComponent c) {
