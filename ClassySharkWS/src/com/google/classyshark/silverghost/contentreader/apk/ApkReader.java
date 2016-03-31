@@ -75,6 +75,7 @@ public class ApkReader implements BinaryContentReader {
                 }
 
                 if (zipEntry.getName().endsWith(".dex")) {
+
                     File file = File.createTempFile("classes" + dexIndex, "dex");
                     file.deleteOnExit();
 
@@ -89,7 +90,7 @@ public class ApkReader implements BinaryContentReader {
                     fos.close();
 
                     List<String> classesAtDex =
-                            DexReader.readClassNamesFromDex(binaryArchiveFile);
+                            DexReader.readClassNamesFromDex(file);
 
                     classNames.add("classes" + dexIndex + ".dex");
                     classNames.addAll(classesAtDex);
@@ -99,6 +100,58 @@ public class ApkReader implements BinaryContentReader {
                     components.add(
                             new ContentReader.Component(zipEntry.getName(),
                                     ContentReader.ARCHIVE_COMPONENT.NATIVE_LIBRARY));
+                }
+
+                // Dynamic dex loading
+                if (zipEntry.getName().endsWith("jar") || zipEntry.getName().endsWith("zip")) {
+                    File innerZip = File.createTempFile("inner_zip", "zip");
+                    innerZip.deleteOnExit();
+
+                    FileOutputStream fos =
+                            new FileOutputStream(innerZip);
+                    byte[] bytes = new byte[1024];
+                    int length;
+                    while ((length = zipFile.read(bytes)) >= 0) {
+                        fos.write(bytes, 0, length);
+                    }
+
+                    fos.close();
+
+                    // so far we have a zip file
+                    ZipInputStream fromInnerZip = new ZipInputStream(new FileInputStream(
+                            innerZip));
+
+                    ZipEntry innerZipEntry;
+
+                    while (true) {
+                        innerZipEntry = fromInnerZip.getNextEntry();
+
+                        if (innerZipEntry == null) {
+                            break;
+                        }
+
+                        if (innerZipEntry.getName().endsWith(".dex")) {
+                            File  tempDexFile = File.createTempFile("inner_zip_classes" + dexIndex, "dex");
+                            tempDexFile.deleteOnExit();
+
+                            FileOutputStream fos1 = new FileOutputStream(tempDexFile);
+                            byte[] bytes1 = new byte[1024];
+
+                            while ((length = fromInnerZip.read(bytes1)) >= 0) {
+                                fos1.write(bytes1, 0, length);
+                            }
+
+                            fos1.close();
+
+                            List<String> classesAtDex =
+                                    DexReader.readClassNamesFromDex(tempDexFile);
+
+                            String name = zipEntry.getName() + "###" + innerZipEntry.getName();
+
+                            classNames.add(name);
+                            classNames.addAll(classesAtDex);
+                        }
+                    }
                 }
             }
             zipFile.close();

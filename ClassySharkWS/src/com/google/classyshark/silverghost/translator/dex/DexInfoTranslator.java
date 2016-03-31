@@ -139,6 +139,8 @@ public class DexInfoTranslator implements Translator {
                         break;
                     }
                 }
+
+                // TODO add here login for custom dex loading
             }
             zipFile.close();
         } catch (Exception e) {
