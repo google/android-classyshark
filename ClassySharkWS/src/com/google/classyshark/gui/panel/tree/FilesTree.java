@@ -200,8 +200,7 @@ public class FilesTree {
 
                 DefaultMutableTreeNode defaultMutableTreeNode = (DefaultMutableTreeNode) selection;
 
-                if (selection.toString().startsWith("classes") &&
-                        selection.toString().endsWith(".dex")) {
+                if (selection.toString().endsWith(".dex")) {
                     FilesTree.this.viewerController.onSelectedClassName(
                             (String) defaultMutableTreeNode.getUserObject());
                     return;
