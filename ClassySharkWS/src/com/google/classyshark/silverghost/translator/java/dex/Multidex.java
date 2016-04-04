@@ -29,6 +29,8 @@ public class Multidex {
     }
 
     public static File extractClassesDexWithClass(String className, File apkFile) {
+
+        // TODO need to delete this file
         File file = new File("classes.dex");
         ZipInputStream zipFile;
         try {
@@ -64,6 +66,57 @@ public class Multidex {
                             DexReader.readClassNamesFromDex(file);
                     if (classNamesInDex.contains(className)) {
                         break;
+                    }
+                }
+
+                if (zipEntry.getName().endsWith("jar") || zipEntry.getName().endsWith("zip")) {
+
+                    File innerZip = File.createTempFile("inner_zip", "zip");
+                    innerZip.deleteOnExit();
+
+                    FileOutputStream fos =
+                            new FileOutputStream(innerZip);
+                    byte[] bytes = new byte[1024];
+                    int length;
+                    while ((length = zipFile.read(bytes)) >= 0) {
+                        fos.write(bytes, 0, length);
+                    }
+
+                    fos.close();
+
+                    // so far we have a zip file
+                    ZipInputStream fromInnerZip = new ZipInputStream(new FileInputStream(
+                            innerZip));
+
+                    ZipEntry innerZipEntry;
+
+                    while (true) {
+                        innerZipEntry = fromInnerZip.getNextEntry();
+
+                        if (innerZipEntry == null) {
+                            fromInnerZip.close();
+                            break;
+                        }
+
+                        if (innerZipEntry.getName().endsWith(".dex")) {
+                            file = File.createTempFile("classes_innerzip", "dex");
+                            FileOutputStream fos1 = new FileOutputStream(file);
+                            byte[] bytes1 = new byte[1024];
+
+                            while ((length = fromInnerZip.read(bytes1)) >= 0) {
+                                fos1.write(bytes1, 0, length);
+                            }
+
+                            fos1.close();
+
+                            List<String> classNamesInDex =
+                                    DexReader.readClassNamesFromDex(file);
+                            if (classNamesInDex.contains(className)) {
+                                fromInnerZip.close();
+                                zipFile.close();
+                                return file;
+                            }
+                        }
                     }
                 }
             }
