@@ -4,6 +4,8 @@ This is not an official Google product
 
 ## Introduction
 
+Follow the shark on twitter [@ItsClassyshark](https://twitter.com/ItsClassyshark)
+
 ClassyShark is a standalone tool for Android developers. It can reliably browse any Android executable and show important info such as class interfaces and members, dex counts and dependencies. The browser supports multiple formats including libraries (.dex, .aar, .so), executables (.apk, .jar, .class) and AndroidManifest (.xml).
 
 ### Learn more
