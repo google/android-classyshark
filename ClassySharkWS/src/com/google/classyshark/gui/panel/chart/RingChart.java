@@ -178,6 +178,9 @@ public class RingChart {
     }
 
     public ClassNode getClassNodeAt(int x, int y) {
+        if (image == null) {
+            return null;
+        }
         int color = image.getRGB(x,y);
         return colorClassNodeMap.get(color);
     }
