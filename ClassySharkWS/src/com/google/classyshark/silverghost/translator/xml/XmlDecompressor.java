@@ -227,10 +227,17 @@ public class XmlDecompressor {
         byte[] buffer = new byte[1024];
         for (int i = 0; i < numStrings; i++) {
             int len = dis.readUnsignedShort();
-            dis.readFully(buffer, 0, len * 2);
-            packedStrings.add(new String(buffer, 0, len * 2, "UTF-16LE"));
+            int bytelen = len * 2;
+            
+            //String larger than existing buffer. Increase buffer.
+            if (bytelen > buffer.length) {
+                buffer = new byte[bytelen * 2];
+            }
+
+            dis.readFully(buffer, 0, bytelen);
+            packedStrings.add(new String(buffer, 0, bytelen, "UTF-16LE"));
             dis.skipBytes(2);
-            bytesRead += 2 + len * 2 + 2;
+            bytesRead += 2 + bytelen + 2;
         }
         //Align to a multiple of 4 to continue reading data.
         dis.skipBytes(bytesRead % 4);
