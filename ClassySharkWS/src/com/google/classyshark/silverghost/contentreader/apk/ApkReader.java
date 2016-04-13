@@ -19,6 +19,8 @@ package com.google.classyshark.silverghost.contentreader.apk;
 import com.google.classyshark.silverghost.contentreader.BinaryContentReader;
 import com.google.classyshark.silverghost.contentreader.ContentReader;
 import com.google.classyshark.silverghost.contentreader.dex.DexReader;
+import com.google.classyshark.silverghost.translator.xml.XmlDecompressor;
+
 import com.google.classyshark.silverghost.io.SherlockHash;
 
 import java.io.File;
