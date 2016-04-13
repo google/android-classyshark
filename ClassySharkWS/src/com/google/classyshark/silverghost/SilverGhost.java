@@ -17,6 +17,7 @@
 package com.google.classyshark.silverghost;
 
 import com.google.classyshark.gui.panel.reducer.Reducer;
+import com.google.classyshark.silverghost.contentreader.ContentReader;
 import com.google.classyshark.silverghost.translator.Translator;
 import com.google.classyshark.silverghost.translator.TranslatorFactory;
 import java.io.File;
@@ -25,10 +26,14 @@ import java.util.List;
 public class SilverGhost {
 
     private File binaryArchive;
-    public Reducer reducer;
-    public Translator translator;
+    private Reducer reducer;
+    private Translator translator;
+    // TODO may be to move back to ClassySharkPanel
     public boolean isDataLoaded = false;
-    public List<String> allClassNamesInArchive;
+
+
+    private List<String> allClassNamesInArchive;
+    private ContentReader contentReader;
 
     public SilverGhost() {
 
@@ -42,12 +47,27 @@ public class SilverGhost {
         return this.binaryArchive;
     }
 
+    public void readContents() {
+        contentReader = new ContentReader(getBinaryArchive());
+        long start = System.currentTimeMillis();
+        contentReader.load();
+        allClassNamesInArchive = contentReader.getAllClassNames();
+        reducer = new Reducer(allClassNamesInArchive);
+        System.out.println("Archive Reading "
+                + (System.currentTimeMillis() - start) + " ms ");
+
+    }
+
+    public List<ContentReader.Component> getComponents() {
+        return contentReader.getAllComponents();
+    }
+
     public List<String> getImportsForCurrentClass() {
         return translator.getDependencies();
     }
 
     public List<String> getAllClassNames() {
-        return reducer.getAllClassNames();
+        return allClassNamesInArchive;
     }
 
     public void initClassNameFiltering() {

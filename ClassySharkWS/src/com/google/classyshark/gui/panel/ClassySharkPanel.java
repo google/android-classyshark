@@ -19,20 +19,27 @@ package com.google.classyshark.gui.panel;
 import com.google.classyshark.gui.panel.chart.RingChartPanel;
 import com.google.classyshark.gui.panel.displayarea.DisplayArea;
 import com.google.classyshark.gui.panel.io.CurrentFolderConfig;
-import com.google.classyshark.silverghost.SilverGhost;
-import com.google.classyshark.silverghost.exporter.Exporter;
 import com.google.classyshark.gui.panel.io.FileChooserUtils;
 import com.google.classyshark.gui.panel.io.RecentArchivesConfig;
 import com.google.classyshark.gui.panel.methodscount.MethodsCountPanel;
-import com.google.classyshark.gui.panel.reducer.Reducer;
 import com.google.classyshark.gui.panel.toolbar.KeyUtils;
 import com.google.classyshark.gui.panel.toolbar.Toolbar;
 import com.google.classyshark.gui.panel.toolbar.ToolbarController;
 import com.google.classyshark.gui.panel.tree.FilesTree;
-import com.google.classyshark.silverghost.contentreader.ContentReader;
+import com.google.classyshark.silverghost.SilverGhost;
+import com.google.classyshark.silverghost.exporter.Exporter;
 import com.google.classyshark.silverghost.methodscounter.ClassNode;
 import com.google.classyshark.silverghost.translator.Translator;
-
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Insets;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -44,16 +51,6 @@ import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileFilter;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Insets;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * App controller, general app structure MVM ==> Model - View - Mediator (this class)
@@ -136,7 +133,9 @@ public class ClassySharkPanel extends JPanel
 
     @Override
     public void onSelectedClassName(String className) {
-        fillDisplayArea(className, VIEW_TOP_CLASS, IS_CLASSNAME_FROM_MOUSE_CLICK);
+        if (silverGhost.getAllClassNames().contains(className)) {
+            fillDisplayArea(className, VIEW_TOP_CLASS, IS_CLASSNAME_FROM_MOUSE_CLICK);
+        }
     }
 
     @Override
@@ -307,7 +306,7 @@ public class ClassySharkPanel extends JPanel
             @Override
             public void stateChanged(ChangeEvent e) {
                 int dividerLocation1 = jSplitPane.getDividerLocation();
-                JTabbedPane jTabbedPane1 = (JTabbedPane)e.getSource();
+                JTabbedPane jTabbedPane1 = (JTabbedPane) e.getSource();
                 if (jTabbedPane1.getSelectedIndex() == 0) {
                     jSplitPane.setRightComponent(rightScrollPane);
                 } else {
@@ -343,18 +342,10 @@ public class ClassySharkPanel extends JPanel
 
     private void readArchiveAndFillDisplayArea(final String className) {
 
-        // TODO stopped here - move content reader to SilverGhost.java
-        final ContentReader contentReader = new ContentReader(silverGhost.getBinaryArchive());
-
         SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
             @Override
             protected Void doInBackground() throws Exception {
-                long start = System.currentTimeMillis();
-                contentReader.load();
-                silverGhost.allClassNamesInArchive = contentReader.getAllClassNames();
-                silverGhost.reducer = new Reducer(silverGhost.allClassNamesInArchive);
-                System.out.println("Archive Reading "
-                        + (System.currentTimeMillis() - start) + " ms ");
+                silverGhost.readContents();
                 return null;
             }
 
@@ -362,14 +353,14 @@ public class ClassySharkPanel extends JPanel
             protected void done() {
                 if (silverGhost.isArchiveError()) {
                     filesTree.fillArchive(new File("ERROR"), new ArrayList<String>(),
-                            contentReader.getAllComponents());
+                            silverGhost.getComponents());
                     displayArea.displayError();
                     return;
                 }
 
                 filesTree.fillArchive(silverGhost.getBinaryArchive(),
-                        silverGhost.allClassNamesInArchive,
-                        contentReader.getAllComponents());
+                        silverGhost.getAllClassNames(),
+                        silverGhost.getComponents());
 
                 if (className != null) {
                     onSelectedClassName(className);
