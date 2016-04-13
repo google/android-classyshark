@@ -17,6 +17,7 @@
 package com.google.classyshark.silverghost.translator;
 
 import com.google.classyshark.silverghost.tokensmapper.ProguardMapper;
+
 import java.util.List;
 
 /**

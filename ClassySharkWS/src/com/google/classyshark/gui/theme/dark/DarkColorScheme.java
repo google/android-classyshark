@@ -1,6 +1,6 @@
 package com.google.classyshark.gui.theme.dark;
 
-import java.awt.*;
+import java.awt.Color;
 
 class DarkColorScheme {
 

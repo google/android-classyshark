@@ -20,7 +20,10 @@ import com.google.classyshark.gui.GuiMode;
 import com.google.classyshark.gui.panel.io.RecentArchivesConfig;
 import com.google.classyshark.gui.theme.Theme;
 
-import javax.swing.*;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import java.awt.event.ActionEvent;

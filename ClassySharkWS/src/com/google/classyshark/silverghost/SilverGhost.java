@@ -18,10 +18,11 @@ package com.google.classyshark.silverghost;
 
 import com.google.classyshark.gui.panel.reducer.Reducer;
 import com.google.classyshark.silverghost.contentreader.ContentReader;
-import com.google.classyshark.silverghost.tokensmapper.ProguardMapper;
 import com.google.classyshark.silverghost.tokensmapper.MappingReader;
+import com.google.classyshark.silverghost.tokensmapper.ProguardMapper;
 import com.google.classyshark.silverghost.translator.Translator;
 import com.google.classyshark.silverghost.translator.TranslatorFactory;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.List;

@@ -20,6 +20,7 @@ import com.google.classyshark.silverghost.contentreader.BinaryContentReader;
 import com.google.classyshark.silverghost.contentreader.ContentReader;
 import com.google.classyshark.silverghost.contentreader.dex.DexReader;
 import com.google.classyshark.silverghost.io.SherlockHash;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
@@ -42,7 +43,7 @@ public class ApkReader implements BinaryContentReader {
         readClassNamesFromMultidex(binaryArchive, allClassNames, components);
 
         // TODO add check for manifest
-        allClassNames.add(6, "AndroidManifest.xml");
+//        allClassNames.add(6, "AndroidManifest.xml");
     }
 
     @Override
@@ -72,6 +73,10 @@ public class ApkReader implements BinaryContentReader {
 
                 if (zipEntry == null) {
                     break;
+                }
+
+                if (zipEntry.getName().endsWith(".xml")) {
+                    classNames.add(zipEntry.getName());
                 }
 
                 if (zipEntry.getName().endsWith(".dex")) {

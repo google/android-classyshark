@@ -20,6 +20,7 @@ import com.google.common.io.LittleEndianDataInputStream;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInput;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -36,16 +37,47 @@ import java.util.List;
  * It contains minor fixes to optionally support CDATA elements and namespaces.
  */
 public class XmlDecompressor {
+    //Identifiers for XML Chunk Types
     private static final int PACKED_XML_IDENTIFIER = 0x00080003;
     private static final int END_DOC_TAG = 0x00100101;
     private static final int START_ELEMENT_TAG = 0x00100102;
     private static final int END_ELEMENT_TAG = 0x00100103;
     private static final int CDATA_TAG = 0x00100104;
     private static final int ATTRS_MARKER = 0x00140014;
+
+    //Resource Types
+    private static final int RES_TYPE_NULL = 0x00;
+    private static final int RES_TYPE_REFERENCE = 0x01;
+    private static final int RES_TYPE_ATTRIBUTE = 0x02;
+    private static final int RES_TYPE_STRING = 0x03;
+    private static final int RES_TYPE_FLOAT = 0x04;
+    private static final int RES_TYPE_DIMENSION = 0x05;
+    private static final int RES_TYPE_FRACTION = 0x06;
+    private static final int RES_TYPE_DYNAMIC_REFERENCE = 0x07;
+    private static final int RES_TYPE_INT_DEC = 0x10;
+    private static final int RES_TYPE_INT_HEX = 0x11;
+    private static final int RES_TYPE_INT_BOOLEAN = 0x12;
+
+    //Complex Types
+    private static final int COMPLEX_UNIT_SHIFT = 0;
+    private static final int COMPLEX_UNIT_MASK = 0xf;
+    private static final int COMPLEX_MANTISSA_SHIFT = 8;
+    private static final int COMPLEX_MANTISSA_MASK = 0xffffff;
+    private static final int COMPLEX_RADIX_SHIFT = 4;
+    private static final int COMPLEX_RADIX_MASK = 0x3;
+    private static final int COMPLEX_UNIT_FRACTION = 0;
+    private static final int COMPLEX_UNIT_FRACTION_PARENT = 1;
+    private static final float MANTISSA_MULT = 1.0f / (1 << COMPLEX_MANTISSA_SHIFT);
+    private static final  float RADIX_MULTS[] = {
+            1.0f * MANTISSA_MULT, 1.0f / (1 << 7)*MANTISSA_MULT,
+            1.0f / (1 << 15) * MANTISSA_MULT, 1.0f / (1 << 23)*MANTISSA_MULT
+    };
+
+    //Resource Values
     private static final int RES_VALUE_TRUE = 0xffffffff;
     private static final int RES_VALUE_FALSE = 0x00000000;
-    private static final int RES_REF_MARKER = 0x7f000000;
 
+    //Char array used to fill spaces.
     private static char[] SPACE_FILL = new char[80];
 
     private static final int IDENT_SIZE = 2;
@@ -189,7 +221,8 @@ public class XmlDecompressor {
             int attributeNamespaceIndex = dis.readInt();
             int attributeNameIndex = dis.readInt();
             int attributeValueIndex = dis.readInt();
-            dis.skipBytes(4);//int attributeFlags = dis.readInt();
+            dis.skipBytes(3);
+            int attrValueType = dis.readByte();
             int attributeResourceId = dis.readInt();
             if (appendNamespaces && attributeNamespaceIndex >= 0) {
                 sb.append(strings.get(attributeNamespaceIndex)).append(":");
@@ -197,18 +230,47 @@ public class XmlDecompressor {
 
             String attributeName = strings.get(attributeNameIndex);
             String attributeValue;
-            if (attributeValueIndex == -1) {
-                if (attributeResourceId == RES_VALUE_TRUE) {
-                    attributeValue = "true";
-                } else if (attributeResourceId == RES_VALUE_FALSE) {
-                    attributeValue = "false";
-                } else if (attributeResourceId < RES_REF_MARKER) {
-                    attributeValue = String.valueOf(attributeResourceId);
-                } else {
+            switch (attrValueType) {
+                case RES_TYPE_NULL:
+                    attributeValue = attributeResourceId == 0 ? "<undefined>" : "<empty>";
+                    break;
+                case RES_TYPE_REFERENCE:
                     attributeValue = String.format("@res/0x%08X", attributeResourceId);
-                }
-            } else  {
-                attributeValue = strings.get(attributeValueIndex);
+                    break;
+                case RES_TYPE_ATTRIBUTE:
+                    attributeValue = String.format("@attr/0x%08X", attributeResourceId);
+                    break;
+                case RES_TYPE_STRING:
+                    attributeValue = strings.get(attributeValueIndex);
+                    break;
+                case RES_TYPE_FLOAT:
+                    attributeValue = Float.toString(Float.intBitsToFloat(attributeResourceId));
+                    break;
+                case RES_TYPE_DIMENSION:
+                    float value = resValue(attributeResourceId);
+                    String type = getDimensionType(attributeResourceId);
+                    attributeValue = value + type;
+                    break;
+                case RES_TYPE_FRACTION:
+                    value = resValue(attributeResourceId);
+                    type = getFractionType(attributeResourceId);
+                    attributeValue = value + type;
+                    break;
+                case RES_TYPE_DYNAMIC_REFERENCE:
+                    attributeValue = String.format("@dyn/0x%08X", attributeResourceId);
+                    break;
+                case RES_TYPE_INT_DEC:
+                    attributeValue = Integer.toString(attributeResourceId);
+                    break;
+                case RES_TYPE_INT_HEX:
+                    attributeValue = String.format("0x%08X", attributeResourceId);
+                    break;
+                case RES_TYPE_INT_BOOLEAN:
+                    attributeValue = attributeResourceId == RES_VALUE_TRUE ? "true" : "false";
+                    break;
+                default:
+                    attributeValue = String.format("0x%08X", attributeResourceId);
+
             }
             sb.append(attributeName).append("='").append(attributeValue).append("'");
         }
@@ -216,8 +278,23 @@ public class XmlDecompressor {
 
     private List<String> parseStrings(DataInput dis) throws IOException {
         int numStrings = dis.readInt();
+        int numStyles = dis.readInt();
+        int flags = dis.readInt();
+
+        boolean isUtf8Encoded = (flags & 0x100) > 0 ;
+        int glyphSize;
+        String encoding;
+
+        if (isUtf8Encoded) {
+            glyphSize = 1;
+            encoding = "UTF-8";
+        } else {
+            glyphSize = 2;
+            encoding = "UTF-16LE";
+        }
+
         //skipping to the beggining of stringtable data
-        dis.skipBytes(16);
+        dis.skipBytes(8);
 
         //Skipping the string offsets.
         dis.skipBytes(Integer.SIZE / 8 * numStrings);
@@ -226,22 +303,69 @@ public class XmlDecompressor {
         int bytesRead = 0;
         byte[] buffer = new byte[1024];
         for (int i = 0; i < numStrings; i++) {
-            int len = dis.readUnsignedShort();
-            int bytelen = len * 2;
-            
+            int len;
+            if (isUtf8Encoded) {
+                dis.skipBytes(1);
+                len = dis.readUnsignedByte();
+            } else {
+                len = dis.readUnsignedShort();
+            }
+
+            int bytelen = len * glyphSize;
             //String larger than existing buffer. Increase buffer.
             if (bytelen > buffer.length) {
                 buffer = new byte[bytelen * 2];
             }
 
             dis.readFully(buffer, 0, bytelen);
-            packedStrings.add(new String(buffer, 0, bytelen, "UTF-16LE"));
-            dis.skipBytes(2);
-            bytesRead += 2 + bytelen + 2;
+            packedStrings.add(new String(buffer, 0, bytelen, encoding));
+            dis.skipBytes(glyphSize);//The string ends with \0. Skip it.
+            bytesRead += 2 + bytelen + glyphSize;
         }
         //Align to a multiple of 4 to continue reading data.
         dis.skipBytes(bytesRead % 4);
         return packedStrings;
     }
 
+    private static String getDimensionType(int data) {
+        switch ((data >> COMPLEX_UNIT_SHIFT) & COMPLEX_UNIT_MASK) {
+            case 0: return "px";
+            case 1: return "dp";
+            case 2: return "sp";
+            case 3: return "pt";
+            case 4: return "in";
+            case 5: return "mm";
+            default: return " (unknown unit)";
+        }
+    }
+
+    private static String getFractionType(int data) {
+        switch ((data >> COMPLEX_UNIT_SHIFT) & COMPLEX_UNIT_MASK) {
+            case COMPLEX_UNIT_FRACTION:
+                return "%%";
+            case COMPLEX_UNIT_FRACTION_PARENT:
+                return "%%p";
+            default:
+                return "(unknown unit)";
+        }
+    }
+
+    private static float resValue(int data) {
+        float value = (data&(COMPLEX_MANTISSA_MASK
+                <<COMPLEX_MANTISSA_SHIFT))
+                * RADIX_MULTS[(data>>COMPLEX_RADIX_SHIFT)
+                & COMPLEX_RADIX_MASK];
+        return value;
+    }
+
+    public static void main(String[] args) {
+//        String fileName = "/Users/andreban/Desktop/map_pin.xml";
+        String fileName = "/Users/andreban/Desktop/abc_fade_in.xml";
+        try (FileInputStream fout = new FileInputStream(fileName)){
+            String xml = new XmlDecompressor().decompressXml(fout);
+            System.out.println(xml);
+        } catch (IOException ex) {
+            ex.printStackTrace(System.err);
+        }
+    }
 }
