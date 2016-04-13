@@ -17,13 +17,17 @@
 package com.google.classyshark.silverghost.exporter;
 
 import com.google.classyshark.silverghost.contentreader.ContentReader;
+import com.google.classyshark.silverghost.methodscounter.ClassNode;
+import com.google.classyshark.silverghost.methodscounter.RootBuilder;
 import com.google.classyshark.silverghost.translator.Translator;
 import com.google.classyshark.silverghost.translator.TranslatorFactory;
 import com.google.classyshark.silverghost.translator.dex.DexMethodsDumper;
 import com.google.classyshark.silverghost.translator.dex.DexStringsDumper;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
@@ -42,11 +46,25 @@ public class Exporter {
         Exporter.writeClassNames(allClasses);
         Exporter.writeMethods(archive);
         Exporter.writeStringTables(archive);
+        Exporter.writeMethodCounts(archive);
     }
 
     public static void writeCurrentClass(Translator translator)
             throws IOException {
         writeString(translator.getClassName() + "_dump", translator.toString());
+    }
+
+    public static void writeMethodCounts(File archive) {
+        File outputFile = new File("method_counts.txt");
+        System.out.println(outputFile.toString());
+        try (PrintWriter pw = new PrintWriter(outputFile)){
+            RootBuilder rootBuilder = new RootBuilder();
+            ClassNode classNode = rootBuilder.fillClassesWithMethods(archive);
+            MethodCountExporter methodCountExporter = new TreeMethodCountExporter(pw);
+            methodCountExporter.exportMethodCounts(classNode);
+        } catch (IOException ex) {
+            ex.printStackTrace(System.err);
+        }
     }
 
     public static void writeManifest(File apk) throws IOException {
