@@ -4,8 +4,12 @@ import com.google.classyshark.gui.GuiMode;
 import com.google.classyshark.gui.theme.Theme;
 import com.google.classyshark.gui.theme.ThemeManager;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import java.awt.BorderLayout;
+import java.awt.HeadlessException;
 
 public class SettingsFrame extends JFrame{
     private final Theme theme = GuiMode.getTheme();

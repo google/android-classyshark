@@ -19,11 +19,10 @@ package com.google.classyshark.silverghost.contentreader.apk;
 import com.google.classyshark.silverghost.contentreader.BinaryContentReader;
 import com.google.classyshark.silverghost.contentreader.ContentReader;
 import com.google.classyshark.silverghost.contentreader.dex.DexReader;
-import com.google.classyshark.silverghost.translator.xml.XmlDecompressor;
+import com.google.classyshark.silverghost.io.SherlockHash;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -61,16 +60,16 @@ public class ApkReader implements BinaryContentReader {
     private static void readClassNamesFromMultidex(File binaryArchiveFile,
                                                    List<String> classNames,
                                                    List<ContentReader.Component> components) {
-        ZipInputStream zipFile;
+        ZipInputStream zipInputStream;
         try {
-            zipFile = new ZipInputStream(new FileInputStream(
+            zipInputStream = new ZipInputStream(new FileInputStream(
                     binaryArchiveFile));
 
             ZipEntry zipEntry;
 
             int dexIndex = 0;
             while (true) {
-                zipEntry = zipFile.getNextEntry();
+                zipEntry = zipInputStream.getNextEntry();
 
                 if (zipEntry == null) {
                     break;
@@ -81,24 +80,19 @@ public class ApkReader implements BinaryContentReader {
                 }
 
                 if (zipEntry.getName().endsWith(".dex")) {
-
-                    File file = File.createTempFile("classes" + dexIndex, "dex");
-                    file.deleteOnExit();
-
-                    FileOutputStream fos =
-                            new FileOutputStream(file);
-                    byte[] bytes = new byte[1024];
-                    int length;
-                    while ((length = zipFile.read(bytes)) >= 0) {
-                        fos.write(bytes, 0, length);
+                    String fName = "classes";
+                    if(dexIndex > 0) {
+                        fName = fName + dexIndex;
                     }
+                    String ext = "dex";
 
-                    fos.close();
+                    File file = SherlockHash.INSTANCE.getFileFromZipStream(binaryArchiveFile,
+                            zipInputStream, fName, ext);
 
                     List<String> classesAtDex =
                             DexReader.readClassNamesFromDex(file);
 
-                    classNames.add("classes" + dexIndex + ".dex");
+                    classNames.add(fName + ".dex");
                     classNames.addAll(classesAtDex);
                     dexIndex++;
                 }
@@ -110,18 +104,11 @@ public class ApkReader implements BinaryContentReader {
 
                 // Dynamic dex loading
                 if (zipEntry.getName().endsWith("jar") || zipEntry.getName().endsWith("zip")) {
-                    File innerZip = File.createTempFile("inner_zip", "zip");
-                    innerZip.deleteOnExit();
+                    String fName = "inner_zip";
+                    String ext = "zip";
 
-                    FileOutputStream fos =
-                            new FileOutputStream(innerZip);
-                    byte[] bytes = new byte[1024];
-                    int length;
-                    while ((length = zipFile.read(bytes)) >= 0) {
-                        fos.write(bytes, 0, length);
-                    }
-
-                    fos.close();
+                    File innerZip = SherlockHash.INSTANCE.getFileFromZipStream(binaryArchiveFile,
+                            zipInputStream, fName, ext);
 
                     // so far we have a zip file
                     ZipInputStream fromInnerZip = new ZipInputStream(new FileInputStream(
@@ -137,17 +124,11 @@ public class ApkReader implements BinaryContentReader {
                         }
 
                         if (innerZipEntry.getName().endsWith(".dex")) {
-                            File  tempDexFile = File.createTempFile("inner_zip_classes" + dexIndex, "dex");
-                            tempDexFile.deleteOnExit();
-
-                            FileOutputStream fos1 = new FileOutputStream(tempDexFile);
-                            byte[] bytes1 = new byte[1024];
-
-                            while ((length = fromInnerZip.read(bytes1)) >= 0) {
-                                fos1.write(bytes1, 0, length);
-                            }
-
-                            fos1.close();
+                            fName = "inner_zip_classes" + dexIndex;
+                            ext = "dex";
+                            File tempDexFile =
+                                    SherlockHash.INSTANCE.getFileFromZipStream(binaryArchiveFile,
+                                            fromInnerZip, fName, ext);
 
                             List<String> classesAtDex =
                                     DexReader.readClassNamesFromDex(tempDexFile);
@@ -160,7 +141,7 @@ public class ApkReader implements BinaryContentReader {
                     }
                 }
             }
-            zipFile.close();
+            zipInputStream.close();
 
         } catch (Exception e) {
             e.printStackTrace();

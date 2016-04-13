@@ -19,15 +19,9 @@ package com.google.classyshark.gui.panel.tree;
 import com.google.classyshark.gui.GuiMode;
 import com.google.classyshark.gui.panel.FileTransferHandler;
 import com.google.classyshark.gui.panel.ViewerController;
-import com.google.classyshark.silverghost.contentreader.ContentReader;
 import com.google.classyshark.gui.panel.reducer.Reducer;
-import java.awt.Component;
-import java.awt.Font;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import com.google.classyshark.silverghost.contentreader.ContentReader;
+
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
@@ -38,6 +32,13 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreeSelectionModel;
+import java.awt.Component;
+import java.awt.Font;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 public class FilesTree {
     private final ViewerController viewerController;

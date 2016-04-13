@@ -3,7 +3,8 @@ package com.google.classyshark.gui.settings;
 import com.google.classyshark.gui.theme.Theme;
 import com.google.classyshark.gui.theme.ThemeManager;
 
-import javax.swing.*;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 

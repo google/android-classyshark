@@ -18,6 +18,7 @@ package com.google.classyshark.silverghost.translator.xml;
 
 import com.google.classyshark.silverghost.tokensmapper.ProguardMapper;
 import com.google.classyshark.silverghost.translator.Translator;
+
 import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
 import java.io.File;

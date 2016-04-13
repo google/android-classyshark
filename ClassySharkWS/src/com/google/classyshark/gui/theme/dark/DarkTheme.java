@@ -2,11 +2,32 @@ package com.google.classyshark.gui.theme.dark;
 
 import com.google.classyshark.gui.theme.Theme;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
+import javax.swing.JTextField;
+import javax.swing.JTree;
+import javax.swing.UIManager;
+import java.awt.Color;
+import java.awt.Component;
 
-import static com.google.classyshark.gui.theme.dark.DarkColorScheme.*;
-import static com.google.classyshark.gui.theme.dark.DarkIconScheme.*;
+import static com.google.classyshark.gui.theme.dark.DarkColorScheme.ANNOTATIONS;
+import static com.google.classyshark.gui.theme.dark.DarkColorScheme.BACKGROUND;
+import static com.google.classyshark.gui.theme.dark.DarkColorScheme.BACKGROUND_LIGHT;
+import static com.google.classyshark.gui.theme.dark.DarkColorScheme.DEFAULT;
+import static com.google.classyshark.gui.theme.dark.DarkColorScheme.IDENTIFIERS;
+import static com.google.classyshark.gui.theme.dark.DarkColorScheme.KEYWORDS;
+import static com.google.classyshark.gui.theme.dark.DarkColorScheme.NAMES;
+import static com.google.classyshark.gui.theme.dark.DarkColorScheme.SELECTION_BG;
+import static com.google.classyshark.gui.theme.dark.DarkIconScheme.BACK_ICON_PATH;
+import static com.google.classyshark.gui.theme.dark.DarkIconScheme.EXPORT_ICON_PATH;
+import static com.google.classyshark.gui.theme.dark.DarkIconScheme.MAPPING_ICON_PATH;
+import static com.google.classyshark.gui.theme.dark.DarkIconScheme.NEXT_ICON_PATH;
+import static com.google.classyshark.gui.theme.dark.DarkIconScheme.OPEN_ICON_PATH;
+import static com.google.classyshark.gui.theme.dark.DarkIconScheme.RECENT_ICON_PATH;
+import static com.google.classyshark.gui.theme.dark.DarkIconScheme.SETTINGS_ICON_PATH;
+import static com.google.classyshark.gui.theme.dark.DarkIconScheme.TOGGLE_ICON_PATH;
 
 public class DarkTheme implements Theme{
 
