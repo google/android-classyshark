@@ -20,13 +20,9 @@ import com.google.common.io.LittleEndianDataInputStream;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInput;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -39,25 +35,15 @@ import java.util.List;
  * http://stackoverflow.com/a/4761689/496992
  *
  * It contains minor fixes to optionally support CDATA elements and namespaces.
- *
- * Improvements made using code android code as reference:
- *  - https://android.googlesource.com/platform/frameworks/base/+/master/include/androidfw/
- *  ResourceTypes.h
- *  - https://android.googlesource.com/platform/frameworks/base/+/master/libs/androidfw/
- *  ResourceTypes.cpp
  */
 public class XmlDecompressor {
     //Identifiers for XML Chunk Types
     private static final int PACKED_XML_IDENTIFIER = 0x00080003;
-    private static final int END_DOC_TAG = 0x0101;
-    private static final int START_ELEMENT_TAG = 0x0102;
-    private static final int END_ELEMENT_TAG = 0x0103;
-    private static final int CDATA_TAG = 0x0104;
+    private static final int END_DOC_TAG = 0x00100101;
+    private static final int START_ELEMENT_TAG = 0x00100102;
+    private static final int END_ELEMENT_TAG = 0x00100103;
+    private static final int CDATA_TAG = 0x00100104;
     private static final int ATTRS_MARKER = 0x00140014;
-
-    private static final int RES_XML_RESOURCE_MAP_TYPE = 0x180;
-    private static final int RES_XML_FIRST_CHUNK_TYPE = 0x100;
-    private static final int REX_XML_STRING_TABLE = 0x0001;
 
     //Resource Types
     private static final int RES_TYPE_NULL = 0x00;
@@ -92,20 +78,18 @@ public class XmlDecompressor {
     private static final int RES_VALUE_FALSE = 0x00000000;
 
     //Char array used to fill spaces.
-    private static char[] SPACE_FILL = new char[160];
+    private static char[] SPACE_FILL = new char[80];
 
     private static final int IDENT_SIZE = 2;
     private static final int ATTR_IDENT_SIZE = 4;
 
     private static final String ERROR_INVALID_MAGIC_NUMBER =
             "Invalid packed XML identifier. Expecting 0x%08X, found 0x%08X\n";
-    private static final String ERROR_INVALID_STRING_TABLE_ID =
-            "Invalid String table identifier. Expecting 0x%08X, found 0x%08X\n";
-    private static final String ERROR_UNKNOWN_TAG = "Unknown Tag 0x%04X\n";
+    private static final String ERROR_UNKNOWN_TAG = "Unknown Tag 0x%08X\n";
     private static final String ERROR_ATTRIBUTE_MARKER =  "Expecting %08X, Found %08X\n";
 
     private boolean appendNamespaces = false;
-    private boolean appendCData = true;
+    private boolean appendCData = false;
 
     static {
         Arrays.fill(SPACE_FILL, ' ');
@@ -136,23 +120,18 @@ public class XmlDecompressor {
                                 PACKED_XML_IDENTIFIER,
                                 fileMarker));
             }
-            dis.skipBytes(4);
+            dis.skipBytes(12);
             List<String> packedStrings = parseStrings(dis);
 
-            int ident = 0;
-            int tag = dis.readShort();
+            //Unknown content after the strings. Seeking for a start tag
+            int tag;
             do {
-                int headerSize = dis.readShort();
-                int chunkSize = dis.readInt();
+                tag = dis.readInt();
+            } while (tag != START_ELEMENT_TAG);
+
+            int ident = 0;
+            do {
                 switch (tag) {
-                    case RES_XML_FIRST_CHUNK_TYPE: {
-                        dis.skipBytes(chunkSize - 8);
-                        break;
-                    }
-                    case RES_XML_RESOURCE_MAP_TYPE: {
-                        dis.skipBytes(chunkSize - 8);
-                        break;
-                    }
                     case START_ELEMENT_TAG: {
                         parseStartTag(result, dis, packedStrings, ident);
                         ident++;
@@ -170,7 +149,7 @@ public class XmlDecompressor {
                     default:
                         System.err.println(String.format(ERROR_UNKNOWN_TAG, tag));
                 }
-                tag = dis.readShort();
+                tag = dis.readInt();
             } while (tag != END_DOC_TAG);
             return result.toString();
         }
@@ -179,18 +158,14 @@ public class XmlDecompressor {
     private void parseCDataTag(StringBuilder sb, DataInput dis, List<String> strings, int ident)
             throws IOException {
         //Skipping 3 unknowns integers:
-        dis.skipBytes(8);
+        dis.skipBytes(12);
         int nameStringIndex = dis.readInt();
         //Skipping more 2 unknown integers.
         dis.skipBytes(8);
 
         if (appendCData) {
             sb.append(SPACE_FILL, 0, ident * IDENT_SIZE);
-            sb.append("<![CDATA[\n");
-            sb.append(SPACE_FILL, 0, ident * IDENT_SIZE + 1);
             sb.append(strings.get(nameStringIndex));
-            sb.append(SPACE_FILL, 0, ident * IDENT_SIZE);
-            sb.append("]]>\n");
         }
     }
 
@@ -203,7 +178,7 @@ public class XmlDecompressor {
         // 1 - a flag?, like 38000000
         // 2 - Line of where this tag appeared in the original source file
         // 3 - Unknown: always FFFFFFFF?
-        dis.skipBytes(8);
+        dis.skipBytes(12);
         int namespaceStringIndex = dis.readInt();
         if (appendNamespaces && namespaceStringIndex >= 0) {
             sb.append(strings.get(namespaceStringIndex)).append(":");
@@ -220,7 +195,7 @@ public class XmlDecompressor {
         // 1 - a flag?, like 38000000
         // 2 - Line of where this tag appeared in the original source file
         // 3 - Unknown: always FFFFFFFF?
-        dis.skipBytes(8);
+        dis.skipBytes(12);
         int namespaceStringIndex = dis.readInt();
         if (appendNamespaces && namespaceStringIndex >= 0) {
             sb.append(strings.get(namespaceStringIndex)).append(":");
@@ -254,7 +229,6 @@ public class XmlDecompressor {
             }
 
             String attributeName = strings.get(attributeNameIndex);
-            if (attributeName.isEmpty()) attributeName="unknown";
             String attributeValue;
             switch (attrValueType) {
                 case RES_TYPE_NULL:
@@ -303,24 +277,14 @@ public class XmlDecompressor {
     }
 
     private List<String> parseStrings(DataInput dis) throws IOException {
-        int stringMarker = dis.readShort();
-        if (stringMarker != REX_XML_STRING_TABLE) {
-            throw new IOException(
-                    String.format(ERROR_INVALID_MAGIC_NUMBER,
-                            PACKED_XML_IDENTIFIER,
-                            stringMarker));
-        }
-        int headerSize = dis.readShort();
-        int chunkSize = dis.readInt();
         int numStrings = dis.readInt();
         int numStyles = dis.readInt();
         int flags = dis.readInt();
-        int stringStart = dis.readInt();
-        int stylesStart = dis.readInt();
 
         boolean isUtf8Encoded = (flags & 0x100) > 0 ;
         int glyphSize;
         String encoding;
+
         if (isUtf8Encoded) {
             glyphSize = 1;
             encoding = "UTF-8";
@@ -329,44 +293,37 @@ public class XmlDecompressor {
             encoding = "UTF-16LE";
         }
 
-        return parseUsingByteBuffer(chunkSize, headerSize, numStrings, numStyles, isUtf8Encoded,
-                glyphSize, encoding, dis);
+        //skipping to the beggining of stringtable data
+        dis.skipBytes(8);
 
-    }
+        //Skipping the string offsets.
+        dis.skipBytes(Integer.SIZE / 8 * numStrings);
 
-    private static List<String> parseUsingByteBuffer(int chunkSize, int headerSize, int numStrings,
-            int numStyles, boolean isUtf8Encoded, int glyphSize, String encoding, DataInput dis)
-            throws IOException{
-        int dataSize = chunkSize - headerSize;
-        byte[] buffer = new byte[dataSize];
-        ByteBuffer byteBuffer = ByteBuffer.allocate(dataSize);
-        byteBuffer.order(ByteOrder.LITTLE_ENDIAN);
-        dis.readFully(buffer);
-        byteBuffer.put(buffer);
-        byteBuffer.rewind();
-
-        //Read the string offsets
         List<String> packedStrings = new ArrayList<>(numStrings);
-        int[] offsets = new int[numStrings];
+        int bytesRead = 0;
+        byte[] buffer = new byte[1024];
         for (int i = 0; i < numStrings; i++) {
-            offsets[i] = byteBuffer.getInt();
-        }
-
-        //Read the string from each offset
-        int stringsStart = byteBuffer.position();
-        for (int i = 0; i < numStrings; i++) {
-            byteBuffer.position(stringsStart + offsets[i]);
             int len;
             if (isUtf8Encoded) {
-                len = byteBuffer.get();
-                byteBuffer.get();
+                dis.skipBytes(1);
+                len = dis.readUnsignedByte();
             } else {
-                len = byteBuffer.getShort();
+                len = dis.readUnsignedShort();
             }
+
             int bytelen = len * glyphSize;
-            String str = new String(buffer, stringsStart + offsets[i] + 2, bytelen, encoding);
-            packedStrings.add(str);
+            //String larger than existing buffer. Increase buffer.
+            if (bytelen > buffer.length) {
+                buffer = new byte[bytelen * 2];
+            }
+
+            dis.readFully(buffer, 0, bytelen);
+            packedStrings.add(new String(buffer, 0, bytelen, encoding));
+            dis.skipBytes(glyphSize);//The string ends with \0. Skip it.
+            bytesRead += 2 + bytelen + glyphSize;
         }
+        //Align to a multiple of 4 to continue reading data.
+        dis.skipBytes(bytesRead % 4);
         return packedStrings;
     }
 
@@ -399,5 +356,16 @@ public class XmlDecompressor {
                 * RADIX_MULTS[(data>>COMPLEX_RADIX_SHIFT)
                 & COMPLEX_RADIX_MASK];
         return value;
+    }
+
+    public static void main(String[] args) {
+//        String fileName = "/Users/andreban/Desktop/map_pin.xml";
+        String fileName = "/Users/andreban/Desktop/abc_fade_in.xml";
+        try (FileInputStream fout = new FileInputStream(fileName)){
+            String xml = new XmlDecompressor().decompressXml(fout);
+            System.out.println(xml);
+        } catch (IOException ex) {
+            ex.printStackTrace(System.err);
+        }
     }
 }
