@@ -1,4 +1,4 @@
-package com.google.classyshark.silverghost.translator.java.proguard;
+package com.google.classyshark.silverghost.tokensmapper;
 
 import java.io.File;
 
@@ -6,8 +6,6 @@ public class Driver {
     public static void main(String[] args) throws Exception {
 
         MappingReader mr = new MappingReader(new File("/Users/bfarber/Desktop/mapping.txt"));
-        mr.pump(new ClassySharkMethodProcessor());
-
-
+        mr.pump(new ClassySharkMappingProcessor());
     }
 }

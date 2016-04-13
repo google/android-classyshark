@@ -19,6 +19,7 @@ package com.google.classyshark.gui.panel;
 import com.google.classyshark.gui.panel.chart.RingChartPanel;
 import com.google.classyshark.gui.panel.displayarea.DisplayArea;
 import com.google.classyshark.gui.panel.io.CurrentFolderConfig;
+import com.google.classyshark.silverghost.SilverGhost;
 import com.google.classyshark.silverghost.exporter.Exporter;
 import com.google.classyshark.gui.panel.io.FileChooserUtils;
 import com.google.classyshark.gui.panel.io.RecentArchivesConfig;
@@ -31,7 +32,6 @@ import com.google.classyshark.gui.panel.tree.FilesTree;
 import com.google.classyshark.silverghost.contentreader.ContentReader;
 import com.google.classyshark.silverghost.methodscounter.ClassNode;
 import com.google.classyshark.silverghost.translator.Translator;
-import com.google.classyshark.silverghost.translator.TranslatorFactory;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -71,22 +71,20 @@ public class ClassySharkPanel extends JPanel
     private int dividerLocation = 0;
     private DisplayArea displayArea;
     private FilesTree filesTree;
-
-    private Reducer reducer;
-    private Translator translator;
-    private boolean isDataLoaded = false;
-    private File binaryArchive;
-    private List<String> allClassNamesInArchive;
     private RingChartPanel ringChartPanel;
+
+    private SilverGhost silverGhost = new SilverGhost();
 
     public ClassySharkPanel(JFrame frame, File archive, String fullClassName) {
         this(frame);
-        updateUiAfterArchiveReadAndLoadClass(archive, fullClassName);
+        silverGhost.setBinaryArchive(archive);
+        updateUiAfterArchiveReadAndLoadClass(fullClassName);
     }
 
     public ClassySharkPanel(JFrame frame, File archive) {
         this(frame);
-        displayArchive(archive);
+        silverGhost.setBinaryArchive(archive);
+        displayArchive(silverGhost.getBinaryArchive());
     }
 
     public ClassySharkPanel(JFrame frame) {
@@ -112,26 +110,27 @@ public class ClassySharkPanel extends JPanel
     }
 
     @Override
-    public void onSelectedTypeClassFromMouseClick(String selectedClass) {
-        for (String clazz : translator.getDependencies()) {
-            if (clazz.contains(selectedClass)) {
-                onSelectedImportFromMouseClick(clazz);
-                return;
-            }
-        }
-
-        for (String clazz : reducer.getAllClassNames()) {
-            if (clazz.contains(selectedClass)) {
-                onSelectedImportFromMouseClick(clazz);
-                return;
-            }
+    public void onSelectedImportFromMouseClick(String className) {
+        if (silverGhost.getAllClassNames().contains(className)) {
+            onSelectedClassName(className);
         }
     }
 
     @Override
-    public void onSelectedImportFromMouseClick(String className) {
-        if (reducer.getAllClassNames().contains(className)) {
-            onSelectedClassName(className);
+    public void onSelectedTypeClassFromMouseClick(String selectedClass) {
+        // optimization if import clicked
+        for (String clazz : silverGhost.getImportsForCurrentClass()) {
+            if (clazz.contains(selectedClass)) {
+                onSelectedImportFromMouseClick(clazz);
+                return;
+            }
+        }
+
+        for (String clazz : silverGhost.getAllClassNames()) {
+            if (clazz.contains(selectedClass)) {
+                onSelectedClassName(selectedClass);
+                return;
+            }
         }
     }
 
@@ -170,9 +169,9 @@ public class ClassySharkPanel extends JPanel
 
     @Override
     public void onGoBackPressed() {
-        displayArea.displayAllClassesNames(allClassNamesInArchive);
+        displayArea.displayAllClassesNames(silverGhost.getAllClassNames());
         toolbar.setText("");
-        reducer.reduce("");
+        silverGhost.initClassNameFiltering();
     }
 
     @Override
@@ -192,8 +191,8 @@ public class ClassySharkPanel extends JPanel
         SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
             @Override
             protected Void doInBackground() throws Exception {
-                Exporter.writeCurrentClass(translator);
-                Exporter.writeArchive(binaryArchive, reducer.getAllClassNames());
+                Exporter.writeCurrentClass(silverGhost.getCurrentClassTranslator());
+                Exporter.writeArchive(silverGhost.getBinaryArchive(), silverGhost.getAllClassNames());
                 return null;
             }
 
@@ -217,15 +216,16 @@ public class ClassySharkPanel extends JPanel
 
     @Override
     public void displayArchive(File binaryArchive) {
+        silverGhost.setBinaryArchive(binaryArchive);
+
         if (parentFrame != null) {
-            parentFrame.setTitle(binaryArchive.getName());
+            parentFrame.setTitle(silverGhost.getBinaryArchive().getName());
         }
 
-        loadAndFillDisplayArea(binaryArchive, null);
-        isDataLoaded = true;
+        readArchiveAndFillDisplayArea(null);
         toolbar.activateNavigationButtons();
         filesTree.setVisibleRoot();
-        methodsCountPanel.loadFile(binaryArchive);
+        methodsCountPanel.loadFile(silverGhost.getBinaryArchive());
     }
 
     @Override
@@ -239,7 +239,7 @@ public class ClassySharkPanel extends JPanel
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if (!isDataLoaded) {
+        if (!silverGhost.isDataLoaded) {
             openArchive();
             return;
         }
@@ -330,30 +330,29 @@ public class ClassySharkPanel extends JPanel
         add(jSplitPane, BorderLayout.CENTER);
     }
 
-    private void updateUiAfterArchiveReadAndLoadClass(File binaryArchive, String className) {
+    private void updateUiAfterArchiveReadAndLoadClass(String className) {
         if (parentFrame != null) {
-            parentFrame.setTitle(binaryArchive.getName());
+            parentFrame.setTitle(silverGhost.getBinaryArchive().getName());
         }
 
-        loadAndFillDisplayArea(binaryArchive, className);
-        isDataLoaded = true;
+        readArchiveAndFillDisplayArea(className);
         toolbar.activateNavigationButtons();
         filesTree.setVisibleRoot();
-        methodsCountPanel.loadFile(binaryArchive);
+        methodsCountPanel.loadFile(silverGhost.getBinaryArchive());
     }
 
-    private void loadAndFillDisplayArea(final File binaryArchive,
-                                        final String className) {
-        this.binaryArchive = binaryArchive;
-        final ContentReader loader = new ContentReader(this.binaryArchive);
+    private void readArchiveAndFillDisplayArea(final String className) {
+
+        // TODO stopped here - move content reader to SilverGhost.java
+        final ContentReader contentReader = new ContentReader(silverGhost.getBinaryArchive());
 
         SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
             @Override
             protected Void doInBackground() throws Exception {
                 long start = System.currentTimeMillis();
-                loader.load();
-                allClassNamesInArchive = loader.getAllClassNames();
-                reducer = new Reducer(allClassNamesInArchive);
+                contentReader.load();
+                silverGhost.allClassNamesInArchive = contentReader.getAllClassNames();
+                silverGhost.reducer = new Reducer(silverGhost.allClassNamesInArchive);
                 System.out.println("Archive Reading "
                         + (System.currentTimeMillis() - start) + " ms ");
                 return null;
@@ -361,29 +360,23 @@ public class ClassySharkPanel extends JPanel
 
             @Override
             protected void done() {
-                if (isArchiveError()) {
-                    filesTree.fillArchive(new File("ERROR"), new ArrayList<String>(), loader.getAllComponents());
+                if (silverGhost.isArchiveError()) {
+                    filesTree.fillArchive(new File("ERROR"), new ArrayList<String>(),
+                            contentReader.getAllComponents());
                     displayArea.displayError();
                     return;
                 }
 
-                filesTree.fillArchive(ClassySharkPanel.this.binaryArchive,
-                        allClassNamesInArchive,
-                        loader.getAllComponents());
+                filesTree.fillArchive(silverGhost.getBinaryArchive(),
+                        silverGhost.allClassNamesInArchive,
+                        contentReader.getAllComponents());
 
                 if (className != null) {
                     onSelectedClassName(className);
                 } else {
                     displayArea.displaySharkey();
                 }
-            }
-
-            private boolean isArchiveError() {
-                boolean noJavaClasses = allClassNamesInArchive.isEmpty();
-                boolean noAndroidClasses = allClassNamesInArchive.size() == 1
-                        && allClassNamesInArchive.contains("AndroidManifest.xml");
-
-                return noJavaClasses || noAndroidClasses;
+                silverGhost.isDataLoaded = true;
             }
         };
 
@@ -397,22 +390,22 @@ public class ClassySharkPanel extends JPanel
 
         SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
             private List<Translator.ELEMENT> displayedClassTokens;
-            private List<String> reducedClassNames;
+            private List<String> filteredClassNames;
             private String className = "";
 
             @Override
             protected Void doInBackground() throws Exception {
                 if (viewMouseClickedClass) {
                     className = textFromTypingArea;
-                    displayedClassTokens = translateClass(className);
+                    displayedClassTokens = silverGhost.translateClass(className);
                 } else if (viewTopClass) {
-                    className = reducer.getAutocompleteClassName();
-                    displayedClassTokens = translateClass(className);
+                    className = silverGhost.getAutoCompleteClassName();
+                    displayedClassTokens = silverGhost.translateClass(className);
                 } else {
-                    reducedClassNames = reducer.reduce(textFromTypingArea);
-                    if (reducedClassNames.size() == 1) {
+                    filteredClassNames = silverGhost.filter(textFromTypingArea);
+                    if (filteredClassNames.size() == 1) {
                         displayedClassTokens =
-                                translateClass(reducedClassNames.get(0));
+                                silverGhost.translateClass(filteredClassNames.get(0));
                     }
                 }
                 return null;
@@ -424,23 +417,15 @@ public class ClassySharkPanel extends JPanel
                     toolbar.setText(className);
                     displayArea.displayClass(displayedClassTokens);
                 } else {
-                    if (reducedClassNames.size() == 1) {
+                    if (filteredClassNames.size() == 1) {
                         displayArea.displayClass(displayedClassTokens);
-                    } else if (reducedClassNames.size() == 0) {
+                    } else if (filteredClassNames.size() == 0) {
                         displayArea.displayError();
                     } else {
-                        displayArea.displayReducedClassNames(reducedClassNames,
+                        displayArea.displayReducedClassNames(filteredClassNames,
                                 textFromTypingArea);
                     }
                 }
-            }
-
-            private List<Translator.ELEMENT> translateClass(String name) {
-                translator =
-                        TranslatorFactory.createTranslator(
-                                name, binaryArchive, reducer.getAllClassNames());
-                translator.apply();
-                return translator.getElementsList();
             }
         };
 

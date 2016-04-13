@@ -19,7 +19,7 @@
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-package com.google.classyshark.silverghost.translator.java.proguard;
+package com.google.classyshark.silverghost.tokensmapper;
 
 import java.io.*;
 /**

@@ -1,13 +1,16 @@
-package com.google.classyshark.silverghost.translator.java.proguard;
+package com.google.classyshark.silverghost.translator.java;
 
-import com.google.classyshark.silverghost.translator.java.MetaObject;
+import java.util.Map;
 
-public class MetaObjectDeobfuscated extends MetaObject {
+public class MetaObjectWithMapper extends MetaObject {
 
+    private final Map<String, String> reverseMappingClasses;
     private MetaObject metaObject;
 
-    public MetaObjectDeobfuscated(MetaObject metaObject) {
+    public MetaObjectWithMapper(MetaObject metaObject,
+                                Map<String, String> reverseMappingClasses) {
         this.metaObject = metaObject;
+        this.reverseMappingClasses = reverseMappingClasses;
     }
 
     @Override
@@ -17,6 +20,10 @@ public class MetaObjectDeobfuscated extends MetaObject {
 
     @Override
     public String getName() {
+        if (reverseMappingClasses.containsKey(metaObject.getName())) {
+            return reverseMappingClasses.get(metaObject.getName());
+        }
+
         return metaObject.getName();
     }
 
