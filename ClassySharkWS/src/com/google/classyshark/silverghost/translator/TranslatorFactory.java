@@ -38,7 +38,7 @@ public class TranslatorFactory {
     public static Translator createTranslator(String className, File archiveFile,
                                               List<String> allClassNames) {
         if(className.endsWith(".xml")) {
-            return new AndroidXmlTranslator(archiveFile);
+            return new AndroidXmlTranslator(className, archiveFile);
         }
 
         if (className.endsWith(".dex")) {

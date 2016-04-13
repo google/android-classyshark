@@ -89,15 +89,31 @@ public class FilesTree {
                                              List<ContentReader.Component> allComponents) {
         DefaultMutableTreeNode root = new DefaultMutableTreeNode(fileName);
         DefaultMutableTreeNode classes = new DefaultMutableTreeNode("classes");
+        DefaultMutableTreeNode res = new DefaultMutableTreeNode("res");
         DefaultMutableTreeNode currentClassesDex = classes;
         List<DefaultMutableTreeNode> noPkgNodes = new ArrayList<>();
 
         String lastPackage = null;
+        String lastResDir = null;
+
         DefaultMutableTreeNode packageNode = null;
+        DefaultMutableTreeNode dirNode = null;
         for (int i = 0; i < displayedClassNames.size(); i++) {
             String resName = displayedClassNames.get(i);
-            if (resName.equals("AndroidManifest.xml")) {
-                root.add(new DefaultMutableTreeNode(resName));
+            if (resName.endsWith(".xml")) {
+                if (resName.lastIndexOf(File.separator) > 0)  {
+                    String dir = resName.substring(0, resName.lastIndexOf(File.separator));
+                    if (lastResDir == null || !dir.equals(lastResDir)) {
+                        if (dirNode != null) {
+                            res.add(dirNode);
+                        }
+                        lastResDir = dir;
+                        dirNode = new DefaultMutableTreeNode(dir);
+                    }
+                    dirNode.add(new DefaultMutableTreeNode(resName));
+                } else {
+                    root.add(new DefaultMutableTreeNode(resName));
+                }
             } else if (resName.endsWith(".dex")) {
                 currentClassesDex = new DefaultMutableTreeNode(resName);
                 classes.add(currentClassesDex);
@@ -121,6 +137,7 @@ public class FilesTree {
             currentClassesDex.add(node);
         }
         root.add(classes);
+        root.add(res);
 
         fillComponents(root, allComponents);
 
