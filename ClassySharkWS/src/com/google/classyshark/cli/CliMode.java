@@ -18,10 +18,18 @@ package com.google.classyshark.cli;
 
 import com.google.classyshark.silverghost.contentreader.ContentReader;
 import com.google.classyshark.silverghost.exporter.Exporter;
+import com.google.classyshark.silverghost.exporter.FlatMethodCountExporter;
+import com.google.classyshark.silverghost.exporter.MethodCountExporter;
+import com.google.classyshark.silverghost.exporter.TreeMethodCountExporter;
+import com.google.classyshark.silverghost.methodscounter.ClassNode;
+import com.google.classyshark.silverghost.methodscounter.RootBuilder;
 import com.google.classyshark.silverghost.translator.Translator;
 import com.google.classyshark.silverghost.translator.TranslatorFactory;
 import com.google.classyshark.silverghost.translator.apk.ApkTranslator;
+
 import java.io.File;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.util.List;
 
 /**
@@ -63,6 +71,9 @@ public class CliMode {
                 break;
             case "-inspect":
                 inspectApk(args);
+                break;
+            case "-methodcounts":
+                inspectPackages(args);
                 break;
             default:
                 System.err.println("wrong operand ==> " + operand + "\n\n\n" + ERROR_MESSAGE);
@@ -116,5 +127,29 @@ public class CliMode {
         Translator translator = new ApkTranslator(new File(args.get(1)));
         translator.apply();
         System.out.print(translator);
+    }
+
+    private static void inspectPackages(List<String> args) {
+        String fileName = args.get(1);
+        File file = new File(fileName);
+
+        if (!file.exists()) {
+            System.err.printf("File '%s' does not exist", fileName);
+            return;
+        }
+
+        RootBuilder rootBuilder = new RootBuilder();
+
+        MethodCountExporter methodCountExporter =
+                new TreeMethodCountExporter(new PrintWriter(System.out));
+        if (args.size() > 2) {
+            for (int i = 2; i < args.size(); i++ ) {
+                if (args.get(i).equals("-flat")) {
+                    methodCountExporter = new FlatMethodCountExporter(new PrintWriter(System.out));
+                }
+            }
+        }
+        ClassNode rootNode = rootBuilder.fillClassesWithMethods(fileName);
+        methodCountExporter.exportMethodCounts(rootNode);
     }
 }
