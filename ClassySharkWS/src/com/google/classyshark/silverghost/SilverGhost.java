@@ -28,15 +28,10 @@ public class SilverGhost {
     private File binaryArchive;
     private Reducer reducer;
     private Translator translator;
-    // TODO may be to move back to ClassySharkPanel
-    public boolean isDataLoaded = false;
-
-
     private List<String> allClassNamesInArchive;
     private ContentReader contentReader;
 
     public SilverGhost() {
-
     }
 
     public void setBinaryArchive(File binArchive) {
@@ -47,6 +42,7 @@ public class SilverGhost {
         return this.binaryArchive;
     }
 
+    //                     1. READ CONTENTS
     public void readContents() {
         contentReader = new ContentReader(getBinaryArchive());
         long start = System.currentTimeMillis();
@@ -55,31 +51,29 @@ public class SilverGhost {
         reducer = new Reducer(allClassNamesInArchive);
         System.out.println("Archive Reading "
                 + (System.currentTimeMillis() - start) + " ms ");
-
     }
 
     public List<ContentReader.Component> getComponents() {
         return contentReader.getAllComponents();
     }
 
-    public List<String> getImportsForCurrentClass() {
-        return translator.getDependencies();
-    }
-
     public List<String> getAllClassNames() {
         return allClassNamesInArchive;
+    }
+
+    public String getAutoCompleteClassName() {
+        return reducer.getAutocompleteClassName();
     }
 
     public void initClassNameFiltering() {
         reducer.reduce("");
     }
 
-    public Translator getCurrentClassTranslator() {
-        return translator;
+    public List<String> filter(String text) {
+        return reducer.reduce(text);
     }
 
     public boolean isArchiveError() {
-
         boolean noJavaClasses = allClassNamesInArchive.isEmpty();
         boolean noAndroidClasses = allClassNamesInArchive.size() == 1
                 && allClassNamesInArchive.contains("AndroidManifest.xml");
@@ -87,21 +81,33 @@ public class SilverGhost {
         return noJavaClasses || noAndroidClasses;
     }
 
+    //                     2. READ MAPPINGS FILE
 
-    public String getAutoCompleteClassName() {
-       return reducer.getAutocompleteClassName();
-    }
 
-    public List<String> filter(String text) {
-        return reducer.reduce(text);
-    }
 
-    // TODO side effect with state
-    public List<Translator.ELEMENT> translateClass(String name) {
+    //                     3. BINARY ARCHIVE ELEMENT
+    public void translateArchiveElement(String elementName) {
+        // TODO handle case when reducer is null or whatever
         translator =
                 TranslatorFactory.createTranslator(
-                        name, getBinaryArchive(), reducer.getAllClassNames());
+                        elementName, getBinaryArchive(),
+                        reducer.getAllClassNames());
         translator.apply();
+    }
+
+    public List<Translator.ELEMENT> getArchiveElementTokens() {
         return translator.getElementsList();
+    }
+
+    public List<String> getImportsForCurrentClass() {
+        return translator.getDependencies();
+    }
+
+    public String getCurrentClassName() {
+        return translator.getClassName();
+    }
+
+    public String getCurrentClassContent() {
+        return translator.toString();
     }
 }

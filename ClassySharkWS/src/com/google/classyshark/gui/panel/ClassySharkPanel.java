@@ -69,6 +69,7 @@ public class ClassySharkPanel extends JPanel
     private DisplayArea displayArea;
     private FilesTree filesTree;
     private RingChartPanel ringChartPanel;
+    private boolean isDataLoaded = false;
 
     private SilverGhost silverGhost = new SilverGhost();
 
@@ -108,9 +109,7 @@ public class ClassySharkPanel extends JPanel
 
     @Override
     public void onSelectedImportFromMouseClick(String className) {
-        if (silverGhost.getAllClassNames().contains(className)) {
-            onSelectedClassName(className);
-        }
+        onSelectedClassName(className);
     }
 
     @Override
@@ -190,8 +189,10 @@ public class ClassySharkPanel extends JPanel
         SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
             @Override
             protected Void doInBackground() throws Exception {
-                Exporter.writeCurrentClass(silverGhost.getCurrentClassTranslator());
-                Exporter.writeArchive(silverGhost.getBinaryArchive(), silverGhost.getAllClassNames());
+                Exporter.writeCurrentClass(silverGhost.getCurrentClassName(),
+                        silverGhost.getCurrentClassContent());
+                Exporter.writeArchive(silverGhost.getBinaryArchive(),
+                        silverGhost.getAllClassNames());
                 return null;
             }
 
@@ -238,7 +239,7 @@ public class ClassySharkPanel extends JPanel
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if (!silverGhost.isDataLoaded) {
+        if (!isDataLoaded) {
             openArchive();
             return;
         }
@@ -367,7 +368,7 @@ public class ClassySharkPanel extends JPanel
                 } else {
                     displayArea.displaySharkey();
                 }
-                silverGhost.isDataLoaded = true;
+                isDataLoaded = true;
             }
         };
 
@@ -388,15 +389,17 @@ public class ClassySharkPanel extends JPanel
             protected Void doInBackground() throws Exception {
                 if (viewMouseClickedClass) {
                     className = textFromTypingArea;
-                    displayedClassTokens = silverGhost.translateClass(className);
+                    silverGhost.translateArchiveElement(className);
+                    displayedClassTokens = silverGhost.getArchiveElementTokens();
                 } else if (viewTopClass) {
                     className = silverGhost.getAutoCompleteClassName();
-                    displayedClassTokens = silverGhost.translateClass(className);
+                    silverGhost.translateArchiveElement(className);
+                    displayedClassTokens = silverGhost.getArchiveElementTokens();
                 } else {
                     filteredClassNames = silverGhost.filter(textFromTypingArea);
                     if (filteredClassNames.size() == 1) {
-                        displayedClassTokens =
-                                silverGhost.translateClass(filteredClassNames.get(0));
+                        silverGhost.translateArchiveElement(filteredClassNames.get(0));
+                        displayedClassTokens = silverGhost.getArchiveElementTokens();
                     }
                 }
                 return null;
