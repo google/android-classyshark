@@ -1,16 +1,19 @@
 package com.google.classyshark.silverghost.translator.java;
 
+import com.google.classyshark.silverghost.tokensmapper.ProguardMapper;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class MetaObjectWithMapper extends MetaObject {
 
-    private final Map<String, String> reverseMappingClasses;
+    private Map<String, String> reverseMappingClasses;
     private MetaObject metaObject;
 
-    public MetaObjectWithMapper(MetaObject metaObject,
-                                Map<String, String> reverseMappingClasses) {
+    public MetaObjectWithMapper(MetaObject metaObject, ProguardMapper reverseMappings) {
+        super();
+
         this.metaObject = metaObject;
-        this.reverseMappingClasses = reverseMappingClasses;
+        this.reverseMappingClasses = reverseMappings.classes;
     }
 
     @Override
@@ -20,6 +23,11 @@ public class MetaObjectWithMapper extends MetaObject {
 
     @Override
     public String getName() {
+        // TODO not clear why is it null
+        if(reverseMappingClasses == null) {
+            reverseMappingClasses = new TreeMap<>();
+        }
+
         if (reverseMappingClasses.containsKey(metaObject.getName())) {
             return reverseMappingClasses.get(metaObject.getName());
         }

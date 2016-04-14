@@ -46,6 +46,7 @@ public class Toolbar extends JToolBar {
     private JButton backBtn;
     private JButton exportButton;
     private JButton recentArchivesBtn;
+    private JButton mappingBtn;
     private JToggleButton leftPanelToggleBtn;
 
     public Toolbar(final ToolbarController toolbarController) {
@@ -65,6 +66,7 @@ public class Toolbar extends JToolBar {
         openBtn = buildOpenButton();
         backBtn = buildBackButton();
         viewBtn = buildViewButton();
+        mappingBtn = buildMappingsButton();
         exportButton = buildExportButton();
         recentArchivesBtn = buildRecentArchivesButton();
         leftPanelToggleBtn = buildLeftPanelToggleButton();
@@ -76,6 +78,7 @@ public class Toolbar extends JToolBar {
         add(backBtn);
         add(viewBtn);
         add(typingArea);
+        add(mappingBtn);
         add(exportButton);
         add(recentArchivesBtn);
 
@@ -217,6 +220,26 @@ public class Toolbar extends JToolBar {
         result.setForeground(ColorScheme.FOREGROUND_YELLOW);
         result.setBackground(ColorScheme.BLACK);
         result.setEnabled(false);
+
+        return result;
+    }
+
+    private JButton buildMappingsButton() {
+        JButton result = new JButton("\u2551");
+        result.setFont(new Font("Menlo", Font.PLAIN, 18));
+
+        result.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                toolbarController.onMappingsButtonPressed();
+            }
+        });
+
+        result.setToolTipText("Export");
+        result.setBorderPainted(false);
+        result.setForeground(ColorScheme.FOREGROUND_YELLOW);
+        result.setBackground(ColorScheme.BLACK);
+        result.setEnabled(true);
 
         return result;
     }

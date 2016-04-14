@@ -20,10 +20,8 @@ import com.google.classyshark.silverghost.translator.Translator;
 import com.google.classyshark.silverghost.translator.TranslatorFactory;
 import com.google.classyshark.silverghost.translator.java.clazz.QualifiedTypesMap;
 import com.google.classyshark.silverghost.translator.java.clazz.reflect.MetaObjectClass;
-import com.google.classyshark.silverghost.tokensmapper.ClassySharkMappingProcessor;
-import com.google.classyshark.silverghost.tokensmapper.MappingReader;
+import com.google.classyshark.silverghost.tokensmapper.ProguardMapper;
 import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -52,19 +50,6 @@ public class JavaTranslator implements Translator {
     public JavaTranslator(String className, File archiveFile) {
         this.metaObject =
                 MetaObjectFactory.buildMetaObject(className, archiveFile);
-
-        /*
-        try {
-            // TODO
-            MappingReader mr = new MappingReader(new File("/Users/bfarber/Desktop/mapping.txt"));
-            ClassySharkMappingProcessor reverseMappings = new ClassySharkMappingProcessor();
-            mr.pump(reverseMappings);
-
-            // TODO decorator
-            this.metaObject = new MetaObjectWithMapper(this.metaObject, reverseMappings.classes);
-        } catch (IOException e) {
-
-        }*/
         sourceCode = new ArrayList<>();
         namesMapper = new QualifiedTypesMap();
     }
@@ -72,6 +57,12 @@ public class JavaTranslator implements Translator {
     @Override
     public String getClassName() {
         return metaObject.getName();
+    }
+
+    @Override
+    public void addMapper(ProguardMapper reverseMappings) {
+        this.metaObject =
+               new MetaObjectWithMapper(this.metaObject, reverseMappings);
     }
 
     @Override

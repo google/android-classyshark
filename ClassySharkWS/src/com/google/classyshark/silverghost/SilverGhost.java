@@ -18,9 +18,12 @@ package com.google.classyshark.silverghost;
 
 import com.google.classyshark.gui.panel.reducer.Reducer;
 import com.google.classyshark.silverghost.contentreader.ContentReader;
+import com.google.classyshark.silverghost.tokensmapper.ProguardMapper;
+import com.google.classyshark.silverghost.tokensmapper.MappingReader;
 import com.google.classyshark.silverghost.translator.Translator;
 import com.google.classyshark.silverghost.translator.TranslatorFactory;
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 public class SilverGhost {
@@ -30,6 +33,7 @@ public class SilverGhost {
     private Translator translator;
     private List<String> allClassNamesInArchive;
     private ContentReader contentReader;
+    private ProguardMapper reverseMappings;
 
     public SilverGhost() {
     }
@@ -51,6 +55,9 @@ public class SilverGhost {
         reducer = new Reducer(allClassNamesInArchive);
         System.out.println("Archive Reading "
                 + (System.currentTimeMillis() - start) + " ms ");
+
+        // TODO add mappings call
+        readMappingFile(new File("xxx"));
     }
 
     public List<ContentReader.Component> getComponents() {
@@ -82,16 +89,26 @@ public class SilverGhost {
     }
 
     //                     2. READ MAPPINGS FILE
-
-
+    public void readMappingFile(File mappingFile) {
+        try {
+            MappingReader mr = new MappingReader(mappingFile);
+            ProguardMapper reverseMappings = new ProguardMapper();
+            mr.pump(reverseMappings);
+            this.reverseMappings = reverseMappings;
+        } catch (IOException e) {
+            this.reverseMappings = ProguardMapper.IDENTITY;
+        }
+    }
 
     //                     3. BINARY ARCHIVE ELEMENT
     public void translateArchiveElement(String elementName) {
         // TODO handle case when reducer is null or whatever
         translator =
                 TranslatorFactory.createTranslator(
-                        elementName, getBinaryArchive(),
+                        elementName,
+                        getBinaryArchive(),
                         reducer.getAllClassNames());
+        translator.addMapper(this.reverseMappings);
         translator.apply();
     }
 

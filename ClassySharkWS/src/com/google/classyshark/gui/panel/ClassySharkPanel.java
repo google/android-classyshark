@@ -27,6 +27,7 @@ import com.google.classyshark.gui.panel.toolbar.Toolbar;
 import com.google.classyshark.gui.panel.toolbar.ToolbarController;
 import com.google.classyshark.gui.panel.tree.FilesTree;
 import com.google.classyshark.silverghost.SilverGhost;
+import com.google.classyshark.silverghost.contentreader.ContentReader;
 import com.google.classyshark.silverghost.exporter.Exporter;
 import com.google.classyshark.silverghost.methodscounter.ClassNode;
 import com.google.classyshark.silverghost.translator.Translator;
@@ -108,13 +109,7 @@ public class ClassySharkPanel extends JPanel
     }
 
     @Override
-    public void onSelectedImportFromMouseClick(String className) {
-        onSelectedClassName(className);
-    }
-
-    @Override
     public void onSelectedTypeClassFromMouseClick(String selectedClass) {
-        // optimization if import clicked
         for (String clazz : silverGhost.getImportsForCurrentClass()) {
             if (clazz.contains(selectedClass)) {
                 onSelectedImportFromMouseClick(clazz);
@@ -124,17 +119,22 @@ public class ClassySharkPanel extends JPanel
 
         for (String clazz : silverGhost.getAllClassNames()) {
             if (clazz.contains(selectedClass)) {
-                onSelectedClassName(selectedClass);
+                onSelectedImportFromMouseClick(clazz);
                 return;
             }
         }
     }
 
     @Override
-    public void onSelectedClassName(String className) {
+    public void onSelectedImportFromMouseClick(String className) {
         if (silverGhost.getAllClassNames().contains(className)) {
-            fillDisplayArea(className, VIEW_TOP_CLASS, IS_CLASSNAME_FROM_MOUSE_CLICK);
+            onSelectedClassName(className);
         }
+    }
+
+    @Override
+    public void onSelectedClassName(String className) {
+        fillDisplayArea(className, VIEW_TOP_CLASS, IS_CLASSNAME_FROM_MOUSE_CLICK);
     }
 
     @Override
@@ -182,6 +182,33 @@ public class ClassySharkPanel extends JPanel
     @Override
     public void onChangedTextFromTypingArea(String selectedLine) {
         fillDisplayArea(selectedLine, !VIEW_TOP_CLASS, !IS_CLASSNAME_FROM_MOUSE_CLICK);
+    }
+
+    @Override
+    public void onMappingsButtonPressed() {
+        final JFileChooser fc = new JFileChooser();
+        fc.setFileFilter(new FileFilter() {
+            @Override
+            public boolean accept(File f) {
+                return true;
+            }
+
+            @Override
+            public String getDescription() {
+                return "";
+            }
+        });
+
+        fc.setCurrentDirectory(CurrentFolderConfig.INSTANCE.getCurrentDirectory());
+
+        int returnVal = fc.showOpenDialog(this);
+        toolbar.setText("");
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File resultFile = fc.getSelectedFile();
+
+            // TODO slow operation
+            silverGhost.readMappingFile(resultFile);
+        }
     }
 
     @Override

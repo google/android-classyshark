@@ -1,10 +1,12 @@
+
 package com.google.classyshark.silverghost.tokensmapper;
 
 import java.util.Map;
 import java.util.TreeMap;
 
-public class ClassySharkMappingProcessor implements MappingProcessor {
+public class ProguardMapper implements MappingProcessor {
 
+    public static final ProguardMapper IDENTITY = new ProguardMapper();
     // TODO enlarge to object with class as a key with
     // TODO methods/fields list
     public Map<String, String> classes = new TreeMap();

@@ -16,6 +16,7 @@
 
 package com.google.classyshark.silverghost.translator.xml;
 
+import com.google.classyshark.silverghost.tokensmapper.ProguardMapper;
 import com.google.classyshark.silverghost.translator.Translator;
 import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
@@ -51,6 +52,11 @@ public class AndroidXmlTranslator implements Translator {
     @Override
     public String getClassName() {
         return "AndroidManifest.xml";
+    }
+
+    @Override
+    public void addMapper(ProguardMapper reverseMappings) {
+
     }
 
     @Override
