@@ -29,6 +29,7 @@ import com.google.classyshark.gui.panel.tree.FilesTree;
 import com.google.classyshark.silverghost.SilverGhost;
 import com.google.classyshark.silverghost.exporter.Exporter;
 import com.google.classyshark.silverghost.methodscounter.ClassNode;
+import com.google.classyshark.silverghost.tokensmapper.ProguardMapper;
 import com.google.classyshark.silverghost.translator.Translator;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -204,10 +205,7 @@ public class ClassySharkPanel extends JPanel
         toolbar.setText("");
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File resultFile = fc.getSelectedFile();
-
-            // TODO slow operation add to swing worker
-            // split to 2 methods reads and update data
-            silverGhost.readMappingFile(resultFile);
+            readMappingFile(resultFile);
         }
     }
 
@@ -447,6 +445,24 @@ public class ClassySharkPanel extends JPanel
                                 textFromTypingArea);
                     }
                 }
+            }
+        };
+
+        worker.execute();
+    }
+
+    private void readMappingFile(final File resultFile) {
+        SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
+            public ProguardMapper reverseMappings;
+
+            @Override
+            protected Void doInBackground() throws Exception {
+                reverseMappings = SilverGhost.readMappingFile(resultFile);
+                return null;
+            }
+
+            protected void done() {
+                silverGhost.addMappings(reverseMappings);
             }
         };
 

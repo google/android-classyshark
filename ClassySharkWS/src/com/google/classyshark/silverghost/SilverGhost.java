@@ -89,15 +89,19 @@ public class SilverGhost {
     }
 
     //                     2. READ MAPPINGS FILE
-    public void readMappingFile(File mappingFile) {
+    public static ProguardMapper readMappingFile(File mappingFile) {
         try {
             MappingReader mr = new MappingReader(mappingFile);
             ProguardMapper reverseMappings = new ProguardMapper();
             mr.pump(reverseMappings);
-            this.proguardMapper = reverseMappings;
+            return reverseMappings;
         } catch (IOException e) {
-            this.proguardMapper = ProguardMapper.IDENTITY;
+            return ProguardMapper.IDENTITY;
         }
+    }
+
+    public void addMappings(ProguardMapper proguardMapper) {
+        this.proguardMapper = proguardMapper;
     }
 
     //                     3. BINARY ARCHIVE ELEMENT
