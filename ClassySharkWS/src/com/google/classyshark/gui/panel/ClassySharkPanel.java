@@ -453,7 +453,7 @@ public class ClassySharkPanel extends JPanel
 
     private void readMappingFile(final File resultFile) {
         SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
-            public ProguardMapper reverseMappings;
+            private ProguardMapper reverseMappings;
 
             @Override
             protected Void doInBackground() throws Exception {

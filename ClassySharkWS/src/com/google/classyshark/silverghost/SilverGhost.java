@@ -92,9 +92,9 @@ public class SilverGhost {
     public static ProguardMapper readMappingFile(File mappingFile) {
         try {
             MappingReader mr = new MappingReader(mappingFile);
-            ProguardMapper reverseMappings = new ProguardMapper();
-            mr.pump(reverseMappings);
-            return reverseMappings;
+            ProguardMapper proguardMapper = new ProguardMapper();
+            mr.pump(proguardMapper);
+            return proguardMapper;
         } catch (IOException e) {
             return ProguardMapper.IDENTITY;
         }
