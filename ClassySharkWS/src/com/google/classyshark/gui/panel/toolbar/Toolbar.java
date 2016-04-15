@@ -225,7 +225,7 @@ public class Toolbar extends JToolBar {
     }
 
     private JButton buildMappingsButton() {
-        JButton result = new JButton("\u2551");
+        JButton result = new JButton("#");
         result.setFont(new Font("Menlo", Font.PLAIN, 18));
 
         result.addActionListener(new ActionListener() {

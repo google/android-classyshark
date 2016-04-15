@@ -27,7 +27,6 @@ import com.google.classyshark.gui.panel.toolbar.Toolbar;
 import com.google.classyshark.gui.panel.toolbar.ToolbarController;
 import com.google.classyshark.gui.panel.tree.FilesTree;
 import com.google.classyshark.silverghost.SilverGhost;
-import com.google.classyshark.silverghost.contentreader.ContentReader;
 import com.google.classyshark.silverghost.exporter.Exporter;
 import com.google.classyshark.silverghost.methodscounter.ClassNode;
 import com.google.classyshark.silverghost.translator.Translator;
@@ -206,7 +205,8 @@ public class ClassySharkPanel extends JPanel
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File resultFile = fc.getSelectedFile();
 
-            // TODO slow operation
+            // TODO slow operation add to swing worker
+            // split to 2 methods reads and update data
             silverGhost.readMappingFile(resultFile);
         }
     }

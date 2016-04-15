@@ -33,17 +33,16 @@ public class SilverGhost {
     private Translator translator;
     private List<String> allClassNamesInArchive;
     private ContentReader contentReader;
-    private ProguardMapper reverseMappings;
+    private ProguardMapper proguardMapper = ProguardMapper.IDENTITY;
 
     public SilverGhost() {
     }
 
     public void setBinaryArchive(File binArchive) {
         this.binaryArchive = binArchive;
-    }
 
-    public File getBinaryArchive() {
-        return this.binaryArchive;
+        // TODO think of initialyzing data members as they hold prev file state
+        proguardMapper = ProguardMapper.IDENTITY;
     }
 
     //                     1. READ CONTENTS
@@ -55,9 +54,10 @@ public class SilverGhost {
         reducer = new Reducer(allClassNamesInArchive);
         System.out.println("Archive Reading "
                 + (System.currentTimeMillis() - start) + " ms ");
+    }
 
-        // TODO add mappings call
-        readMappingFile(new File("xxx"));
+    public File getBinaryArchive() {
+        return this.binaryArchive;
     }
 
     public List<ContentReader.Component> getComponents() {
@@ -94,9 +94,9 @@ public class SilverGhost {
             MappingReader mr = new MappingReader(mappingFile);
             ProguardMapper reverseMappings = new ProguardMapper();
             mr.pump(reverseMappings);
-            this.reverseMappings = reverseMappings;
+            this.proguardMapper = reverseMappings;
         } catch (IOException e) {
-            this.reverseMappings = ProguardMapper.IDENTITY;
+            this.proguardMapper = ProguardMapper.IDENTITY;
         }
     }
 
@@ -108,7 +108,7 @@ public class SilverGhost {
                         elementName,
                         getBinaryArchive(),
                         reducer.getAllClassNames());
-        translator.addMapper(this.reverseMappings);
+        translator.addMapper(this.proguardMapper);
         translator.apply();
     }
 
