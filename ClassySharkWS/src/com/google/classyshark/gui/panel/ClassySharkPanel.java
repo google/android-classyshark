@@ -91,21 +91,6 @@ public class ClassySharkPanel extends JPanel
 
     public ClassySharkPanel(JFrame frame) {
         super(false);
-        UIManager.put("swing.boldMetal", Boolean.FALSE);
-        UIManager.put("Button.select", Color.GRAY);
-        UIManager.put("ToggleButton.select", Color.GRAY);
-
-        UIManager.put("TabbedPane.contentAreaColor ", ColorScheme.LIGHT_GRAY);
-        UIManager.put("TabbedPane.selected", ColorScheme.BLACK);
-        UIManager.put("TabbedPane.background", ColorScheme.LIGHT_GRAY);
-        UIManager.put("TabbedPane.shadow", ColorScheme.FOREGROUND_CYAN);
-        UIManager.put("TabbedPane.darkShadow", ColorScheme.LIGHT_GRAY);
-        UIManager.put("TabbedPane.foreground", ColorScheme.FOREGROUND_CYAN);
-        UIManager.put("TabbedPane.unselectedTabForeground", ColorScheme.FOREGROUND_CYAN);
-        UIManager.put("TabbedPane.selectedForeground", ColorScheme.FOREGROUND_CYAN);
-        UIManager.put("TabbedPane.tabInsets", new Insets(5, 10, 5, 10));
-        UIManager.put("TabbedPane.font", new Font("SansSerif", Font.BOLD, 16));
-
         buildUI();
         parentFrame = frame;
         toolbar.setText("");
@@ -283,8 +268,6 @@ public class ClassySharkPanel extends JPanel
         BorderLayout borderLayout = new BorderLayout();
         setLayout(borderLayout);
 
-        setBackground(ColorScheme.BLACK);
-
         ringChartPanel = new RingChartPanel(this);
 
         toolbar = new Toolbar(this);
@@ -296,7 +279,6 @@ public class ClassySharkPanel extends JPanel
 
         filesTree = new FilesTree(this);
         JTabbedPane jTabbedPane = new JTabbedPane();
-        jTabbedPane.setBackground(ColorScheme.BACKGROUND);
         JScrollPane leftScrollPane = new JScrollPane(filesTree.getJTree());
 
         jTabbedPane.addTab("Archive", leftScrollPane);
@@ -318,7 +300,6 @@ public class ClassySharkPanel extends JPanel
         });
 
         jSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-        jSplitPane.setBackground(ColorScheme.BACKGROUND);
         jSplitPane.setDividerSize(3);
         jSplitPane.setPreferredSize(new Dimension(1000, 700));
 

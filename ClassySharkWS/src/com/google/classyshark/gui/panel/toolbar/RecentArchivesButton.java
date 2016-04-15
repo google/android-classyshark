@@ -47,8 +47,6 @@ public class RecentArchivesButton extends JButton {
 
         setBorderPainted(false);
         setFocusPainted(true);
-        setForeground(ColorScheme.FOREGROUND_YELLOW);
-        setBackground(ColorScheme.BLACK);
         setFont(new Font("Menlo", Font.BOLD, 18));
         setText("፨");
         addMouseListener(new MousePopupListener());

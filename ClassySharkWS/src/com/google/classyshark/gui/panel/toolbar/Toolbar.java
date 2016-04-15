@@ -50,14 +50,6 @@ public class Toolbar extends JToolBar {
 
     public Toolbar(final ToolbarController toolbarController) {
         super();
-        UIManager.put("ToolBar.background", ColorScheme.BACKGROUND);
-        UIManager.put("ToolBar.foreground", ColorScheme.BACKGROUND);
-
-        UIManager.put("Button.background", ColorScheme.BACKGROUND);
-        UIManager.put("Button.foreground", ColorScheme.WHITE);
-
-        Font f = new Font("Menlo", Font.PLAIN, 18);
-        UIManager.put("Button.font", f);
 
         this.toolbarController = toolbarController;
 
@@ -69,8 +61,6 @@ public class Toolbar extends JToolBar {
         recentArchivesBtn = buildRecentArchivesButton();
         leftPanelToggleBtn = buildLeftPanelToggleButton();
 
-        this.setBackground(ColorScheme.BLACK);
-
         add(leftPanelToggleBtn);
         add(openBtn);
         add(backBtn);
@@ -80,9 +70,6 @@ public class Toolbar extends JToolBar {
         add(recentArchivesBtn);
 
         setFloatable(false);
-
-        Border roundedBorder = new LineBorder(ColorScheme.BLACK, 5);
-        setBorder(roundedBorder);
         setTypingArea();
     }
 
@@ -91,12 +78,8 @@ public class Toolbar extends JToolBar {
     }
 
     public void setTypingArea() {
-        typingArea.setBackground(ColorScheme.LIGHT_GRAY);
 
-        Font typingAreaFont = new Font("Menlo", Font.PLAIN, 18);
-        typingArea.setFont(typingAreaFont);
-        typingArea.setForeground(ColorScheme.FOREGROUND_CYAN);
-
+        typingArea.setForeground(ColorScheme.LIGHT_GRAY);
         setTypingAreaCaret();
     }
 
@@ -157,8 +140,6 @@ public class Toolbar extends JToolBar {
 
         result.setBorderPainted(false);
         result.setFocusPainted(true);
-        result.setForeground(ColorScheme.WHITE);
-        result.setBackground(ColorScheme.BLACK);
 
         return result;
     }
@@ -175,8 +156,6 @@ public class Toolbar extends JToolBar {
 
         result.setBorderPainted(false);
         result.setFocusPainted(true);
-        result.setForeground(ColorScheme.FOREGROUND_YELLOW);
-        result.setBackground(ColorScheme.BLACK);
         result.setEnabled(false);
 
         return result;
@@ -194,8 +173,6 @@ public class Toolbar extends JToolBar {
 
         result.setBorderPainted(false);
         result.setFocusPainted(true);
-        result.setForeground(ColorScheme.FOREGROUND_YELLOW);
-        result.setBackground(ColorScheme.BLACK);
         result.setEnabled(false);
 
         return result;
@@ -214,8 +191,6 @@ public class Toolbar extends JToolBar {
 
         result.setToolTipText("Export");
         result.setBorderPainted(false);
-        result.setForeground(ColorScheme.FOREGROUND_YELLOW);
-        result.setBackground(ColorScheme.BLACK);
         result.setEnabled(false);
 
         return result;
@@ -231,8 +206,6 @@ public class Toolbar extends JToolBar {
         final JToggleButton jToggleButton = new JToggleButton("\u2592", true);
         jToggleButton.setBorderPainted(false);
         jToggleButton.setFocusPainted(true);
-        jToggleButton.setForeground(ColorScheme.FOREGROUND_YELLOW);
-        jToggleButton.setBackground(ColorScheme.BLACK);
         jToggleButton.setFont(new Font("Menlo", Font.PLAIN, 18));
         jToggleButton.addActionListener(new ActionListener() {
             @Override

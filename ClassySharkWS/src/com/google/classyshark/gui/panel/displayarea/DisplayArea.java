@@ -63,7 +63,6 @@ public class DisplayArea {
         jTextPane.setTransferHandler(new FileTransferHandler(viewerController));
 
         jTextPane.setEditable(false);
-        jTextPane.setBackground(ColorScheme.BACKGROUND);
 
         jTextPane.addMouseListener(new MouseAdapter() {
             @Override
@@ -191,7 +190,6 @@ public class DisplayArea {
                 doc.insertString(doc.getLength(), beforeMatch, style);
                 StyleConstants.setBackground(style, ColorScheme.SELECTION_BG);
                 doc.insertString(doc.getLength(), match, style);
-                StyleConstants.setBackground(style, ColorScheme.BACKGROUND);
                 doc.insertString(doc.getLength(), afterMatch + "\n", style);
             } catch (BadLocationException e) {
                 e.printStackTrace();
