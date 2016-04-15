@@ -47,7 +47,7 @@ public class GuiMode {
 
     private static void buildAndShowClassyShark(List<String> cmdLineArgs) {
         try {
-            UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (UnsupportedLookAndFeelException | IllegalAccessException | ClassNotFoundException
                 | InstantiationException ex) {
             ex.printStackTrace();
