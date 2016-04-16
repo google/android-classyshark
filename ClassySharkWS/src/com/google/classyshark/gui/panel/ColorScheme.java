@@ -24,13 +24,10 @@ import java.awt.Color;
 public class ColorScheme {
     private ColorScheme(){}
 
-    public static final Color BACKGROUND = new Color(0x2b, 0x2b, 0x2b);
-    public static final Color FOREGROUND_YELLOW = new Color(0xFF, 0xFF, 0x80);
-    public static final Color FOREGROUND_ORANGE = new Color(0xFF, 0x99, 0x33);
-    public static final Color FOREGROUND_CYAN = new Color(0xd8, 0xd8, 0xd8);
-    public static final Color WHITE = Color.white;
-    public static final Color BLACK = Color.black;
-    public static final Color FOREGROUND_YELLOW_ANNOTATIONS = new Color(0xBB, 0xB5, 0x29);
+    public static final Color DEFAULT = new Color(0x61, 0x62, 0x7C);
+    public static final Color KEYWORDS = new Color(0xAA, 0x7D, 0x29);
+    public static final Color IDENTIFIERS = new Color(0x78, 0x8A, 0x4);
+    public static final Color ANNOTATIONS = new Color(0xD2, 0x16, 0x5B);
     public static final Color SELECTION_BG = new Color(0x21, 0x42, 0x83);
-    public static final Color LIGHT_GRAY = new Color(0x58, 0x58, 0x58);
+    public static final Color NAMES = new Color(0x61, 0x62, 0x7C);
 }

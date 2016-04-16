@@ -19,7 +19,6 @@ package com.google.classyshark.gui.panel.toolbar;
 import com.google.classyshark.gui.panel.ColorScheme;
 import com.google.classyshark.gui.panel.IconSchemes;
 
-import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyListener;
@@ -27,7 +26,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.*;
 import javax.swing.border.Border;
-import javax.swing.border.LineBorder;
 
 /**
  * toolbar = buttons + command line
@@ -75,14 +73,14 @@ public class Toolbar extends JToolBar {
 
     public void setTypingArea() {
 
-        typingArea.setForeground(ColorScheme.LIGHT_GRAY);
+        typingArea.setForeground(ColorScheme.NAMES);
         setTypingAreaCaret();
     }
 
     public void setTypingAreaCaret() {
         int len = typingArea.getDocument().getLength();
         typingArea.setCaretPosition(len);
-        typingArea.setCaretColor(ColorScheme.FOREGROUND_CYAN);
+        typingArea.setCaretColor(ColorScheme.IDENTIFIERS);
     }
 
     public String getText() {

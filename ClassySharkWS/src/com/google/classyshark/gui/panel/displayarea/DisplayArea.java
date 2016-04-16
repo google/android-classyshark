@@ -167,7 +167,7 @@ public class DisplayArea {
         String afterMatch = "";
 
         StyleConstants.setFontSize(style, 18);
-        StyleConstants.setForeground(style, ColorScheme.FOREGROUND_CYAN);
+        StyleConstants.setForeground(style, ColorScheme.IDENTIFIERS);
 
         Document doc = jTextPane.getDocument();
 
@@ -204,7 +204,7 @@ public class DisplayArea {
 
         displayDataState = DisplayDataState.CLASSES_LIST;
         StyleConstants.setFontSize(style, 18);
-        StyleConstants.setForeground(style, ColorScheme.FOREGROUND_CYAN);
+        StyleConstants.setForeground(style, ColorScheme.IDENTIFIERS);
 
         clearText();
 
@@ -267,25 +267,25 @@ public class DisplayArea {
             for (Translator.ELEMENT e : elements) {
                 switch (e.tag) {
                     case MODIFIER:
-                        StyleConstants.setForeground(style, ColorScheme.FOREGROUND_ORANGE);
+                        StyleConstants.setForeground(style, ColorScheme.KEYWORDS);
                         break;
                     case DOCUMENT:
-                        StyleConstants.setForeground(style, ColorScheme.FOREGROUND_YELLOW);
+                        StyleConstants.setForeground(style, ColorScheme.DEFAULT);
                         break;
                     case IDENTIFIER:
-                        StyleConstants.setForeground(style, ColorScheme.FOREGROUND_CYAN);
+                        StyleConstants.setForeground(style, ColorScheme.IDENTIFIERS);
                         break;
                     case ANNOTATION:
-                        StyleConstants.setForeground(style, ColorScheme.FOREGROUND_YELLOW_ANNOTATIONS);
+                        StyleConstants.setForeground(style, ColorScheme.ANNOTATIONS);
                         break;
                     case XML_TAG:
-                        StyleConstants.setForeground(style, ColorScheme.FOREGROUND_YELLOW);
+                        StyleConstants.setForeground(style, ColorScheme.DEFAULT);
                         break;
                     case XML_ATTR_NAME:
-                        StyleConstants.setForeground(style, ColorScheme.FOREGROUND_CYAN);
+                        StyleConstants.setForeground(style, ColorScheme.IDENTIFIERS);
                         break;
                     case XML_ATTR_VALUE:
-                        StyleConstants.setForeground(style, ColorScheme.FOREGROUND_YELLOW_ANNOTATIONS);
+                        StyleConstants.setForeground(style, ColorScheme.ANNOTATIONS);
                         break;
                     default:
                         StyleConstants.setForeground(style, Color.LIGHT_GRAY);
@@ -297,7 +297,7 @@ public class DisplayArea {
             e.printStackTrace();
         }
 
-        StyleConstants.setForeground(style, ColorScheme.FOREGROUND_CYAN);
+        StyleConstants.setForeground(style, ColorScheme.IDENTIFIERS);
 
         jTextPane.setDocument(doc);
     }
@@ -309,7 +309,7 @@ public class DisplayArea {
         Document doc = jTextPane.getStyledDocument();
 
         try {
-            StyleConstants.setForeground(style, ColorScheme.FOREGROUND_YELLOW);
+            StyleConstants.setForeground(style, ColorScheme.DEFAULT);
             StyleConstants.setFontSize(style, 13);
             StyleConstants.setFontFamily(style, "Menlo");
 
@@ -329,7 +329,7 @@ public class DisplayArea {
         Document doc = jTextPane.getStyledDocument();
 
         try {
-            StyleConstants.setForeground(style, ColorScheme.FOREGROUND_YELLOW);
+            StyleConstants.setForeground(style, ColorScheme.DEFAULT);
             StyleConstants.setFontSize(style, 13);
             StyleConstants.setFontFamily(style, "Menlo");
 
