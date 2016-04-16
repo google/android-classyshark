@@ -185,11 +185,7 @@ public class FilesTree {
 
     private void configureJTree(final JTree jTree) {
         jTree.setRootVisible(false);
-        jTree.setBackground(ColorScheme.BACKGROUND);
         DefaultTreeCellRenderer cellRenderer = (DefaultTreeCellRenderer) jTree.getCellRenderer();
-        cellRenderer.setBackground(ColorScheme.BACKGROUND);
-        cellRenderer.setBackgroundNonSelectionColor(ColorScheme.BACKGROUND);
-        cellRenderer.setTextNonSelectionColor(ColorScheme.FOREGROUND_CYAN);
         cellRenderer.setFont(new Font("Menlo", Font.PLAIN, 18));
         jTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
         jTree.addTreeSelectionListener(new TreeSelectionListener() {
