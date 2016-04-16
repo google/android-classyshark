@@ -52,7 +52,7 @@ public class Toolbar extends JToolBar {
         openBtn = buildOpenButton();
         backBtn = buildBackButton();
         viewBtn = buildViewButton();
-        //mappingBtn = buildMappingsButton();
+        mappingBtn = buildMappingsButton();
         exportButton = buildExportButton();
         recentArchivesBtn = buildRecentArchivesButton();
         leftPanelToggleBtn = buildLeftPanelToggleButton();
@@ -62,7 +62,7 @@ public class Toolbar extends JToolBar {
         add(backBtn);
         add(viewBtn);
         add(typingArea);
-        //add(mappingBtn);
+        add(mappingBtn);
         add(exportButton);
         add(recentArchivesBtn);
 
@@ -199,11 +199,10 @@ public class Toolbar extends JToolBar {
         return result;
     }
 
-    /*
     private JButton buildMappingsButton() {
 
-        JButton result = new JButton("#");
-        result.setFont(new Font("Menlo", Font.PLAIN, 18));
+        JButton result =
+                new JButton(new ImageIcon(getClass().getResource(IconSchemes.EXPORT_ICON_PATH)));
 
         result.addActionListener(new ActionListener() {
             @Override
@@ -212,15 +211,12 @@ public class Toolbar extends JToolBar {
             }
         });
 
-        result.setToolTipText("Export");
+        result.setToolTipText("Mappings");
         result.setBorderPainted(false);
-        result.setForeground(ColorScheme.FOREGROUND_YELLOW);
-        result.setBackground(ColorScheme.BLACK);
         result.setEnabled(true);
 
         return result;
     }
-    */
 
     private JButton buildRecentArchivesButton() {
         RecentArchivesButton result = new RecentArchivesButton();
