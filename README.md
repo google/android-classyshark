@@ -4,54 +4,45 @@ This is not an official Google product
 
 ## Introduction
 
-ClassyShark is a handy browser for Android executables. It has clients for both Android (apk) and Desktop (jar). With ClassyShark you can open APK/Zip/Class/Jar files and analyze their contents.
+Follow the shark on twitter [@ItsClassyshark](https://twitter.com/ItsClassyshark)
 
-![](https://github.com/googlesamples/android-classyshark/blob/master/Resources/Intro.png)
+ClassyShark is a standalone tool for Android developers. It can reliably browse any Android executable and show important info such as class interfaces and members, dex counts and dependencies. The browser supports multiple formats including libraries (.dex, .aar, .so), executables (.apk, .jar, .class) and AndroidManifest (.xml).
 
-## Use cases
+### Learn more
+www.classyshark.com
 
-### Multidex
-Helps you understand the contents of [multidex](http://developer.android.com/tools/building/multidex.html) apps
+### Command line 
+[Command line reference] (https://github.com/google/android-classyshark/blob/master/CommandLine.pdf)
 
-* Show the content of each classes.dex file
-* Show the dex counts for methods, classes, strings etc
+### ClassyShark APIs (as jar)
+The following [sample] (https://github.com/google/android-classyshark/tree/master/Samples) shows how to use ClassyShark APIs in your build or integration process
 
-### Performance
-Identify and understand performance problems including: 
+### Downloads
 
-* Slow libraries
-* Duplicate libraries
-* Redundant libraries
-
-### Security
-Identify security risks including: 
-
-* AndroidManifest inside production APK
-* Verifying obfuscated code
-
-### Debugging
-Helps you debug your app by allowing you to:
-
-* Show class name collisions 
-* Show missing and/or changed code due to Proguard obfuscation
-* Trace method calls in obfuscated APK
-
-## Downloads
-
-Grab the latest release from [here] (https://github.com/googlesamples/android-classyshark/releases).
+To run, grab the latest jar from [here] (https://github.com/google/android-classyshark/releases)
+and type `java -jar ClassyShark.jar`.
 
 ## Start developing
-Clone this repository and import the `ClassySharkWS` folder in your favorite IDE.
+### Android
+
+Clone this repository and import the `ClassySharkAndroid` folder in Android Studio.
+
+### Desktop
+
+Clone this repository and import the `ClassySharkWS` folder in your favorite IDE. For releases  [RetroBuild](https://github.com/borisf/RetroBuild), a fast jar build system is used.
 
 ## Dependencies
 * [dexlib2](https://github.com/JesusFreke/smali/tree/master/dexlib2) by jesusfreke
 * [guava](https://github.com/google/guava) by Google
 * [ASM](http://asm.ow2.org/) by OW2
+* [ASMDEX](http://asm.ow2.org/asmdex-index.html) by OW2
+* [java-binutils](https://github.com/jawi/java-binutils) by jawi
+* [BCEL](https://commons.apache.org/proper/commons-bcel) by Apache
 
 ## Support
 If you've found an error, please file an issue:
 
-https://github.com/googlesamples/android-classyshark/issues
+https://github.com/google/android-classyshark/issues
 
 Patches are encouraged, and may be submitted by forking this project and
 submitting a pull request through GitHub.
