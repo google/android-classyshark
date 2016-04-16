@@ -65,6 +65,7 @@ public class Toolbar extends JToolBar {
 
         setFloatable(false);
         setTypingArea();
+        setBorder(BorderFactory.createEmptyBorder());
     }
 
     public void addKeyListenerToTypingArea(KeyListener kl) {
