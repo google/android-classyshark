@@ -125,7 +125,8 @@ public class Toolbar extends JToolBar {
     }
 
     private JButton buildOpenButton() {
-        JButton result = new JButton("Open");
+        JButton result = new JButton(new ImageIcon(IconSchemes.OPEN_ICON_PATH));
+        result.setToolTipText("Open file");
 
         result.addActionListener(new ActionListener() {
             @Override
@@ -177,8 +178,7 @@ public class Toolbar extends JToolBar {
     }
 
     private JButton buildExportButton() {
-        JButton result = new JButton("Export");
-        result.setFont(new Font("Menlo", Font.PLAIN, 18));
+        JButton result = new JButton(new ImageIcon(IconSchemes.EXPORT_ICON_PATH));
 
         result.addActionListener(new ActionListener() {
             @Override
