@@ -141,7 +141,8 @@ public class Toolbar extends JToolBar {
     }
 
     private JButton buildBackButton() {
-        JButton result = new JButton(" <== ");
+        JButton result = new JButton(new ImageIcon(IconSchemes.BACK_ICON_PATH));
+        result.setToolTipText("Back");
 
         result.addActionListener(new ActionListener() {
             @Override
