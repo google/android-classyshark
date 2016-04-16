@@ -159,7 +159,8 @@ public class Toolbar extends JToolBar {
     }
 
     private JButton buildViewButton() {
-        JButton result = new JButton(" ==> ");
+        JButton result = new JButton(new ImageIcon(IconSchemes.NEXT_ICON_PATH));
+        result.setToolTipText("Next");
 
         result.addActionListener(new ActionListener() {
             @Override
@@ -176,7 +177,7 @@ public class Toolbar extends JToolBar {
     }
 
     private JButton buildExportButton() {
-        JButton result = new JButton("\u2551");
+        JButton result = new JButton("Export");
         result.setFont(new Font("Menlo", Font.PLAIN, 18));
 
         result.addActionListener(new ActionListener() {
