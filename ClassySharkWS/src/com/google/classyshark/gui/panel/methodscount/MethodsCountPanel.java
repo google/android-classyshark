@@ -60,13 +60,10 @@ public class MethodsCountPanel extends JPanel {
         this.setLayout(new BorderLayout());
         treeModel = new DefaultTreeModel(new DefaultMutableTreeNode(null));
         jTree = new JTree(treeModel);
-        jTree.setBackground(ColorScheme.BACKGROUND);
         jTree.setRootVisible(false);
 
         DefaultTreeCellRenderer cellRenderer = (DefaultTreeCellRenderer) jTree.getCellRenderer();
-        cellRenderer.setBackground(ColorScheme.BACKGROUND);
-        cellRenderer.setBackgroundNonSelectionColor(ColorScheme.BACKGROUND);
-        cellRenderer.setTextNonSelectionColor(ColorScheme.FOREGROUND_CYAN);
+
         cellRenderer.setFont(new Font("Menlo", Font.PLAIN, 18));
         jTree.setCellRenderer(cellRenderer);
         jTree.addTreeSelectionListener(new TreeSelectionListener() {

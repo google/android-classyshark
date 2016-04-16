@@ -17,21 +17,15 @@
 package com.google.classyshark.gui.panel.toolbar;
 
 import com.google.classyshark.gui.panel.ColorScheme;
-import java.awt.Font;
+import com.google.classyshark.gui.panel.IconSchemes;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JTextField;
-import javax.swing.JToggleButton;
-import javax.swing.JToolBar;
-import javax.swing.UIManager;
-import javax.swing.WindowConstants;
+import javax.swing.*;
 import javax.swing.border.Border;
-import javax.swing.border.LineBorder;
 
 /**
  * toolbar = buttons + command line
@@ -51,14 +45,6 @@ public class Toolbar extends JToolBar {
 
     public Toolbar(final ToolbarController toolbarController) {
         super();
-        UIManager.put("ToolBar.background", ColorScheme.BACKGROUND);
-        UIManager.put("ToolBar.foreground", ColorScheme.BACKGROUND);
-
-        UIManager.put("Button.background", ColorScheme.BACKGROUND);
-        UIManager.put("Button.foreground", ColorScheme.WHITE);
-
-        Font f = new Font("Menlo", Font.PLAIN, 18);
-        UIManager.put("Button.font", f);
 
         this.toolbarController = toolbarController;
 
@@ -71,8 +57,6 @@ public class Toolbar extends JToolBar {
         recentArchivesBtn = buildRecentArchivesButton();
         leftPanelToggleBtn = buildLeftPanelToggleButton();
 
-        this.setBackground(ColorScheme.BLACK);
-
         add(leftPanelToggleBtn);
         add(openBtn);
         add(backBtn);
@@ -83,10 +67,8 @@ public class Toolbar extends JToolBar {
         add(recentArchivesBtn);
 
         setFloatable(false);
-
-        Border roundedBorder = new LineBorder(ColorScheme.BLACK, 5);
-        setBorder(roundedBorder);
         setTypingArea();
+        setBorder(BorderFactory.createEmptyBorder());
     }
 
     public void addKeyListenerToTypingArea(KeyListener kl) {
@@ -94,19 +76,15 @@ public class Toolbar extends JToolBar {
     }
 
     public void setTypingArea() {
-        typingArea.setBackground(ColorScheme.LIGHT_GRAY);
 
-        Font typingAreaFont = new Font("Menlo", Font.PLAIN, 18);
-        typingArea.setFont(typingAreaFont);
-        typingArea.setForeground(ColorScheme.FOREGROUND_CYAN);
-
+        typingArea.setForeground(ColorScheme.NAMES);
         setTypingAreaCaret();
     }
 
     public void setTypingAreaCaret() {
         int len = typingArea.getDocument().getLength();
         typingArea.setCaretPosition(len);
-        typingArea.setCaretColor(ColorScheme.FOREGROUND_CYAN);
+        typingArea.setCaretColor(ColorScheme.IDENTIFIERS);
     }
 
     public String getText() {
@@ -124,11 +102,9 @@ public class Toolbar extends JToolBar {
     }
 
     private JTextField buildTypingArea() {
-        final JTextField result = new JTextField(50) {
-            @Override
-            public void setBorder(Border border) {
-            }
-        };
+        final JTextField result = new JTextField(50);
+
+        result.setEnabled(false);
 
         result.addMouseListener(new MouseAdapter() {
 
@@ -149,7 +125,8 @@ public class Toolbar extends JToolBar {
     }
 
     private JButton buildOpenButton() {
-        JButton result = new JButton("Open");
+        JButton result = new JButton(new ImageIcon(IconSchemes.OPEN_ICON_PATH));
+        result.setToolTipText("Open file");
 
         result.addActionListener(new ActionListener() {
             @Override
@@ -160,14 +137,13 @@ public class Toolbar extends JToolBar {
 
         result.setBorderPainted(false);
         result.setFocusPainted(true);
-        result.setForeground(ColorScheme.WHITE);
-        result.setBackground(ColorScheme.BLACK);
 
         return result;
     }
 
     private JButton buildBackButton() {
-        JButton result = new JButton(" <== ");
+        JButton result = new JButton(new ImageIcon(IconSchemes.BACK_ICON_PATH));
+        result.setToolTipText("Back");
 
         result.addActionListener(new ActionListener() {
             @Override
@@ -178,15 +154,14 @@ public class Toolbar extends JToolBar {
 
         result.setBorderPainted(false);
         result.setFocusPainted(true);
-        result.setForeground(ColorScheme.FOREGROUND_YELLOW);
-        result.setBackground(ColorScheme.BLACK);
         result.setEnabled(false);
 
         return result;
     }
 
     private JButton buildViewButton() {
-        JButton result = new JButton(" ==> ");
+        JButton result = new JButton(new ImageIcon(IconSchemes.NEXT_ICON_PATH));
+        result.setToolTipText("Next");
 
         result.addActionListener(new ActionListener() {
             @Override
@@ -197,16 +172,13 @@ public class Toolbar extends JToolBar {
 
         result.setBorderPainted(false);
         result.setFocusPainted(true);
-        result.setForeground(ColorScheme.FOREGROUND_YELLOW);
-        result.setBackground(ColorScheme.BLACK);
         result.setEnabled(false);
 
         return result;
     }
 
     private JButton buildExportButton() {
-        JButton result = new JButton("\u2551");
-        result.setFont(new Font("Menlo", Font.PLAIN, 18));
+        JButton result = new JButton(new ImageIcon(IconSchemes.EXPORT_ICON_PATH));
 
         result.addActionListener(new ActionListener() {
             @Override
@@ -217,8 +189,6 @@ public class Toolbar extends JToolBar {
 
         result.setToolTipText("Export");
         result.setBorderPainted(false);
-        result.setForeground(ColorScheme.FOREGROUND_YELLOW);
-        result.setBackground(ColorScheme.BLACK);
         result.setEnabled(false);
 
         return result;
@@ -251,12 +221,10 @@ public class Toolbar extends JToolBar {
     }
 
     private JToggleButton buildLeftPanelToggleButton() {
-        final JToggleButton jToggleButton = new JToggleButton("\u2592", true);
+        final ImageIcon toggleIcon = new ImageIcon(IconSchemes.TOGGLE_ICON_PATH);
+        final JToggleButton jToggleButton = new JToggleButton(toggleIcon, true);
+        jToggleButton.setToolTipText("Show/hide navigation tree");
         jToggleButton.setBorderPainted(false);
-        jToggleButton.setFocusPainted(true);
-        jToggleButton.setForeground(ColorScheme.FOREGROUND_YELLOW);
-        jToggleButton.setBackground(ColorScheme.BLACK);
-        jToggleButton.setFont(new Font("Menlo", Font.PLAIN, 18));
         jToggleButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

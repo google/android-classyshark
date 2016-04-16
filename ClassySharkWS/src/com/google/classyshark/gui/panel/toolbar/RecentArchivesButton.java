@@ -16,20 +16,17 @@
 
 package com.google.classyshark.gui.panel.toolbar;
 
-import com.google.classyshark.gui.panel.ColorScheme;
+import com.google.classyshark.gui.panel.IconSchemes;
 import com.google.classyshark.gui.panel.io.RecentArchivesConfig;
-import java.awt.Font;
+
+import javax.swing.*;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
-import javax.swing.event.PopupMenuEvent;
-import javax.swing.event.PopupMenuListener;
 
 /**
  * recent files button
@@ -40,6 +37,8 @@ public class RecentArchivesButton extends JButton {
     private ToolbarController panel;
 
     public RecentArchivesButton() {
+        super(new ImageIcon(IconSchemes.RECENT_ICON_PATH));
+        setToolTipText("History");
         popup = new JPopupMenu();
         popup.setLayout(new BoxLayout(popup, BoxLayout.Y_AXIS));
         popup.addPopupMenuListener(new PopupPrintListener());
@@ -47,10 +46,6 @@ public class RecentArchivesButton extends JButton {
 
         setBorderPainted(false);
         setFocusPainted(true);
-        setForeground(ColorScheme.FOREGROUND_YELLOW);
-        setBackground(ColorScheme.BLACK);
-        setFont(new Font("Menlo", Font.BOLD, 18));
-        setText("፨");
         addMouseListener(new MousePopupListener());
     }
 
@@ -64,7 +59,6 @@ public class RecentArchivesButton extends JButton {
 
         for (String archiveName : RecentArchivesConfig.INSTANCE.getRecentArchiveNames()) {
             item = new JMenuItem(archiveName);
-            item.setFont(new Font("Menlo", Font.BOLD, 16));
             popup.add(item);
             item.setHorizontalTextPosition(JMenuItem.RIGHT);
             item.addActionListener(new RecentFilesListener(archiveName));
@@ -72,7 +66,6 @@ public class RecentArchivesButton extends JButton {
 
         popup.addSeparator();
         final JMenuItem clearRecentArchivesItem = new JMenuItem("Clear");
-        clearRecentArchivesItem.setFont(new Font("Menlo", Font.BOLD, 16));
         popup.add(clearRecentArchivesItem);
         clearRecentArchivesItem.addActionListener(new ActionListener() {
             @Override
