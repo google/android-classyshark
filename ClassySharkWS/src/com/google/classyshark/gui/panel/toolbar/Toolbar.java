@@ -17,19 +17,15 @@
 package com.google.classyshark.gui.panel.toolbar;
 
 import com.google.classyshark.gui.panel.ColorScheme;
+import com.google.classyshark.gui.panel.IconSchemes;
+
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JTextField;
-import javax.swing.JToggleButton;
-import javax.swing.JToolBar;
-import javax.swing.UIManager;
-import javax.swing.WindowConstants;
+import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 
@@ -203,10 +199,10 @@ public class Toolbar extends JToolBar {
     }
 
     private JToggleButton buildLeftPanelToggleButton() {
-        final JToggleButton jToggleButton = new JToggleButton("\u2592", true);
+        final ImageIcon toggleIcon = new ImageIcon(IconSchemes.TOGGLE_ICON_PATH);
+        final JToggleButton jToggleButton = new JToggleButton(toggleIcon, true);
+        jToggleButton.setToolTipText("Show/hide navigation tree");
         jToggleButton.setBorderPainted(false);
-        jToggleButton.setFocusPainted(true);
-        jToggleButton.setFont(new Font("Menlo", Font.PLAIN, 18));
         jToggleButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
