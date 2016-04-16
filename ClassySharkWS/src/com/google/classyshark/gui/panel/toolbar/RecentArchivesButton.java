@@ -37,7 +37,8 @@ public class RecentArchivesButton extends JButton {
     private ToolbarController panel;
 
     public RecentArchivesButton() {
-        super(new ImageIcon(IconSchemes.RECENT_ICON_PATH));
+        super();
+        setIcon(new ImageIcon(getClass().getResource(IconSchemes.RECENT_ICON_PATH)));
         setToolTipText("History");
         popup = new JPopupMenu();
         popup.setLayout(new BoxLayout(popup, BoxLayout.Y_AXIS));

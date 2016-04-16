@@ -52,7 +52,7 @@ public class Toolbar extends JToolBar {
         openBtn = buildOpenButton();
         backBtn = buildBackButton();
         viewBtn = buildViewButton();
-        mappingBtn = buildMappingsButton();
+        //mappingBtn = buildMappingsButton();
         exportButton = buildExportButton();
         recentArchivesBtn = buildRecentArchivesButton();
         leftPanelToggleBtn = buildLeftPanelToggleButton();
@@ -62,7 +62,7 @@ public class Toolbar extends JToolBar {
         add(backBtn);
         add(viewBtn);
         add(typingArea);
-        add(mappingBtn);
+        //add(mappingBtn);
         add(exportButton);
         add(recentArchivesBtn);
 
@@ -125,7 +125,8 @@ public class Toolbar extends JToolBar {
     }
 
     private JButton buildOpenButton() {
-        JButton result = new JButton(new ImageIcon(IconSchemes.OPEN_ICON_PATH));
+        JButton result =
+                new JButton(new ImageIcon(getClass().getResource((IconSchemes.OPEN_ICON_PATH))));
         result.setToolTipText("Open file");
 
         result.addActionListener(new ActionListener() {
@@ -142,7 +143,9 @@ public class Toolbar extends JToolBar {
     }
 
     private JButton buildBackButton() {
-        JButton result = new JButton(new ImageIcon(IconSchemes.BACK_ICON_PATH));
+        JButton result =
+                new JButton(
+                        new ImageIcon(getClass().getResource(IconSchemes.BACK_ICON_PATH)));
         result.setToolTipText("Back");
 
         result.addActionListener(new ActionListener() {
@@ -160,7 +163,8 @@ public class Toolbar extends JToolBar {
     }
 
     private JButton buildViewButton() {
-        JButton result = new JButton(new ImageIcon(IconSchemes.NEXT_ICON_PATH));
+        JButton result =
+                new JButton(new ImageIcon(getClass().getResource(IconSchemes.NEXT_ICON_PATH)));
         result.setToolTipText("Next");
 
         result.addActionListener(new ActionListener() {
@@ -178,7 +182,8 @@ public class Toolbar extends JToolBar {
     }
 
     private JButton buildExportButton() {
-        JButton result = new JButton(new ImageIcon(IconSchemes.EXPORT_ICON_PATH));
+        JButton result =
+                new JButton(new ImageIcon(getClass().getResource(IconSchemes.EXPORT_ICON_PATH)));
 
         result.addActionListener(new ActionListener() {
             @Override
@@ -194,7 +199,9 @@ public class Toolbar extends JToolBar {
         return result;
     }
 
+    /*
     private JButton buildMappingsButton() {
+
         JButton result = new JButton("#");
         result.setFont(new Font("Menlo", Font.PLAIN, 18));
 
@@ -213,6 +220,7 @@ public class Toolbar extends JToolBar {
 
         return result;
     }
+    */
 
     private JButton buildRecentArchivesButton() {
         RecentArchivesButton result = new RecentArchivesButton();
@@ -221,7 +229,7 @@ public class Toolbar extends JToolBar {
     }
 
     private JToggleButton buildLeftPanelToggleButton() {
-        final ImageIcon toggleIcon = new ImageIcon(IconSchemes.TOGGLE_ICON_PATH);
+        final ImageIcon toggleIcon = new ImageIcon(getClass().getResource((IconSchemes.TOGGLE_ICON_PATH)));
         final JToggleButton jToggleButton = new JToggleButton(toggleIcon, true);
         jToggleButton.setToolTipText("Show/hide navigation tree");
         jToggleButton.setBorderPainted(false);

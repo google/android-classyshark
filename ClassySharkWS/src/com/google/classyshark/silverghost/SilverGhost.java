@@ -31,7 +31,6 @@ public class SilverGhost {
     private File binaryArchive;
     private Reducer reducer;
     private Translator translator;
-    private List<String> allClassNamesInArchive;
     private ContentReader contentReader;
     private ProguardMapper proguardMapper = ProguardMapper.IDENTITY;
 
@@ -50,8 +49,7 @@ public class SilverGhost {
         contentReader = new ContentReader(getBinaryArchive());
         long start = System.currentTimeMillis();
         contentReader.load();
-        allClassNamesInArchive = contentReader.getAllClassNames();
-        reducer = new Reducer(allClassNamesInArchive);
+        reducer = new Reducer(contentReader.getAllClassNames());
         System.out.println("Archive Reading "
                 + (System.currentTimeMillis() - start) + " ms ");
     }
@@ -65,7 +63,7 @@ public class SilverGhost {
     }
 
     public List<String> getAllClassNames() {
-        return allClassNamesInArchive;
+        return contentReader.getAllClassNames();
     }
 
     public String getAutoCompleteClassName() {
@@ -81,9 +79,9 @@ public class SilverGhost {
     }
 
     public boolean isArchiveError() {
-        boolean noJavaClasses = allClassNamesInArchive.isEmpty();
-        boolean noAndroidClasses = allClassNamesInArchive.size() == 1
-                && allClassNamesInArchive.contains("AndroidManifest.xml");
+        boolean noJavaClasses = contentReader.getAllClassNames().isEmpty();
+        boolean noAndroidClasses = contentReader.getAllClassNames().size() == 1
+                && contentReader.getAllClassNames().contains("AndroidManifest.xml");
 
         return noJavaClasses || noAndroidClasses;
     }
