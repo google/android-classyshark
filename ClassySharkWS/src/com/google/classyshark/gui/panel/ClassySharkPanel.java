@@ -281,9 +281,9 @@ public class ClassySharkPanel extends JPanel
         JTabbedPane jTabbedPane = new JTabbedPane();
         JScrollPane leftScrollPane = new JScrollPane(filesTree.getJTree());
 
-        jTabbedPane.addTab("Archive", leftScrollPane);
+        jTabbedPane.addTab("Classes", leftScrollPane);
         methodsCountPanel = new MethodsCountPanel(this);
-        jTabbedPane.addTab("Packages", methodsCountPanel);
+        jTabbedPane.addTab("Methods count", methodsCountPanel);
 
         jTabbedPane.addChangeListener(new ChangeListener() {
             @Override
