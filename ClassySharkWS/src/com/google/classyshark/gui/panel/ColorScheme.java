@@ -30,4 +30,7 @@ public class ColorScheme {
     public static final Color ANNOTATIONS = new Color(0xD2, 0x16, 0x5B);
     public static final Color SELECTION_BG = new Color(0x21, 0x42, 0x83);
     public static final Color NAMES = new Color(0x61, 0x62, 0x7C);
+
+    public static final Color BACKGROUND = new Color(0x2b, 0x2b, 0x2b);
+    public static final Color FOREGROUND_GRAY = new Color(0x5b, 0x5b, 0x5b);
 }
