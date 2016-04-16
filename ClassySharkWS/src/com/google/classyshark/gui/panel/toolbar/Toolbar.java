@@ -98,11 +98,9 @@ public class Toolbar extends JToolBar {
     }
 
     private JTextField buildTypingArea() {
-        final JTextField result = new JTextField(50) {
-            @Override
-            public void setBorder(Border border) {
-            }
-        };
+        final JTextField result = new JTextField(50);
+
+        result.setEnabled(false);
 
         result.addMouseListener(new MouseAdapter() {
 
