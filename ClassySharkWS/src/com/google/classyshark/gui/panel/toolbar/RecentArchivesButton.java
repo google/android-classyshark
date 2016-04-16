@@ -22,7 +22,6 @@ import com.google.classyshark.gui.panel.io.RecentArchivesConfig;
 import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -60,7 +59,6 @@ public class RecentArchivesButton extends JButton {
 
         for (String archiveName : RecentArchivesConfig.INSTANCE.getRecentArchiveNames()) {
             item = new JMenuItem(archiveName);
-            item.setFont(new Font("Menlo", Font.BOLD, 16));
             popup.add(item);
             item.setHorizontalTextPosition(JMenuItem.RIGHT);
             item.addActionListener(new RecentFilesListener(archiveName));
@@ -68,7 +66,6 @@ public class RecentArchivesButton extends JButton {
 
         popup.addSeparator();
         final JMenuItem clearRecentArchivesItem = new JMenuItem("Clear");
-        clearRecentArchivesItem.setFont(new Font("Menlo", Font.BOLD, 16));
         popup.add(clearRecentArchivesItem);
         clearRecentArchivesItem.addActionListener(new ActionListener() {
             @Override
