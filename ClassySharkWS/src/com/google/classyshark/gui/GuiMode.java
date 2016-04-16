@@ -40,16 +40,11 @@ public class GuiMode {
         });
     }
 
-    private static void setParamsForOtherPlatforms() throws Exception {
-        UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-        UIManager.setLookAndFeel("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
-    }
-
     private static void buildAndShowClassyShark(List<String> cmdLineArgs) {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (UnsupportedLookAndFeelException | IllegalAccessException | ClassNotFoundException
-                | InstantiationException ex) {
+                | InstantiationException | SecurityException ex) {
             ex.printStackTrace();
         }
 
