@@ -16,6 +16,7 @@
 
 package com.google.classyshark.silverghost.translator.jar;
 
+import com.google.classyshark.silverghost.tokensmapper.ProguardMapper;
 import com.google.classyshark.silverghost.translator.Translator;
 import java.io.File;
 import java.text.DecimalFormat;
@@ -40,6 +41,11 @@ public class JarInfoTranslator implements Translator {
     @Override
     public String getClassName() {
         return jarArchive.getName();
+    }
+
+    @Override
+    public void addMapper(ProguardMapper reverseMappings) {
+
     }
 
     @Override

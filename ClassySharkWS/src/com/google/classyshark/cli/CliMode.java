@@ -28,7 +28,6 @@ import com.google.classyshark.silverghost.translator.TranslatorFactory;
 import com.google.classyshark.silverghost.translator.apk.ApkTranslator;
 
 import java.io.File;
-import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.List;
 
@@ -36,6 +35,9 @@ import java.util.List;
  * Command line mode
  */
 public class CliMode {
+
+    // TODO fix the message with packages dump
+    // TODO introduce SilverGhost api
 
     private static final String ERROR_MESSAGE = "Usage: java -jar ClassyShark.jar [-options] <archive> [args...]\n" +
             "           (to execute a ClassyShark on binary archive jar/apk/dex/class)\n" +
@@ -111,7 +113,7 @@ public class CliMode {
         }
 
         try {
-            Exporter.writeCurrentClass(translator);
+            Exporter.writeCurrentClass(translator.getClassName(), translator.toString());
         } catch (Exception e) {
             System.err.println("Internal error - couldn't write file" + "\n\n\n" + ERROR_MESSAGE);
         }

@@ -17,10 +17,10 @@
 package com.google.classyshark.silverghost.translator.elf;
 
 
+import com.google.classyshark.silverghost.tokensmapper.ProguardMapper;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.text.DecimalFormat;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -50,6 +50,11 @@ public class ElfTranslator implements Translator {
     @Override
     public String getClassName() {
         return archiveFile.getName();
+    }
+
+    @Override
+    public void addMapper(ProguardMapper reverseMappings) {
+
     }
 
     @Override

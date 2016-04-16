@@ -16,6 +16,7 @@
 
 package com.google.classyshark.silverghost.translator;
 
+import com.google.classyshark.silverghost.tokensmapper.ProguardMapper;
 import java.util.List;
 
 /**
@@ -46,6 +47,8 @@ public interface Translator {
     }
 
     String getClassName();
+
+    void addMapper(ProguardMapper reverseMappings);
 
     void apply();
 

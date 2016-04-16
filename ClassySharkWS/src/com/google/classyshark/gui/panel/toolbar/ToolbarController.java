@@ -27,6 +27,8 @@ public interface ToolbarController extends ArchiveDisplayer {
 
     void onViewTopClassPressed();
 
+    void onMappingsButtonPressed();
+
     void onExportButtonPressed();
 
     void onChangeLeftPaneVisibility(boolean selected);
