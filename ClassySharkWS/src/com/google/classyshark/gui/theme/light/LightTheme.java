@@ -1,11 +1,11 @@
 package com.google.classyshark.gui.theme.light;
 
-import com.google.classyshark.gui.theme.ThemeManager;
+import com.google.classyshark.gui.theme.Theme;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class LightThemeManager implements ThemeManager{
+public class LightTheme implements Theme {
     private final ImageIcon toggleIcon;
     private final ImageIcon recentIcon;
     private final ImageIcon backIcon;
@@ -14,7 +14,7 @@ public class LightThemeManager implements ThemeManager{
     private final ImageIcon exportIcon;
     private final ImageIcon mappingsIcon;
 
-    public LightThemeManager() {
+    public LightTheme() {
         toggleIcon = new ImageIcon(getClass().getResource(LightIconScheme.TOGGLE_ICON_PATH));
         recentIcon = new ImageIcon(getClass().getResource(LightIconScheme.RECENT_ICON_PATH));
         backIcon = new ImageIcon(getClass().getResource(LightIconScheme.BACK_ICON_PATH));
