@@ -16,7 +16,7 @@
 
 package com.google.classyshark.gui.panel.toolbar;
 
-import com.google.classyshark.gui.theme.light.IconSchemes;
+import com.google.classyshark.gui.theme.light.LightIconScheme;
 import com.google.classyshark.gui.panel.io.RecentArchivesConfig;
 
 import javax.swing.*;
@@ -38,7 +38,7 @@ public class RecentArchivesButton extends JButton {
 
     public RecentArchivesButton() {
         super();
-        setIcon(new ImageIcon(getClass().getResource(IconSchemes.RECENT_ICON_PATH)));
+        setIcon(new ImageIcon(getClass().getResource(LightIconScheme.RECENT_ICON_PATH)));
         setToolTipText("History");
         popup = new JPopupMenu();
         popup.setLayout(new BoxLayout(popup, BoxLayout.Y_AXIS));

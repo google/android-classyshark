@@ -21,8 +21,8 @@ import java.awt.Color;
 /**
  *  Application color scheme
  */
-public class ColorScheme {
-    private ColorScheme(){}
+public class LightColorScheme {
+    private LightColorScheme(){}
 
     public static final Color DEFAULT = new Color(0x61, 0x62, 0x7C);
     public static final Color KEYWORDS = new Color(0xAA, 0x7D, 0x29);

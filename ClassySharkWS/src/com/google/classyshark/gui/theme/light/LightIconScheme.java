@@ -1,7 +1,7 @@
 package com.google.classyshark.gui.theme.light;
 
 
-public class IconSchemes {
+public class LightIconScheme {
 
     private static final String ROOT_PATH = "/resources/";
     private static final String EXTENSION = ".png";
