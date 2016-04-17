@@ -6,7 +6,7 @@ import java.awt.*;
 /**
  * This class is the one defining the different parameters needed in order to obtain a proper theme across the whole app
  */
-public interface Theme {
+public interface Theme extends SwingThemeApplier<JComponent> {
 
     ImageIcon getToggleIcon();
     ImageIcon getRecentIcon();

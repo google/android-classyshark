@@ -88,4 +88,11 @@ public class LightTheme implements Theme {
     public Color getNamesColor() {
         return LightColorScheme.NAMES;
     }
+
+    @Override
+    public void applyTo(JComponent component) {
+        /**
+         * Do nothing as we don't want to override system defaults for the light theme
+         */
+    }
 }
