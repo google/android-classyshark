@@ -28,6 +28,8 @@ public class DarkTheme implements Theme{
         exportIcon = new ImageIcon(getClass().getResource(EXPORT_ICON_PATH));
         mappingsIcon = new ImageIcon(getClass().getResource(MAPPING_ICON_PATH));
         settingsIcon = new ImageIcon(getClass().getResource(SETTINGS_ICON_PATH));
+
+        UIManager.put("MenuItem.foreground", DEFAULT);
     }
 
     @Override
@@ -102,10 +104,15 @@ public class DarkTheme implements Theme{
 
     @Override
     public void applyTo(Component component) {
-        if (component instanceof JTree || component instanceof JTextField) {
+        if (shallBeLighter(component)) {
             component.setBackground(BACKGROUND_LIGHT);
         } else {
             component.setBackground(BACKGROUND);
         }
+    }
+
+    private boolean shallBeLighter(Component component) {
+        return component instanceof JTree || component instanceof JTextField ||
+                component instanceof JMenuItem || component instanceof JPopupMenu;
     }
 }
