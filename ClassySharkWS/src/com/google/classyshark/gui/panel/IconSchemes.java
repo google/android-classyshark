@@ -12,4 +12,5 @@ public class IconSchemes {
     public static final String NEXT_ICON_PATH = ROOT_PATH + "ic_next" + EXTENSION;
     public static final String OPEN_ICON_PATH = ROOT_PATH + "ic_open" + EXTENSION;
     public static final String EXPORT_ICON_PATH = ROOT_PATH + "ic_export" + EXTENSION;
+    public static final String MAPPING_ICON_PATH = ROOT_PATH + "ic_mappings" + EXTENSION;
 }
