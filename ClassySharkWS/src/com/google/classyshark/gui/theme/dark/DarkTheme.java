@@ -17,6 +17,7 @@ public class DarkTheme implements Theme{
     private final ImageIcon openIcon;
     private final ImageIcon exportIcon;
     private final ImageIcon mappingsIcon;
+    private final ImageIcon settingsIcon;
 
     public DarkTheme() {
         toggleIcon = new ImageIcon(getClass().getResource(TOGGLE_ICON_PATH));
@@ -26,6 +27,7 @@ public class DarkTheme implements Theme{
         openIcon = new ImageIcon(getClass().getResource(OPEN_ICON_PATH));
         exportIcon = new ImageIcon(getClass().getResource(EXPORT_ICON_PATH));
         mappingsIcon = new ImageIcon(getClass().getResource(MAPPING_ICON_PATH));
+        settingsIcon = new ImageIcon(getClass().getResource(SETTINGS_ICON_PATH));
     }
 
     @Override
@@ -61,6 +63,11 @@ public class DarkTheme implements Theme{
     @Override
     public ImageIcon getMappingIcon() {
         return mappingsIcon;
+    }
+
+    @Override
+    public ImageIcon getSettingsIcon() {
+        return settingsIcon;
     }
 
     @Override

@@ -13,4 +13,5 @@ class LightIconScheme {
     static final String OPEN_ICON_PATH = ROOT_PATH + "ic_open" + EXTENSION;
     static final String EXPORT_ICON_PATH = ROOT_PATH + "ic_export" + EXTENSION;
     static final String MAPPING_ICON_PATH = ROOT_PATH + "ic_mappings" + EXTENSION;
+    static final String SETTINGS_ICON_PATH = ROOT_PATH + "ic_settings" + EXTENSION;
 }

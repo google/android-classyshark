@@ -15,6 +15,7 @@ public interface Theme extends SwingThemeApplier<Component> {
     ImageIcon getOpenIcon();
     ImageIcon getExportIcon();
     ImageIcon getMappingIcon();
+    ImageIcon getSettingsIcon();
 
     Color getDefaultColor();
     Color getKeyWordsColor();
