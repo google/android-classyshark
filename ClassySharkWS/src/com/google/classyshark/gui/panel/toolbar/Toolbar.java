@@ -106,6 +106,7 @@ public class Toolbar extends JToolBar {
         final JTextField result = new JTextField(50);
 
         result.setEnabled(true);
+        theme.applyTo(result);
 
         result.addMouseListener(new MouseAdapter() {
 
