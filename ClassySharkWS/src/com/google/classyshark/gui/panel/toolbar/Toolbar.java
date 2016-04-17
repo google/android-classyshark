@@ -33,7 +33,7 @@ public class Toolbar extends JToolBar {
 
     private final JTextField typingArea;
     private final ToolbarController toolbarController;
-    private final ThemeManager themeManager;
+    private final ThemeManager themeManager = GuiMode.getThemeManager();
 
     private JButton openBtn;
     private JButton viewBtn;
@@ -47,7 +47,6 @@ public class Toolbar extends JToolBar {
         super();
 
         this.toolbarController = toolbarController;
-        themeManager = GuiMode.getThemeManager();
 
         typingArea = buildTypingArea();
         openBtn = buildOpenButton();
