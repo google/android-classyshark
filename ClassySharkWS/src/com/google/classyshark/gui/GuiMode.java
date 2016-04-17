@@ -18,6 +18,7 @@ package com.google.classyshark.gui;
 
 import com.google.classyshark.gui.panel.ClassySharkPanel;
 import com.google.classyshark.gui.theme.Theme;
+import com.google.classyshark.gui.theme.ThemeManager;
 import com.google.classyshark.gui.theme.light.LightTheme;
 
 import java.io.File;
@@ -32,7 +33,7 @@ import javax.swing.WindowConstants;
  */
 public class GuiMode {
 
-    private static Theme theme = new LightTheme();
+    private static Theme theme = ThemeManager.getCurrentTheme();
 
     private GuiMode() {
     }
