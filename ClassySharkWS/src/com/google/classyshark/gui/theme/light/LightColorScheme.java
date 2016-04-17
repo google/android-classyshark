@@ -24,10 +24,10 @@ import java.awt.Color;
 class LightColorScheme {
     private LightColorScheme(){}
 
-    static final Color DEFAULT = new Color(0x61, 0x62, 0x7C);
-    static final Color KEYWORDS = new Color(0xAA, 0x7D, 0x29);
-    static final Color IDENTIFIERS = new Color(0x78, 0x8A, 0x4);
-    static final Color ANNOTATIONS = new Color(0xD2, 0x16, 0x5B);
-    static final Color SELECTION_BG = new Color(0x21, 0x42, 0x83);
-    static final Color NAMES = new Color(0x61, 0x62, 0x7C);
+    static final Color DEFAULT = new Color(101, 123, 131);
+    static final Color KEYWORDS = new Color(181, 137, 0);
+    static final Color IDENTIFIERS = new Color(133, 153, 0);
+    static final Color ANNOTATIONS = new Color(108, 113, 196);
+    static final Color SELECTION_BG = new Color(238, 232, 213);
+    static final Color NAMES = new Color(147, 161, 161);
 }
