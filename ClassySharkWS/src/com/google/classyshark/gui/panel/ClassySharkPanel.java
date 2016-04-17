@@ -27,6 +27,7 @@ import com.google.classyshark.gui.panel.toolbar.KeyUtils;
 import com.google.classyshark.gui.panel.toolbar.Toolbar;
 import com.google.classyshark.gui.panel.toolbar.ToolbarController;
 import com.google.classyshark.gui.panel.tree.FilesTree;
+import com.google.classyshark.gui.settings.SettingsFrame;
 import com.google.classyshark.gui.theme.Theme;
 import com.google.classyshark.silverghost.SilverGhost;
 import com.google.classyshark.silverghost.exporter.Exporter;
@@ -232,7 +233,7 @@ public class ClassySharkPanel extends JPanel
 
     @Override
     public void onSettingsButtonPressed() {
-
+        SettingsFrame frame = new SettingsFrame();
     }
 
     @Override
