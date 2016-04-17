@@ -16,8 +16,8 @@
 
 package com.google.classyshark.gui.panel.toolbar;
 
-import com.google.classyshark.gui.theme.light.LightColorScheme;
-import com.google.classyshark.gui.theme.light.LightIconScheme;
+import com.google.classyshark.gui.GuiMode;
+import com.google.classyshark.gui.theme.ThemeManager;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -33,6 +33,7 @@ public class Toolbar extends JToolBar {
 
     private final JTextField typingArea;
     private final ToolbarController toolbarController;
+    private final ThemeManager themeManager;
 
     private JButton openBtn;
     private JButton viewBtn;
@@ -46,6 +47,7 @@ public class Toolbar extends JToolBar {
         super();
 
         this.toolbarController = toolbarController;
+        themeManager = GuiMode.getThemeManager();
 
         typingArea = buildTypingArea();
         openBtn = buildOpenButton();
@@ -76,14 +78,14 @@ public class Toolbar extends JToolBar {
 
     public void setTypingArea() {
 
-        typingArea.setForeground(LightColorScheme.NAMES);
+        typingArea.setForeground(themeManager.getNamesColor());
         setTypingAreaCaret();
     }
 
     public void setTypingAreaCaret() {
         int len = typingArea.getDocument().getLength();
         typingArea.setCaretPosition(len);
-        typingArea.setCaretColor(LightColorScheme.IDENTIFIERS);
+        typingArea.setCaretColor(themeManager.getIdentifiersColor());
     }
 
     public String getText() {
@@ -124,8 +126,7 @@ public class Toolbar extends JToolBar {
     }
 
     private JButton buildOpenButton() {
-        JButton result =
-                new JButton(new ImageIcon(getClass().getResource((LightIconScheme.OPEN_ICON_PATH))));
+        JButton result = new JButton(themeManager.getOpenIcon());
         result.setToolTipText("Open file");
 
         result.addActionListener(new ActionListener() {
@@ -142,9 +143,7 @@ public class Toolbar extends JToolBar {
     }
 
     private JButton buildBackButton() {
-        JButton result =
-                new JButton(
-                        new ImageIcon(getClass().getResource(LightIconScheme.BACK_ICON_PATH)));
+        JButton result = new JButton(themeManager.getBackIcon());
         result.setToolTipText("Back");
 
         result.addActionListener(new ActionListener() {
@@ -162,8 +161,7 @@ public class Toolbar extends JToolBar {
     }
 
     private JButton buildViewButton() {
-        JButton result =
-                new JButton(new ImageIcon(getClass().getResource(LightIconScheme.NEXT_ICON_PATH)));
+        JButton result = new JButton(themeManager.getForwardIcon());
         result.setToolTipText("Next");
 
         result.addActionListener(new ActionListener() {
@@ -181,8 +179,7 @@ public class Toolbar extends JToolBar {
     }
 
     private JButton buildExportButton() {
-        JButton result =
-                new JButton(new ImageIcon(getClass().getResource(LightIconScheme.EXPORT_ICON_PATH)));
+        JButton result = new JButton(themeManager.getExportIcon());
 
         result.addActionListener(new ActionListener() {
             @Override
@@ -200,8 +197,7 @@ public class Toolbar extends JToolBar {
 
     private JButton buildMappingsButton() {
 
-        JButton result =
-                new JButton(new ImageIcon(getClass().getResource(LightIconScheme.MAPPING_ICON_PATH)));
+        JButton result = new JButton(themeManager.getMappingIcon());
 
         result.addActionListener(new ActionListener() {
             @Override
@@ -224,7 +220,7 @@ public class Toolbar extends JToolBar {
     }
 
     private JToggleButton buildLeftPanelToggleButton() {
-        final ImageIcon toggleIcon = new ImageIcon(getClass().getResource((LightIconScheme.TOGGLE_ICON_PATH)));
+        final ImageIcon toggleIcon = themeManager.getToggleIcon();
         final JToggleButton jToggleButton = new JToggleButton(toggleIcon, true);
         jToggleButton.setToolTipText("Show/hide navigation tree");
         jToggleButton.setBorderPainted(false);
