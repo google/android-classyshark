@@ -16,6 +16,7 @@
 
 package com.google.classyshark.gui.panel;
 
+import com.google.classyshark.gui.GuiMode;
 import com.google.classyshark.gui.panel.chart.RingChartPanel;
 import com.google.classyshark.gui.panel.displayarea.DisplayArea;
 import com.google.classyshark.gui.panel.io.CurrentFolderConfig;
@@ -26,11 +27,14 @@ import com.google.classyshark.gui.panel.toolbar.KeyUtils;
 import com.google.classyshark.gui.panel.toolbar.Toolbar;
 import com.google.classyshark.gui.panel.toolbar.ToolbarController;
 import com.google.classyshark.gui.panel.tree.FilesTree;
+import com.google.classyshark.gui.theme.Theme;
 import com.google.classyshark.silverghost.SilverGhost;
 import com.google.classyshark.silverghost.exporter.Exporter;
 import com.google.classyshark.silverghost.methodscounter.ClassNode;
 import com.google.classyshark.silverghost.tokensmapper.ProguardMapper;
 import com.google.classyshark.silverghost.translator.Translator;
+import com.sun.deploy.util.GeneralUtil;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -72,6 +76,8 @@ public class ClassySharkPanel extends JPanel
     private RingChartPanel ringChartPanel;
     private boolean isDataLoaded = false;
 
+    private final Theme theme = GuiMode.getTheme();
+
     private SilverGhost silverGhost = new SilverGhost();
 
     public ClassySharkPanel(JFrame frame, File archive, String fullClassName) {
@@ -91,6 +97,7 @@ public class ClassySharkPanel extends JPanel
         buildUI();
         parentFrame = frame;
         toolbar.setText("");
+        theme.applyTo(this);
     }
 
     @Override
@@ -138,7 +145,6 @@ public class ClassySharkPanel extends JPanel
         });
 
         fc.setCurrentDirectory(CurrentFolderConfig.INSTANCE.getCurrentDirectory());
-
         int returnVal = fc.showOpenDialog(this);
         toolbar.setText("");
         if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -301,14 +307,17 @@ public class ClassySharkPanel extends JPanel
 
         displayArea = new DisplayArea(this);
         final JScrollPane rightScrollPane = new JScrollPane(displayArea.onAddComponentToPane());
+        theme.applyTo(rightScrollPane);
 
         filesTree = new FilesTree(this);
         JTabbedPane jTabbedPane = new JTabbedPane();
         JScrollPane leftScrollPane = new JScrollPane(filesTree.getJTree());
+        theme.applyTo(leftScrollPane);
 
         jTabbedPane.addTab("Classes", leftScrollPane);
         methodsCountPanel = new MethodsCountPanel(this);
         jTabbedPane.addTab("Methods count", methodsCountPanel);
+        theme.applyTo(jTabbedPane);
 
         jTabbedPane.addChangeListener(new ChangeListener() {
             @Override
@@ -332,6 +341,8 @@ public class ClassySharkPanel extends JPanel
         jSplitPane.add(rightScrollPane, JSplitPane.RIGHT);
         jSplitPane.getLeftComponent().setVisible(true);
         jSplitPane.setDividerLocation(300);
+
+        theme.applyTo(jSplitPane);
 
         add(jSplitPane, BorderLayout.CENTER);
     }

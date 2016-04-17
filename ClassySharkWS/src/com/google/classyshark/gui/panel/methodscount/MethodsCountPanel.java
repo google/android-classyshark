@@ -16,8 +16,10 @@
 
 package com.google.classyshark.gui.panel.methodscount;
 
+import com.google.classyshark.gui.GuiMode;
 import com.google.classyshark.gui.panel.FileTransferHandler;
 import com.google.classyshark.gui.panel.ViewerController;
+import com.google.classyshark.gui.theme.Theme;
 import com.google.classyshark.silverghost.methodscounter.ClassNode;
 import com.google.classyshark.silverghost.methodscounter.RootBuilder;
 import java.awt.BorderLayout;
@@ -40,15 +42,18 @@ public class MethodsCountPanel extends JPanel {
     private DefaultTreeModel treeModel;
     private JTree jTree;
     private ViewerController viewerController;
+    private final Theme theme = GuiMode.getTheme();
 
     public MethodsCountPanel(ViewerController viewerController, File file) throws HeadlessException {
         this(viewerController);
         loadFile(file);
+        theme.applyTo(this);
     }
 
     public MethodsCountPanel(ViewerController viewerController) throws HeadlessException {
         this.viewerController = viewerController;
         setup();
+        theme.applyTo(this);
     }
 
     public void loadFile(File file) {
@@ -60,6 +65,7 @@ public class MethodsCountPanel extends JPanel {
         treeModel = new DefaultTreeModel(new DefaultMutableTreeNode(null));
         jTree = new JTree(treeModel);
         jTree.setRootVisible(false);
+        theme.applyTo(jTree);
 
         DefaultTreeCellRenderer cellRenderer = (DefaultTreeCellRenderer) jTree.getCellRenderer();
 
@@ -78,6 +84,7 @@ public class MethodsCountPanel extends JPanel {
         JScrollPane jScrollPane = new JScrollPane(jTree);
         this.setBorder(new EmptyBorder(0,0,0,0));
         this.add(jScrollPane, BorderLayout.CENTER);
+        theme.applyTo(jScrollPane);
 
         jTree.setDragEnabled(true);
         jTree.setTransferHandler(new FileTransferHandler(viewerController));

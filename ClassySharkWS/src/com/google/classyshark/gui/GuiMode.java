@@ -67,6 +67,7 @@ public class GuiMode {
 
     private static JFrame buildClassySharkFrame(List<String> cmdLineArgs) {
         JFrame result = new JFrame("ClassyShark");
+        theme.applyTo(result);
 
         // no arguments
         if (cmdLineArgs.size() == 0) {
