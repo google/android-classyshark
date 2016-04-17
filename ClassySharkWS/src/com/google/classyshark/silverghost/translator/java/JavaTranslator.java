@@ -20,6 +20,7 @@ import com.google.classyshark.silverghost.translator.Translator;
 import com.google.classyshark.silverghost.translator.TranslatorFactory;
 import com.google.classyshark.silverghost.translator.java.clazz.QualifiedTypesMap;
 import com.google.classyshark.silverghost.translator.java.clazz.reflect.MetaObjectClass;
+import com.google.classyshark.silverghost.tokensmapper.ProguardMapper;
 import java.io.File;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -56,6 +57,12 @@ public class JavaTranslator implements Translator {
     @Override
     public String getClassName() {
         return metaObject.getName();
+    }
+
+    @Override
+    public void addMapper(ProguardMapper reverseMappings) {
+        this.metaObject =
+               new MetaObjectWithMapper(this.metaObject, reverseMappings);
     }
 
     @Override

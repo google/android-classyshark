@@ -163,7 +163,6 @@ public class RingChart {
         imageG2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
         imageG2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         imageG2d.setComposite(AlphaComposite.Src);
-        imageG2d.setColor(ColorScheme.BACKGROUND);
         imageG2d.fillRect(0, 0, width, height);
 
         int graphWidth = width - MARGIN * 2;

@@ -49,9 +49,9 @@ public class Exporter {
         Exporter.writeMethodCounts(archive);
     }
 
-    public static void writeCurrentClass(Translator translator)
+    public static void writeCurrentClass(String className, String content)
             throws IOException {
-        writeString(translator.getClassName() + "_dump", translator.toString());
+        writeString(className + "_dump", content);
     }
 
     public static void writeMethodCounts(File archive) {
