@@ -66,6 +66,7 @@ public class Toolbar extends JToolBar {
         add(mappingBtn);
         add(exportButton);
         add(recentArchivesBtn);
+        add(buildSettingsButton());
 
         setFloatable(false);
         setTypingArea();
@@ -218,6 +219,15 @@ public class Toolbar extends JToolBar {
         RecentArchivesButton result = new RecentArchivesButton();
         result.setPanel(toolbarController);
         return result;
+    }
+
+    private JButton buildSettingsButton() {
+        JButton button = new JButton(theme.getSettingsIcon());
+
+        button.setToolTipText("Settings");
+        button.setBorderPainted(false);
+
+        return button;
     }
 
     private JToggleButton buildLeftPanelToggleButton() {
