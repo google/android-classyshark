@@ -16,7 +16,6 @@
 
 package com.google.classyshark.gui.panel.methodscount;
 
-import com.google.classyshark.gui.panel.ColorScheme;
 import com.google.classyshark.gui.panel.FileTransferHandler;
 import com.google.classyshark.gui.panel.ViewerController;
 import com.google.classyshark.silverghost.methodscounter.ClassNode;

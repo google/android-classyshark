@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.classyshark.gui.panel;
+package com.google.classyshark.gui.theme.light;
 
 import java.awt.Color;
 

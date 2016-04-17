@@ -16,7 +16,6 @@
 
 package com.google.classyshark.gui.panel.tree;
 
-import com.google.classyshark.gui.panel.ColorScheme;
 import com.google.classyshark.gui.panel.FileTransferHandler;
 import com.google.classyshark.gui.panel.ViewerController;
 import com.google.classyshark.silverghost.contentreader.ContentReader;

@@ -16,7 +16,7 @@
 
 package com.google.classyshark.gui.panel.toolbar;
 
-import com.google.classyshark.gui.panel.IconSchemes;
+import com.google.classyshark.gui.theme.light.IconSchemes;
 import com.google.classyshark.gui.panel.io.RecentArchivesConfig;
 
 import javax.swing.*;

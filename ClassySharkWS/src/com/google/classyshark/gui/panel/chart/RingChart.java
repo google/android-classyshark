@@ -16,16 +16,13 @@
 
 package com.google.classyshark.gui.panel.chart;
 
-import com.google.classyshark.gui.panel.ColorScheme;
 import com.google.classyshark.silverghost.methodscounter.ClassNode;
 
 import java.awt.AlphaComposite;
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
-import java.awt.Stroke;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;

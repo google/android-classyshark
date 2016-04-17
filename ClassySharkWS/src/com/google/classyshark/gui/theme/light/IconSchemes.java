@@ -1,4 +1,4 @@
-package com.google.classyshark.gui.panel;
+package com.google.classyshark.gui.theme.light;
 
 
 public class IconSchemes {
