@@ -47,6 +47,7 @@ public class Toolbar extends JToolBar {
         super();
 
         this.toolbarController = toolbarController;
+        theme.applyTo(this);
 
         typingArea = buildTypingArea();
         openBtn = buildOpenButton();

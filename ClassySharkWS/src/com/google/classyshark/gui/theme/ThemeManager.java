@@ -1,6 +1,7 @@
 package com.google.classyshark.gui.theme;
 
 import com.google.classyshark.gui.GuiMode;
+import com.google.classyshark.gui.theme.dark.DarkTheme;
 import com.google.classyshark.gui.theme.light.LightTheme;
 
 import java.io.File;
@@ -45,7 +46,7 @@ public class ThemeManager {
             Class<Theme> c = (Class<Theme>) Class.forName(theme);
             return c.newInstance();
         } catch (Exception e) {
-            return new LightTheme();
+            return new DarkTheme();
         }
     }
 }

@@ -62,6 +62,7 @@ public class GuiMode {
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
+        theme.applyTo(frame);
     }
 
     private static JFrame buildClassySharkFrame(List<String> cmdLineArgs) {

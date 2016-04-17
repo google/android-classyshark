@@ -94,7 +94,7 @@ public class DarkTheme implements Theme{
     }
 
     @Override
-    public void applyTo(JComponent component) {
+    public void applyTo(Component component) {
         component.setBackground(BACKGROUND);
     }
 }

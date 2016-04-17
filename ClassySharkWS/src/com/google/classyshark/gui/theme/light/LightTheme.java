@@ -93,7 +93,7 @@ public class LightTheme implements Theme {
     }
 
     @Override
-    public void applyTo(JComponent component) {
+    public void applyTo(Component component) {
         /**
          * Do nothing as we don't want to override system defaults for the light theme
          */
