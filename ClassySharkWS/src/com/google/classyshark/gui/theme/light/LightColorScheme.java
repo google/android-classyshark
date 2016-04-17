@@ -21,13 +21,13 @@ import java.awt.Color;
 /**
  *  Application color scheme
  */
-public class LightColorScheme {
+class LightColorScheme {
     private LightColorScheme(){}
 
-    public static final Color DEFAULT = new Color(0x61, 0x62, 0x7C);
-    public static final Color KEYWORDS = new Color(0xAA, 0x7D, 0x29);
-    public static final Color IDENTIFIERS = new Color(0x78, 0x8A, 0x4);
-    public static final Color ANNOTATIONS = new Color(0xD2, 0x16, 0x5B);
-    public static final Color SELECTION_BG = new Color(0x21, 0x42, 0x83);
-    public static final Color NAMES = new Color(0x61, 0x62, 0x7C);
+    static final Color DEFAULT = new Color(0x61, 0x62, 0x7C);
+    static final Color KEYWORDS = new Color(0xAA, 0x7D, 0x29);
+    static final Color IDENTIFIERS = new Color(0x78, 0x8A, 0x4);
+    static final Color ANNOTATIONS = new Color(0xD2, 0x16, 0x5B);
+    static final Color SELECTION_BG = new Color(0x21, 0x42, 0x83);
+    static final Color NAMES = new Color(0x61, 0x62, 0x7C);
 }
