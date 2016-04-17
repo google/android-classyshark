@@ -104,7 +104,7 @@ public class Toolbar extends JToolBar {
     private JTextField buildTypingArea() {
         final JTextField result = new JTextField(50);
 
-        result.setEnabled(false);
+        result.setEnabled(true);
 
         result.addMouseListener(new MouseAdapter() {
 
