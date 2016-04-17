@@ -1,14 +1,15 @@
-package com.google.classyshark.gui.theme.light;
+package com.google.classyshark.gui.theme.dark;
 
 import com.google.classyshark.gui.theme.Theme;
 
 import javax.swing.*;
 import java.awt.*;
 
-import static com.google.classyshark.gui.theme.light.LightColorScheme.*;
-import static com.google.classyshark.gui.theme.light.LightIconScheme.*;
+import static com.google.classyshark.gui.theme.dark.DarkColorScheme.*;
+import static com.google.classyshark.gui.theme.dark.DarkIconScheme.*;
 
-public class LightTheme implements Theme {
+public class DarkTheme implements Theme{
+
     private final ImageIcon toggleIcon;
     private final ImageIcon recentIcon;
     private final ImageIcon backIcon;
@@ -17,7 +18,7 @@ public class LightTheme implements Theme {
     private final ImageIcon exportIcon;
     private final ImageIcon mappingsIcon;
 
-    public LightTheme() {
+    public DarkTheme() {
         toggleIcon = new ImageIcon(getClass().getResource(TOGGLE_ICON_PATH));
         recentIcon = new ImageIcon(getClass().getResource(RECENT_ICON_PATH));
         backIcon = new ImageIcon(getClass().getResource(BACK_ICON_PATH));
@@ -94,8 +95,6 @@ public class LightTheme implements Theme {
 
     @Override
     public void applyTo(JComponent component) {
-        /**
-         * Do nothing as we don't want to override system defaults for the light theme
-         */
+        component.setBackground(BACKGROUND);
     }
 }
