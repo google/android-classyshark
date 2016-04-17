@@ -104,7 +104,7 @@ public class Toolbar extends JToolBar {
     private JTextField buildTypingArea() {
         final JTextField result = new JTextField(50);
 
-        result.setEnabled(false);
+        result.setEnabled(true);
 
         result.addMouseListener(new MouseAdapter() {
 
@@ -202,7 +202,7 @@ public class Toolbar extends JToolBar {
     private JButton buildMappingsButton() {
 
         JButton result =
-                new JButton(new ImageIcon(getClass().getResource(IconSchemes.EXPORT_ICON_PATH)));
+                new JButton(new ImageIcon(getClass().getResource(IconSchemes.MAPPING_ICON_PATH)));
 
         result.addActionListener(new ActionListener() {
             @Override
@@ -211,7 +211,7 @@ public class Toolbar extends JToolBar {
             }
         });
 
-        result.setToolTipText("Mappings");
+        result.setToolTipText("Import Proguard mapping file");
         result.setBorderPainted(false);
         result.setEnabled(true);
 
