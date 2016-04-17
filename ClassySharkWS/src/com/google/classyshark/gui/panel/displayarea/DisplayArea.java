@@ -60,6 +60,7 @@ public class DisplayArea {
 
     public DisplayArea(final ViewerController viewerController) {
         jTextPane = new JTextPane();
+        theme.applyTo(jTextPane);
 
         jTextPane.setDragEnabled(true);
         jTextPane.setTransferHandler(new FileTransferHandler(viewerController));
