@@ -95,6 +95,10 @@ public class DarkTheme implements Theme{
 
     @Override
     public void applyTo(Component component) {
-        component.setBackground(BACKGROUND);
+        if (component instanceof JTree) {
+            component.setBackground(BACKGROUND_LIGHT);
+        } else {
+            component.setBackground(BACKGROUND);
+        }
     }
 }
