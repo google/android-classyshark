@@ -231,6 +231,11 @@ public class ClassySharkPanel extends JPanel
     }
 
     @Override
+    public void onSettingsButtonPressed() {
+
+    }
+
+    @Override
     public void displayArchive(File binaryArchive) {
         silverGhost.setBinaryArchive(binaryArchive);
 

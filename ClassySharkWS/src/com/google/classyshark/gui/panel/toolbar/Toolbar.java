@@ -224,6 +224,12 @@ public class Toolbar extends JToolBar {
     private JButton buildSettingsButton() {
         JButton button = new JButton(theme.getSettingsIcon());
 
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                toolbarController.onSettingsButtonPressed();
+            }
+        });
         button.setToolTipText("Settings");
         button.setBorderPainted(false);
 
