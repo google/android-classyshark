@@ -101,7 +101,7 @@ public class LightTheme implements Theme {
 
     @Override
     public Color getBackgroundColor() {
-        return NAMES;
+        return Color.WHITE;
     }
 
     @Override

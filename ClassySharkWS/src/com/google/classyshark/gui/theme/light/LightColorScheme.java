@@ -28,6 +28,6 @@ class LightColorScheme {
     static final Color KEYWORDS = new Color(181, 137, 0);
     static final Color IDENTIFIERS = new Color(133, 153, 0);
     static final Color ANNOTATIONS = new Color(108, 113, 196);
-    static final Color SELECTION_BG = new Color(238, 232, 213);
+    static final Color SELECTION_BG = new Color(7, 56, 66);
     static final Color NAMES = new Color(147, 161, 161);
 }
