@@ -16,6 +16,7 @@
 
 package com.google.classyshark.gui.panel.chart;
 
+import com.google.classyshark.gui.GuiMode;
 import com.google.classyshark.silverghost.methodscounter.ClassNode;
 
 import java.awt.AlphaComposite;
@@ -160,6 +161,7 @@ public class RingChart {
         imageG2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
         imageG2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         imageG2d.setComposite(AlphaComposite.Src);
+        imageG2d.setColor(GuiMode.getTheme().getBackgroundColor());
         imageG2d.fillRect(0, 0, width, height);
 
         int graphWidth = width - MARGIN * 2;
