@@ -35,6 +35,12 @@ import java.util.List;
  * http://stackoverflow.com/a/4761689/496992
  *
  * It contains minor fixes to optionally support CDATA elements and namespaces.
+ *
+ * Improvements made using code android code as reference:
+ *  - https://android.googlesource.com/platform/frameworks/base/+/master/include/androidfw/
+ *  ResourceTypes.h
+ *  - https://android.googlesource.com/platform/frameworks/base/+/master/libs/androidfw/
+ *  ResourceTypes.cpp
  */
 public class XmlDecompressor {
     //Identifiers for XML Chunk Types
