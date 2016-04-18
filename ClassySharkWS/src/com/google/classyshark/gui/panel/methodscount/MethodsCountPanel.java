@@ -19,6 +19,7 @@ package com.google.classyshark.gui.panel.methodscount;
 import com.google.classyshark.gui.GuiMode;
 import com.google.classyshark.gui.panel.FileTransferHandler;
 import com.google.classyshark.gui.panel.ViewerController;
+import com.google.classyshark.gui.panel.tree.CellRenderer;
 import com.google.classyshark.gui.theme.Theme;
 import com.google.classyshark.silverghost.methodscounter.ClassNode;
 import com.google.classyshark.silverghost.methodscounter.RootBuilder;
@@ -65,6 +66,7 @@ public class MethodsCountPanel extends JPanel {
         treeModel = new DefaultTreeModel(new DefaultMutableTreeNode(null));
         jTree = new JTree(treeModel);
         jTree.setRootVisible(false);
+        jTree.setCellRenderer(new CellRenderer());
         theme.applyTo(jTree);
 
         DefaultTreeCellRenderer cellRenderer = (DefaultTreeCellRenderer) jTree.getCellRenderer();
