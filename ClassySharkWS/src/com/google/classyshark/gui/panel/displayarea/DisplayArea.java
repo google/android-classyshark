@@ -147,8 +147,6 @@ public class DisplayArea {
 
             }
         });
-
-        jTextPane.setBackground(ColorScheme.BACKGROUND);
         displaySharkey();
     }
 
