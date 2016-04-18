@@ -16,14 +16,11 @@
 
 package com.google.classyshark;
 
-import com.google.classyshark.silverghost.contentreader.ContentReader;
-import com.google.classyshark.silverghost.translator.Translator;
-import com.google.classyshark.silverghost.translator.TranslatorFactory;
-import com.google.classyshark.silverghost.translator.dex.DexMethodsDumper;
-import com.google.classyshark.silverghost.translator.dex.DexStringsDumper;
+import com.google.classyshark.silverghost.SilverGhostFacade;
 import java.io.File;
-import java.util.LinkedList;
 import java.util.List;
+
+import static com.google.classyshark.silverghost.SilverGhostFacade.getGeneratedClassString;
 
 /**
  * The ClassyShark API usually used by build & continues integration toolchains
@@ -45,71 +42,40 @@ public class Shark {
      * @return
      */
     public String getGeneratedClass(String className) {
-        String result;
-        ContentReader loader = new ContentReader(archiveFile);
-        loader.load();
-
-        Translator translator =
-                TranslatorFactory.createTranslator(className, archiveFile,
-                        loader.getAllClassNames());
-        try {
-            translator.apply();
-            result = translator.toString();
-        } catch (NullPointerException npe) {
-            System.out.println("Class doesn't exist in the writeArchive");
-            return new String();
-        }
-        return result;
+        return getGeneratedClassString(className, archiveFile);
     }
 
     /**
      * @return list of class names
      */
     public List<String> getAllClassNames() {
-        ContentReader loader = new ContentReader(archiveFile);
-        loader.load();
-        return loader.getAllClassNames();
+        return SilverGhostFacade.getAllClassNames(archiveFile);
     }
 
     /**
      * @return manifest
      */
     public String getManifest() {
-        if (!archiveFile.getName().endsWith(".apk")) {
-            return new String();
-        }
-        Translator translator =
-                TranslatorFactory.createTranslator("AndroidManifest.xml", archiveFile);
-        translator.apply();
-        return translator.toString();
+        return SilverGhostFacade.getManifest(archiveFile);
     }
 
     /**
      * @return all methods
      */
     public List<String> getAllMethods() {
-        if (!archiveFile.getName().endsWith(".apk")) {
-            return new LinkedList<>();
-        }
-        List<String> allMethods = DexMethodsDumper.dumpMethods(archiveFile);
-        return allMethods;
+        return SilverGhostFacade.getAllMethods(archiveFile);
     }
 
     /**
      * @return all strings from all string tables
      */
     public List<String> getAllStrings() {
-        if (!archiveFile.getName().endsWith(".apk")) {
-            return new LinkedList<>();
-        }
-
-        List<String> allStrings = DexStringsDumper.dumpStrings(archiveFile);
-        return allStrings;
+        return SilverGhostFacade.getAllStrings(archiveFile);
     }
 
     public static void main(String[] args) {
         File apk =
-                new File("/Users/bfarber/Desktop/Scenarios/4 APKs/"
+                new File("/Users/bfarber/Desktop/Scenarios/3 APKs/"
                         + "com.google.samples.apps.iosched-333.apk");
         Shark shark = Shark.with(apk);
 
@@ -118,6 +84,6 @@ public class Shark {
         System.out.println(shark.getAllClassNames());
         System.out.println(shark.getManifest());
         System.out.println(shark.getAllMethods());
-        System.out.println(shark.getAllStrings());
+        //System.out.println(shark.getAllStrings());
     }
 }
