@@ -12,10 +12,11 @@ import java.util.Properties;
 public class ThemeManager {
 
     private static final String PROP_FILE = "classyshark_ui.properties";
-
     private static final String THEME_KEY = "Theme";
-
     private static final String[] themes = {"Light", "Dark"};
+
+    private static final int LIGHT = 0;
+    private static final int DARK = 1;
 
     public static void saveCurrentTheme(Theme theme) {
         try {
@@ -57,17 +58,17 @@ public class ThemeManager {
 
     public static int getThemeIndexFrom(Theme theme) {
         if (theme instanceof DarkTheme) {
-            return 1;
+            return DARK;
         } else {
-            return 0;
+            return LIGHT;
         }
     }
 
     public static Theme getThemeFrom(final int index) {
         switch (index) {
-            case 0:
+            case LIGHT:
                 return new LightTheme();
-            case 1:
+            case DARK:
             default:
                 return new DarkTheme();
         }

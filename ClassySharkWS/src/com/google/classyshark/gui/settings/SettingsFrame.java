@@ -3,12 +3,9 @@ package com.google.classyshark.gui.settings;
 import com.google.classyshark.gui.GuiMode;
 import com.google.classyshark.gui.theme.Theme;
 import com.google.classyshark.gui.theme.ThemeManager;
-import com.google.classyshark.gui.theme.dark.DarkTheme;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class SettingsFrame extends JFrame{
     private final Theme theme = GuiMode.getTheme();
