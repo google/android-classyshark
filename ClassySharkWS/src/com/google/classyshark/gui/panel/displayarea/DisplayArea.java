@@ -309,7 +309,7 @@ public class DisplayArea {
         Document doc = jTextPane.getStyledDocument();
 
         try {
-            StyleConstants.setForeground(style, ColorScheme.DEFAULT);
+            StyleConstants.setForeground(style, ColorScheme.IDENTIFIERS);
             StyleConstants.setFontSize(style, 13);
             StyleConstants.setFontFamily(style, "Menlo");
 
