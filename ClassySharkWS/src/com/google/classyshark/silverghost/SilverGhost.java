@@ -26,6 +26,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * Main API class with respect to threading (never call readXXX method from UI thread)
+ */
 public class SilverGhost {
 
     private File binaryArchive;

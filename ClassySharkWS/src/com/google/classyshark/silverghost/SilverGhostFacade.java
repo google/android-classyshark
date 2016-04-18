@@ -33,6 +33,9 @@ import java.io.PrintWriter;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ *  Basic API class with small independent scenarios
+ */
 public class SilverGhostFacade {
     private SilverGhostFacade() {
 
