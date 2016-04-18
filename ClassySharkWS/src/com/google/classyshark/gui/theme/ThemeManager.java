@@ -1,6 +1,5 @@
 package com.google.classyshark.gui.theme;
 
-import com.google.classyshark.gui.GuiMode;
 import com.google.classyshark.gui.theme.dark.DarkTheme;
 import com.google.classyshark.gui.theme.light.LightTheme;
 
@@ -16,10 +15,12 @@ public class ThemeManager {
 
     private static final String THEME_KEY = "Theme";
 
-    public static void saveCurrentTheme() {
+    private static final String[] themes = {"Light", "Dark"};
+
+    public static void saveCurrentTheme(Theme theme) {
         try {
             Properties properties = new Properties();
-            properties.setProperty(THEME_KEY, GuiMode.getTheme().getClass().getName());
+            properties.setProperty(THEME_KEY, theme.getClass().getName());
             FileWriter writer = new FileWriter(getPropertyFile());
             properties.store(writer, "Theme stored");
             writer.close();
@@ -47,6 +48,28 @@ public class ThemeManager {
             return c.newInstance();
         } catch (Exception e) {
             return new DarkTheme();
+        }
+    }
+
+    public static String[] getThemes() {
+        return themes;
+    }
+
+    public static int getThemeIndexFrom(Theme theme) {
+        if (theme instanceof DarkTheme) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+
+    public static Theme getThemeFrom(final int index) {
+        switch (index) {
+            case 0:
+                return new LightTheme();
+            case 1:
+            default:
+                return new DarkTheme();
         }
     }
 }
