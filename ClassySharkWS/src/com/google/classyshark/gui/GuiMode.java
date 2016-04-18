@@ -17,6 +17,10 @@
 package com.google.classyshark.gui;
 
 import com.google.classyshark.gui.panel.ClassySharkPanel;
+import com.google.classyshark.gui.theme.Theme;
+import com.google.classyshark.gui.theme.ThemeManager;
+import com.google.classyshark.gui.theme.light.LightTheme;
+
 import java.io.File;
 import java.util.List;
 import javax.swing.JFrame;
@@ -29,6 +33,8 @@ import javax.swing.WindowConstants;
  */
 public class GuiMode {
 
+    private static Theme theme = ThemeManager.getCurrentTheme();
+
     private GuiMode() {
     }
 
@@ -38,6 +44,10 @@ public class GuiMode {
                 buildAndShowClassyShark(argsAsArray);
             }
         });
+    }
+
+    public static Theme getTheme(){
+        return theme;
     }
 
     private static void buildAndShowClassyShark(List<String> cmdLineArgs) {
@@ -52,10 +62,12 @@ public class GuiMode {
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
+        theme.applyTo(frame);
     }
 
     private static JFrame buildClassySharkFrame(List<String> cmdLineArgs) {
         JFrame result = new JFrame("ClassyShark");
+        theme.applyTo(result);
 
         // no arguments
         if (cmdLineArgs.size() == 0) {

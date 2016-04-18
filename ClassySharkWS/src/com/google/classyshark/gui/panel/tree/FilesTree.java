@@ -16,7 +16,7 @@
 
 package com.google.classyshark.gui.panel.tree;
 
-import com.google.classyshark.gui.panel.ColorScheme;
+import com.google.classyshark.gui.GuiMode;
 import com.google.classyshark.gui.panel.FileTransferHandler;
 import com.google.classyshark.gui.panel.ViewerController;
 import com.google.classyshark.silverghost.contentreader.ContentReader;
@@ -51,6 +51,7 @@ public class FilesTree {
         jTree.setDragEnabled(true);
         jTree.setTransferHandler(new FileTransferHandler(viewerController));
         configureJTree(jTree);
+        GuiMode.getTheme().applyTo(jTree);
     }
 
     public void fillArchive(File loadedFile, List<String> displayedClassNames, List<ContentReader.Component> allComponets) {

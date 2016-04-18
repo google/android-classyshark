@@ -16,8 +16,8 @@
 
 package com.google.classyshark.gui.panel.toolbar;
 
-import com.google.classyshark.gui.panel.ColorScheme;
-import com.google.classyshark.gui.panel.IconSchemes;
+import com.google.classyshark.gui.GuiMode;
+import com.google.classyshark.gui.theme.Theme;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -25,7 +25,6 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.*;
-import javax.swing.border.Border;
 
 /**
  * toolbar = buttons + command line
@@ -34,6 +33,7 @@ public class Toolbar extends JToolBar {
 
     private final JTextField typingArea;
     private final ToolbarController toolbarController;
+    private final Theme theme = GuiMode.getTheme();
 
     private JButton openBtn;
     private JButton viewBtn;
@@ -47,6 +47,7 @@ public class Toolbar extends JToolBar {
         super();
 
         this.toolbarController = toolbarController;
+        theme.applyTo(this);
 
         typingArea = buildTypingArea();
         openBtn = buildOpenButton();
@@ -65,6 +66,7 @@ public class Toolbar extends JToolBar {
         add(mappingBtn);
         add(exportButton);
         add(recentArchivesBtn);
+        add(buildSettingsButton());
 
         setFloatable(false);
         setTypingArea();
@@ -77,14 +79,14 @@ public class Toolbar extends JToolBar {
 
     public void setTypingArea() {
 
-        typingArea.setForeground(ColorScheme.NAMES);
+        typingArea.setForeground(theme.getNamesColor());
         setTypingAreaCaret();
     }
 
     public void setTypingAreaCaret() {
         int len = typingArea.getDocument().getLength();
         typingArea.setCaretPosition(len);
-        typingArea.setCaretColor(ColorScheme.IDENTIFIERS);
+        typingArea.setCaretColor(theme.getIdentifiersColor());
     }
 
     public String getText() {
@@ -105,6 +107,7 @@ public class Toolbar extends JToolBar {
         final JTextField result = new JTextField(50);
 
         result.setEnabled(true);
+        theme.applyTo(result);
 
         result.addMouseListener(new MouseAdapter() {
 
@@ -125,8 +128,7 @@ public class Toolbar extends JToolBar {
     }
 
     private JButton buildOpenButton() {
-        JButton result =
-                new JButton(new ImageIcon(getClass().getResource((IconSchemes.OPEN_ICON_PATH))));
+        JButton result = new JButton(theme.getOpenIcon());
         result.setToolTipText("Open file");
 
         result.addActionListener(new ActionListener() {
@@ -143,9 +145,7 @@ public class Toolbar extends JToolBar {
     }
 
     private JButton buildBackButton() {
-        JButton result =
-                new JButton(
-                        new ImageIcon(getClass().getResource(IconSchemes.BACK_ICON_PATH)));
+        JButton result = new JButton(theme.getBackIcon());
         result.setToolTipText("Back");
 
         result.addActionListener(new ActionListener() {
@@ -163,8 +163,7 @@ public class Toolbar extends JToolBar {
     }
 
     private JButton buildViewButton() {
-        JButton result =
-                new JButton(new ImageIcon(getClass().getResource(IconSchemes.NEXT_ICON_PATH)));
+        JButton result = new JButton(theme.getForwardIcon());
         result.setToolTipText("Next");
 
         result.addActionListener(new ActionListener() {
@@ -182,8 +181,7 @@ public class Toolbar extends JToolBar {
     }
 
     private JButton buildExportButton() {
-        JButton result =
-                new JButton(new ImageIcon(getClass().getResource(IconSchemes.EXPORT_ICON_PATH)));
+        JButton result = new JButton(theme.getExportIcon());
 
         result.addActionListener(new ActionListener() {
             @Override
@@ -201,8 +199,7 @@ public class Toolbar extends JToolBar {
 
     private JButton buildMappingsButton() {
 
-        JButton result =
-                new JButton(new ImageIcon(getClass().getResource(IconSchemes.MAPPING_ICON_PATH)));
+        JButton result = new JButton(theme.getMappingIcon());
 
         result.addActionListener(new ActionListener() {
             @Override
@@ -224,8 +221,23 @@ public class Toolbar extends JToolBar {
         return result;
     }
 
+    private JButton buildSettingsButton() {
+        JButton button = new JButton(theme.getSettingsIcon());
+
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                toolbarController.onSettingsButtonPressed();
+            }
+        });
+        button.setToolTipText("Settings");
+        button.setBorderPainted(false);
+
+        return button;
+    }
+
     private JToggleButton buildLeftPanelToggleButton() {
-        final ImageIcon toggleIcon = new ImageIcon(getClass().getResource((IconSchemes.TOGGLE_ICON_PATH)));
+        final ImageIcon toggleIcon = theme.getToggleIcon();
         final JToggleButton jToggleButton = new JToggleButton(toggleIcon, true);
         jToggleButton.setToolTipText("Show/hide navigation tree");
         jToggleButton.setBorderPainted(false);

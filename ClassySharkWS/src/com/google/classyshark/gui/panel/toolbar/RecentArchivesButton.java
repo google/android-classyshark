@@ -16,8 +16,9 @@
 
 package com.google.classyshark.gui.panel.toolbar;
 
-import com.google.classyshark.gui.panel.IconSchemes;
+import com.google.classyshark.gui.GuiMode;
 import com.google.classyshark.gui.panel.io.RecentArchivesConfig;
+import com.google.classyshark.gui.theme.Theme;
 
 import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;
@@ -35,12 +36,14 @@ public class RecentArchivesButton extends JButton {
 
     private JPopupMenu popup;
     private ToolbarController panel;
+    private final Theme theme = GuiMode.getTheme();
 
     public RecentArchivesButton() {
         super();
-        setIcon(new ImageIcon(getClass().getResource(IconSchemes.RECENT_ICON_PATH)));
+        setIcon(GuiMode.getTheme().getRecentIcon());
         setToolTipText("History");
         popup = new JPopupMenu();
+        theme.applyTo(popup);
         popup.setLayout(new BoxLayout(popup, BoxLayout.Y_AXIS));
         popup.addPopupMenuListener(new PopupPrintListener());
         buildPopup();
@@ -60,6 +63,7 @@ public class RecentArchivesButton extends JButton {
 
         for (String archiveName : RecentArchivesConfig.INSTANCE.getRecentArchiveNames()) {
             item = new JMenuItem(archiveName);
+            theme.applyTo(item);
             popup.add(item);
             item.setHorizontalTextPosition(JMenuItem.RIGHT);
             item.addActionListener(new RecentFilesListener(archiveName));
@@ -67,6 +71,7 @@ public class RecentArchivesButton extends JButton {
 
         popup.addSeparator();
         final JMenuItem clearRecentArchivesItem = new JMenuItem("Clear");
+        theme.applyTo(clearRecentArchivesItem);
         popup.add(clearRecentArchivesItem);
         clearRecentArchivesItem.addActionListener(new ActionListener() {
             @Override
