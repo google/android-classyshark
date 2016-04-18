@@ -106,7 +106,9 @@ public class DarkTheme implements Theme{
     public void applyTo(Component component) {
         if (shallBeLighter(component)) {
             component.setBackground(BACKGROUND_LIGHT);
-        } else {
+        } else if (component instanceof JLabel) {
+            component.setForeground(DEFAULT);
+        }else {
             component.setBackground(BACKGROUND);
         }
     }
