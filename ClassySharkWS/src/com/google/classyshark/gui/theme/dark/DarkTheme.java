@@ -103,6 +103,11 @@ public class DarkTheme implements Theme{
     }
 
     @Override
+    public Color getBackgroundColor() {
+        return BACKGROUND;
+    }
+
+    @Override
     public void applyTo(Component component) {
         if (shallBeLighter(component)) {
             component.setBackground(BACKGROUND_LIGHT);

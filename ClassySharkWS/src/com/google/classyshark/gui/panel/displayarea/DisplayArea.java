@@ -263,6 +263,7 @@ public class DisplayArea {
         displayDataState = DisplayDataState.INSIDE_CLASS;
         clearText();
         StyleConstants.setFontSize(style, 18);
+        StyleConstants.setBackground(style, theme.getBackgroundColor());
 
         Document doc = new DefaultStyledDocument();
 

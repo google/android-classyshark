@@ -23,4 +23,5 @@ public interface Theme extends SwingThemeApplier<Component> {
     Color getAnnotationsColor();
     Color getSelectionBgColor();
     Color getNamesColor();
+    Color getBackgroundColor();
 }
