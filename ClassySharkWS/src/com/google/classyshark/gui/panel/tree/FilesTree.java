@@ -50,6 +50,7 @@ public class FilesTree {
         jTree = new JTree(treeModel);
         jTree.setDragEnabled(true);
         jTree.setTransferHandler(new FileTransferHandler(viewerController));
+        jTree.setCellRenderer(new CellRenderer());
         configureJTree(jTree);
         GuiMode.getTheme().applyTo(jTree);
     }
