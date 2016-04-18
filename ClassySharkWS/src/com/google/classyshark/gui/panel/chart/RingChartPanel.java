@@ -16,6 +16,7 @@
 
 package com.google.classyshark.gui.panel.chart;
 
+import com.google.classyshark.gui.GuiMode;
 import com.google.classyshark.gui.panel.FileTransferHandler;
 import com.google.classyshark.gui.panel.ViewerController;
 import com.google.classyshark.silverghost.methodscounter.ClassNode;
@@ -34,6 +35,7 @@ public class RingChartPanel extends JPanel {
     public RingChartPanel(final ViewerController viewerController) {
         super();
         ToolTipManager.sharedInstance().registerComponent(this);
+        GuiMode.getTheme().applyTo(this);
 
         this.addMouseMotionListener(new MouseMotionListener() {
             @Override

@@ -16,11 +16,12 @@
 
 package com.google.classyshark.gui.panel.displayarea;
 
+import com.google.classyshark.gui.GuiMode;
 import com.google.classyshark.gui.panel.FileTransferHandler;
 import com.google.classyshark.gui.panel.displayarea.doodles.Doodle;
+import com.google.classyshark.gui.theme.Theme;
 import com.google.classyshark.silverghost.translator.Translator;
 import com.google.classyshark.silverghost.translator.java.JavaTranslator;
-import com.google.classyshark.gui.panel.ColorScheme;
 import com.google.classyshark.gui.panel.ViewerController;
 import java.awt.Color;
 import java.awt.Component;
@@ -53,11 +54,13 @@ public class DisplayArea {
 
     private final JTextPane jTextPane;
     private Style style;
+    private final Theme theme = GuiMode.getTheme();
 
     private DisplayDataState displayDataState;
 
     public DisplayArea(final ViewerController viewerController) {
         jTextPane = new JTextPane();
+        theme.applyTo(jTextPane);
 
         jTextPane.setDragEnabled(true);
         jTextPane.setTransferHandler(new FileTransferHandler(viewerController));
@@ -167,7 +170,7 @@ public class DisplayArea {
         String afterMatch = "";
 
         StyleConstants.setFontSize(style, 18);
-        StyleConstants.setForeground(style, ColorScheme.IDENTIFIERS);
+        StyleConstants.setForeground(style, theme.getIdentifiersColor());
 
         Document doc = jTextPane.getDocument();
 
@@ -188,7 +191,7 @@ public class DisplayArea {
 
             try {
                 doc.insertString(doc.getLength(), beforeMatch, style);
-                StyleConstants.setBackground(style, ColorScheme.SELECTION_BG);
+                StyleConstants.setBackground(style, theme.getSelectionBgColor());
                 doc.insertString(doc.getLength(), match, style);
                 doc.insertString(doc.getLength(), afterMatch + "\n", style);
             } catch (BadLocationException e) {
@@ -204,7 +207,7 @@ public class DisplayArea {
 
         displayDataState = DisplayDataState.CLASSES_LIST;
         StyleConstants.setFontSize(style, 18);
-        StyleConstants.setForeground(style, ColorScheme.IDENTIFIERS);
+        StyleConstants.setForeground(style, theme.getIdentifiersColor());
 
         clearText();
 
@@ -267,25 +270,25 @@ public class DisplayArea {
             for (Translator.ELEMENT e : elements) {
                 switch (e.tag) {
                     case MODIFIER:
-                        StyleConstants.setForeground(style, ColorScheme.KEYWORDS);
+                        StyleConstants.setForeground(style, theme.getKeyWordsColor());
                         break;
                     case DOCUMENT:
-                        StyleConstants.setForeground(style, ColorScheme.DEFAULT);
+                        StyleConstants.setForeground(style, theme.getDefaultColor());
                         break;
                     case IDENTIFIER:
-                        StyleConstants.setForeground(style, ColorScheme.IDENTIFIERS);
+                        StyleConstants.setForeground(style, theme.getIdentifiersColor());
                         break;
                     case ANNOTATION:
-                        StyleConstants.setForeground(style, ColorScheme.ANNOTATIONS);
+                        StyleConstants.setForeground(style, theme.getAnnotationsColor());
                         break;
                     case XML_TAG:
-                        StyleConstants.setForeground(style, ColorScheme.DEFAULT);
+                        StyleConstants.setForeground(style, theme.getDefaultColor());
                         break;
                     case XML_ATTR_NAME:
-                        StyleConstants.setForeground(style, ColorScheme.IDENTIFIERS);
+                        StyleConstants.setForeground(style, theme.getIdentifiersColor());
                         break;
                     case XML_ATTR_VALUE:
-                        StyleConstants.setForeground(style, ColorScheme.ANNOTATIONS);
+                        StyleConstants.setForeground(style, theme.getAnnotationsColor());
                         break;
                     default:
                         StyleConstants.setForeground(style, Color.LIGHT_GRAY);
@@ -297,7 +300,7 @@ public class DisplayArea {
             e.printStackTrace();
         }
 
-        StyleConstants.setForeground(style, ColorScheme.IDENTIFIERS);
+        StyleConstants.setForeground(style, theme.getIdentifiersColor());
 
         jTextPane.setDocument(doc);
     }
@@ -309,7 +312,7 @@ public class DisplayArea {
         Document doc = jTextPane.getStyledDocument();
 
         try {
-            StyleConstants.setForeground(style, ColorScheme.DEFAULT);
+            StyleConstants.setForeground(style, theme.getDefaultColor());
             StyleConstants.setFontSize(style, 13);
             StyleConstants.setFontFamily(style, "Menlo");
 
@@ -329,7 +332,7 @@ public class DisplayArea {
         Document doc = jTextPane.getStyledDocument();
 
         try {
-            StyleConstants.setForeground(style, ColorScheme.DEFAULT);
+            StyleConstants.setForeground(style, theme.getDefaultColor());
             StyleConstants.setFontSize(style, 13);
             StyleConstants.setFontFamily(style, "Menlo");
 
