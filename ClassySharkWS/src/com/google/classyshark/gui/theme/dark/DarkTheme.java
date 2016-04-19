@@ -116,6 +116,10 @@ public class DarkTheme implements Theme{
         }else {
             component.setBackground(BACKGROUND);
         }
+
+        if(component instanceof JTextField) {
+            component.setForeground(KEYWORDS);
+        }
     }
 
     private boolean shallBeLighter(Component component) {
