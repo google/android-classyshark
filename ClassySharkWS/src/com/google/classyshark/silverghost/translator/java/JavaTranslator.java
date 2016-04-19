@@ -171,7 +171,7 @@ public class JavaTranslator implements Translator {
         List<String> imports = namesMapper.getFullTypes();
         for (String importStr : imports) {
             words.add(new ELEMENT("\nimport ", TAG.MODIFIER));
-            words.add(new ELEMENT(importStr + ";", TAG.IDENTIFIER));
+            words.add(new ELEMENT(importStr + ";", TAG.DOCUMENT));
         }
 
         words.add(new ELEMENT("\n\n", TAG.IDENTIFIER));
@@ -237,9 +237,9 @@ public class JavaTranslator implements Translator {
 
             words.add(new ELEMENT("\n      " + Modifier.toString(md) + " ", TAG.MODIFIER));
             words.add(new ELEMENT(namesMapper.getTypeNull(field.typeName) + " ",
-                    TAG.IDENTIFIER));
+                    TAG.MODIFIER));
 
-            words.add(new ELEMENT(field.name, TAG.DOCUMENT));
+            words.add(new ELEMENT(field.name, TAG.IDENTIFIER));
             words.add(new ELEMENT(field.genericStr, TAG.DOCUMENT));
             words.add(new ELEMENT(";", TAG.DOCUMENT));
         }
@@ -260,20 +260,20 @@ public class JavaTranslator implements Translator {
             words.add(new ELEMENT(x, TAG.IDENTIFIER));
 
             MetaObject.ParameterInfo parameterTypes[] = constructor.parameterTypes;
-            words.add(new ELEMENT("(", TAG.IDENTIFIER));
+            words.add(new ELEMENT("(", TAG.DOCUMENT));
             if (parameterTypes.length > 0) {
                 for (int j = 0; j < parameterTypes.length; j++) {
                     words.add(new ELEMENT(
                             namesMapper.getTypeNull(parameterTypes[j].parameterStr),
-                            TAG.IDENTIFIER));
+                            TAG.DOCUMENT));
                     words.add(new ELEMENT(parameterTypes[j].genericStr, TAG.DOCUMENT));
                     if (j < (parameterTypes.length - 1)) {
-                        words.add(new ELEMENT(", ", TAG.IDENTIFIER));
-                        words.add(new ELEMENT("\n        ", TAG.IDENTIFIER));
+                        words.add(new ELEMENT(", ", TAG.DOCUMENT));
+                        words.add(new ELEMENT("\n        ", TAG.DOCUMENT));
                     }
                 }
             }
-            words.add(new ELEMENT(") { ... }\n", TAG.IDENTIFIER));
+            words.add(new ELEMENT(") { ... }\n", TAG.DOCUMENT));
         }
     }
 
@@ -296,31 +296,31 @@ public class JavaTranslator implements Translator {
 
             words.add(new ELEMENT("    " + Modifier.toString(md) + " ", TAG.MODIFIER));
             words.add(new ELEMENT(namesMapper.getTypeNull(method.returnType) + " ",
-                    TAG.IDENTIFIER));
-            words.add(new ELEMENT(method.genericReturnType, TAG.IDENTIFIER));
-            words.add(new ELEMENT(method.name, TAG.DOCUMENT));
+                    TAG.DOCUMENT));
+            words.add(new ELEMENT(method.genericReturnType, TAG.DOCUMENT));
+            words.add(new ELEMENT(method.name, TAG.IDENTIFIER));
 
             MetaObject.ParameterInfo parameterTypes[] = method.parameterTypes;
-            words.add(new ELEMENT("(", TAG.IDENTIFIER));
+            words.add(new ELEMENT("(", TAG.DOCUMENT));
             if (parameterTypes.length > 0) {
                 for (int j = 0; j < parameterTypes.length; j++) {
                     words.add(new ELEMENT(
                             namesMapper.getType(parameterTypes[j].parameterStr),
-                            TAG.IDENTIFIER));
+                            TAG.DOCUMENT));
                     words.add(new ELEMENT(parameterTypes[j].genericStr, TAG.DOCUMENT));
                     if (j < (parameterTypes.length - 1)) {
-                        words.add(new ELEMENT(", ", TAG.IDENTIFIER));
-                        words.add(new ELEMENT("\n        ", TAG.IDENTIFIER));
+                        words.add(new ELEMENT(", ", TAG.DOCUMENT));
+                        words.add(new ELEMENT("\n        ", TAG.DOCUMENT));
                     }
                 }
             }
 
-            words.add(new ELEMENT(") ", TAG.IDENTIFIER));
+            words.add(new ELEMENT(") ", TAG.DOCUMENT));
 
             MetaObject.ExceptionInfo[] exceptionTypes = method.exceptionTypes;
 
             if (exceptionTypes.length > 0) {
-                words.add(new ELEMENT(" throws ", TAG.IDENTIFIER));
+                words.add(new ELEMENT(" throws ", TAG.MODIFIER));
 
                 for (MetaObject.ExceptionInfo aXType : exceptionTypes) {
                     words.add(new ELEMENT(namesMapper.getType(aXType.exceptionStr),
@@ -330,9 +330,9 @@ public class JavaTranslator implements Translator {
                 }
                 words.remove(words.size() - 1);
             }
-            words.add(new ELEMENT("{ ... }\n", TAG.IDENTIFIER));
+            words.add(new ELEMENT("{ ... }\n", TAG.DOCUMENT));
         }
-        words.add(new ELEMENT("\n} ", TAG.IDENTIFIER));
+        words.add(new ELEMENT("\n} ", TAG.DOCUMENT));
     }
 
     public static void testJar() {

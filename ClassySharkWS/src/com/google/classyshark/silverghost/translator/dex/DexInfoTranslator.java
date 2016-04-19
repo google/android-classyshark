@@ -64,35 +64,35 @@ public class DexInfoTranslator implements Translator {
             DexBackedDexFile dataPack = (DexBackedDexFile) dxFile;
 
             ELEMENT element = new ELEMENT("\nclasses: " + dataPack.getClassCount(),
-                    TAG.ANNOTATION);
+                    TAG.MODIFIER);
             elements.add(element);
-            element = new ELEMENT("\nstrings: " + dataPack.getStringCount(), TAG.ANNOTATION);
+            element = new ELEMENT("\nstrings: " + dataPack.getStringCount(), TAG.DOCUMENT);
             elements.add(element);
-            element = new ELEMENT("\ntypes: " + dataPack.getTypeCount(), TAG.ANNOTATION);
+            element = new ELEMENT("\ntypes: " + dataPack.getTypeCount(), TAG.DOCUMENT);
             elements.add(element);
-            element = new ELEMENT("\nprotos: " + dataPack.getProtoCount(), TAG.ANNOTATION);
+            element = new ELEMENT("\nprotos: " + dataPack.getProtoCount(), TAG.DOCUMENT);
             elements.add(element);
-            element = new ELEMENT("\nfields: " + dataPack.getFieldCount(), TAG.ANNOTATION);
+            element = new ELEMENT("\nfields: " + dataPack.getFieldCount(), TAG.DOCUMENT);
             elements.add(element);
-            element = new ELEMENT("\nmethods: " + dataPack.getMethodCount(), TAG.DOCUMENT);
+            element = new ELEMENT("\nmethods: " + dataPack.getMethodCount(), TAG.IDENTIFIER);
             elements.add(element);
 
-            element = new ELEMENT("\n\nClasses with Native Calls\n", TAG.DOCUMENT);
+            element = new ELEMENT("\n\nClasses with Native Calls\n", TAG.MODIFIER);
             elements.add(element);
 
             ApkTranslator.DexData dexData = ApkTranslator.fillAnalysis(index,
                     classesDex);
 
             for (String nativeMethodsClass : dexData.nativeMethodsClasses) {
-                element = new ELEMENT(nativeMethodsClass + "\n", TAG.ANNOTATION);
+                element = new ELEMENT(nativeMethodsClass + "\n", TAG.DOCUMENT);
                 elements.add(element);
             }
 
-            element = new ELEMENT("\nClasses with Abstract Calls\n", TAG.DOCUMENT);
+            element = new ELEMENT("\nClasses with Abstract Calls\n", TAG.MODIFIER);
             elements.add(element);
 
             for (String abstractMethodsClass : dexData.abstractClasses) {
-                element = new ELEMENT(abstractMethodsClass + "\n", TAG.XML_ATTR_NAME);
+                element = new ELEMENT(abstractMethodsClass + "\n", TAG.DOCUMENT);
                 elements.add(element);
             }
         } catch (Exception e) {

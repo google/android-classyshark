@@ -283,13 +283,13 @@ public class DisplayArea {
                         StyleConstants.setForeground(style, theme.getAnnotationsColor());
                         break;
                     case XML_TAG:
-                        StyleConstants.setForeground(style, theme.getDefaultColor());
-                        break;
-                    case XML_ATTR_NAME:
                         StyleConstants.setForeground(style, theme.getIdentifiersColor());
                         break;
+                    case XML_ATTR_NAME:
+                        StyleConstants.setForeground(style, theme.getKeyWordsColor());
+                        break;
                     case XML_ATTR_VALUE:
-                        StyleConstants.setForeground(style, theme.getAnnotationsColor());
+                        StyleConstants.setForeground(style, theme.getDefaultColor());
                         break;
                     default:
                         StyleConstants.setForeground(style, Color.LIGHT_GRAY);
@@ -313,7 +313,7 @@ public class DisplayArea {
         Document doc = jTextPane.getStyledDocument();
 
         try {
-            StyleConstants.setForeground(style, theme.getDefaultColor());
+            StyleConstants.setForeground(style, theme.getIdentifiersColor());
             StyleConstants.setFontSize(style, 13);
             StyleConstants.setFontFamily(style, "Menlo");
 

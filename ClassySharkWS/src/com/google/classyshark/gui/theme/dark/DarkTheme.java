@@ -29,7 +29,8 @@ public class DarkTheme implements Theme{
         mappingsIcon = new ImageIcon(getClass().getResource(MAPPING_ICON_PATH));
         settingsIcon = new ImageIcon(getClass().getResource(SETTINGS_ICON_PATH));
 
-        UIManager.put("MenuItem.foreground", DEFAULT);
+        // TODO was default need to change names
+        UIManager.put("MenuItem.foreground", IDENTIFIERS);
     }
 
     @Override
@@ -112,13 +113,13 @@ public class DarkTheme implements Theme{
         if (shallBeLighter(component)) {
             component.setBackground(BACKGROUND_LIGHT);
         } else if (component instanceof JLabel) {
-            component.setForeground(DEFAULT);
+            component.setForeground(IDENTIFIERS);
         }else {
             component.setBackground(BACKGROUND);
         }
 
         if(component instanceof JTextField) {
-            component.setForeground(KEYWORDS);
+            component.setForeground(IDENTIFIERS);
         }
     }
 

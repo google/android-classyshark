@@ -77,7 +77,7 @@ public class ApkTranslator implements Translator {
                             + dexData.nativeMethodsCount
                             + "\nabstract methods: "
                             + dexData.abstractMethodsCount + "\n",
-                    TAG.ANNOTATION);
+                    TAG.DOCUMENT);
             elements.add(element);
         }
 
@@ -88,7 +88,7 @@ public class ApkTranslator implements Translator {
 
         Collections.sort(apkAnalysis.nativeLibs);
         for (String nativeLib : apkAnalysis.nativeLibs) {
-            element = new ELEMENT(nativeLib, TAG.ANNOTATION);
+            element = new ELEMENT(nativeLib, TAG.DOCUMENT);
             elements.add(element);
         }
     }
