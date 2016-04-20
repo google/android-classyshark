@@ -111,6 +111,10 @@ public class DexInfoTranslator implements Translator {
     }
 
     private static File extractClassesDex(String dexName, File apkFile, DexInfoTranslator diTranslator) {
+        if(apkFile.getName().endsWith(".dex")) {
+            return apkFile;
+        }
+
         File file = new File("classes.dex");
         ZipInputStream zipFile;
         try {
