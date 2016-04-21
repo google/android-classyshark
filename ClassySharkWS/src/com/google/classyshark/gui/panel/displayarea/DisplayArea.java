@@ -157,8 +157,18 @@ public class DisplayArea {
         return this.jTextPane;
     }
 
-    public void displayReducedClassNames(List<String> classNamesToShow,
-                                         String inputText) {
+    public void displayClassNames(List<String> classNamesToShow,
+                                  String inputText) {
+
+        StyleConstants.setFontSize(style, 18);
+        StyleConstants.setForeground(style, theme.getIdentifiersColor());
+        StyleConstants.setBackground(style, theme.getBackgroundColor());
+
+        if(classNamesToShow.size() > 50) {
+            displayAllClassesNames(classNamesToShow);
+            return;
+        }
+
         displayDataState = DisplayDataState.CLASSES_LIST;
 
         clearText();
@@ -168,10 +178,7 @@ public class DisplayArea {
         String beforeMatch = "";
         String match;
         String afterMatch = "";
-
-        StyleConstants.setFontSize(style, 18);
-        StyleConstants.setForeground(style, theme.getIdentifiersColor());
-
+        
         Document doc = jTextPane.getDocument();
 
         for (String className : classNamesToShow) {
@@ -193,6 +200,7 @@ public class DisplayArea {
                 doc.insertString(doc.getLength(), beforeMatch, style);
                 StyleConstants.setBackground(style, theme.getSelectionBgColor());
                 doc.insertString(doc.getLength(), match, style);
+                StyleConstants.setBackground(style, theme.getBackgroundColor());
                 doc.insertString(doc.getLength(), afterMatch + "\n", style);
             } catch (BadLocationException e) {
                 e.printStackTrace();
@@ -202,7 +210,7 @@ public class DisplayArea {
         jTextPane.setDocument(doc);
     }
 
-    public void displayAllClassesNames(List<String> classNames) {
+    private void displayAllClassesNames(List<String> classNames) {
         long start = System.currentTimeMillis();
 
         displayDataState = DisplayDataState.CLASSES_LIST;

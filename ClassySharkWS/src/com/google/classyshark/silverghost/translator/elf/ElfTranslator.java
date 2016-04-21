@@ -17,6 +17,7 @@
 package com.google.classyshark.silverghost.translator.elf;
 
 
+import com.google.classyshark.silverghost.io.SherlockHash;
 import com.google.classyshark.silverghost.tokensmapper.ProguardMapper;
 import java.io.File;
 import java.io.FileInputStream;
@@ -84,13 +85,13 @@ public class ElfTranslator implements Translator {
         LinkedList<ELEMENT> result = new LinkedList<>();
 
         result.add(new ELEMENT("File size - ", TAG.DOCUMENT));
-        result.add(new ELEMENT(readableFileSize(resource.length()), TAG.ANNOTATION));
+        result.add(new ELEMENT(readableFileSize(resource.length()), TAG.DOCUMENT));
 
-        result.add(new ELEMENT("\n\nNative Dependencies\n\n", TAG.DOCUMENT));
-        result.add(new ELEMENT(this.dependencies, TAG.ANNOTATION));
+        result.add(new ELEMENT("\n\nNative Dependencies\n\n", TAG.IDENTIFIER));
+        result.add(new ELEMENT(this.dependencies, TAG.DOCUMENT));
 
-        result.add(new ELEMENT("\n\n\n\nDynamic Symbols\n\n", TAG.DOCUMENT));
-        result.add(new ELEMENT(this.dynamicSymbols.toString(), TAG.ANNOTATION));
+        result.add(new ELEMENT("\n\n\n\nDynamic Symbols\n\n", TAG.IDENTIFIER));
+        result.add(new ELEMENT(this.dynamicSymbols.toString(), TAG.DOCUMENT));
         return result;
     }
 
@@ -117,18 +118,9 @@ public class ElfTranslator implements Translator {
                 }
 
                 if (zipEntry.getName().equals(elfName)) {
-                    file = File.createTempFile(elfName, "so");
-                    file.deleteOnExit();
-
-                    FileOutputStream fos =
-                            new FileOutputStream(file);
-                    byte[] bytes = new byte[1024];
-                    int length;
-                    while ((length = zipFile.read(bytes)) >= 0) {
-                        fos.write(bytes, 0, length);
-                    }
-
-                    fos.close();
+                    String fName = elfName;
+                    String ext = "so";
+                    file = SherlockHash.INSTANCE.getFileFromZipStream(apkFile, zipFile, fName, ext);
                     break;
                 }
             }

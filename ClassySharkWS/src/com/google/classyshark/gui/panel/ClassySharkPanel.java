@@ -34,7 +34,6 @@ import com.google.classyshark.silverghost.exporter.Exporter;
 import com.google.classyshark.silverghost.methodscounter.ClassNode;
 import com.google.classyshark.silverghost.tokensmapper.ProguardMapper;
 import com.google.classyshark.silverghost.translator.Translator;
-import com.sun.deploy.util.GeneralUtil;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -155,8 +154,8 @@ public class ClassySharkPanel extends JPanel
 
     @Override
     public void onGoBackPressed() {
-        displayArea.displayAllClassesNames(silverGhost.getAllClassNames());
         toolbar.setText("");
+        displayArea.displayClassNames(silverGhost.getAllClassNames(), "");
         silverGhost.initClassNameFiltering();
     }
 
@@ -435,7 +434,7 @@ public class ClassySharkPanel extends JPanel
                     } else if (filteredClassNames.size() == 0) {
                         displayArea.displayError();
                     } else {
-                        displayArea.displayReducedClassNames(filteredClassNames,
+                        displayArea.displayClassNames(filteredClassNames,
                                 textFromTypingArea);
                     }
                 }
