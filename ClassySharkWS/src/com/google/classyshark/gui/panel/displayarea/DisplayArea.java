@@ -159,6 +159,11 @@ public class DisplayArea {
 
     public void displayClassNames(List<String> classNamesToShow,
                                   String inputText) {
+
+        StyleConstants.setFontSize(style, 18);
+        StyleConstants.setForeground(style, theme.getIdentifiersColor());
+        StyleConstants.setBackground(style, theme.getBackgroundColor());
+
         if(classNamesToShow.size() > 50) {
             displayAllClassesNames(classNamesToShow);
             return;
@@ -173,10 +178,7 @@ public class DisplayArea {
         String beforeMatch = "";
         String match;
         String afterMatch = "";
-
-        StyleConstants.setFontSize(style, 18);
-        StyleConstants.setForeground(style, theme.getIdentifiersColor());
-
+        
         Document doc = jTextPane.getDocument();
 
         for (String className : classNamesToShow) {
@@ -198,6 +200,7 @@ public class DisplayArea {
                 doc.insertString(doc.getLength(), beforeMatch, style);
                 StyleConstants.setBackground(style, theme.getSelectionBgColor());
                 doc.insertString(doc.getLength(), match, style);
+                StyleConstants.setBackground(style, theme.getBackgroundColor());
                 doc.insertString(doc.getLength(), afterMatch + "\n", style);
             } catch (BadLocationException e) {
                 e.printStackTrace();
