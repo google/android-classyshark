@@ -138,15 +138,15 @@ public class ApkTranslator implements Translator {
         }
     }
 
-    public static DexData fillAnalysis(int dexIndex, File file) throws Exception {
+    public static DexData fillAnalysis(int dexIndex, File file)  {
         DexData dexData = new DexData(dexIndex);
 
-        InputStream is = new FileInputStream(file);
-        ApplicationVisitor av = new ApkInspectVisitor(dexData);
-        ApplicationReader ar = new ApplicationReader(Opcodes.ASM4, is);
-        ar.accept(av, 0);
-
         try {
+            InputStream is = new FileInputStream(file);
+            ApplicationVisitor av = new ApkInspectVisitor(dexData);
+            ApplicationReader ar = new ApplicationReader(Opcodes.ASM4, is);
+            ar.accept(av, 0);
+
             DexFile dxFile = DexlibLoader.loadDexFile(file);
             DexBackedDexFile dataPack = (DexBackedDexFile) dxFile;
             dexData.allMethods = dataPack.getMethodCount();
