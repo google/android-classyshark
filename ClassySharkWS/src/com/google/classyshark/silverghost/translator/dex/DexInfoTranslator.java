@@ -122,11 +122,13 @@ public class DexInfoTranslator implements Translator {
                 }
 
                 if (zipEntry.getName().endsWith(".dex")) {
-
-                    String currentClassesDexName = "classes" + dexIndex + ".dex";
-
-                    String fName = "classes" + dexIndex;
+                    String fName = "classes";
+                    if (dexIndex > 0) {
+                        fName = fName + dexName;
+                    }
                     String ext = "dex";
+
+                    String currentClassesDexName = fName + ".dex";
 
                     file = SherlockHash.INSTANCE.getFileFromZipStream(apkFile,
                             zipFile, fName, ext);
