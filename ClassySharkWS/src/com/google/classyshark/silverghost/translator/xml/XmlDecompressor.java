@@ -45,11 +45,14 @@ import java.util.List;
 public class XmlDecompressor {
     //Identifiers for XML Chunk Types
     private static final int PACKED_XML_IDENTIFIER = 0x00080003;
-    private static final int END_DOC_TAG = 0x00100101;
-    private static final int START_ELEMENT_TAG = 0x00100102;
-    private static final int END_ELEMENT_TAG = 0x00100103;
+    private static final int END_DOC_TAG = 0x0101;
+    private static final int START_ELEMENT_TAG = 0x0102;
+    private static final int END_ELEMENT_TAG = 0x0103;
     private static final int CDATA_TAG = 0x00100104;
     private static final int ATTRS_MARKER = 0x00140014;
+
+    private static final int RES_XML_RESOURCE_MAP_TYPE = 0x180;
+    private static final int RES_XML_FIRST_CHUNK_TYPE = 0x100;
 
     //Resource Types
     private static final int RES_TYPE_NULL = 0x00;
@@ -91,7 +94,7 @@ public class XmlDecompressor {
 
     private static final String ERROR_INVALID_MAGIC_NUMBER =
             "Invalid packed XML identifier. Expecting 0x%08X, found 0x%08X\n";
-    private static final String ERROR_UNKNOWN_TAG = "Unknown Tag 0x%08X\n";
+    private static final String ERROR_UNKNOWN_TAG = "Unknown Tag 0x%04X\n";
     private static final String ERROR_ATTRIBUTE_MARKER =  "Expecting %08X, Found %08X\n";
 
     private boolean appendNamespaces = false;
@@ -129,15 +132,21 @@ public class XmlDecompressor {
             dis.skipBytes(12);
             List<String> packedStrings = parseStrings(dis);
 
-            //Unknown content after the strings. Seeking for a start tag
-            int tag;
-            do {
-                tag = dis.readInt();
-            } while (tag != START_ELEMENT_TAG);
-
             int ident = 0;
+            int tag = dis.readShort();
             do {
+                System.out.printf("%04x\n", tag);
+                int headerSize = dis.readShort();
+                int chunkSize = dis.readInt();
                 switch (tag) {
+                    case RES_XML_FIRST_CHUNK_TYPE: {
+                        dis.skipBytes(chunkSize - 8);
+                        break;
+                    }
+                    case RES_XML_RESOURCE_MAP_TYPE: {
+                        dis.skipBytes(chunkSize - 8);
+                        break;
+                    }
                     case START_ELEMENT_TAG: {
                         parseStartTag(result, dis, packedStrings, ident);
                         ident++;
@@ -154,8 +163,10 @@ public class XmlDecompressor {
                     }
                     default:
                         System.err.println(String.format(ERROR_UNKNOWN_TAG, tag));
+                        System.err.println(headerSize);
+                        System.err.println(chunkSize);
                 }
-                tag = dis.readInt();
+                tag = dis.readShort();
             } while (tag != END_DOC_TAG);
             return result.toString();
         }
@@ -184,7 +195,7 @@ public class XmlDecompressor {
         // 1 - a flag?, like 38000000
         // 2 - Line of where this tag appeared in the original source file
         // 3 - Unknown: always FFFFFFFF?
-        dis.skipBytes(12);
+        dis.skipBytes(8);
         int namespaceStringIndex = dis.readInt();
         if (appendNamespaces && namespaceStringIndex >= 0) {
             sb.append(strings.get(namespaceStringIndex)).append(":");
@@ -201,7 +212,7 @@ public class XmlDecompressor {
         // 1 - a flag?, like 38000000
         // 2 - Line of where this tag appeared in the original source file
         // 3 - Unknown: always FFFFFFFF?
-        dis.skipBytes(12);
+        dis.skipBytes(8);
         int namespaceStringIndex = dis.readInt();
         if (appendNamespaces && namespaceStringIndex >= 0) {
             sb.append(strings.get(namespaceStringIndex)).append(":");
@@ -234,8 +245,11 @@ public class XmlDecompressor {
                 sb.append(strings.get(attributeNamespaceIndex)).append(":");
             }
 
+            System.out.println(attributeNameIndex);
             String attributeName = strings.get(attributeNameIndex);
+            if (attributeName.isEmpty()) attributeName="unknown";
             String attributeValue;
+            System.out.println(attrValueType);
             switch (attrValueType) {
                 case RES_TYPE_NULL:
                     attributeValue = attributeResourceId == 0 ? "<undefined>" : "<empty>";
@@ -290,7 +304,7 @@ public class XmlDecompressor {
         boolean isUtf8Encoded = (flags & 0x100) > 0 ;
         int glyphSize;
         String encoding;
-
+        System.out.println("Num Strings: " + numStrings);
         if (isUtf8Encoded) {
             glyphSize = 1;
             encoding = "UTF-8";
@@ -328,7 +342,14 @@ public class XmlDecompressor {
             dis.skipBytes(glyphSize);//The string ends with \0. Skip it.
             bytesRead += 2 + bytelen + glyphSize;
         }
+
+//        for (int i = 0; i < numStyles; i++) {
+//            int len = dis.readUnsignedShort();
+//            dis.skipBytes(len);
+//        }
         //Align to a multiple of 4 to continue reading data.
+        System.out.println("zzz" + bytesRead);
+        System.out.println(packedStrings);
         dis.skipBytes(bytesRead % 4);
         return packedStrings;
     }
@@ -366,7 +387,8 @@ public class XmlDecompressor {
 
     public static void main(String[] args) {
 //        String fileName = "/Users/andreban/Desktop/map_pin.xml";
-        String fileName = "/Users/andreban/Desktop/abc_fade_in.xml";
+//        String fileName = "/Users/andreban/Desktop/abc_fade_in.xml";
+        String fileName = "/Users/andreban/Desktop/abc_search_url_text.xml";
         try (FileInputStream fout = new FileInputStream(fileName)){
             String xml = new XmlDecompressor().decompressXml(fout);
             System.out.println(xml);
