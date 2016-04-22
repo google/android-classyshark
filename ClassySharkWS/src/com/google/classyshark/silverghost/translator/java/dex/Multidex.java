@@ -49,8 +49,10 @@ public class Multidex {
                 }
 
                 if (zipEntry.getName().endsWith(".dex")) {
-                    dexIndex++;
-                    String fName = "classes" + dexIndex;
+                    String fName = "classes";
+                    if(dexIndex > 0) {
+                        fName = fName + dexIndex;
+                    }
                     String ext = "dex";
 
                     file = SherlockHash.INSTANCE.getFileFromZipStream(apkFile,
@@ -61,6 +63,8 @@ public class Multidex {
                     if (classNamesInDex.contains(className)) {
                         break;
                     }
+
+                    dexIndex++;
                 }
 
                 if (zipEntry.getName().endsWith("jar") || zipEntry.getName().endsWith("zip")) {

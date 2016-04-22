@@ -75,7 +75,10 @@ public class ApkReader implements BinaryContentReader {
                 }
 
                 if (zipEntry.getName().endsWith(".dex")) {
-                    String fName = "classes" + dexIndex;
+                    String fName = "classes";
+                    if(dexIndex > 0) {
+                        fName = fName + dexIndex;
+                    }
                     String ext = "dex";
 
                     File file = SherlockHash.INSTANCE.getFileFromZipStream(binaryArchiveFile,
@@ -84,7 +87,7 @@ public class ApkReader implements BinaryContentReader {
                     List<String> classesAtDex =
                             DexReader.readClassNamesFromDex(file);
 
-                    classNames.add("classes" + dexIndex + ".dex");
+                    classNames.add(fName + ".dex");
                     classNames.addAll(classesAtDex);
                     dexIndex++;
                 }
