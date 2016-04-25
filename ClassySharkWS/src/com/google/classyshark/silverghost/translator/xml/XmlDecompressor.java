@@ -23,6 +23,9 @@ import java.io.DataInput;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -53,6 +56,7 @@ public class XmlDecompressor {
 
     private static final int RES_XML_RESOURCE_MAP_TYPE = 0x180;
     private static final int RES_XML_FIRST_CHUNK_TYPE = 0x100;
+    private static final int REX_XML_STRING_TABLE = 0x0001;
 
     //Resource Types
     private static final int RES_TYPE_NULL = 0x00;
@@ -87,13 +91,15 @@ public class XmlDecompressor {
     private static final int RES_VALUE_FALSE = 0x00000000;
 
     //Char array used to fill spaces.
-    private static char[] SPACE_FILL = new char[80];
+    private static char[] SPACE_FILL = new char[160];
 
     private static final int IDENT_SIZE = 2;
     private static final int ATTR_IDENT_SIZE = 4;
 
     private static final String ERROR_INVALID_MAGIC_NUMBER =
             "Invalid packed XML identifier. Expecting 0x%08X, found 0x%08X\n";
+    private static final String ERROR_INVALID_STRING_TABLE_ID =
+            "Invalid String table identifier. Expecting 0x%08X, found 0x%08X\n";
     private static final String ERROR_UNKNOWN_TAG = "Unknown Tag 0x%04X\n";
     private static final String ERROR_ATTRIBUTE_MARKER =  "Expecting %08X, Found %08X\n";
 
@@ -129,13 +135,12 @@ public class XmlDecompressor {
                                 PACKED_XML_IDENTIFIER,
                                 fileMarker));
             }
-            dis.skipBytes(12);
+            dis.skipBytes(4);
             List<String> packedStrings = parseStrings(dis);
 
             int ident = 0;
             int tag = dis.readShort();
             do {
-                System.out.printf("%04x\n", tag);
                 int headerSize = dis.readShort();
                 int chunkSize = dis.readInt();
                 switch (tag) {
@@ -163,8 +168,6 @@ public class XmlDecompressor {
                     }
                     default:
                         System.err.println(String.format(ERROR_UNKNOWN_TAG, tag));
-                        System.err.println(headerSize);
-                        System.err.println(chunkSize);
                 }
                 tag = dis.readShort();
             } while (tag != END_DOC_TAG);
@@ -245,11 +248,9 @@ public class XmlDecompressor {
                 sb.append(strings.get(attributeNamespaceIndex)).append(":");
             }
 
-            System.out.println(attributeNameIndex);
             String attributeName = strings.get(attributeNameIndex);
             if (attributeName.isEmpty()) attributeName="unknown";
             String attributeValue;
-            System.out.println(attrValueType);
             switch (attrValueType) {
                 case RES_TYPE_NULL:
                     attributeValue = attributeResourceId == 0 ? "<undefined>" : "<empty>";
@@ -297,14 +298,24 @@ public class XmlDecompressor {
     }
 
     private List<String> parseStrings(DataInput dis) throws IOException {
+        int stringMarker = dis.readShort();
+        if (stringMarker != REX_XML_STRING_TABLE) {
+            throw new IOException(
+                    String.format(ERROR_INVALID_MAGIC_NUMBER,
+                            PACKED_XML_IDENTIFIER,
+                            stringMarker));
+        }
+        int headerSize = dis.readShort();
+        int chunkSize = dis.readInt();
         int numStrings = dis.readInt();
         int numStyles = dis.readInt();
         int flags = dis.readInt();
+        int stringStart = dis.readInt();
+        int stylesStart = dis.readInt();
 
         boolean isUtf8Encoded = (flags & 0x100) > 0 ;
         int glyphSize;
         String encoding;
-        System.out.println("Num Strings: " + numStrings);
         if (isUtf8Encoded) {
             glyphSize = 1;
             encoding = "UTF-8";
@@ -313,44 +324,44 @@ public class XmlDecompressor {
             encoding = "UTF-16LE";
         }
 
-        //skipping to the beggining of stringtable data
-        dis.skipBytes(8);
+        return parseUsingByteBuffer(chunkSize, headerSize, numStrings, numStyles, isUtf8Encoded,
+                glyphSize, encoding, dis);
 
-        //Skipping the string offsets.
-        dis.skipBytes(Integer.SIZE / 8 * numStrings);
+    }
 
+    private static List<String> parseUsingByteBuffer(int chunkSize, int headerSize, int numStrings,
+            int numStyles, boolean isUtf8Encoded, int glyphSize, String encoding, DataInput dis)
+            throws IOException{
+        int dataSize = chunkSize - headerSize;
+        byte[] buffer = new byte[dataSize];
+        ByteBuffer byteBuffer = ByteBuffer.allocate(dataSize);
+        byteBuffer.order(ByteOrder.LITTLE_ENDIAN);
+        dis.readFully(buffer);
+        byteBuffer.put(buffer);
+        byteBuffer.rewind();
+
+        //Read the string offsets
         List<String> packedStrings = new ArrayList<>(numStrings);
-        int bytesRead = 0;
-        byte[] buffer = new byte[1024];
+        int[] offsets = new int[numStrings];
         for (int i = 0; i < numStrings; i++) {
-            int len;
-            if (isUtf8Encoded) {
-                dis.skipBytes(1);
-                len = dis.readUnsignedByte();
-            } else {
-                len = dis.readUnsignedShort();
-            }
-
-            int bytelen = len * glyphSize;
-            //String larger than existing buffer. Increase buffer.
-            if (bytelen > buffer.length) {
-                buffer = new byte[bytelen * 2];
-            }
-
-            dis.readFully(buffer, 0, bytelen);
-            packedStrings.add(new String(buffer, 0, bytelen, encoding));
-            dis.skipBytes(glyphSize);//The string ends with \0. Skip it.
-            bytesRead += 2 + bytelen + glyphSize;
+            offsets[i] = byteBuffer.getInt();
         }
 
-//        for (int i = 0; i < numStyles; i++) {
-//            int len = dis.readUnsignedShort();
-//            dis.skipBytes(len);
-//        }
-        //Align to a multiple of 4 to continue reading data.
-        System.out.println("zzz" + bytesRead);
-        System.out.println(packedStrings);
-        dis.skipBytes(bytesRead % 4);
+        //Read the string from each offset
+        int stringsStart = byteBuffer.position();
+        for (int i = 0; i < numStrings; i++) {
+            byteBuffer.position(stringsStart + offsets[i]);
+            int len;
+            if (isUtf8Encoded) {
+                len = byteBuffer.get();
+                byteBuffer.get();
+            } else {
+                len = byteBuffer.getShort();
+            }
+            int bytelen = len * glyphSize;
+            String str = new String(buffer, stringsStart + offsets[i] + 2, bytelen, encoding);
+            packedStrings.add(str);
+        }
         return packedStrings;
     }
 
@@ -383,17 +394,5 @@ public class XmlDecompressor {
                 * RADIX_MULTS[(data>>COMPLEX_RADIX_SHIFT)
                 & COMPLEX_RADIX_MASK];
         return value;
-    }
-
-    public static void main(String[] args) {
-//        String fileName = "/Users/andreban/Desktop/map_pin.xml";
-//        String fileName = "/Users/andreban/Desktop/abc_fade_in.xml";
-        String fileName = "/Users/andreban/Desktop/abc_search_url_text.xml";
-        try (FileInputStream fout = new FileInputStream(fileName)){
-            String xml = new XmlDecompressor().decompressXml(fout);
-            System.out.println(xml);
-        } catch (IOException ex) {
-            ex.printStackTrace(System.err);
-        }
     }
 }
