@@ -358,16 +358,28 @@ public class XmlDecompressor {
             byteBuffer.position(stringsStart + offsets[i]);
             int len;
             if (isUtf8Encoded) {
-                len = byteBuffer.get();
+                len = getUnsignedByte(byteBuffer);
                 byteBuffer.get();
             } else {
-                len = byteBuffer.getShort();
+                len = getUnsignedShort(byteBuffer);
             }
             int bytelen = len * glyphSize;
             String str = new String(buffer, stringsStart + offsets[i] + 2, bytelen, encoding);
             packedStrings.add(str);
         }
         return packedStrings;
+    }
+
+    public static int getUnsignedShort(ByteBuffer bb) {
+        return (bb.getShort() & 0xffff);
+    }
+
+    public static int getUnsignedByte(ByteBuffer bb) {
+        return (bb.get() & 0xff);
+    }
+
+    public static long getUnsignedInt(ByteBuffer bb) {
+        return ((long)bb.getInt() & 0xffffffffL);
     }
 
     private static String getDimensionType(int data) {
