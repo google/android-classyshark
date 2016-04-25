@@ -20,6 +20,7 @@ import com.google.common.io.LittleEndianDataInputStream;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInput;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -51,7 +52,7 @@ public class XmlDecompressor {
     private static final int END_DOC_TAG = 0x0101;
     private static final int START_ELEMENT_TAG = 0x0102;
     private static final int END_ELEMENT_TAG = 0x0103;
-    private static final int CDATA_TAG = 0x00100104;
+    private static final int CDATA_TAG = 0x0104;
     private static final int ATTRS_MARKER = 0x00140014;
 
     private static final int RES_XML_RESOURCE_MAP_TYPE = 0x180;
@@ -104,7 +105,7 @@ public class XmlDecompressor {
     private static final String ERROR_ATTRIBUTE_MARKER =  "Expecting %08X, Found %08X\n";
 
     private boolean appendNamespaces = false;
-    private boolean appendCData = false;
+    private boolean appendCData = true;
 
     static {
         Arrays.fill(SPACE_FILL, ' ');
@@ -178,14 +179,18 @@ public class XmlDecompressor {
     private void parseCDataTag(StringBuilder sb, DataInput dis, List<String> strings, int ident)
             throws IOException {
         //Skipping 3 unknowns integers:
-        dis.skipBytes(12);
+        dis.skipBytes(8);
         int nameStringIndex = dis.readInt();
         //Skipping more 2 unknown integers.
         dis.skipBytes(8);
 
         if (appendCData) {
             sb.append(SPACE_FILL, 0, ident * IDENT_SIZE);
+            sb.append("<![CDATA[\n");
+            sb.append(SPACE_FILL, 0, ident * IDENT_SIZE + 1);
             sb.append(strings.get(nameStringIndex));
+            sb.append(SPACE_FILL, 0, ident * IDENT_SIZE);
+            sb.append("]]>\n");
         }
     }
 
