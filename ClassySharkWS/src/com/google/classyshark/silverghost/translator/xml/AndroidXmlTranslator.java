@@ -16,8 +16,8 @@
 
 package com.google.classyshark.silverghost.translator.xml;
 
-import com.google.classyshark.silverghost.tokensmapper.ProguardMapper;
 import com.google.classyshark.silverghost.translator.Translator;
+
 import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
 import java.io.File;
@@ -38,25 +38,27 @@ import java.util.zip.ZipFile;
  * all strings
  */
 public class AndroidXmlTranslator implements Translator {
+    private static final String DEFAULT_CLASS_NAME = "AndroidManifest.xml";
 
     private final File archiveFile;
+    private final String xmlName;
     private String xml;
 
     private XmlHighlighter xmlHighlighter = new XmlHighlighter();
     private XmlDecompressor xmlDecompressor = new XmlDecompressor();
 
-    public AndroidXmlTranslator(File archiveFile) {
+    public AndroidXmlTranslator(String xmlName, File archiveFile) {
+        this.xmlName = xmlName;
         this.archiveFile = archiveFile;
+    }
+
+    public AndroidXmlTranslator(File archiveFile) {
+        this(DEFAULT_CLASS_NAME, archiveFile);
     }
 
     @Override
     public String getClassName() {
-        return "AndroidManifest.xml";
-    }
-
-    @Override
-    public void addMapper(ProguardMapper reverseMappings) {
-
+        return xmlName;
     }
 
     @Override
@@ -71,7 +73,7 @@ public class AndroidXmlTranslator implements Translator {
                     || archiveFile.getName().endsWith(".zip")
                     || archiveFile.getName().endsWith(".aar")) {
                 zip = new ZipFile(archiveFile);
-                ZipEntry mft = zip.getEntry("AndroidManifest.xml");
+                ZipEntry mft = zip.getEntry(xmlName);
                 size = mft.getSize();
                 is = zip.getInputStream(mft);
             } else {
@@ -137,7 +139,7 @@ public class AndroidXmlTranslator implements Translator {
 
     public static void main(String[] args) throws Exception {
         String archiveName = System.getProperty("user.home") +
-                "/Desktop/Scenarios/2 Samples/app-debug.apk";
+                "/Desktop/Scenarios/ 2 Samples/app-debug.apk";
         AndroidXmlTranslator t2ax = new AndroidXmlTranslator(new File(archiveName));
         t2ax.apply();
         System.out.print(t2ax.toString());

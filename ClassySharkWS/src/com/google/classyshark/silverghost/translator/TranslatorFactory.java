@@ -16,12 +16,13 @@
 
 package com.google.classyshark.silverghost.translator;
 
-import com.google.classyshark.silverghost.translator.elf.ElfTranslator;
 import com.google.classyshark.silverghost.translator.apk.ApkTranslator;
+import com.google.classyshark.silverghost.translator.dex.DexInfoTranslator;
+import com.google.classyshark.silverghost.translator.elf.ElfTranslator;
 import com.google.classyshark.silverghost.translator.jar.JarInfoTranslator;
 import com.google.classyshark.silverghost.translator.java.JavaTranslator;
-import com.google.classyshark.silverghost.translator.dex.DexInfoTranslator;
 import com.google.classyshark.silverghost.translator.xml.AndroidXmlTranslator;
+
 import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
@@ -38,7 +39,7 @@ public class TranslatorFactory {
     public static Translator createTranslator(String className, File archiveFile,
                                               List<String> allClassNames) {
         if(className.endsWith(".xml")) {
-            return new AndroidXmlTranslator(archiveFile);
+            return new AndroidXmlTranslator(className, archiveFile);
         }
 
         if (className.endsWith(".dex")) {

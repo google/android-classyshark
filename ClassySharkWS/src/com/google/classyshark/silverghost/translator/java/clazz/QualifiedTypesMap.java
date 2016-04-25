@@ -17,6 +17,7 @@
 package com.google.classyshark.silverghost.translator.java.clazz;
 
 import com.google.classyshark.silverghost.translator.java.dex.DexlibAdapter;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;

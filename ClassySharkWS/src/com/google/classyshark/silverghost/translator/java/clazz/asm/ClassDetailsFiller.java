@@ -18,10 +18,6 @@ package com.google.classyshark.silverghost.translator.java.clazz.asm;
 
 import com.google.classyshark.silverghost.translator.java.MetaObject;
 import com.google.classyshark.silverghost.translator.java.dex.DexlibAdapter;
-import java.io.File;
-import java.io.RandomAccessFile;
-import java.util.ArrayList;
-import java.util.List;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.Attribute;
 import org.objectweb.asm.ClassReader;
@@ -29,6 +25,11 @@ import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
+
+import java.io.File;
+import java.io.RandomAccessFile;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.objectweb.asm.Type.getArgumentTypes;
 import static org.objectweb.asm.Type.getReturnType;

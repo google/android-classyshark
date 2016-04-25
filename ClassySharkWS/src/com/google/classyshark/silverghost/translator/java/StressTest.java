@@ -22,12 +22,13 @@ import com.google.classyshark.silverghost.contentreader.jar.JarReader;
 import com.google.classyshark.silverghost.translator.Translator;
 import com.google.classyshark.silverghost.translator.TranslatorFactory;
 import com.google.classyshark.silverghost.translator.java.dex.DexlibAdapter;
+import org.jf.dexlib2.iface.ClassDef;
+import org.jf.dexlib2.iface.DexFile;
+
 import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import org.jf.dexlib2.iface.ClassDef;
-import org.jf.dexlib2.iface.DexFile;
 
 /**
  * Stress test for classes
