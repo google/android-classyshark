@@ -20,9 +20,16 @@ import com.google.classyshark.silverghost.contentreader.dex.DexlibLoader;
 import com.google.classyshark.silverghost.io.SherlockHash;
 import com.google.classyshark.silverghost.tokensmapper.ProguardMapper;
 import com.google.classyshark.silverghost.translator.Translator;
+import org.jf.dexlib2.dexbacked.DexBackedDexFile;
+import org.jf.dexlib2.iface.DexFile;
+import org.ow2.asmdex.ApplicationReader;
+import org.ow2.asmdex.ApplicationVisitor;
+import org.ow2.asmdex.ClassVisitor;
+import org.ow2.asmdex.MethodVisitor;
+import org.ow2.asmdex.Opcodes;
+
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -33,13 +40,6 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-import org.jf.dexlib2.dexbacked.DexBackedDexFile;
-import org.jf.dexlib2.iface.DexFile;
-import org.ow2.asmdex.ApplicationReader;
-import org.ow2.asmdex.ApplicationVisitor;
-import org.ow2.asmdex.ClassVisitor;
-import org.ow2.asmdex.MethodVisitor;
-import org.ow2.asmdex.Opcodes;
 
 /**
  * Translator for the .apk entry

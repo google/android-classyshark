@@ -1,8 +1,9 @@
 package com.google.classyshark.silverghost.contentreader.dex;
 
-import java.io.File;
 import org.jf.dexlib2.DexFileFactory;
 import org.jf.dexlib2.iface.DexFile;
+
+import java.io.File;
 
 // TODO inline class, looks redundant
 public class DexlibLoader {

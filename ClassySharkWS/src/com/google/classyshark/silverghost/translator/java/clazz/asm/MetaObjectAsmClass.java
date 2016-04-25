@@ -17,12 +17,13 @@
 package com.google.classyshark.silverghost.translator.java.clazz.asm;
 
 import com.google.classyshark.silverghost.translator.java.MetaObject;
+import org.objectweb.asm.ClassReader;
+
 import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import org.objectweb.asm.ClassReader;
 
 /**
  * Meta object for class format, based on ASM parsing

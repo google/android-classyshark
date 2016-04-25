@@ -19,15 +19,9 @@ package com.google.classyshark.gui.panel.tree;
 import com.google.classyshark.gui.GuiMode;
 import com.google.classyshark.gui.panel.FileTransferHandler;
 import com.google.classyshark.gui.panel.ViewerController;
-import com.google.classyshark.silverghost.contentreader.ContentReader;
 import com.google.classyshark.gui.panel.reducer.Reducer;
-import java.awt.Component;
-import java.awt.Font;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import com.google.classyshark.silverghost.contentreader.ContentReader;
+
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
@@ -38,6 +32,13 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreeSelectionModel;
+import java.awt.Component;
+import java.awt.Font;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 public class FilesTree {
     private final ViewerController viewerController;
@@ -89,15 +90,31 @@ public class FilesTree {
                                              List<ContentReader.Component> allComponents) {
         DefaultMutableTreeNode root = new DefaultMutableTreeNode(fileName);
         DefaultMutableTreeNode classes = new DefaultMutableTreeNode("classes");
+        DefaultMutableTreeNode res = new DefaultMutableTreeNode("res");
         DefaultMutableTreeNode currentClassesDex = classes;
         List<DefaultMutableTreeNode> noPkgNodes = new ArrayList<>();
 
         String lastPackage = null;
+        String lastResDir = null;
+
         DefaultMutableTreeNode packageNode = null;
+        DefaultMutableTreeNode dirNode = null;
         for (int i = 0; i < displayedClassNames.size(); i++) {
             String resName = displayedClassNames.get(i);
-            if (resName.equals("AndroidManifest.xml")) {
-                root.add(new DefaultMutableTreeNode(resName));
+            if (resName.endsWith(".xml")) {
+                if (resName.lastIndexOf(File.separator) > 0)  {
+                    String dir = resName.substring(0, resName.lastIndexOf(File.separator));
+                    if (lastResDir == null || !dir.equals(lastResDir)) {
+                        if (dirNode != null) {
+                            res.add(dirNode);
+                        }
+                        lastResDir = dir;
+                        dirNode = new DefaultMutableTreeNode(dir);
+                    }
+                    dirNode.add(new DefaultMutableTreeNode(resName));
+                } else {
+                    root.add(new DefaultMutableTreeNode(resName));
+                }
             } else if (resName.endsWith(".dex")) {
                 currentClassesDex = new DefaultMutableTreeNode(resName);
                 classes.add(currentClassesDex);
@@ -121,6 +138,7 @@ public class FilesTree {
             currentClassesDex.add(node);
         }
         root.add(classes);
+        root.add(res);
 
         fillComponents(root, allComponents);
 

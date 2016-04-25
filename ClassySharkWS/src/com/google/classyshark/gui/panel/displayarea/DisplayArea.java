@@ -18,11 +18,21 @@ package com.google.classyshark.gui.panel.displayarea;
 
 import com.google.classyshark.gui.GuiMode;
 import com.google.classyshark.gui.panel.FileTransferHandler;
+import com.google.classyshark.gui.panel.ViewerController;
 import com.google.classyshark.gui.panel.displayarea.doodles.Doodle;
 import com.google.classyshark.gui.theme.Theme;
 import com.google.classyshark.silverghost.translator.Translator;
 import com.google.classyshark.silverghost.translator.java.JavaTranslator;
-import com.google.classyshark.gui.panel.ViewerController;
+
+import javax.swing.JFrame;
+import javax.swing.JTextPane;
+import javax.swing.WindowConstants;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultStyledDocument;
+import javax.swing.text.Document;
+import javax.swing.text.Style;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.Utilities;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Toolkit;
@@ -33,15 +43,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.StringTokenizer;
-import javax.swing.JFrame;
-import javax.swing.JTextPane;
-import javax.swing.WindowConstants;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.DefaultStyledDocument;
-import javax.swing.text.Document;
-import javax.swing.text.Style;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.Utilities;
 
 /**
  * the area to display lists of classes and individual class

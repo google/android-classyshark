@@ -18,12 +18,13 @@ package com.google.classyshark.silverghost.contentreader.dex;
 
 import com.google.classyshark.silverghost.contentreader.BinaryContentReader;
 import com.google.classyshark.silverghost.contentreader.ContentReader;
+import org.jf.dexlib2.iface.ClassDef;
+import org.jf.dexlib2.iface.DexFile;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import org.jf.dexlib2.iface.ClassDef;
-import org.jf.dexlib2.iface.DexFile;
 
 public class DexReader implements BinaryContentReader {
     private File binaryArchive;

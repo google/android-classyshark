@@ -2,9 +2,10 @@ package com.google.classyshark.gui.panel.tree;
 
 import com.google.classyshark.gui.GuiMode;
 
-import javax.swing.*;
+import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeCellRenderer;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Component;
 
 public class CellRenderer extends DefaultTreeCellRenderer{
 

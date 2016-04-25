@@ -23,6 +23,9 @@ import com.google.classyshark.silverghost.translator.java.clazz.reflect.MetaObje
 import com.google.classyshark.silverghost.translator.java.dex.DexlibAdapter;
 import com.google.classyshark.silverghost.translator.java.dex.MetaObjectDex;
 import com.google.classyshark.silverghost.translator.java.dex.Multidex;
+import org.jf.dexlib2.iface.ClassDef;
+import org.jf.dexlib2.iface.DexFile;
+
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -31,8 +34,6 @@ import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-import org.jf.dexlib2.iface.ClassDef;
-import org.jf.dexlib2.iface.DexFile;
 
 /**
  * Factory for creating meta-objects to represent Java's data
