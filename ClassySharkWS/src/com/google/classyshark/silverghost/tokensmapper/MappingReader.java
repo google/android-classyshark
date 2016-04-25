@@ -21,7 +21,11 @@
 
 package com.google.classyshark.silverghost.tokensmapper;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.LineNumberReader;
 /**
  * This class can parse mapping files and invoke a processor for each of the
  * mapping entries.

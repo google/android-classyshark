@@ -19,15 +19,15 @@ package com.google.classyshark.silverghost.translator.elf;
 
 import com.google.classyshark.silverghost.io.SherlockHash;
 import com.google.classyshark.silverghost.tokensmapper.ProguardMapper;
+import com.google.classyshark.silverghost.translator.Translator;
+import nl.lxtreme.binutils.elf.Elf;
+
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-import nl.lxtreme.binutils.elf.Elf;
-import com.google.classyshark.silverghost.translator.Translator;
 
 import static com.google.classyshark.silverghost.translator.jar.JarInfoTranslator.readableFileSize;
 

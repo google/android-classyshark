@@ -16,11 +16,12 @@
 
 package com.google.classyshark.silverghost.translator.java;
 
+import com.google.classyshark.silverghost.tokensmapper.ProguardMapper;
 import com.google.classyshark.silverghost.translator.Translator;
 import com.google.classyshark.silverghost.translator.TranslatorFactory;
 import com.google.classyshark.silverghost.translator.java.clazz.QualifiedTypesMap;
 import com.google.classyshark.silverghost.translator.java.clazz.reflect.MetaObjectClass;
-import com.google.classyshark.silverghost.tokensmapper.ProguardMapper;
+
 import java.io.File;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;

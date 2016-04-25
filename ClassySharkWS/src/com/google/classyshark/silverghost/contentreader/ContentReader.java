@@ -21,6 +21,7 @@ import com.google.classyshark.silverghost.contentreader.apk.ApkReader;
 import com.google.classyshark.silverghost.contentreader.clazz.ClazzReader;
 import com.google.classyshark.silverghost.contentreader.dex.DexReader;
 import com.google.classyshark.silverghost.contentreader.jar.JarReader;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;

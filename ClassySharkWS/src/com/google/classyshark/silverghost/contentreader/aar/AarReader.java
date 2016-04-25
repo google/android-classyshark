@@ -19,6 +19,7 @@ package com.google.classyshark.silverghost.contentreader.aar;
 import com.google.classyshark.silverghost.contentreader.BinaryContentReader;
 import com.google.classyshark.silverghost.contentreader.ContentReader;
 import com.google.classyshark.silverghost.contentreader.jar.JarReader;
+
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;

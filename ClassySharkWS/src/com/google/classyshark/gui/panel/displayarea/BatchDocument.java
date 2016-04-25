@@ -16,11 +16,11 @@
 
 package com.google.classyshark.gui.panel.displayarea;
 
-import java.util.ArrayList;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.Element;
+import java.util.ArrayList;
 
 class BatchDocument extends DefaultStyledDocument {
 

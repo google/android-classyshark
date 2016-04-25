@@ -2,11 +2,24 @@ package com.google.classyshark.gui.theme.light;
 
 import com.google.classyshark.gui.theme.Theme;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.ImageIcon;
+import java.awt.Color;
+import java.awt.Component;
 
-import static com.google.classyshark.gui.theme.light.LightColorScheme.*;
-import static com.google.classyshark.gui.theme.light.LightIconScheme.*;
+import static com.google.classyshark.gui.theme.light.LightColorScheme.ANNOTATIONS;
+import static com.google.classyshark.gui.theme.light.LightColorScheme.DEFAULT;
+import static com.google.classyshark.gui.theme.light.LightColorScheme.IDENTIFIERS;
+import static com.google.classyshark.gui.theme.light.LightColorScheme.KEYWORDS;
+import static com.google.classyshark.gui.theme.light.LightColorScheme.NAMES;
+import static com.google.classyshark.gui.theme.light.LightColorScheme.SELECTION_BG;
+import static com.google.classyshark.gui.theme.light.LightIconScheme.BACK_ICON_PATH;
+import static com.google.classyshark.gui.theme.light.LightIconScheme.EXPORT_ICON_PATH;
+import static com.google.classyshark.gui.theme.light.LightIconScheme.MAPPING_ICON_PATH;
+import static com.google.classyshark.gui.theme.light.LightIconScheme.NEXT_ICON_PATH;
+import static com.google.classyshark.gui.theme.light.LightIconScheme.OPEN_ICON_PATH;
+import static com.google.classyshark.gui.theme.light.LightIconScheme.RECENT_ICON_PATH;
+import static com.google.classyshark.gui.theme.light.LightIconScheme.SETTINGS_ICON_PATH;
+import static com.google.classyshark.gui.theme.light.LightIconScheme.TOGGLE_ICON_PATH;
 
 public class LightTheme implements Theme {
     private final ImageIcon toggleIcon;

@@ -21,6 +21,9 @@ import com.google.classyshark.silverghost.io.SherlockHash;
 import com.google.classyshark.silverghost.tokensmapper.ProguardMapper;
 import com.google.classyshark.silverghost.translator.Translator;
 import com.google.classyshark.silverghost.translator.apk.ApkTranslator;
+import org.jf.dexlib2.dexbacked.DexBackedDexFile;
+import org.jf.dexlib2.iface.DexFile;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
@@ -28,8 +31,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-import org.jf.dexlib2.dexbacked.DexBackedDexFile;
-import org.jf.dexlib2.iface.DexFile;
 
 /**
  * Translator for the classes.dex entry
