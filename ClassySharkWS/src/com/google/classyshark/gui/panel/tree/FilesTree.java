@@ -105,11 +105,9 @@ public class FilesTree {
                 if (resName.lastIndexOf(File.separator) > 0)  {
                     String dir = resName.substring(0, resName.lastIndexOf(File.separator));
                     if (lastResDir == null || !dir.equals(lastResDir)) {
-                        if (dirNode != null) {
-                            res.add(dirNode);
-                        }
                         lastResDir = dir;
                         dirNode = new DefaultMutableTreeNode(dir);
+                        res.add(dirNode);
                     }
                     dirNode.add(new DefaultMutableTreeNode(resName));
                 } else {
@@ -261,10 +259,9 @@ public class FilesTree {
     }
 
     public static void main(String[] args) {
-        //File test = new File(System.getProperty("user.home") +
-        //        "/Desktop/Scenarios/2 Samples/android.jar");
+        File test = new File(System.getProperty("user.home") +
+                "/Desktop/Scenarios/2 Samples/android.jar");
 
-        File test = new File("classes1.dex");
         FilesTree filesTree = new FilesTree(null);
 
         ContentReader loader = new ContentReader(test);
