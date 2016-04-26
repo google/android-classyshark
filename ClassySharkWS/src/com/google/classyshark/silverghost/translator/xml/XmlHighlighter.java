@@ -34,8 +34,12 @@ public class XmlHighlighter {
         TAG, ATTR_NAME, ATTR_VALUE, COMMENT, CDATA
     }
     private static final Pattern TAG_PATTERN =
-            Pattern.compile("(</?[a-z-]*)\\s?>?", Pattern.MULTILINE);
-    private static final Pattern TAG_END_PATTERN = Pattern.compile("(/?+>)", Pattern.MULTILINE);
+            Pattern.compile("(</?[a-z-]+)\\s?>?", Pattern.MULTILINE);
+    private static final Pattern TAG_PATTERN_2 =
+            Pattern.compile("(<\\?)[a-z-]+\\s?>?", Pattern.MULTILINE);
+
+    private static final Pattern TAG_END_PATTERN = Pattern.compile("[^\\]](\\??>)", Pattern.MULTILINE);
+
     private static final Pattern TAG_ATTRIBUTE_PATTERN =
             Pattern.compile("\\s(\\w*)\\=", Pattern.MULTILINE);
     private static final Pattern TAG_ATTRIBUTE_VALUE =
@@ -51,6 +55,7 @@ public class XmlHighlighter {
 
     static {
         PATTERN_TAG_TYPE_MAP.put(TAG_PATTERN, TagType.TAG);
+        PATTERN_TAG_TYPE_MAP.put(TAG_PATTERN_2, TagType.TAG);
         PATTERN_TAG_TYPE_MAP.put(TAG_END_PATTERN, TagType.TAG);
         PATTERN_TAG_TYPE_MAP.put(TAG_ATTRIBUTE_PATTERN, TagType.ATTR_NAME);
         PATTERN_TAG_TYPE_MAP.put(TAG_ATTRIBUTE_VALUE, TagType.ATTR_VALUE);
@@ -156,12 +161,17 @@ public class XmlHighlighter {
                 "      debuggable='@res/0xFFFFFFFF'\n" +
                 "      allowBackup='@res/0xFFFFFFFF'\n" +
                 "      supportsRtl='@res/0xFFFFFFFF'>\n" +
+                "        <![CDATA[Testing 123]]>\n"+
                 "    <meta-data\n" +
                 "        name='test'>\n" +
                 "    </meta-data>\n" +
                 "  </application>\n" +
                 "</manifest>";
+        System.out.println(xml);
         List<Translator.ELEMENT> elements = new XmlHighlighter().getElements(xml);
+        for (Translator.ELEMENT e: elements) {
+            System.out.println(e.text);
+        }
         System.out.println(elements.size());
 
     }
