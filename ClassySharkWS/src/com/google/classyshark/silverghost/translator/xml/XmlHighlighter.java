@@ -34,7 +34,7 @@ public class XmlHighlighter {
         TAG, ATTR_NAME, ATTR_VALUE, COMMENT, CDATA
     }
     private static final Pattern TAG_PATTERN =
-            Pattern.compile("(</?[a-z-]+)\\s?>?", Pattern.MULTILINE);
+            Pattern.compile("(</?[A-Za-z-\\d\\._]+)\\s?>?", Pattern.MULTILINE);
     private static final Pattern TAG_PATTERN_2 =
             Pattern.compile("(<\\?)[a-z-]+\\s?>?", Pattern.MULTILINE);
 
