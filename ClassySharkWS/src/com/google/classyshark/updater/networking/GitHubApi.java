@@ -5,7 +5,7 @@ import com.google.classyshark.updater.models.Release;
 import retrofit2.Call;
 import retrofit2.http.GET;
 
-interface GitHubApi {
+public interface GitHubApi {
 
     String ENDPOINT = "https://api.github.com/";
 
