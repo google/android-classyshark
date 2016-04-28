@@ -19,6 +19,7 @@ package com.google.classyshark;
 import com.google.classyshark.cli.CliMode;
 import com.google.classyshark.gui.GuiMode;
 import com.google.classyshark.updater.UpdateManager;
+import com.google.classyshark.updater.models.Release;
 
 import java.util.Arrays;
 import java.util.List;
@@ -38,7 +39,7 @@ public class Main {
     public static void main(final String[] args) {
         final List<String> argsAsArray = Arrays.asList(args);
 
-        UpdateManager.checkVersion();
+        UpdateManager.getInstance().checkVersion();
 
         if (isGui(argsAsArray)) {
             GuiMode.with(argsAsArray);
