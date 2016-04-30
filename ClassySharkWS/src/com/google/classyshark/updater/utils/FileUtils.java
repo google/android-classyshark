@@ -31,17 +31,34 @@ import java.nio.file.StandardCopyOption;
 import static com.google.classyshark.updater.utils.NamingUtils.extractCurrentPath;
 import static javax.script.ScriptEngine.FILENAME;
 
+/**
+ * This class is the one taking care of managing the files: it will download the new version and, when needed, replace
+ * the old one with the new.
+ *
+ * @see #downloadFileFrom(Release) Implementation details
+ */
 public class FileUtils {
 
+    /**
+     * This method will download the new version if and only if it has not been downloaded already.
+     * In case the software detects that the same new JAR is already present, it will skip the download and just
+     * notify the user about the new version
+     */
     public static File downloadFileFrom(Release release) throws IOException {
+        File file = new File(NamingUtils.buildNameFrom(release));
+        if (!file.exists()) {
+            obtainNewJarFrom(release, file);
+        }
+        return file;
+    }
+
+    private static void obtainNewJarFrom(Release release, File file) throws IOException {
         URL url = new URL(release.getDownloadURL());
         ReadableByteChannel rbc = Channels.newChannel(url.openStream());
-        File file = new File(NamingUtils.buildNameFrom(release));
         file.getParentFile().mkdirs();
         FileOutputStream fos = new FileOutputStream(file);
         fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
         fos.close();
-        return file;
     }
 
     private void overwriteOld(File file) throws IOException {
