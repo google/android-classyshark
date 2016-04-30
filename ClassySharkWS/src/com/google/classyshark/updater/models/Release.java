@@ -1,6 +1,7 @@
 package com.google.classyshark.updater.models;
 
 
+import com.google.classyshark.Version;
 import com.google.gson.annotations.SerializedName;
 import com.sun.istack.internal.Nullable;
 
@@ -23,8 +24,8 @@ public class Release {
         this.createdAt = createdAt;
     }
 
-    public Release(String name) {
-        this(name, false, "", null, "");
+    public Release() {
+        this(String.format("%d.%d", Version.MAJOR, Version.MINOR), false, "", null, "");
     }
 
     @Override

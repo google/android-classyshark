@@ -13,7 +13,7 @@ import java.io.IOException;
 public class UpdateManager{
     private static final UpdateManager instance = new UpdateManager();
     private final AbstractReleaseCallback releaseCallback;
-    private final Release currentRelease = new Release("1.0");
+    private final Release currentRelease = new Release();
     private boolean gui = false;
 
     private UpdateManager() {
