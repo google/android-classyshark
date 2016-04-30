@@ -12,7 +12,9 @@ public class NamingUtils {
     private static final String PREFIX = "ClassyShark";
     private static final String SUFFIX = ".jar";
 
-    public static String buildNameFrom(@NotNull Release release) {
+    final String FILENAME = "ClassyShark.jar";
+
+    static String buildNameFrom(@NotNull Release release) {
         String[] creationDates = release.getCreatedAt().split("T");
         String timeStamp = "";
         if (creationDates.length > 0) {
@@ -22,7 +24,7 @@ public class NamingUtils {
         return extractCurrentPath() + File.separator + PREFIX + timeStamp + SUFFIX;
     }
 
-    private static String extractCurrentPath() {
+    static String extractCurrentPath() {
         return Paths.get(".").toAbsolutePath().normalize().toString();
     }
 }
