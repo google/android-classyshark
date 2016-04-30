@@ -2,7 +2,7 @@ package com.google.classyshark.updater.networking;
 
 import javax.swing.*;
 
-public class MessageRunnable implements Runnable{
+public class MessageRunnable implements Runnable {
     private final String title;
     private final String changelog;
     private final boolean gui;
@@ -16,11 +16,11 @@ public class MessageRunnable implements Runnable{
     }
 
     private String buildTitleFrom(String title) {
-        return "ClassyShark version " + title;
+        return "New ClassyShark version " + title;
     }
 
     private String buildChangelogFrom(String changelog) {
-        return "CHANGELOG:\n" + changelog + "\n\nWould you like to automatically restart ClassyShark to run the update?";
+        return "CHANGELOG:\n" + changelog;
     }
 
     @Override
@@ -31,14 +31,7 @@ public class MessageRunnable implements Runnable{
     }
 
     private void warnUserAboutNewRelease() {
-        int buttons = JOptionPane.YES_NO_OPTION;
         final Icon icon = new ImageIcon(getClass().getResource(ICON_PATH));
-        int dialogResults = JOptionPane.showConfirmDialog(null, changelog, title, buttons, JOptionPane.INFORMATION_MESSAGE, icon);
-
-        if (dialogResults == JOptionPane.YES_OPTION) {
-            System.out.print("YES");
-        } else {
-            System.out.print("NO");
-        }
+        JOptionPane.showConfirmDialog(null, changelog, title, JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, icon);
     }
 }
