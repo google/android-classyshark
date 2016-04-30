@@ -16,29 +16,32 @@
 
 package com.google.classyshark.updater.models;
 
-class Assets {
+import com.google.gson.annotations.SerializedName;
 
-    private final String browser_download_url;
+class ReleaseDownloadData {
 
-    Assets(String browser_download_url) {
-        this.browser_download_url = browser_download_url;
+    @SerializedName("browser_download_url")
+    private final String browserDownloadUrl;
+
+    ReleaseDownloadData(String browserDownloadUrl) {
+        this.browserDownloadUrl = browserDownloadUrl;
     }
 
     @Override
     public boolean equals(Object other) {
-        if (!(other instanceof Assets)) {
+        if (!(other instanceof ReleaseDownloadData)) {
             return false;
         }
 
-        return browser_download_url.equals(((Assets) other).browser_download_url);
+        return browserDownloadUrl.equals(((ReleaseDownloadData) other).browserDownloadUrl);
     }
 
     @Override
     public int hashCode() {
-        return browser_download_url.hashCode();
+        return browserDownloadUrl.hashCode();
     }
 
     String getURL() {
-        return browser_download_url;
+        return browserDownloadUrl;
     }
 }

@@ -27,12 +27,12 @@ public class Release {
     @SerializedName("prerelease")
     private final boolean preRelease;
     private final String body;
-    private final Assets[] assets;
+    private final ReleaseDownloadData[] assets;
     @SerializedName("created_at")
     private final String createdAt;
 
 
-    private Release(String name, boolean preRelease, String body, Assets[] assets, String createdAt) {
+    private Release(String name, boolean preRelease, String body, ReleaseDownloadData[] assets, String createdAt) {
         this.name = name;
         this.preRelease = preRelease;
         this.body = body;
