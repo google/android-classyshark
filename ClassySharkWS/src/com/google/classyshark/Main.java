@@ -18,8 +18,6 @@ package com.google.classyshark;
 
 import com.google.classyshark.cli.CliMode;
 import com.google.classyshark.gui.GuiMode;
-import com.google.classyshark.updater.UpdateManager;
-import com.google.classyshark.updater.models.Release;
 
 import java.util.Arrays;
 import java.util.List;
