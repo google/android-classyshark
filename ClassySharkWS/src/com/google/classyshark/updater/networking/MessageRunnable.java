@@ -36,7 +36,7 @@ public class MessageRunnable implements Runnable {
     }
 
     private String buildChangelogFrom(String changelog) {
-        return "CHANGELOG:\n" + changelog;
+        return "A new ClassyShark version is available for you in the same directory where the old one was!\nCheck it out!\nCHANGELOG:\n" + changelog;
     }
 
     @Override
