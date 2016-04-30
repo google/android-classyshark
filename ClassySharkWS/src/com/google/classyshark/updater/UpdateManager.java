@@ -2,9 +2,11 @@ package com.google.classyshark.updater;
 
 import com.google.classyshark.updater.models.Release;
 import com.google.classyshark.updater.networking.AbstractReleaseCallback;
+import com.google.classyshark.updater.networking.MessageRunnable;
 import com.google.classyshark.updater.networking.NetworkManager;
 import retrofit2.Call;
 
+import javax.swing.*;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -59,6 +61,7 @@ public class UpdateManager{
                 @Override
                 public void run() {
                     obtainNew(release);
+                    SwingUtilities.invokeLater(new MessageRunnable(release.getReleaseName(), release.getChangelog(), gui));
                 }
             }).start();
 
