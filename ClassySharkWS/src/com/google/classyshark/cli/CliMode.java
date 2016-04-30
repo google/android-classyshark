@@ -16,6 +16,8 @@
 
 package com.google.classyshark.cli;
 
+import com.google.classyshark.updater.UpdateManager;
+
 import java.io.File;
 import java.util.List;
 
@@ -42,6 +44,7 @@ public class CliMode {
     }
 
     public static void with(List<String> args) {
+        UpdateManager.getInstance().checkVersionConsole();
         if (args.size() < 2) {
             System.err.println("missing command line arguments " + "\n\n\n" + ERROR_MESSAGE);
             return;

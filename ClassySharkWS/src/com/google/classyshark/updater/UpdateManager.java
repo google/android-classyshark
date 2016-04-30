@@ -21,6 +21,7 @@ public class UpdateManager{
 
     private final AbstractReleaseCallback releaseCallback;
     private final Release currentRelease = new Release("1.0");
+    private boolean gui = false;
 
     private final String TEMP_FILENAME = "ClassyShark_new.jar";
     private final String FILENAME = "ClassyShark.jar";
@@ -38,7 +39,16 @@ public class UpdateManager{
         return instance;
     }
 
-    public void checkVersion() {
+    public void checkVersionConsole() {
+        checkVersion(false);
+    }
+
+    public void checkVersionGui() {
+        checkVersion(true);
+    }
+
+    private void checkVersion(boolean gui) {
+        this.gui = gui;
         Call<Release> call = NetworkManager.getGitHubApi().getLatestRelease();
         call.enqueue(releaseCallback);
     }

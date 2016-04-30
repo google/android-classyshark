@@ -39,8 +39,6 @@ public class Main {
     public static void main(final String[] args) {
         final List<String> argsAsArray = Arrays.asList(args);
 
-        UpdateManager.getInstance().checkVersion();
-
         if (isGui(argsAsArray)) {
             GuiMode.with(argsAsArray);
         } else {

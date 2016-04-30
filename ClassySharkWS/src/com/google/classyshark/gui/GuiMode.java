@@ -19,6 +19,7 @@ package com.google.classyshark.gui;
 import com.google.classyshark.gui.panel.ClassySharkPanel;
 import com.google.classyshark.gui.theme.Theme;
 import com.google.classyshark.gui.theme.ThemeManager;
+import com.google.classyshark.updater.UpdateManager;
 
 import javax.swing.JFrame;
 import javax.swing.UIManager;
@@ -38,6 +39,7 @@ public class GuiMode {
     }
 
     public static void with(final List<String> argsAsArray) {
+        UpdateManager.getInstance().checkVersionGui();
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 buildAndShowClassyShark(argsAsArray);
