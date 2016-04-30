@@ -26,6 +26,12 @@ import retrofit2.Call;
 import javax.swing.*;
 import java.io.IOException;
 
+
+/**
+ * This class is the core point for the update process: based on the response received from GitHub, it will download
+ * the new release and, if ClassyShark has been started as desktop app, when the download finishes, it will show a
+ * dialog containing the changelog of the new version
+ */
 public class UpdateManager{
     private static final UpdateManager instance = new UpdateManager();
     private final AbstractReleaseCallback releaseCallback;
