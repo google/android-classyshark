@@ -21,6 +21,10 @@ import com.google.classyshark.updater.models.Release;
 import retrofit2.Call;
 import retrofit2.http.GET;
 
+/**
+ * This class is the one taking care of representing the API needed in order to retrieve the latest release data from
+ * GitHub.
+ */
 public interface GitHubApi {
 
     String ENDPOINT = "https://api.github.com/";
