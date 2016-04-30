@@ -18,9 +18,16 @@ package com.google.classyshark.updater.models;
 
 
 import com.google.classyshark.Version;
+import com.google.classyshark.updater.networking.GitHubApi;
 import com.google.gson.annotations.SerializedName;
 import com.sun.istack.internal.Nullable;
 
+/**
+ * This class represents the response that GitHub returns when queried with {@link GitHubApi#getLatestRelease()}.
+ * Since we do not need all the fields from the response, we just add those we are gonna use.
+ * At the moment, the {@link #preRelease} field is not used, but it will most probably be in the future in case we want to
+ * only update to stable releases.
+ */
 public class Release {
 
     private final String name;
