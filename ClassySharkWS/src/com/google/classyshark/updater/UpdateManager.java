@@ -30,7 +30,7 @@ public class UpdateManager{
     private static final UpdateManager instance = new UpdateManager();
     private final AbstractReleaseCallback releaseCallback;
     private final Release currentRelease = new Release();
-    private boolean gui = false;
+    private boolean isGui = false;
 
     private UpdateManager() {
         releaseCallback = new AbstractReleaseCallback() {
@@ -53,8 +53,8 @@ public class UpdateManager{
         checkVersion(true);
     }
 
-    private void checkVersion(boolean gui) {
-        this.gui = gui;
+    private void checkVersion(boolean isGui) {
+        this.isGui = isGui;
         Call<Release> call = NetworkManager.getGitHubApi().getLatestRelease();
         call.enqueue(releaseCallback);
     }
@@ -65,7 +65,7 @@ public class UpdateManager{
                 @Override
                 public void run() {
                     obtainNew(release);
-                    SwingUtilities.invokeLater(new MessageRunnable(release.getReleaseName(), release.getChangelog(), gui));
+                    SwingUtilities.invokeLater(new MessageRunnable(release.getReleaseName(), release.getChangelog(), isGui));
                 }
             }).start();
 
