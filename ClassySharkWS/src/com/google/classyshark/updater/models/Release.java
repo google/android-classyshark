@@ -1,25 +1,30 @@
 package com.google.classyshark.updater.models;
 
 
+import com.google.gson.annotations.SerializedName;
 import com.sun.istack.internal.Nullable;
 
 public class Release {
 
     private final String name;
-    private final boolean prerelease;
+    @SerializedName("prerelease")
+    private final boolean preRelease;
     private final String body;
     private final Assets[] assets;
+    @SerializedName("created_at")
+    private final String createdAt;
 
 
-    private Release(String name, boolean prerelease, String body, Assets[] assets) {
+    private Release(String name, boolean preRelease, String body, Assets[] assets, String createdAt) {
         this.name = name;
-        this.prerelease = prerelease;
+        this.preRelease = preRelease;
         this.body = body;
         this.assets = assets;
+        this.createdAt = createdAt;
     }
 
     public Release(String name) {
-        this(name, false, "", null);
+        this(name, false, "", null, "");
     }
 
     @Override
@@ -72,11 +77,15 @@ public class Release {
         return name;
     }
 
-    public boolean isPrerelease() {
-        return prerelease;
+    public boolean isPreRelease() {
+        return preRelease;
     }
 
     public String getChangelog() {
         return body;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
     }
 }

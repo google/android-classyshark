@@ -4,6 +4,7 @@ import com.google.classyshark.updater.models.Release;
 import com.google.classyshark.updater.networking.AbstractReleaseCallback;
 import com.google.classyshark.updater.networking.MessageRunnable;
 import com.google.classyshark.updater.networking.NetworkManager;
+import com.google.classyshark.updater.utils.NamingUtils;
 import retrofit2.Call;
 
 import javax.swing.*;
@@ -71,7 +72,6 @@ public class UpdateManager{
     private void obtainNew(Release release) {
         try {
             File file = downloadFileFrom(release);
-            overwriteOld(file);
         } catch (IOException e) {
             System.err.println("ERROR: " + e.getMessage());
         }
@@ -81,7 +81,7 @@ public class UpdateManager{
     private File downloadFileFrom(Release release) throws IOException {
         URL url = new URL(release.getDownloadURL());
         ReadableByteChannel rbc = Channels.newChannel(url.openStream());
-        File file = new File(extractCurrentPath() + File.separator + TEMP_FILENAME);
+        File file = new File(NamingUtils.buildNameFrom(release));
         file.getParentFile().mkdirs();
         FileOutputStream fos = new FileOutputStream(file);
         fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
