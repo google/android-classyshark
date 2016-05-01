@@ -17,8 +17,6 @@
 package com.google.classyshark.updater.utils;
 
 import com.google.classyshark.updater.models.Release;
-import com.sun.istack.internal.NotNull;
-
 import java.io.File;
 import java.nio.file.Paths;
 
@@ -29,7 +27,7 @@ public class NamingUtils {
 
     final String FILENAME = "ClassyShark.jar";
 
-    static String buildNameFrom(@NotNull Release release) {
+    static String buildNameFrom(Release release) {
         String[] creationDates = release.getCreatedAt().split("T");
         String timeStamp = "";
         if (creationDates.length > 0) {

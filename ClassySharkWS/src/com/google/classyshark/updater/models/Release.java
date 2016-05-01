@@ -19,7 +19,6 @@ package com.google.classyshark.updater.models;
 import com.google.classyshark.Version;
 import com.google.classyshark.updater.networking.GitHubApi;
 import com.google.gson.annotations.SerializedName;
-import com.sun.istack.internal.Nullable;
 
 /**
  * This class represents the response that GitHub returns when queried with {@link GitHubApi#getLatestRelease()}.
@@ -36,7 +35,7 @@ public class Release {
     private final ReleaseDownloadData[] assets;
     @SerializedName("created_at")
     private final String createdAt;
-    
+
     private Release(String name, boolean preRelease, String body, ReleaseDownloadData[] assets, String createdAt) {
         this.name = name;
         this.preRelease = preRelease;
@@ -86,7 +85,6 @@ public class Release {
                 getMajorVersion() == other.getMajorVersion() && getMinorVersion() > other.getMinorVersion();
     }
 
-    @Nullable
     public String getDownloadURL() {
         if (assets != null && assets.length > 0) {
             return assets[0].getURL();
