@@ -28,8 +28,9 @@ import java.io.IOException;
 
 
 /**
- * This class is the core point for the update process: based on the response received from GitHub, it will download
- * the new release and, if ClassyShark has been started as desktop app, when the download finishes, it will show a
+ * This class is the core point for the update process: based on the response
+ * received from GitHub, it will download the new release and, if ClassyShark
+ * has been started as desktop app, when the download finishes, it will show a
  * dialog containing the changelog of the new version
  */
 public class UpdateManager{
@@ -65,7 +66,7 @@ public class UpdateManager{
         call.enqueue(releaseCallback);
     }
 
-    private void onReleaseResponse(Release release) {
+    private void onReleaseResponse(final Release release) {
         if (release.isNewerThan(currentRelease)) {
             new Thread(new Runnable() {
                 @Override
@@ -85,5 +86,4 @@ public class UpdateManager{
             System.err.println("ERROR: " + e.getMessage());
         }
     }
-
 }

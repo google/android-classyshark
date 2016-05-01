@@ -16,7 +16,6 @@
 
 package com.google.classyshark.updater.utils;
 
-
 import com.google.classyshark.updater.models.Release;
 import com.sun.istack.internal.NotNull;
 

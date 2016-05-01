@@ -34,3 +34,5 @@ ClassySharkWS/out/
 *.txt
 
 ClassySharkWS/*_dump
+
+ClassySharkWS/ClassyShark*.jar

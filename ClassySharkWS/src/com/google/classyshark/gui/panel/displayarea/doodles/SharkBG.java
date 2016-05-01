@@ -16,6 +16,8 @@
 
 package com.google.classyshark.gui.panel.displayarea.doodles;
 
+import com.google.classyshark.Version;
+
 /**
  *  the welcome ascii art image
  */
@@ -46,6 +48,7 @@ class SharkBG {
                       + "               ii!                             '*YMWM,                        \n"
                       + "               I'                                  \"YM\n"
                       + "\n\n\n\thttp://www.retrojunkie.com/asciiart/animals/sharks.htm"
-                      + "\n\n\n\tClassyShark ver. 6.4 powered by SilverGhost";
+                      + "\n\n\n\tClassyShark ver." + Version.MAJOR + "."
+                      + Version.MINOR + " powered by SilverGhost";
 
 }

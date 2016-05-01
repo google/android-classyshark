@@ -21,14 +21,14 @@ import javax.swing.*;
 public class MessageRunnable implements Runnable {
     private final String title;
     private final String changelog;
-    private final boolean gui;
+    private final boolean isGui;
 
     private final String ICON_PATH = "/resources/ic_update.png";
 
     public MessageRunnable(String title, String changelog, boolean gui) {
         this.title = buildTitleFrom(title);
         this.changelog = buildChangelogFrom(changelog);
-        this.gui = gui;
+        this.isGui = gui;
     }
 
     private String buildTitleFrom(String title) {
@@ -41,7 +41,7 @@ public class MessageRunnable implements Runnable {
 
     @Override
     public void run() {
-        if (gui) {
+        if (isGui) {
             warnUserAboutNewRelease();
         }
     }

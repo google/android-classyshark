@@ -16,7 +16,6 @@
 
 package com.google.classyshark.updater.models;
 
-
 import com.google.classyshark.Version;
 import com.google.classyshark.updater.networking.GitHubApi;
 import com.google.gson.annotations.SerializedName;
@@ -37,8 +36,7 @@ public class Release {
     private final ReleaseDownloadData[] assets;
     @SerializedName("created_at")
     private final String createdAt;
-
-
+    
     private Release(String name, boolean preRelease, String body, ReleaseDownloadData[] assets, String createdAt) {
         this.name = name;
         this.preRelease = preRelease;
