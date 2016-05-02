@@ -19,6 +19,7 @@ package com.google.classyshark.updater.networking;
 import com.google.classyshark.updater.models.Release;
 
 import java.io.File;
+import java.util.Scanner;
 
 public class CliDownloader extends AbstractDownloader{
     private static final AbstractDownloader instance = new CliDownloader();
@@ -27,19 +28,25 @@ public class CliDownloader extends AbstractDownloader{
 
     @Override
     boolean warnAboutNew(Release release) {
-        return false;
+        String message = "New ClassyShark version available!\n" +
+                release.getReleaseName() + "\n" +
+                release.getChangelog() + "\n" +
+                "Do you wish to download it? (y/N)";
+
+        System.out.println(message);
+        Scanner scanner = new Scanner(System.in);
+
+        return scanner.next().equalsIgnoreCase("y");
     }
 
     @Override
     void onReleaseDownloaded(File file, Release release) {
 
-        String message = new StringBuilder("New ClassyShark version available!")
-                .append("\n")
-                .append("The new release ")
-                .append(release.getReleaseName())
-                .append(" has been downloaded to ")
-                .append(file.getAbsolutePath())
-                .toString();
+        String message = "New ClassyShark version available offline!\n" +
+                "The new release " +
+                release.getReleaseName() +
+                " has been downloaded to " +
+                file.getAbsolutePath();
 
         System.out.println(message);
     }
