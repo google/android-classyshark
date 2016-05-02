@@ -23,6 +23,11 @@ import retrofit2.Call;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * This class is the skeleton of both the {@link GuiDownloader} and {@link CliDownloader}: it contains the core logic
+ * needed to download the new JAR and a couple of callbacks that helps in managing the different outputs between the
+ * two logics
+ */
 public abstract class AbstractDownloader extends AbstractReleaseCallback{
     private final Release current = new Release();
 

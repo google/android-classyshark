@@ -21,6 +21,10 @@ import com.google.classyshark.updater.models.Release;
 import javax.swing.*;
 import java.io.File;
 
+/**
+ * This class is the one being called when ClassyShark shall be updated from the GUI.
+ * Its callback is informing the user about the new version and the new changelog
+ */
 public class GuiDownloader extends AbstractDownloader{
     private final static AbstractDownloader instance = new GuiDownloader();
 

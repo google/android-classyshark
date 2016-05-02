@@ -21,6 +21,10 @@ import com.google.classyshark.updater.models.Release;
 import java.io.File;
 import java.util.Scanner;
 
+/**
+ * This class is the one taking care of downloading the update from the CLI, asking the user if they want to update
+ * to the new version when one is found.
+ */
 public class CliDownloader extends AbstractDownloader{
     private static final AbstractDownloader instance = new CliDownloader();
 
