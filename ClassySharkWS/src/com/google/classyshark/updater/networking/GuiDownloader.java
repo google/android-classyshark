@@ -19,8 +19,12 @@ package com.google.classyshark.updater.networking;
 import com.google.classyshark.updater.models.Release;
 
 import javax.swing.*;
+import java.io.File;
 
 public class GuiDownloader extends AbstractDownloader{
+    private final static AbstractDownloader instance = new GuiDownloader();
+
+    private GuiDownloader() {}
 
     @Override
     boolean warnAboutNew(Release release) {
@@ -28,8 +32,11 @@ public class GuiDownloader extends AbstractDownloader{
     }
 
     @Override
-    void onReleaseDownloaded(Release release) {
+    void onReleaseDownloaded(File file, Release release) {
         SwingUtilities.invokeLater(new MessageRunnable(release.getReleaseName(), release.getChangelog(), true));
     }
 
+    public static AbstractDownloader getInstance() {
+        return instance;
+    }
 }

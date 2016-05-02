@@ -20,6 +20,7 @@ import com.google.classyshark.updater.models.Release;
 import com.google.classyshark.updater.utils.FileUtils;
 import retrofit2.Call;
 
+import java.io.File;
 import java.io.IOException;
 
 public abstract class AbstractDownloader extends AbstractReleaseCallback{
@@ -38,7 +39,6 @@ public abstract class AbstractDownloader extends AbstractReleaseCallback{
                 public void run() {
                     if (warnAboutNew(release)) {
                         obtainNew(release);
-                        onReleaseDownloaded(release);
                     }
                 }
             }).start();
@@ -46,15 +46,15 @@ public abstract class AbstractDownloader extends AbstractReleaseCallback{
         }
     }
 
-    abstract void onReleaseDownloaded(Release release);
-
     abstract boolean warnAboutNew(Release release);
 
     private void obtainNew(Release release) {
         try {
-            FileUtils.downloadFileFrom(release);
+            onReleaseDownloaded(FileUtils.downloadFileFrom(release), release);
         } catch (IOException e) {
             System.err.println("ERROR: " + e.getMessage());
         }
     }
+
+    abstract void onReleaseDownloaded(File file, Release release);
 }
