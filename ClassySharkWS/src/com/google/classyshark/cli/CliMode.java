@@ -45,7 +45,6 @@ public class CliMode {
     }
 
     public static void with(List<String> args) {
-        UpdateManager.getInstance().checkVersionConsole();
         if (args.size() < 2) {
             System.err.println("missing command line arguments " + "\n\n\n" + ERROR_MESSAGE);
             return;
@@ -71,6 +70,9 @@ public class CliMode {
                 break;
             case "-methodcounts":
                 inspectPackages(args);
+                break;
+            case "-update":
+                UpdateManager.getInstance().checkVersionConsole();
                 break;
             default:
                 System.err.println("wrong operand ==> " + operand + "\n\n\n" + ERROR_MESSAGE);
