@@ -37,7 +37,8 @@ public class CliMode {
             "    -open\t  open an archive with GUI \n" +
             "    -export\t  export to file \n" +
             "    -methodcounts\t  packages with method counts \n" +
-            "    -inspect  experimental prints apk analysis" +
+            "    -inspect  experimental prints apk analysis\n" +
+            "    -update\tupdates ClassyShark" +
             "\nwhere args is an optional classname\n";
 
     private CliMode() {
