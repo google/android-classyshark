@@ -37,7 +37,7 @@ public abstract class AbstractDownloader extends AbstractReleaseCallback{
     }
 
     @Override
-    public void onReleaseReceived(Release release) {
+    public void onReleaseReceived(final Release release) {
         if (release.isNewerThan(current)) {
             new Thread(new Runnable() {
                 @Override
