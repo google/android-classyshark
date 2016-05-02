@@ -16,16 +16,9 @@
 
 package com.google.classyshark.updater;
 
-import com.google.classyshark.updater.models.Release;
-import com.google.classyshark.updater.networking.AbstractReleaseCallback;
-import com.google.classyshark.updater.networking.MessageRunnable;
-import com.google.classyshark.updater.networking.NetworkManager;
-import com.google.classyshark.updater.utils.FileUtils;
-import retrofit2.Call;
-
-import javax.swing.*;
-import java.io.IOException;
-
+import com.google.classyshark.updater.networking.AbstractDownloader;
+import com.google.classyshark.updater.networking.CliDownloader;
+import com.google.classyshark.updater.networking.GuiDownloader;
 
 /**
  * This class is the core point for the update process: based on the response
@@ -35,17 +28,9 @@ import java.io.IOException;
  */
 public class UpdateManager{
     private static final UpdateManager instance = new UpdateManager();
-    private final AbstractReleaseCallback releaseCallback;
-    private final Release currentRelease = new Release();
-    private boolean isGui = false;
 
     private UpdateManager() {
-        releaseCallback = new AbstractReleaseCallback() {
-            @Override
-            public void onReleaseReceived(Release release) {
-                onReleaseResponse(release);
-            }
-        };
+
     }
 
     public static UpdateManager getInstance() {
@@ -61,29 +46,14 @@ public class UpdateManager{
     }
 
     private void checkVersion(boolean isGui) {
-        this.isGui = isGui;
-        Call<Release> call = NetworkManager.getGitHubApi().getLatestRelease();
-        call.enqueue(releaseCallback);
+        getDownloaderFrom(isGui).checkNewVersion();
     }
 
-    private void onReleaseResponse(final Release release) {
-        if (release.isNewerThan(currentRelease)) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    obtainNew(release);
-                    SwingUtilities.invokeLater(new MessageRunnable(release.getReleaseName(), release.getChangelog(), isGui));
-                }
-            }).start();
-
-        }
-    }
-
-    private void obtainNew(Release release) {
-        try {
-            FileUtils.downloadFileFrom(release);
-        } catch (IOException e) {
-            System.err.println("ERROR: " + e.getMessage());
+    private AbstractDownloader getDownloaderFrom(boolean isGui) {
+        if (isGui) {
+            return GuiDownloader.getInstance();
+        } else {
+            return CliDownloader.getInstance();
         }
     }
 }

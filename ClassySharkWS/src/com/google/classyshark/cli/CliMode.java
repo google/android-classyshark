@@ -37,14 +37,14 @@ public class CliMode {
             "    -open\t  open an archive with GUI \n" +
             "    -export\t  export to file \n" +
             "    -methodcounts\t  packages with method counts \n" +
-            "    -inspect  experimental prints apk analysis" +
+            "    -inspect  experimental prints apk analysis\n" +
+            "    -update\tupdates ClassyShark" +
             "\nwhere args is an optional classname\n";
 
     private CliMode() {
     }
 
     public static void with(List<String> args) {
-        UpdateManager.getInstance().checkVersionConsole();
         if (args.size() < 2) {
             System.err.println("missing command line arguments " + "\n\n\n" + ERROR_MESSAGE);
             return;
@@ -70,6 +70,9 @@ public class CliMode {
                 break;
             case "-methodcounts":
                 inspectPackages(args);
+                break;
+            case "-update":
+                UpdateManager.getInstance().checkVersionConsole();
                 break;
             default:
                 System.err.println("wrong operand ==> " + operand + "\n\n\n" + ERROR_MESSAGE);
