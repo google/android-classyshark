@@ -37,7 +37,7 @@ public class GuiDownloader extends AbstractDownloader{
 
     @Override
     void onReleaseDownloaded(File file, Release release) {
-        SwingUtilities.invokeLater(new MessageRunnable(release.getReleaseName(), release.getChangelog(), true));
+        SwingUtilities.invokeLater(new MessageRunnable(release.getReleaseName(), release.getChangelog()));
     }
 
     public static AbstractDownloader getInstance() {

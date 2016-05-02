@@ -18,17 +18,15 @@ package com.google.classyshark.updater.networking;
 
 import javax.swing.*;
 
-public class MessageRunnable implements Runnable {
+class MessageRunnable implements Runnable {
     private final String title;
     private final String changelog;
-    private final boolean isGui;
 
     private final String ICON_PATH = "/resources/ic_update.png";
 
-    public MessageRunnable(String title, String changelog, boolean gui) {
+    MessageRunnable(String title, String changelog) {
         this.title = buildTitleFrom(title);
         this.changelog = buildChangelogFrom(changelog);
-        this.isGui = gui;
     }
 
     private String buildTitleFrom(String title) {
@@ -41,12 +39,6 @@ public class MessageRunnable implements Runnable {
 
     @Override
     public void run() {
-        if (isGui) {
-            warnUserAboutNewRelease();
-        }
-    }
-
-    private void warnUserAboutNewRelease() {
         final Icon icon = new ImageIcon(getClass().getResource(ICON_PATH));
         JOptionPane.showConfirmDialog(null, changelog, title, JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, icon);
     }
