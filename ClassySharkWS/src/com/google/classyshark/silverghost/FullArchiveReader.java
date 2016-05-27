@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package com.google.classyshark;
+package com.google.classyshark.silverghost;
 
-/**
- * This file is the one containing the data for the current ClassyShark version
- */
-public class Version {
+import com.google.classyshark.silverghost.translator.Translator;
+import java.io.File;
 
-    public static final int MAJOR = 6;
-    public static final int MINOR = 5;
+public interface FullArchiveReader {
+    void readAsyncArchive(File file);
+
+    Translator buildTranslator(String className, File archiveFile);
 }

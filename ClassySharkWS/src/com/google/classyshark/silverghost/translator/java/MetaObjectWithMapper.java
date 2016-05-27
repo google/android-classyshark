@@ -16,7 +16,7 @@
 
 package com.google.classyshark.silverghost.translator.java;
 
-import com.google.classyshark.silverghost.tokensmapper.ProguardMapper;
+import com.google.classyshark.silverghost.TokensMapper;
 
 import java.util.Map;
 import java.util.TreeMap;
@@ -26,11 +26,11 @@ public class MetaObjectWithMapper extends MetaObject {
     private Map<String, String> reverseMappingClasses;
     private MetaObject metaObject;
 
-    public MetaObjectWithMapper(MetaObject metaObject, ProguardMapper reverseMappings) {
+    public MetaObjectWithMapper(MetaObject metaObject, TokensMapper reverseMappings) {
         super();
 
         this.metaObject = metaObject;
-        this.reverseMappingClasses = reverseMappings.classes;
+        this.reverseMappingClasses = reverseMappings.getReverseClasses();
     }
 
     @Override

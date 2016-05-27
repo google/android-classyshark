@@ -32,7 +32,7 @@ import com.google.classyshark.gui.theme.Theme;
 import com.google.classyshark.silverghost.SilverGhost;
 import com.google.classyshark.silverghost.exporter.Exporter;
 import com.google.classyshark.silverghost.methodscounter.ClassNode;
-import com.google.classyshark.silverghost.tokensmapper.ProguardMapper;
+import com.google.classyshark.silverghost.TokensMapper;
 import com.google.classyshark.silverghost.translator.Translator;
 
 import javax.swing.JFileChooser;
@@ -446,11 +446,11 @@ public class ClassySharkPanel extends JPanel
 
     private void readMappingFile(final File resultFile) {
         SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
-            private ProguardMapper reverseMappings;
+            private TokensMapper reverseMappings;
 
             @Override
             protected Void doInBackground() throws Exception {
-                reverseMappings = SilverGhost.readMappingFile(resultFile);
+                reverseMappings = silverGhost.readMappingFile(resultFile);
                 return null;
             }
 

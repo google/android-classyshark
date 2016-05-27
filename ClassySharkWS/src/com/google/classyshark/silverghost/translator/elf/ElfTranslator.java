@@ -18,7 +18,7 @@ package com.google.classyshark.silverghost.translator.elf;
 
 
 import com.google.classyshark.silverghost.io.SherlockHash;
-import com.google.classyshark.silverghost.tokensmapper.ProguardMapper;
+import com.google.classyshark.silverghost.TokensMapper;
 import com.google.classyshark.silverghost.translator.Translator;
 import nl.lxtreme.binutils.elf.Elf;
 
@@ -54,7 +54,7 @@ public class ElfTranslator implements Translator {
     }
 
     @Override
-    public void addMapper(ProguardMapper reverseMappings) {
+    public void addMapper(TokensMapper reverseMappings) {
 
     }
 

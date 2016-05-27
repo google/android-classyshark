@@ -16,7 +16,7 @@
 
 package com.google.classyshark.silverghost.translator.java;
 
-import com.google.classyshark.silverghost.tokensmapper.ProguardMapper;
+import com.google.classyshark.silverghost.TokensMapper;
 import com.google.classyshark.silverghost.translator.Translator;
 import com.google.classyshark.silverghost.translator.TranslatorFactory;
 import com.google.classyshark.silverghost.translator.java.clazz.QualifiedTypesMap;
@@ -61,7 +61,7 @@ public class JavaTranslator implements Translator {
     }
 
     @Override
-    public void addMapper(ProguardMapper reverseMappings) {
+    public void addMapper(TokensMapper reverseMappings) {
         this.metaObject =
                new MetaObjectWithMapper(this.metaObject, reverseMappings);
     }
