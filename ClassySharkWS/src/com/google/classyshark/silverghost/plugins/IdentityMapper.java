@@ -14,13 +14,28 @@
  * limitations under the License.
  */
 
-package com.google.classyshark;
+package com.google.classyshark.silverghost.plugins;
 
-/**
- * This file is the one containing the data for the current ClassyShark version
- */
-public class Version {
+import com.google.classyshark.silverghost.TokensMapper;
+import java.io.File;
+import java.util.Map;
+import java.util.TreeMap;
 
-    public static final int MAJOR = 6;
-    public static final int MINOR = 5;
+public class IdentityMapper implements TokensMapper {
+
+    private Map<String, String> identityMap = new TreeMap<>();
+
+    public IdentityMapper() {
+
+    }
+
+    @Override
+    public TokensMapper readMappings(File file) {
+        return this;
+    }
+
+    @Override
+    public Map<String, String> getReverseClasses() {
+        return this.identityMap;
+    }
 }

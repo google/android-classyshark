@@ -16,34 +16,42 @@
 
 package com.google.classyshark.silverghost.translator;
 
+import com.google.classyshark.silverghost.FullArchiveReader;
+import com.google.classyshark.silverghost.plugins.EmptyFullArchiveReader;
 import com.google.classyshark.silverghost.translator.apk.ApkTranslator;
 import com.google.classyshark.silverghost.translator.dex.DexInfoTranslator;
 import com.google.classyshark.silverghost.translator.elf.ElfTranslator;
 import com.google.classyshark.silverghost.translator.jar.JarInfoTranslator;
 import com.google.classyshark.silverghost.translator.java.JavaTranslator;
 import com.google.classyshark.silverghost.translator.xml.AndroidXmlTranslator;
-
 import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
 /**
- *  Creates translators based on class names and archives
+ * Creates translators based on class names and archives
  */
 public class TranslatorFactory {
 
     public static Translator createTranslator(String className, File archiveFile) {
-        return createTranslator(className, archiveFile, new LinkedList<String>());
+        return createTranslator(className, archiveFile, new LinkedList<String>(), null);
     }
+
 
     public static Translator createTranslator(String className, File archiveFile,
                                               List<String> allClassNames) {
-        if(className.endsWith(".xml")) {
+        return createTranslator(className, archiveFile, allClassNames, null);
+    }
+
+
+    public static Translator createTranslator(String className, File archiveFile,
+                                              List<String> allClassNames, FullArchiveReader fullArchiveReader) {
+        if (className.endsWith(".xml")) {
             return new AndroidXmlTranslator(className, archiveFile);
         }
 
         if (className.endsWith(".dex")) {
-           return new DexInfoTranslator(className, archiveFile);
+            return new DexInfoTranslator(className, archiveFile);
         }
 
         if (className.endsWith(".jar")) {
@@ -56,6 +64,11 @@ public class TranslatorFactory {
 
         if (className.endsWith(".so")) {
             return new ElfTranslator(className, archiveFile);
+        }
+
+        if (fullArchiveReader != null &&
+                !(fullArchiveReader instanceof EmptyFullArchiveReader)) {
+            return fullArchiveReader.buildTranslator(className, archiveFile);
         }
 
         return new JavaTranslator(className, archiveFile);

@@ -17,14 +17,12 @@
 package com.google.classyshark.silverghost;
 
 import com.google.classyshark.gui.panel.reducer.Reducer;
+import com.google.classyshark.silverghost.plugins.EmptyFullArchiveReader;
 import com.google.classyshark.silverghost.contentreader.ContentReader;
-import com.google.classyshark.silverghost.tokensmapper.MappingReader;
-import com.google.classyshark.silverghost.tokensmapper.ProguardMapper;
+import com.google.classyshark.silverghost.plugins.IdentityMapper;
 import com.google.classyshark.silverghost.translator.Translator;
 import com.google.classyshark.silverghost.translator.TranslatorFactory;
-
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -36,7 +34,13 @@ public class SilverGhost {
     private Reducer reducer;
     private Translator translator;
     private ContentReader contentReader;
-    private ProguardMapper proguardMapper = ProguardMapper.IDENTITY;
+    private static TokensMapper tokensMapper;
+    private static FullArchiveReader fullArchiveReader;
+
+    static {
+        tokensMapper = new IdentityMapper();
+        fullArchiveReader = new EmptyFullArchiveReader();
+    }
 
     public SilverGhost() {
     }
@@ -45,7 +49,7 @@ public class SilverGhost {
         this.binaryArchive = binArchive;
 
         // TODO think of initialyzing data members as they hold prev file state
-        proguardMapper = ProguardMapper.IDENTITY;
+        tokensMapper = new IdentityMapper();
     }
 
     //                     1. READ CONTENTS
@@ -56,6 +60,8 @@ public class SilverGhost {
         reducer = new Reducer(contentReader.getAllClassNames());
         System.out.println("Archive Reading "
                 + (System.currentTimeMillis() - start) + " ms ");
+
+        fullArchiveReader.readAsyncArchive(binaryArchive);
     }
 
     public File getBinaryArchive() {
@@ -91,19 +97,13 @@ public class SilverGhost {
     }
 
     //                     2. READ MAPPINGS FILE
-    public static ProguardMapper readMappingFile(File mappingFile) {
-        try {
-            MappingReader mr = new MappingReader(mappingFile);
-            ProguardMapper proguardMapper = new ProguardMapper();
-            mr.pump(proguardMapper);
-            return proguardMapper;
-        } catch (IOException e) {
-            return ProguardMapper.IDENTITY;
-        }
+    public TokensMapper readMappingFile(File mappingFile) {
+        tokensMapper.readMappings(mappingFile);
+        return tokensMapper;
     }
 
-    public void addMappings(ProguardMapper proguardMapper) {
-        this.proguardMapper = proguardMapper;
+    public void addMappings(TokensMapper tokensMapper) {
+        this.tokensMapper = tokensMapper;
     }
 
     //                     3. BINARY ARCHIVE ELEMENT
@@ -113,8 +113,8 @@ public class SilverGhost {
                 TranslatorFactory.createTranslator(
                         elementName,
                         getBinaryArchive(),
-                        reducer.getAllClassNames());
-        translator.addMapper(this.proguardMapper);
+                        reducer.getAllClassNames(), fullArchiveReader);
+        translator.addMapper(tokensMapper);
         translator.apply();
     }
 

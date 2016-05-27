@@ -18,7 +18,7 @@ package com.google.classyshark.silverghost.translator.apk;
 
 import com.google.classyshark.silverghost.contentreader.dex.DexlibLoader;
 import com.google.classyshark.silverghost.io.SherlockHash;
-import com.google.classyshark.silverghost.tokensmapper.ProguardMapper;
+import com.google.classyshark.silverghost.TokensMapper;
 import com.google.classyshark.silverghost.translator.Translator;
 import org.jf.dexlib2.dexbacked.DexBackedDexFile;
 import org.jf.dexlib2.iface.DexFile;
@@ -59,7 +59,7 @@ public class ApkTranslator implements Translator {
     }
 
     @Override
-    public void addMapper(ProguardMapper reverseMappings) {
+    public void addMapper(TokensMapper reverseMappings) {
 
     }
 

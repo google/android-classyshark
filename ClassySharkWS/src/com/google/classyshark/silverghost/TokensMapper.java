@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-package com.google.classyshark;
+package com.google.classyshark.silverghost;
 
-/**
- * This file is the one containing the data for the current ClassyShark version
- */
-public class Version {
+import java.io.File;
+import java.util.Map;
 
-    public static final int MAJOR = 6;
-    public static final int MINOR = 5;
+public interface TokensMapper {
+
+    TokensMapper readMappings(File file);
+
+    Map<String,String> getReverseClasses();
 }

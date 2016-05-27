@@ -16,7 +16,7 @@
 
 package com.google.classyshark.silverghost.translator.jar;
 
-import com.google.classyshark.silverghost.tokensmapper.ProguardMapper;
+import com.google.classyshark.silverghost.TokensMapper;
 import com.google.classyshark.silverghost.translator.Translator;
 
 import java.io.File;
@@ -45,7 +45,7 @@ public class JarInfoTranslator implements Translator {
     }
 
     @Override
-    public void addMapper(ProguardMapper reverseMappings) {
+    public void addMapper(TokensMapper reverseMappings) {
 
     }
 
