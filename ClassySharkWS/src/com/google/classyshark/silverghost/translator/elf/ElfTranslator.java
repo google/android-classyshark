@@ -102,7 +102,7 @@ public class ElfTranslator implements Translator {
 
     // TODO currently support only dexes, here is how to do for jar
     // TODO https://github.com/adamheinrich/native-utils/blob/master/NativeUtils.java
-    private static File extractElf(String elfName,
+    public static File extractElf(String elfName,
                                    File apkFile) {
         File file = new File("classes.dex");
         ZipInputStream zipFile;

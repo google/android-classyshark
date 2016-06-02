@@ -16,18 +16,11 @@
 
 package com.google.classyshark.silverghost.translator.apk;
 
+import com.google.classyshark.silverghost.TokensMapper;
 import com.google.classyshark.silverghost.contentreader.dex.DexlibLoader;
 import com.google.classyshark.silverghost.io.SherlockHash;
-import com.google.classyshark.silverghost.TokensMapper;
 import com.google.classyshark.silverghost.translator.Translator;
-import org.jf.dexlib2.dexbacked.DexBackedDexFile;
-import org.jf.dexlib2.iface.DexFile;
-import org.ow2.asmdex.ApplicationReader;
-import org.ow2.asmdex.ApplicationVisitor;
-import org.ow2.asmdex.ClassVisitor;
-import org.ow2.asmdex.MethodVisitor;
-import org.ow2.asmdex.Opcodes;
-
+import com.google.classyshark.silverghost.translator.elf.ElfTranslator;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -40,6 +33,14 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+import nl.lxtreme.binutils.elf.Elf;
+import org.jf.dexlib2.dexbacked.DexBackedDexFile;
+import org.jf.dexlib2.iface.DexFile;
+import org.ow2.asmdex.ApplicationReader;
+import org.ow2.asmdex.ApplicationVisitor;
+import org.ow2.asmdex.ClassVisitor;
+import org.ow2.asmdex.MethodVisitor;
+import org.ow2.asmdex.Opcodes;
 
 /**
  * Translator for the .apk entry
@@ -91,6 +92,18 @@ public class ApkTranslator implements Translator {
             element = new ELEMENT(nativeLib, TAG.DOCUMENT);
             elements.add(element);
         }
+
+        element = new ELEMENT("\nNative Dependencies\n",
+                TAG.DOCUMENT);
+
+        elements.add(element);
+
+        List<String> sortedNativeDependencies = new LinkedList<>(apkAnalysis.nativeDependencies);
+        Collections.sort(sortedNativeDependencies);
+        for (String nativeLib : sortedNativeDependencies) {
+            element = new ELEMENT(nativeLib + "\n", TAG.DOCUMENT);
+            elements.add(element);
+        }
     }
 
     @Override
@@ -132,7 +145,7 @@ public class ApkTranslator implements Translator {
         }
     }
 
-    public static DexData fillAnalysis(int dexIndex, File file)  {
+    public static DexData fillAnalysis(int dexIndex, File file) {
         DexData dexData = new DexData(dexIndex);
 
         try {
@@ -156,6 +169,7 @@ public class ApkTranslator implements Translator {
     private static class ApkAnalysis {
         public List<String> nativeLibs = new ArrayList<>();
         public TreeSet<DexData> dexes = new TreeSet<>();
+        public TreeSet<String> nativeDependencies = new TreeSet<>();
 
         public String toString() {
             return dexes + "\n\n"
@@ -192,6 +206,15 @@ public class ApkTranslator implements Translator {
                     dexIndex++;
                 } else {
                     if (zipEntry.getName().startsWith("lib")) {
+
+                        File nativeLib = ElfTranslator.extractElf(zipEntry.getName(), binaryArchiveFile);
+
+                        Elf dependenciesReader = new Elf(nativeLib);
+                        List<String> libraryDependencies = dependenciesReader.getSharedDependencies();
+                        for (String dependency : libraryDependencies) {
+                            result.nativeDependencies.add(dependency);
+                        }
+
                         result.nativeLibs.add(zipEntry.getName() + "\n");
                     }
                 }
