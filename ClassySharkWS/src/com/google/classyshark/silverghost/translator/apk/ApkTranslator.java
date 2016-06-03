@@ -100,10 +100,31 @@ public class ApkTranslator implements Translator {
 
         List<String> sortedNativeDependencies = new LinkedList<>(apkAnalysis.nativeDependencies);
         Collections.sort(sortedNativeDependencies);
+        List<String> nativeLibNames = extractLibNames(apkAnalysis.nativeLibs);
         for (String nativeLib : sortedNativeDependencies) {
-            element = new ELEMENT(nativeLib + "\n", TAG.DOCUMENT);
+            element = new ELEMENT(nativeLib + " " +
+                    PrivateNativeLibsInspector.check(nativeLib, nativeLibNames) + "\n", TAG.DOCUMENT);
             elements.add(element);
         }
+    }
+
+
+    private static List<String> extractLibNames(List<String> nativeLibs) {
+        // libs/x86/lib.so\n ==> libs.so
+        LinkedList<String> result = new LinkedList<>();
+
+        for (String nativeLib : nativeLibs) {
+            String simpleNativeLibName = nativeLib;
+
+            if (nativeLib.contains("/")) {
+                simpleNativeLibName = simpleNativeLibName.substring(simpleNativeLibName.lastIndexOf("/") + 1,
+                        simpleNativeLibName.length() - 1);
+            }
+
+            result.add(simpleNativeLibName);
+        }
+
+        return result;
     }
 
     @Override
