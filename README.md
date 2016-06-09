@@ -1,7 +1,5 @@
 # ClassyShark
 
-This is not an official Google product
-
 ## Introduction
 
 Follow the shark on twitter [@ItsClassyshark](https://twitter.com/ItsClassyshark)
