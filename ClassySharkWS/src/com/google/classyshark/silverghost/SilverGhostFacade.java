@@ -154,4 +154,29 @@ public class SilverGhostFacade {
             System.err.println("Internal error - couldn't write file");
         }
     }
+
+    /** returns true if the apk is multidex
+     *
+     * @param archiveFile
+     * @return
+     */
+    public static boolean isMultiDex(File archiveFile) {
+        ContentReader contentReader = new ContentReader(archiveFile);
+        contentReader.load();
+
+        List<String> allClassNames = contentReader.getAllClassNames();
+        int numDexes = 0;
+
+        for(String classEntry : allClassNames) {
+            if(classEntry.endsWith(".dex")) {
+                numDexes++;
+                // 2 dexes or more + optimization
+                if(numDexes == 2) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
 }

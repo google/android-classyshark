@@ -19,6 +19,7 @@ package com.google.classyshark;
 import com.google.classyshark.silverghost.SilverGhostFacade;
 
 import java.io.File;
+import java.util.LinkedList;
 import java.util.List;
 
 import static com.google.classyshark.silverghost.SilverGhostFacade.getGeneratedClassString;
@@ -74,7 +75,16 @@ public class Shark {
         return SilverGhostFacade.getAllStrings(archiveFile);
     }
 
+    /**
+     *
+     * @return
+     */
+    public boolean isMultiDex() {
+        return SilverGhostFacade.isMultiDex(archiveFile);
+    }
+    
     public static void main(String[] args) {
+
         File apk =
                 new File("/Users/bfarber/Desktop/Scenarios/3 APKs/"
                         + "com.google.samples.apps.iosched-333.apk");
@@ -86,5 +96,6 @@ public class Shark {
         System.out.println(shark.getManifest());
         System.out.println(shark.getAllMethods());
         //System.out.println(shark.getAllStrings());
+        System.out.println(shark.isMultiDex());
     }
 }
