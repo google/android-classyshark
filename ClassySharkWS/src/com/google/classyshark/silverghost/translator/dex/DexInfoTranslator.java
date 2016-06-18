@@ -35,7 +35,8 @@ import java.util.zip.ZipInputStream;
 /**
  * Translator for the classes.dex entry
  */
-public class DexInfoTranslator implements Translator {
+public class
+DexInfoTranslator implements Translator {
     private File apkfile;
     private String dexFileName;
     private int index;

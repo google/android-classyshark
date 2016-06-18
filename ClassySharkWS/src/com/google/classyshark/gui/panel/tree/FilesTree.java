@@ -132,6 +132,12 @@ public class FilesTree {
                 }
             }
         }
+
+        // hack for manually stripped APKs with one flat package
+        if (packageNode != null && currentClassesDex.isLeaf()) {
+           currentClassesDex.add(packageNode);
+        }
+
         for (DefaultMutableTreeNode node : noPkgNodes) {
             currentClassesDex.add(node);
         }

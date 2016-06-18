@@ -352,7 +352,7 @@ public class JavaTranslator implements Translator {
     }
 
     public static void testCustomClass() {
-        final File testFile = new File(System.getProperty("user.home") + "/Desktop/Scenarios/3 Class/Reducer.class");
+        final File testFile = new File(System.getProperty("user.home") + "/Desktop/Scenarios/2 Class/Reducer.class");
         String textClass = "com.google.classyshark.gui.panel.reducer.Reducer.class";
         Translator translator = TranslatorFactory.createTranslator(textClass, testFile);
         translator.apply();
@@ -361,7 +361,7 @@ public class JavaTranslator implements Translator {
     }
 
     public static void testInnerClass() {
-        final File testFile = new File(System.getProperty("user.home") + "/Desktop/Scenarios/3 Class/Reducer$1.class");
+        final File testFile = new File(System.getProperty("user.home") + "/Desktop/Scenarios/2 Class/Reducer$1.class");
         String textClass = "com.google.classyshark.gui.panel.reducer.Reducer$1.class";
         Translator translator = TranslatorFactory.createTranslator(textClass, testFile);
         translator.apply();

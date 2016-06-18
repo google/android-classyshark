@@ -18,10 +18,14 @@ package com.google.classyshark.silverghost.contentreader.clazz;
 
 import com.google.classyshark.silverghost.contentreader.BinaryContentReader;
 import com.google.classyshark.silverghost.contentreader.ContentReader;
-
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import org.objectweb.asm.ClassReader;
 
 public class ClazzReader implements BinaryContentReader {
 
@@ -34,7 +38,21 @@ public class ClazzReader implements BinaryContentReader {
 
     @Override
     public void read() {
-        allClassNames.add(ClazzLoader.loadClassFromClassFile(binaryArchive).getName());
+        try {
+
+            Path path = Paths.get(binaryArchive.getAbsolutePath());
+            byte[] bytes = Files.readAllBytes(path);
+
+            ClassNameVisitor classNameVisitor = new ClassNameVisitor();
+            ClassReader cr = new ClassReader(bytes);
+            cr.accept(classNameVisitor, 0);
+
+            String className = classNameVisitor.getName();
+            allClassNames.add(className);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

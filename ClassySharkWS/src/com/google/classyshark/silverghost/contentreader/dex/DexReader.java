@@ -67,4 +67,14 @@ public class DexReader implements BinaryContentReader {
         Collections.sort(result);
         return result;
     }
+
+    public static void main(String[] args) {
+        DexReader dxr =
+                new DexReader(new File("//Users//bfarber//Desktop//classes.dex"));
+
+        dxr.read();
+
+        System.out.println(dxr.getClassNames());
+
+    }
 }
