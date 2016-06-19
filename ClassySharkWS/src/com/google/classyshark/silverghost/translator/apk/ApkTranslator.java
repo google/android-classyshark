@@ -82,7 +82,15 @@ public class ApkTranslator implements Translator {
             elements.add(element);
         }
 
-        ELEMENT element = new ELEMENT("\nNative Libraries\n",
+        ELEMENT element = new ELEMENT("\nDynamic Symbol Errors", TAG.DOCUMENT);
+        elements.add(element);
+
+        for (String error : apkAnalysis.errors) {
+            element = new ELEMENT("\n" + error, TAG.DOCUMENT);
+            elements.add(element);
+        }
+
+        element = new ELEMENT("\n\n\nNative Libraries\n",
                 TAG.DOCUMENT);
 
         elements.add(element);
@@ -103,11 +111,13 @@ public class ApkTranslator implements Translator {
         List<String> nativeLibNames = extractLibNames(apkAnalysis.nativeLibs);
         for (String nativeLib : sortedNativeDependencies) {
             element = new ELEMENT(nativeLib + " " +
-                    PrivateNativeLibsInspector.check(nativeLib, nativeLibNames) + "\n", TAG.DOCUMENT);
+                    PrivateNativeLibsInspector.check(nativeLib, nativeLibNames) +
+                    "\n", TAG.DOCUMENT);
             elements.add(element);
         }
-    }
 
+
+    }
 
     private static List<String> extractLibNames(List<String> nativeLibs) {
         // libs/x86/lib.so\n ==> libs.so
@@ -191,6 +201,7 @@ public class ApkTranslator implements Translator {
         public List<String> nativeLibs = new ArrayList<>();
         public TreeSet<DexData> dexes = new TreeSet<>();
         public TreeSet<String> nativeDependencies = new TreeSet<>();
+        public List<String> errors = new LinkedList<>();
 
         public String toString() {
             return dexes + "\n\n"
@@ -234,6 +245,12 @@ public class ApkTranslator implements Translator {
                         List<String> libraryDependencies = dependenciesReader.getSharedDependencies();
                         for (String dependency : libraryDependencies) {
                             result.nativeDependencies.add(dependency);
+                        }
+
+                        DynamicSymbolsInspector dsi = new DynamicSymbolsInspector(dependenciesReader);
+
+                        if (dsi.areErrors()) {
+                            result.errors.add(zipEntry.getName() + " " + dsi.getErrors());
                         }
 
                         result.nativeLibs.add(zipEntry.getName() + "\n");
