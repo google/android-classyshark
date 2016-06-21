@@ -28,14 +28,13 @@ import com.google.classyshark.silverghost.translator.TranslatorFactory;
 import com.google.classyshark.silverghost.translator.apk.ApkTranslator;
 import com.google.classyshark.silverghost.translator.dex.DexMethodsDumper;
 import com.google.classyshark.silverghost.translator.dex.DexStringsDumper;
-
 import java.io.File;
 import java.io.PrintWriter;
 import java.util.LinkedList;
 import java.util.List;
 
 /**
- *  Basic API class with small independent scenarios
+ * Basic API class with small independent scenarios
  */
 public class SilverGhostFacade {
     private SilverGhostFacade() {
@@ -127,7 +126,7 @@ public class SilverGhostFacade {
         MethodCountExporter methodCountExporter =
                 new TreeMethodCountExporter(new PrintWriter(System.out));
         if (args.size() > 2) {
-            for (int i = 2; i < args.size(); i++ ) {
+            for (int i = 2; i < args.size(); i++) {
                 if (args.get(i).equals("-flat")) {
                     methodCountExporter = new FlatMethodCountExporter(new PrintWriter(System.out));
                 }
@@ -155,7 +154,8 @@ public class SilverGhostFacade {
         }
     }
 
-    /** returns true if the apk is multidex
+    /**
+     * returns true if the apk is multidex
      *
      * @param archiveFile
      * @return
@@ -167,16 +167,47 @@ public class SilverGhostFacade {
         List<String> allClassNames = contentReader.getAllClassNames();
         int numDexes = 0;
 
-        for(String classEntry : allClassNames) {
-            if(classEntry.endsWith(".dex")) {
+        for (String classEntry : allClassNames) {
+            if (classEntry.endsWith(".dex")) {
                 numDexes++;
                 // 2 dexes or more + optimization
-                if(numDexes == 2) {
+                if (numDexes == 2) {
                     return true;
                 }
             }
         }
 
+        return false;
+    }
+
+    /**
+     * returns true if the apk is custom dex loading multidex
+     *
+     * @param archiveFile
+     * @return
+     */
+    public static boolean isCustomMultiDex(File archiveFile) {
+        if (!isMultiDex(archiveFile)) {
+            return false;
+        }
+
+        ContentReader contentReader = new ContentReader(archiveFile);
+        contentReader.load();
+
+        List<String> allClassNames = contentReader.getAllClassNames();
+        List<String> allDexNames = new LinkedList<>();
+
+        for (String classEntry : allClassNames) {
+            if (classEntry.endsWith(".dex")) {
+                allDexNames.add(classEntry);
+            }
+        }
+
+        for (String classEntry : allDexNames) {
+            if (!classEntry.startsWith("classes")) {
+                return true;
+            }
+        }
         return false;
     }
 }
