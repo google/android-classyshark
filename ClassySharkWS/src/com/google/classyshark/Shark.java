@@ -82,7 +82,11 @@ public class Shark {
     public boolean isMultiDex() {
         return SilverGhostFacade.isMultiDex(archiveFile);
     }
-    
+
+    public boolean isCustomMultiDex() {
+        return SilverGhostFacade.isCustomMultiDex(archiveFile);
+    }
+
     public static void main(String[] args) {
 
         File apk =
