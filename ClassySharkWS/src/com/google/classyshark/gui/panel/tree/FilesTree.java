@@ -119,12 +119,10 @@ public class FilesTree {
             } else {
                 if (resName.lastIndexOf('.') >= 0) {
                     String pkg = resName.substring(0, resName.lastIndexOf('.'));
-                    if (lastPackage == null || !pkg.equals(lastPackage)) {
-                        if (packageNode != null) {
-                            currentClassesDex.add(packageNode);
-                        }
+                    if (!pkg.equals(lastPackage)) {
                         lastPackage = pkg;
                         packageNode = new DefaultMutableTreeNode(pkg);
+                        currentClassesDex.add(packageNode);
                     }
                     packageNode.add(new DefaultMutableTreeNode(new NodeInfo(resName)));
                 } else {
