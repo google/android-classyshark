@@ -21,6 +21,7 @@ import com.google.classyshark.silverghost.io.SherlockHash;
 import com.google.classyshark.silverghost.TokensMapper;
 import com.google.classyshark.silverghost.translator.Translator;
 import com.google.classyshark.silverghost.translator.apk.ApkTranslator;
+import com.google.classyshark.silverghost.translator.jar.JarInfoTranslator;
 import org.jf.dexlib2.dexbacked.DexBackedDexFile;
 import org.jf.dexlib2.iface.DexFile;
 
@@ -77,6 +78,10 @@ DexInfoTranslator implements Translator {
             element = new ELEMENT("\nfields: " + dataPack.getFieldCount(), TAG.DOCUMENT);
             elements.add(element);
             element = new ELEMENT("\nmethods: " + dataPack.getMethodCount(), TAG.IDENTIFIER);
+            elements.add(element);
+
+            element = new ELEMENT("\n\nFile size: " +
+                    JarInfoTranslator.readableFileSize(classesDex.length()), TAG.DOCUMENT);
             elements.add(element);
 
             element = new ELEMENT("\n\nClasses with Native Calls\n", TAG.MODIFIER);
