@@ -16,7 +16,7 @@ ClassyShark is a standalone tool for Android developers. It can reliably browse 
 To run, grab the latest jar from [here] (https://github.com/google/android-classyshark/releases)
 and type `java -jar ClassyShark.jar`.
 
-## Dependencies
+### Dependencies
 * [dexlib2](https://github.com/JesusFreke/smali/tree/master/dexlib2) by jesusfreke
 * [guava](https://github.com/google/guava) by Google
 * [ASM](http://asm.ow2.org/) by OW2
@@ -24,7 +24,7 @@ and type `java -jar ClassyShark.jar`.
 * [java-binutils](https://github.com/jawi/java-binutils) by jawi
 * [BCEL](https://commons.apache.org/proper/commons-bcel) by Apache
 
-## Support
+### Support
 If you've found an error, please file an issue:
 
 https://github.com/google/android-classyshark/issues
