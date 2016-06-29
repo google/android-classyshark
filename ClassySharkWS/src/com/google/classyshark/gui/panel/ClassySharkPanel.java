@@ -19,6 +19,7 @@ package com.google.classyshark.gui.panel;
 import com.google.classyshark.gui.GuiMode;
 import com.google.classyshark.gui.panel.chart.RingChartPanel;
 import com.google.classyshark.gui.panel.displayarea.DisplayArea;
+import com.google.classyshark.gui.panel.displayarea.IDisplayArea;
 import com.google.classyshark.gui.panel.io.CurrentFolderConfig;
 import com.google.classyshark.gui.panel.io.FileChooserUtils;
 import com.google.classyshark.gui.panel.io.RecentArchivesConfig;
@@ -67,7 +68,7 @@ public class ClassySharkPanel extends JPanel
     private JSplitPane jSplitPane;
     private MethodsCountPanel methodsCountPanel;
     private int dividerLocation = 0;
-    private DisplayArea displayArea;
+    private IDisplayArea displayArea;
     private FilesTree filesTree;
     private RingChartPanel ringChartPanel;
     private boolean isDataLoaded = false;
