@@ -47,7 +47,7 @@ import java.util.StringTokenizer;
 /**
  * the area to display lists of classes and individual class
  */
-public class DisplayArea {
+public class DisplayArea implements IDisplayArea {
 
     private enum DisplayDataState {
         SHARKEY, CLASSES_LIST, INSIDE_CLASS, ERROR
@@ -154,10 +154,12 @@ public class DisplayArea {
         displaySharkey();
     }
 
+    @Override
     public Component onAddComponentToPane() {
         return this.jTextPane;
     }
 
+    @Override
     public void displayClassNames(List<String> classNamesToShow,
                                   String inputText) {
 
@@ -240,6 +242,7 @@ public class DisplayArea {
         System.out.println("UI update " + (System.currentTimeMillis() - start) + " ms");
     }
 
+    @Override
     public void displayClass(String classString) {
         displayDataState = DisplayDataState.INSIDE_CLASS;
         try {
@@ -268,6 +271,7 @@ public class DisplayArea {
 
     // TODO add here logic fo highlighter
     // TODO by adding flag to Translator.ELEMENT
+    @Override
     public void displayClass(List<Translator.ELEMENT> elements) {
         displayDataState = DisplayDataState.INSIDE_CLASS;
         clearText();
@@ -315,6 +319,7 @@ public class DisplayArea {
         jTextPane.setDocument(doc);
     }
 
+    @Override
     public void displaySharkey() {
         displayDataState = DisplayDataState.SHARKEY;
         clearText();
@@ -334,6 +339,7 @@ public class DisplayArea {
         jTextPane.setDocument(doc);
     }
 
+    @Override
     public void displayError() {
         displayDataState = DisplayDataState.ERROR;
         clearText();
