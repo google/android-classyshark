@@ -203,6 +203,10 @@ public class SilverGhostFacade {
             }
         }
 
+        if(allClassNames.contains("classes1.dex")) {
+            return true;
+        }
+
         for (String classEntry : allDexNames) {
             if (!classEntry.startsWith("classes")) {
                 return true;
