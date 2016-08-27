@@ -18,21 +18,18 @@ package com.google.classyshark.silverghost.translator.dex;
 
 import com.google.classyshark.silverghost.TokensMapper;
 import com.google.classyshark.silverghost.contentreader.dex.DexlibLoader;
-import com.google.classyshark.silverghost.io.SherlockHash;
 import com.google.classyshark.silverghost.translator.Translator;
 import com.google.classyshark.silverghost.translator.jar.JarInfoTranslator;
 import java.io.File;
-import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 import org.jf.dexlib2.dexbacked.DexBackedDexFile;
 import org.jf.dexlib2.iface.DexFile;
 
 import static com.google.classyshark.silverghost.translator.apk.apkinspectionsbag.ApkInspectionsBag.getClassesWithNativeMethodsPerDexIndex;
+import static com.google.classyshark.silverghost.translator.java.dex.Multidex.extractClassesDex;
 
 /**
  * Translator for the classes.dex entry
@@ -41,7 +38,7 @@ public class
 DexInfoTranslator implements Translator {
     private File apkFile;
     private String dexFileName;
-    private int index;
+    public int index;
     private List<ELEMENT> elements = new ArrayList<>();
 
     public DexInfoTranslator(String dexFileName, File apkFile) {
@@ -110,92 +107,5 @@ DexInfoTranslator implements Translator {
     @Override
     public List<String> getDependencies() {
         return new LinkedList<>();
-    }
-
-    private static File extractClassesDex(String dexName, File apkFile, DexInfoTranslator diTranslator) {
-        if (apkFile.getName().endsWith(".dex")) {
-            return apkFile;
-        }
-
-        File file = new File("classes.dex");
-        ZipInputStream zipFile;
-        try {
-            zipFile = new ZipInputStream(new FileInputStream(apkFile));
-            ZipEntry zipEntry;
-
-            while (true) {
-                zipEntry = zipFile.getNextEntry();
-
-                if (zipEntry == null) {
-                    break;
-                }
-
-                if (zipEntry.getName().endsWith(".dex")) {
-
-
-                    String fName = zipEntry.getName().substring(0, zipEntry.getName().lastIndexOf("."));
-                    String ext = "dex";
-
-                    String currentClassesDexName = fName + ".dex";
-
-                    file = SherlockHash.INSTANCE.getFileFromZipStream(apkFile,
-                            zipFile, fName, ext);
-
-                    if (dexName.equals(currentClassesDexName)) {
-
-                        // TODO extract index from fname + special case for classes.dex
-
-                        if(dexName.equals("classes.dex")) {
-                            diTranslator.index = 0;
-                        } else {
-                            diTranslator.index = Integer.parseInt(fName.substring(fName.length() - 1));
-                        }
-
-
-                        break;
-                    }
-                }
-
-                if (zipEntry.getName().endsWith("jar") || zipEntry.getName().endsWith("zip")) {
-
-                    String fName = "inner_zip";
-                    String ext = "zip";
-
-                    File innerZip = SherlockHash.INSTANCE.getFileFromZipStream(apkFile,
-                            zipFile, fName, ext);
-
-                    // so far we have a zip file
-                    ZipInputStream fromInnerZip = new ZipInputStream(new FileInputStream(
-                            innerZip));
-
-                    ZipEntry innerZipEntry;
-
-                    while (true) {
-                        innerZipEntry = fromInnerZip.getNextEntry();
-
-                        if (innerZipEntry == null) {
-                            fromInnerZip.close();
-                            break;
-                        }
-
-                        if (innerZipEntry.getName().endsWith(".dex")) {
-                            fName = "inner_zip_classes";
-                            ext = "dex";
-                            file = SherlockHash.INSTANCE.getFileFromZipStream(apkFile, fromInnerZip, fName, ext);
-
-                            if (dexName.startsWith(zipEntry.getName())) {
-                                diTranslator.index = 99;
-                                zipFile.close();
-                                return file;
-                            }
-                        }
-                    }
-                }
-            }
-            zipFile.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return file;
     }
 }
