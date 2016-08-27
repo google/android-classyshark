@@ -40,19 +40,17 @@ public class Multidex {
 
             ZipEntry zipEntry;
 
-            int dexIndex = 0;
             while (true) {
                 zipEntry = zipFile.getNextEntry();
 
                 if (zipEntry == null) {
                     break;
                 }
-
+                
                 if (zipEntry.getName().endsWith(".dex")) {
-                    String fName = "classes";
-                    if(dexIndex > 0) {
-                        fName = fName + dexIndex;
-                    }
+                    String fName =
+                            zipEntry.getName().substring(0, zipEntry.getName().lastIndexOf("."));
+
                     String ext = "dex";
 
                     file = SherlockHash.INSTANCE.getFileFromZipStream(apkFile,
@@ -63,8 +61,6 @@ public class Multidex {
                     if (classNamesInDex.contains(className)) {
                         break;
                     }
-
-                    dexIndex++;
                 }
 
                 if (zipEntry.getName().endsWith("jar") || zipEntry.getName().endsWith("zip")) {
@@ -89,7 +85,7 @@ public class Multidex {
                         }
 
                         if (innerZipEntry.getName().endsWith(".dex")) {
-                            fName = "inner_zip_classes" + dexIndex;
+                            fName = "inner_zip_classes";
                             ext = "dex";
                             file = SherlockHash.INSTANCE.getFileFromZipStream(apkFile, fromInnerZip,
                                     fName, ext);

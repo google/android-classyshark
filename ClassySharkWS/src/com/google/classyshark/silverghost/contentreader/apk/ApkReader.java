@@ -44,7 +44,7 @@ public class ApkReader implements BinaryContentReader {
     public void read() {
         readClassNamesFromMultidex(binaryArchive, allClassNames, components);
 
-        // TODO add check for manifest
+        // TODO add isPrivate for manifest
 //        allClassNames.add(6, "AndroidManifest.xml");
     }
 
@@ -69,7 +69,6 @@ public class ApkReader implements BinaryContentReader {
 
             ZipEntry zipEntry;
 
-            int dexIndex = 0;
             while (true) {
                 zipEntry = zipInputStream.getNextEntry();
 
@@ -82,10 +81,8 @@ public class ApkReader implements BinaryContentReader {
                 }
 
                 if (zipEntry.getName().endsWith(".dex")) {
-                    String fName = "classes";
-                    if(dexIndex > 0) {
-                        fName = fName + dexIndex;
-                    }
+
+                    String fName = zipEntry.getName().substring(0, zipEntry.getName().lastIndexOf("."));
                     String ext = "dex";
 
                     File file = SherlockHash.INSTANCE.getFileFromZipStream(binaryArchiveFile,
@@ -96,7 +93,6 @@ public class ApkReader implements BinaryContentReader {
 
                     classNames.add(fName + ".dex");
                     classNames.addAll(classesAtDex);
-                    dexIndex++;
                 }
                 if (zipEntry.getName().startsWith("lib")) {
                     components.add(
@@ -104,7 +100,7 @@ public class ApkReader implements BinaryContentReader {
                                     ContentReader.ARCHIVE_COMPONENT.NATIVE_LIBRARY));
                 }
 
-                // Dynamic dex loading
+                // Dynamic dex loading, currently one one inner zip is supported
                 if (zipEntry.getName().endsWith("jar") || zipEntry.getName().endsWith("zip")) {
                     String fName = "inner_zip";
                     String ext = "zip";
@@ -125,8 +121,9 @@ public class ApkReader implements BinaryContentReader {
                             break;
                         }
 
+                        // currently only one is supported
                         if (innerZipEntry.getName().endsWith(".dex")) {
-                            fName = "inner_zip_classes" + dexIndex;
+                            fName = "inner_zip_classes";
                             ext = "dex";
                             File tempDexFile =
                                     SherlockHash.INSTANCE.getFileFromZipStream(binaryArchiveFile,
