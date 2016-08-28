@@ -67,17 +67,6 @@ public class ApkTranslator implements Translator {
                             + apkInspectionsBag.getAllNativeMethodsCountPerDex(i)
                             + "\n", TAG.DOCUMENT);
             elements.add(element);
-
-            element = new ELEMENT(
-                    "\nSyntheticAccessors \n", TAG.MODIFIER);
-
-            elements.add(element);
-
-            element = new ELEMENT(
-                    apkInspectionsBag.getSyntheticAccessors(i).toString(),
-                    TAG.DOCUMENT);
-
-            elements.add(element);
         }
 
         ELEMENT element = new ELEMENT("\n\n\nDynamic Symbol Errors", TAG.MODIFIER);
@@ -102,6 +91,23 @@ public class ApkTranslator implements Translator {
         for (String nativeLib : apkInspectionsBag.getNativeLibNamesSorted()) {
             element = new ELEMENT(nativeLib + " " + apkInspectionsBag.getPrivateLibErrorTag(nativeLib)
                     + "\n", TAG.DOCUMENT);
+            elements.add(element);
+        }
+
+        for (int i = 0; i < numDexes; i++) {
+
+            element = new ELEMENT("\nclasses" + ((i==0)? "" : i + "") + ".dex", TAG.MODIFIER);
+            elements.add(element);
+
+            element = new ELEMENT(
+                    "\nSyntheticAccessors \n", TAG.MODIFIER);
+
+            elements.add(element);
+
+            element = new ELEMENT(
+                    apkInspectionsBag.getSyntheticAccessors(i).toString(),
+                    TAG.DOCUMENT);
+
             elements.add(element);
         }
     }
