@@ -84,8 +84,8 @@ public class ApkInspectionsBag {
 
     public List<String> getNativeLibNamesSorted() {
 
-        Set<String> s = new LinkedHashSet<>(apkAnalysis.nativeDependencies);
-        LinkedList<String> sortedNativeDependencies = new LinkedList<>(s);
+        Set<String> uniqueDependencies = new LinkedHashSet<>(apkAnalysis.nativeDependencies);
+        LinkedList<String> sortedNativeDependencies = new LinkedList<>(uniqueDependencies);
         Collections.sort(sortedNativeDependencies);
 
         List<String> nativeLibNames =
