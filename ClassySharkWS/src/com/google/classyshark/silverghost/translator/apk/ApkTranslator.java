@@ -57,7 +57,7 @@ public class ApkTranslator implements Translator {
 
         for (int i = 0; i < numDexes; i++) {
 
-            ELEMENT element = new ELEMENT("\nclasses" + ((i==0)? "" : i + "") + ".dex", TAG.MODIFIER);
+            ELEMENT element = new ELEMENT("\nclasses" + ((i == 0) ? "" : i + "") + ".dex", TAG.MODIFIER);
             elements.add(element);
 
             element = new ELEMENT(
@@ -96,7 +96,7 @@ public class ApkTranslator implements Translator {
 
         for (int i = 0; i < numDexes; i++) {
 
-            element = new ELEMENT("\nclasses" + ((i==0)? "" : i + "") + ".dex", TAG.MODIFIER);
+            element = new ELEMENT("\nclasses" + ((i == 0) ? "" : i + "") + ".dex", TAG.MODIFIER);
             elements.add(element);
 
             element = new ELEMENT(
@@ -123,8 +123,12 @@ public class ApkTranslator implements Translator {
     }
 
     public String toString() {
-        // TODO some sort of convertion for the command line
+        StringBuilder sb = new StringBuilder();
 
-        return elements.toString();
+        for (ELEMENT element : elements) {
+            sb.append(element.text);
+        }
+
+        return sb.toString();
     }
 }

@@ -95,7 +95,14 @@ public class ApkInspectionsBag {
     }
 
     public String getPrivateLibErrorTag(String nativeLib) {
-        return PrivateNativeLibsInspector.isPrivate(nativeLib, getNativeLibNamesSorted());
+        boolean isPrivate = PrivateNativeLibsInspector.isPrivate(nativeLib, getNativeLibNamesSorted());
+
+        if(isPrivate) {
+            return " -- private api!";
+        } else {
+            return "";
+        }
+
     }
 
     public static Set<String> getClassesWithNativeMethodsPerDexIndex(int dexIndex, File classesDex) {

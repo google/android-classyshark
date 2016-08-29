@@ -53,13 +53,12 @@ public class PrivateNativeLibsInspector {
 
     private static List<String> APIS_LIB_LIST = new LinkedList<>(Arrays.asList(apiLibs));
 
-    // TODO make it boolean
-    public static String isPrivate(String nativeLib, List<String> nativeLibNames) {
+    public static boolean isPrivate(String nativeLib, List<String> nativeLibNames) {
 
         if (!APIS_LIB_LIST.contains(nativeLib) && !nativeLibNames.contains(nativeLib)) {
-            return " -- private api!";
+            return true;
         }
 
-        return "";
+        return false;
     }
 }
