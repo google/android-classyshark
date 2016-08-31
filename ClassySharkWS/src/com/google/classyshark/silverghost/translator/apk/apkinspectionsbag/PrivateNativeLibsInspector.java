@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.classyshark.silverghost.translator.apk;
+package com.google.classyshark.silverghost.translator.apk.apkinspectionsbag;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -53,12 +53,12 @@ public class PrivateNativeLibsInspector {
 
     private static List<String> APIS_LIB_LIST = new LinkedList<>(Arrays.asList(apiLibs));
 
-    public static String check(String nativeLib, List<String> nativeLibNames) {
+    public static boolean isPrivate(String nativeLib, List<String> nativeLibNames) {
 
         if (!APIS_LIB_LIST.contains(nativeLib) && !nativeLibNames.contains(nativeLib)) {
-            return " -- private api!";
+            return true;
         }
 
-        return "";
+        return false;
     }
 }

@@ -17,41 +17,25 @@
 package com.google.classyshark.silverghost.translator.apk;
 
 import com.google.classyshark.silverghost.TokensMapper;
-import com.google.classyshark.silverghost.contentreader.dex.DexlibLoader;
-import com.google.classyshark.silverghost.io.SherlockHash;
 import com.google.classyshark.silverghost.translator.Translator;
-import com.google.classyshark.silverghost.translator.elf.ElfTranslator;
+import com.google.classyshark.silverghost.translator.apk.apkinspectionsbag.ApkInspectionsBag;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
-import nl.lxtreme.binutils.elf.Elf;
-import org.jf.dexlib2.dexbacked.DexBackedDexFile;
-import org.jf.dexlib2.iface.DexFile;
-import org.ow2.asmdex.ApplicationReader;
-import org.ow2.asmdex.ApplicationVisitor;
-import org.ow2.asmdex.ClassVisitor;
-import org.ow2.asmdex.MethodVisitor;
-import org.ow2.asmdex.Opcodes;
 
 /**
- * Translator for the .apk entry
+ * Translator for the apk
  */
 public class ApkTranslator implements Translator {
-    private File archiveFile;
-    private ApkAnalysis apkAnalysis;
+    private File apkFile;
+    private ApkInspectionsBag apkInspectionsBag;
+
     private List<ELEMENT> elements = new ArrayList<>();
 
-    public ApkTranslator(File archiveFile) {
-        this.archiveFile = archiveFile;
+    public ApkTranslator(File apkFile) {
+        // TODO add checks for file that is not an APK
+        this.apkFile = apkFile;
     }
 
     @Override
@@ -66,75 +50,66 @@ public class ApkTranslator implements Translator {
 
     @Override
     public void apply() {
-        apkAnalysis = doInspect(archiveFile);
+        apkInspectionsBag = new ApkInspectionsBag(apkFile);
+        apkInspectionsBag.inspect();
 
-        for (DexData dexData : apkAnalysis.dexes) {
-            ELEMENT element = new ELEMENT("\nclasses" + dexData.index + ".dex", TAG.DOCUMENT);
+        int numDexes = apkInspectionsBag.getNumberOfDexes();
+
+        for (int i = 0; i < numDexes; i++) {
+
+            ELEMENT element = new ELEMENT("\nclasses" + ((i == 0) ? "" : i + "") + ".dex", TAG.MODIFIER);
             elements.add(element);
 
             element = new ELEMENT(
                     "\nall methods: "
-                            + dexData.allMethods
+                            + apkInspectionsBag.getAllMethodsCountPerDex(i)
                             + "\nnative methods: "
-                            + dexData.nativeMethodsCount
-                            + "\n",
-                    TAG.DOCUMENT);
+                            + apkInspectionsBag.getAllNativeMethodsCountPerDex(i)
+                            + "\n", TAG.DOCUMENT);
             elements.add(element);
         }
 
-        ELEMENT element = new ELEMENT("\nDynamic Symbol Errors", TAG.DOCUMENT);
+        ELEMENT element = new ELEMENT("\n\n\nDynamic Symbol Errors", TAG.MODIFIER);
         elements.add(element);
 
-        for (String error : apkAnalysis.errors) {
+        for (String error : apkInspectionsBag.getNativeErrors()) {
             element = new ELEMENT("\n" + error, TAG.DOCUMENT);
             elements.add(element);
         }
 
-        element = new ELEMENT("\n\n\nNative Libraries\n",
-                TAG.DOCUMENT);
-
+        element = new ELEMENT("\n\n\nNative Libraries\n", TAG.MODIFIER);
         elements.add(element);
 
-        Collections.sort(apkAnalysis.nativeLibs);
-        for (String nativeLib : apkAnalysis.nativeLibs) {
+        for (String nativeLib : apkInspectionsBag.getFullPathNativeLibNamesSorted()) {
             element = new ELEMENT(nativeLib, TAG.DOCUMENT);
             elements.add(element);
         }
 
-        element = new ELEMENT("\nNative Dependencies\n",
-                TAG.DOCUMENT);
-
+        element = new ELEMENT("\n\nNative Dependencies\n", TAG.MODIFIER);
         elements.add(element);
 
-        List<String> sortedNativeDependencies = new LinkedList<>(apkAnalysis.nativeDependencies);
-        Collections.sort(sortedNativeDependencies);
-        List<String> nativeLibNames = extractLibNames(apkAnalysis.nativeLibs);
-        for (String nativeLib : sortedNativeDependencies) {
-            element = new ELEMENT(nativeLib + " " +
-                    PrivateNativeLibsInspector.check(nativeLib, nativeLibNames) +
-                    "\n", TAG.DOCUMENT);
+        for (String nativeLib : apkInspectionsBag.getNativeLibNamesSorted()) {
+            element = new ELEMENT(nativeLib + " " + apkInspectionsBag.getPrivateLibErrorTag(nativeLib)
+                    + "\n", TAG.DOCUMENT);
             elements.add(element);
         }
 
+        for (int i = 0; i < numDexes; i++) {
 
-    }
+            element = new ELEMENT("\nclasses" + ((i == 0) ? "" : i + "") + ".dex", TAG.MODIFIER);
+            elements.add(element);
 
-    private static List<String> extractLibNames(List<String> nativeLibs) {
-        // libs/x86/lib.so\n ==> libs.so
-        LinkedList<String> result = new LinkedList<>();
+            element = new ELEMENT(
+                    "\nSyntheticAccessors \n", TAG.MODIFIER);
 
-        for (String nativeLib : nativeLibs) {
-            String simpleNativeLibName = nativeLib;
+            elements.add(element);
 
-            if (nativeLib.contains("/")) {
-                simpleNativeLibName = simpleNativeLibName.substring(simpleNativeLibName.lastIndexOf("/") + 1,
-                        simpleNativeLibName.length() - 1);
-            }
+            element = new ELEMENT(
+                    apkInspectionsBag.getSyntheticAccessors(i).toString(),
+                    TAG.DOCUMENT);
 
-            result.add(simpleNativeLibName);
+            elements.add(element);
         }
-
-        return result;
     }
 
     @Override
@@ -147,158 +122,13 @@ public class ApkTranslator implements Translator {
         return new LinkedList<>();
     }
 
-    public static class DexData implements Comparable {
-        public int index;
-        public int nativeMethodsCount = 0;
-        public Set<String> nativeMethodsClasses = new TreeSet<>();
-        public int allMethods = 0;
-
-        public DexData(int index) {
-            this.index = index;
-        }
-
-        @Override
-        public int compareTo(Object o) {
-            if (!(o instanceof DexData)) {
-                return -1;
-            }
-
-            return Integer.valueOf(index).compareTo(((DexData) o).index);
-        }
-
-        public String toString() {
-            return
-                    "\nclasses" + index + ".dex"
-                            + "\nnative methods: "
-                            + nativeMethodsCount
-                            + "\nclasses with native methods"
-                            + nativeMethodsClasses;
-        }
-    }
-
-    public static DexData fillAnalysis(int dexIndex, File file) {
-        DexData dexData = new DexData(dexIndex);
-
-        try {
-            InputStream is = new FileInputStream(file);
-            ApplicationVisitor av = new ApkInspectVisitor(dexData);
-            ApplicationReader ar = new ApplicationReader(Opcodes.ASM4, is);
-            ar.accept(av, 0);
-
-            DexFile dxFile = DexlibLoader.loadDexFile(file);
-            DexBackedDexFile dataPack = (DexBackedDexFile) dxFile;
-            dexData.allMethods = dataPack.getMethodCount();
-        } catch (Exception e) {
-        }
-        return dexData;
-    }
-
     public String toString() {
-        return apkAnalysis.toString();
-    }
+        StringBuilder sb = new StringBuilder();
 
-    private static class ApkAnalysis {
-        public List<String> nativeLibs = new ArrayList<>();
-        public TreeSet<DexData> dexes = new TreeSet<>();
-        public TreeSet<String> nativeDependencies = new TreeSet<>();
-        public List<String> errors = new LinkedList<>();
-
-        public String toString() {
-            return dexes + "\n\n"
-                    + nativeLibs;
-        }
-    }
-
-    private static ApkAnalysis doInspect(File binaryArchiveFile) {
-        ApkAnalysis result = new ApkAnalysis();
-
-        try {
-            ZipInputStream zipFile = new ZipInputStream(new FileInputStream(
-                    binaryArchiveFile));
-
-            ZipEntry zipEntry;
-
-            int dexIndex = 0;
-            while (true) {
-                zipEntry = zipFile.getNextEntry();
-
-                if (zipEntry == null) {
-                    break;
-                }
-
-                if (zipEntry.getName().endsWith(".dex")) {
-                    String fName = "ANALYZER_classes" + dexIndex;
-                    String ext = "dex";
-
-                    File file = SherlockHash.INSTANCE.getFileFromZipStream(binaryArchiveFile,
-                            zipFile, fName, ext);
-
-                    result.dexes.add(fillAnalysis(dexIndex, file));
-
-                    dexIndex++;
-                } else {
-                    if (zipEntry.getName().startsWith("lib")) {
-
-                        File nativeLib = ElfTranslator.extractElf(zipEntry.getName(), binaryArchiveFile);
-
-                        Elf dependenciesReader = new Elf(nativeLib);
-                        List<String> libraryDependencies = dependenciesReader.getSharedDependencies();
-                        for (String dependency : libraryDependencies) {
-                            result.nativeDependencies.add(dependency);
-                        }
-
-                        DynamicSymbolsInspector dsi = new DynamicSymbolsInspector(dependenciesReader);
-
-                        if (dsi.areErrors()) {
-                            result.errors.add(zipEntry.getName() + " " + dsi.getErrors());
-                        }
-
-                        result.nativeLibs.add(zipEntry.getName() + "\n");
-                    }
-                }
-            }
-            zipFile.close();
-
-        } catch (Exception e) {
-            e.printStackTrace();
+        for (ELEMENT element : elements) {
+            sb.append(element.text);
         }
 
-        return result;
-    }
-
-    private static class ApkInspectVisitor extends ApplicationVisitor {
-        private DexData dexData;
-
-        public ApkInspectVisitor(DexData dexData) {
-            super(Opcodes.ASM4);
-            this.dexData = dexData;
-        }
-
-        public ClassVisitor visitClass(int access, String name, String[] signature,
-                                       String superName, String[] interfaces) {
-
-            final String mName = name;
-
-            return new ClassVisitor(Opcodes.ASM4) {
-                private String className = mName.replaceAll("\\/", "\\.").substring(1, mName.length() - 1);
-
-                @Override
-                public void visit(int version, int access, String name, String[] signature,
-                                  String superName, String[] interfaces) {
-                    super.visit(version, access, name, signature, superName, interfaces);
-                }
-
-                @Override
-                public MethodVisitor visitMethod(int access, String name, String desc,
-                                                 String[] signature, String[] exceptions) {
-                    if (Modifier.isNative(access)) {
-                        dexData.nativeMethodsCount++;
-                        dexData.nativeMethodsClasses.add(this.className);
-                    }
-
-                    return super.visitMethod(access, name, desc, signature, exceptions);
-                }
-            };
-        }
+        return sb.toString();
     }
 }

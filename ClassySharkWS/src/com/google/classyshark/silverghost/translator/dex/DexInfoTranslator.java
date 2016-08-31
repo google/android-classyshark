@@ -16,35 +16,33 @@
 
 package com.google.classyshark.silverghost.translator.dex;
 
-import com.google.classyshark.silverghost.contentreader.dex.DexlibLoader;
-import com.google.classyshark.silverghost.io.SherlockHash;
 import com.google.classyshark.silverghost.TokensMapper;
+import com.google.classyshark.silverghost.contentreader.dex.DexlibLoader;
 import com.google.classyshark.silverghost.translator.Translator;
-import com.google.classyshark.silverghost.translator.apk.ApkTranslator;
 import com.google.classyshark.silverghost.translator.jar.JarInfoTranslator;
-import org.jf.dexlib2.dexbacked.DexBackedDexFile;
-import org.jf.dexlib2.iface.DexFile;
-
 import java.io.File;
-import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
+import java.util.Set;
+import org.jf.dexlib2.dexbacked.DexBackedDexFile;
+import org.jf.dexlib2.iface.DexFile;
+
+import static com.google.classyshark.silverghost.translator.apk.apkinspectionsbag.ApkInspectionsBag.getClassesWithNativeMethodsPerDexIndex;
+import static com.google.classyshark.silverghost.translator.java.dex.Multidex.extractClassesDex;
 
 /**
  * Translator for the classes.dex entry
  */
 public class
 DexInfoTranslator implements Translator {
-    private File apkfile;
+    private File apkFile;
     private String dexFileName;
-    private int index;
+    public int index;
     private List<ELEMENT> elements = new ArrayList<>();
 
-    public DexInfoTranslator(String dexFileName, File apkfile) {
-        this.apkfile = apkfile;
+    public DexInfoTranslator(String dexFileName, File apkFile) {
+        this.apkFile = apkFile;
         this.dexFileName = dexFileName;
     }
 
@@ -61,7 +59,9 @@ DexInfoTranslator implements Translator {
     @Override
     public void apply() {
         try {
-            File classesDex = extractClassesDex(dexFileName, apkfile, this);
+            elements.clear();
+
+            File classesDex = extractClassesDex(dexFileName, apkFile, this);
 
             DexFile dxFile = DexlibLoader.loadDexFile(classesDex);
             DexBackedDexFile dataPack = (DexBackedDexFile) dxFile;
@@ -87,11 +87,10 @@ DexInfoTranslator implements Translator {
             element = new ELEMENT("\n\nClasses with Native Calls\n", TAG.MODIFIER);
             elements.add(element);
 
-            ApkTranslator.DexData dexData = ApkTranslator.fillAnalysis(index,
-                    classesDex);
+            Set<String> classesWithNativeMethods = getClassesWithNativeMethodsPerDexIndex(index, classesDex);
 
-            for (String nativeMethodsClass : dexData.nativeMethodsClasses) {
-                element = new ELEMENT(nativeMethodsClass + "\n", TAG.DOCUMENT);
+            for (String classWithNativeMethods : classesWithNativeMethods) {
+                element = new ELEMENT(classWithNativeMethods + "\n", TAG.DOCUMENT);
                 elements.add(element);
             }
 
@@ -108,86 +107,5 @@ DexInfoTranslator implements Translator {
     @Override
     public List<String> getDependencies() {
         return new LinkedList<>();
-    }
-
-    private static File extractClassesDex(String dexName, File apkFile, DexInfoTranslator diTranslator) {
-        if (apkFile.getName().endsWith(".dex")) {
-            return apkFile;
-        }
-
-        File file = new File("classes.dex");
-        ZipInputStream zipFile;
-        try {
-            zipFile = new ZipInputStream(new FileInputStream(apkFile));
-            ZipEntry zipEntry;
-            int dexIndex = 0;
-            while (true) {
-                zipEntry = zipFile.getNextEntry();
-
-                if (zipEntry == null) {
-                    break;
-                }
-
-                if (zipEntry.getName().endsWith(".dex")) {
-                    String fName = "classes";
-                    if (dexIndex > 0) {
-                        fName = fName + dexName;
-                    }
-                    String ext = "dex";
-
-                    String currentClassesDexName = fName + ".dex";
-
-                    file = SherlockHash.INSTANCE.getFileFromZipStream(apkFile,
-                            zipFile, fName, ext);
-
-                    if (dexName.equals(currentClassesDexName)) {
-                        diTranslator.index = dexIndex;
-                        break;
-                    }
-
-                    dexIndex++;
-                }
-
-                if (zipEntry.getName().endsWith("jar") || zipEntry.getName().endsWith("zip")) {
-
-                    String fName = "inner_zip";
-                    String ext = "zip";
-
-                    File innerZip = SherlockHash.INSTANCE.getFileFromZipStream(apkFile,
-                            zipFile, fName, ext);
-
-                    // so far we have a zip file
-                    ZipInputStream fromInnerZip = new ZipInputStream(new FileInputStream(
-                            innerZip));
-
-                    ZipEntry innerZipEntry;
-
-                    while (true) {
-                        innerZipEntry = fromInnerZip.getNextEntry();
-
-                        if (innerZipEntry == null) {
-                            fromInnerZip.close();
-                            break;
-                        }
-
-                        if (innerZipEntry.getName().endsWith(".dex")) {
-                            fName = "inner_zip_classes" + dexIndex;
-                            ext = "dex";
-                            file = SherlockHash.INSTANCE.getFileFromZipStream(apkFile, fromInnerZip, fName, ext);
-
-                            if (dexName.startsWith(zipEntry.getName())) {
-                                diTranslator.index = 99;
-                                zipFile.close();
-                                return file;
-                            }
-                        }
-                    }
-                }
-            }
-            zipFile.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return file;
     }
 }
