@@ -18,6 +18,10 @@ ClassyShark is a standalone tool for Android developers. It can reliably browse 
 To run, grab the latest jar from [here] (https://github.com/google/android-classyshark/releases)
 and type `java -jar ClassyShark.jar`.
 
+### Arch Linux
+
+If you're running Arch Linux you can install the latest [prebuilt jar from the AUR](https://aur.archlinux.org/packages/classyshark/).
+
 ### Dependencies
 * [dexlib2](https://github.com/JesusFreke/smali/tree/master/dexlib2) by jesusfreke
 * [guava](https://github.com/google/guava) by Google
