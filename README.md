@@ -11,7 +11,8 @@ ClassyShark is a standalone tool for Android developers. It can reliably browse 
 ### Useful links
 * [User guide] (https://github.com/borisf/classyshark-user-guide)
 * [Command-line reference] (https://github.com/google/android-classyshark/blob/master/CommandLine.pdf)
-* Gradle [sample](https://github.com/google/android-classyshark/tree/master/Samples/SampleGradle) 
+* Gradle [sample](https://github.com/google/android-classyshark/tree/master/Samples/SampleGradle)
+* [Roadmap](https://github.com/borisf/classyshark-roadmap)
 
 ### Download
 
