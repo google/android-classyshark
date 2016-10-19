@@ -23,16 +23,6 @@ import com.google.classyshark.gui.panel.displayarea.doodles.Doodle;
 import com.google.classyshark.gui.theme.Theme;
 import com.google.classyshark.silverghost.translator.Translator;
 import com.google.classyshark.silverghost.translator.java.JavaTranslator;
-
-import javax.swing.JFrame;
-import javax.swing.JTextPane;
-import javax.swing.WindowConstants;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.DefaultStyledDocument;
-import javax.swing.text.Document;
-import javax.swing.text.Style;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.Utilities;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Toolkit;
@@ -43,6 +33,15 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.StringTokenizer;
+import javax.swing.JFrame;
+import javax.swing.JTextPane;
+import javax.swing.WindowConstants;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultStyledDocument;
+import javax.swing.text.Document;
+import javax.swing.text.Style;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.Utilities;
 
 /**
  * the area to display lists of classes and individual class
@@ -159,6 +158,71 @@ public class DisplayArea implements IDisplayArea {
         return this.jTextPane;
     }
 
+
+    @Override
+    public void displayClassNamesWithManifestSearches(List<String> filteredClassNames,
+                                                      List<Translator.ELEMENT> displayedManifestSearchResultsTokens,
+                                                      String textFromTypingArea) {
+        displayDataState = DisplayDataState.CLASSES_LIST;
+        StyleConstants.setFontSize(style, 18);
+        StyleConstants.setForeground(style, theme.getIdentifiersColor());
+
+        clearText();
+
+        Document doc = new DefaultStyledDocument();
+        jTextPane.setDocument(doc);
+
+        StyleConstants.setFontSize(style, 18);
+        StyleConstants.setBackground(style, theme.getBackgroundColor());
+
+        try {
+            for (Translator.ELEMENT e : displayedManifestSearchResultsTokens) {
+                switch (e.tag) {
+                    case MODIFIER:
+                        StyleConstants.setForeground(style, theme.getKeyWordsColor());
+                        break;
+                    case DOCUMENT:
+                        StyleConstants.setForeground(style, theme.getDefaultColor());
+                        break;
+                    case IDENTIFIER:
+                        StyleConstants.setForeground(style, theme.getIdentifiersColor());
+                        break;
+                    case ANNOTATION:
+                        StyleConstants.setForeground(style, theme.getAnnotationsColor());
+                        break;
+                    case XML_TAG:
+                        StyleConstants.setForeground(style, theme.getIdentifiersColor());
+                        break;
+                    case XML_ATTR_NAME:
+                        StyleConstants.setForeground(style, theme.getKeyWordsColor());
+                        break;
+                    case XML_ATTR_VALUE:
+                        StyleConstants.setForeground(style, theme.getDefaultColor());
+                        break;
+                    default:
+                        StyleConstants.setForeground(style, Color.LIGHT_GRAY);
+                }
+                doc.insertString(doc.getLength(), e.text + "\n", style);
+
+            }
+        } catch (BadLocationException e) {
+            e.printStackTrace();
+        }
+
+        // TODO limit for 50
+        for (String s : filteredClassNames) {
+            try {
+                doc.insertString(doc.getLength(), s + "\n", style);
+            } catch (BadLocationException e) {
+                e.printStackTrace();
+            }
+        }
+
+        // TODO not sure, remove the line below
+        jTextPane.setDocument(doc);
+    }
+
+
     @Override
     public void displayClassNames(List<String> classNamesToShow,
                                   String inputText) {
@@ -167,7 +231,7 @@ public class DisplayArea implements IDisplayArea {
         StyleConstants.setForeground(style, theme.getIdentifiersColor());
         StyleConstants.setBackground(style, theme.getBackgroundColor());
 
-        if(classNamesToShow.size() > 50) {
+        if (classNamesToShow.size() > 50) {
             displayAllClassesNames(classNamesToShow);
             return;
         }
@@ -181,7 +245,7 @@ public class DisplayArea implements IDisplayArea {
         String beforeMatch = "";
         String match;
         String afterMatch = "";
-        
+
         Document doc = jTextPane.getDocument();
 
         for (String className : classNamesToShow) {

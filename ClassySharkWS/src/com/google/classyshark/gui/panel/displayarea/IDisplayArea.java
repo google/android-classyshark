@@ -33,4 +33,6 @@ public interface IDisplayArea {
     void displaySharkey();
 
     void displayError();
+
+    void displayClassNamesWithManifestSearches(List<String> filteredClassNames, List<Translator.ELEMENT> displayedManifestSearchResultsTokens, String textFromTypingArea);
 }

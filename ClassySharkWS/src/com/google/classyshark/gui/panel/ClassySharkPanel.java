@@ -31,11 +31,17 @@ import com.google.classyshark.gui.panel.tree.FilesTree;
 import com.google.classyshark.gui.settings.SettingsFrame;
 import com.google.classyshark.gui.theme.Theme;
 import com.google.classyshark.silverghost.SilverGhost;
+import com.google.classyshark.silverghost.TokensMapper;
 import com.google.classyshark.silverghost.exporter.Exporter;
 import com.google.classyshark.silverghost.methodscounter.ClassNode;
-import com.google.classyshark.silverghost.TokensMapper;
 import com.google.classyshark.silverghost.translator.Translator;
-
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -46,13 +52,6 @@ import javax.swing.SwingWorker;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileFilter;
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * App controller, general app structure MVM ==> Model - View - Mediator (this class)
@@ -62,6 +61,7 @@ public class ClassySharkPanel extends JPanel
 
     private static final boolean IS_CLASSNAME_FROM_MOUSE_CLICK = true;
     private static final boolean VIEW_TOP_CLASS = true;
+    public static final String ANDROID_MANIFEST_XML_SEARCH = "AndroidManifest.xml - ";
 
     private JFrame parentFrame;
     private Toolbar toolbar;
@@ -394,57 +394,6 @@ public class ClassySharkPanel extends JPanel
         worker.execute();
     }
 
-    private void fillDisplayArea(final String textFromTypingArea,
-                                 final boolean viewTopClass,
-                                 final boolean viewMouseClickedClass) {
-        toolbar.setTypingAreaCaret();
-
-        SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
-            private List<Translator.ELEMENT> displayedClassTokens;
-            private List<String> filteredClassNames;
-            private String className = "";
-
-            @Override
-            protected Void doInBackground() throws Exception {
-                if (viewMouseClickedClass) {
-                    className = textFromTypingArea;
-                    silverGhost.translateArchiveElement(className);
-                    displayedClassTokens = silverGhost.getArchiveElementTokens();
-                } else if (viewTopClass) {
-                    className = silverGhost.getAutoCompleteClassName();
-                    silverGhost.translateArchiveElement(className);
-                    displayedClassTokens = silverGhost.getArchiveElementTokens();
-                } else {
-                    filteredClassNames = silverGhost.filter(textFromTypingArea);
-                    if (filteredClassNames.size() == 1) {
-                        silverGhost.translateArchiveElement(filteredClassNames.get(0));
-                        displayedClassTokens = silverGhost.getArchiveElementTokens();
-                    }
-                }
-                return null;
-            }
-
-            @Override
-            protected void done() {
-                if (viewTopClass || viewMouseClickedClass) {
-                    toolbar.setText(className);
-                    displayArea.displayClass(displayedClassTokens);
-                } else {
-                    if (filteredClassNames.size() == 1) {
-                        displayArea.displayClass(displayedClassTokens);
-                    } else if (filteredClassNames.size() == 0) {
-                        displayArea.displayError();
-                    } else {
-                        displayArea.displayClassNames(filteredClassNames,
-                                textFromTypingArea);
-                    }
-                }
-            }
-        };
-
-        worker.execute();
-    }
-
     private void readMappingFile(final File resultFile) {
         SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
             private TokensMapper reverseMappings;
@@ -457,6 +406,89 @@ public class ClassySharkPanel extends JPanel
 
             protected void done() {
                 silverGhost.addMappings(reverseMappings);
+            }
+        };
+
+        worker.execute();
+    }
+
+    private void fillDisplayArea(final String textFromTypingArea,
+                                 final boolean viewTopClass,
+                                 final boolean viewMouseClickedClass) {
+        toolbar.setTypingAreaCaret();
+
+        // TODO add specific search logic when inside manifest
+        SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
+            private List<Translator.ELEMENT> displayedClassTokens;
+            private List<Translator.ELEMENT> displayedManifestSearchResultsTokens;
+            private List<String> filteredClassNames;
+            private String className = "";
+
+            @Override
+            protected Void doInBackground() throws Exception {
+                if (viewMouseClickedClass) {
+                    className = textFromTypingArea;
+                    convertToManifestIfNeeded();
+                    silverGhost.translateArchiveElement(className);
+                    displayedClassTokens = silverGhost.getArchiveElementTokens();
+                } else if (viewTopClass) {
+                    className = silverGhost.getAutoCompleteClassName();
+                    silverGhost.translateArchiveElement(className);
+                    displayedClassTokens = silverGhost.getArchiveElementTokens();
+                } else {
+                    className = textFromTypingArea;
+                    convertToManifestIfNeeded();
+                    filteredClassNames = silverGhost.filter(className);
+                    displayedManifestSearchResultsTokens = silverGhost.getManifestMatches(textFromTypingArea);
+
+                    checkIfOneClassAndShowIt();
+                }
+                return null;
+            }
+
+            private void checkIfOneClassAndShowIt() {
+                // TODO need to fix it, as it doesn't work yet
+                if (filteredClassNames.size() +
+                        displayedManifestSearchResultsTokens.size() == 1) {
+                    String topClassName = "AndroidManifest.xml";
+
+                    if (filteredClassNames.size() == 1) {
+                        topClassName = filteredClassNames.get(0);
+                    }
+
+                    silverGhost.translateArchiveElement(topClassName);
+                    displayedClassTokens = silverGhost.getArchiveElementTokens();
+                }
+            }
+
+            @Override
+            protected void done() {
+                // TODO add logic to scroll to relevant place in file
+                if (viewTopClass || viewMouseClickedClass) {
+                    toolbar.setText(className);
+                    displayArea.displayClass(displayedClassTokens);
+                } else {
+
+                    if(oneResult()) {
+
+                    } else {
+
+                    }
+
+                    displayArea.displayClassNamesWithManifestSearches(filteredClassNames,
+                            displayedManifestSearchResultsTokens,
+                            textFromTypingArea);
+                }
+            }
+
+            private void checkIfThereNoClassAndManifestMatchesAndDisplayError() {
+
+            }
+
+            private void convertToManifestIfNeeded() {
+                if (textFromTypingArea.startsWith(ANDROID_MANIFEST_XML_SEARCH)) {
+                    className = "AndroidManifest.xml";
+                }
             }
         };
 
