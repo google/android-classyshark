@@ -481,6 +481,10 @@ public class ClassySharkPanel extends JPanel
                 }
             }
 
+            private boolean oneResult() {
+                return true;
+            }
+
             private void checkIfThereNoClassAndManifestMatchesAndDisplayError() {
 
             }
