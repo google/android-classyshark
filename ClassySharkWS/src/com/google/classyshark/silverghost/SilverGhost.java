@@ -173,8 +173,8 @@ public class SilverGhost {
                         result.add(new Translator.ELEMENT(ANDROID_MANIFEST_XML_SEARCH + manifestStrArray[j + 2], Translator.TAG.ANNOTATION));
                     }
 
-                    result.add(new Translator.ELEMENT(ANDROID_MANIFEST_XML_SEARCH, Translator.TAG.ANNOTATION));
-                    result.add(new Translator.ELEMENT(ANDROID_MANIFEST_XML_SEARCH,Translator.TAG.ANNOTATION));
+                    result.add(new Translator.ELEMENT("", Translator.TAG.ANNOTATION));
+                    result.add(new Translator.ELEMENT("",Translator.TAG.ANNOTATION));
                 }
             }
         }

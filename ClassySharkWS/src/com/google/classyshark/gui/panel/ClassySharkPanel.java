@@ -447,6 +447,8 @@ public class ClassySharkPanel extends JPanel
 
             @Override
             protected void done() {
+                if(className.isEmpty()) return;
+
                 // TODO add logic to scroll to relevant place in file
                 if (viewTopClass || viewMouseClickedClass) {
                     toolbar.setText(className);
