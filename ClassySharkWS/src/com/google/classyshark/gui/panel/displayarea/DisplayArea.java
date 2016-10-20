@@ -160,7 +160,7 @@ public class DisplayArea implements IDisplayArea {
 
 
     @Override
-    public void displayClassNamesWithManifestSearches(List<String> filteredClassNames,
+    public void displaySearches(List<String> filteredClassNames,
                                                       List<Translator.ELEMENT> displayedManifestSearchResultsTokens,
                                                       String textFromTypingArea) {
         displayDataState = DisplayDataState.CLASSES_LIST;

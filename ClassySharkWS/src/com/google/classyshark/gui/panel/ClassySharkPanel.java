@@ -417,10 +417,9 @@ public class ClassySharkPanel extends JPanel
                                  final boolean viewMouseClickedClass) {
         toolbar.setTypingAreaCaret();
 
-        // TODO add specific search logic when inside manifest
         SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
             private List<Translator.ELEMENT> displayedClassTokens;
-            private List<Translator.ELEMENT> displayedManifestSearchResultsTokens;
+            private List<Translator.ELEMENT> manifestSearchResultsTokens;
             private List<String> filteredClassNames;
             private String className = "";
 
@@ -439,26 +438,11 @@ public class ClassySharkPanel extends JPanel
                     className = textFromTypingArea;
                     convertToManifestIfNeeded();
                     filteredClassNames = silverGhost.filter(className);
-                    displayedManifestSearchResultsTokens = silverGhost.getManifestMatches(textFromTypingArea);
+                    manifestSearchResultsTokens = silverGhost.getManifestMatches(textFromTypingArea);
 
-                    checkIfOneClassAndShowIt();
+                    checkIfOneClassAndPrepareTokens();
                 }
                 return null;
-            }
-
-            private void checkIfOneClassAndShowIt() {
-                // TODO need to fix it, as it doesn't work yet
-                if (filteredClassNames.size() +
-                        displayedManifestSearchResultsTokens.size() == 1) {
-                    String topClassName = "AndroidManifest.xml";
-
-                    if (filteredClassNames.size() == 1) {
-                        topClassName = filteredClassNames.get(0);
-                    }
-
-                    silverGhost.translateArchiveElement(topClassName);
-                    displayedClassTokens = silverGhost.getArchiveElementTokens();
-                }
             }
 
             @Override
@@ -468,25 +452,32 @@ public class ClassySharkPanel extends JPanel
                     toolbar.setText(className);
                     displayArea.displayClass(displayedClassTokens);
                 } else {
-
-                    if(oneResult()) {
-
+                    if (noResults()) {
+                        displayArea.displayError();
+                    } else if (oneResult()) {
+                        displayArea.displayClass(displayedClassTokens);
                     } else {
-
+                        displayArea.displaySearches(filteredClassNames,
+                                manifestSearchResultsTokens,
+                                textFromTypingArea);
                     }
-
-                    displayArea.displayClassNamesWithManifestSearches(filteredClassNames,
-                            displayedManifestSearchResultsTokens,
-                            textFromTypingArea);
                 }
             }
 
-            private boolean oneResult() {
-                return true;
+            private void checkIfOneClassAndPrepareTokens() {
+                if (oneResult()) {
+                    String topClassName = filteredClassNames.get(0);
+                    silverGhost.translateArchiveElement(topClassName);
+                    displayedClassTokens = silverGhost.getArchiveElementTokens();
+                }
             }
 
-            private void checkIfThereNoClassAndManifestMatchesAndDisplayError() {
+            private boolean noResults() {
+                return ((filteredClassNames.size() == 0) && (manifestSearchResultsTokens.size() == 0));
+            }
 
+            private boolean oneResult() {
+                return filteredClassNames.size() == 1;
             }
 
             private void convertToManifestIfNeeded() {

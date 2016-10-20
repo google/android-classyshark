@@ -34,5 +34,5 @@ public interface IDisplayArea {
 
     void displayError();
 
-    void displayClassNamesWithManifestSearches(List<String> filteredClassNames, List<Translator.ELEMENT> displayedManifestSearchResultsTokens, String textFromTypingArea);
+    void displaySearches(List<String> filteredClassNames, List<Translator.ELEMENT> displayedManifestSearchResultsTokens, String textFromTypingArea);
 }
