@@ -161,20 +161,20 @@ public class SilverGhost {
                         manifestStrArray[i].equalsIgnoreCase(textFromTypingArea)) {
                     if (i > 2) {
                         int j = i;
-                        result.add(new Translator.ELEMENT(ANDROID_MANIFEST_XML_SEARCH + manifestStrArray[j - 1], Translator.TAG.MODIFIER));
-                        result.add(new Translator.ELEMENT(ANDROID_MANIFEST_XML_SEARCH + manifestStrArray[j - 2], Translator.TAG.MODIFIER));
+                        result.add(new Translator.ELEMENT(ANDROID_MANIFEST_XML_SEARCH + manifestStrArray[j - 1], Translator.TAG.ANNOTATION));
+                        result.add(new Translator.ELEMENT(ANDROID_MANIFEST_XML_SEARCH + manifestStrArray[j - 2], Translator.TAG.ANNOTATION));
                     }
 
                     result.add(new Translator.ELEMENT(ANDROID_MANIFEST_XML_SEARCH + manifestStrArray[i], Translator.TAG.IDENTIFIER));
 
                     if (i < manifestStrArray.length - 4) {
                         int j = i;
-                        result.add(new Translator.ELEMENT(ANDROID_MANIFEST_XML_SEARCH + manifestStrArray[j + 1], Translator.TAG.MODIFIER));
-                        result.add(new Translator.ELEMENT(ANDROID_MANIFEST_XML_SEARCH + manifestStrArray[j + 2], Translator.TAG.MODIFIER));
+                        result.add(new Translator.ELEMENT(ANDROID_MANIFEST_XML_SEARCH + manifestStrArray[j + 1], Translator.TAG.ANNOTATION));
+                        result.add(new Translator.ELEMENT(ANDROID_MANIFEST_XML_SEARCH + manifestStrArray[j + 2], Translator.TAG.ANNOTATION));
                     }
 
-                    result.add(new Translator.ELEMENT(ANDROID_MANIFEST_XML_SEARCH, Translator.TAG.MODIFIER));
-                    result.add(new Translator.ELEMENT(ANDROID_MANIFEST_XML_SEARCH,Translator.TAG.MODIFIER));
+                    result.add(new Translator.ELEMENT(ANDROID_MANIFEST_XML_SEARCH, Translator.TAG.ANNOTATION));
+                    result.add(new Translator.ELEMENT(ANDROID_MANIFEST_XML_SEARCH,Translator.TAG.ANNOTATION));
                 }
             }
         }

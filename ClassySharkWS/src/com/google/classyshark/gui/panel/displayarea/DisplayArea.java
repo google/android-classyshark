@@ -209,6 +209,10 @@ public class DisplayArea implements IDisplayArea {
             e.printStackTrace();
         }
 
+        StyleConstants.setFontSize(style, 18);
+        StyleConstants.setForeground(style, theme.getIdentifiersColor());
+        StyleConstants.setBackground(style, theme.getBackgroundColor());
+
         // TODO limit for 50
         for (String s : filteredClassNames) {
             try {
