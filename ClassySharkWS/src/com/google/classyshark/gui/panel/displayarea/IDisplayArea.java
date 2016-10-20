@@ -26,9 +26,9 @@ public interface IDisplayArea {
     void displayClassNames(List<String> classNamesToShow,
                            String inputText);
 
-    void displayClass(String classString);
+    void displayClass(List<Translator.ELEMENT> displayedClassTokens, String classString);
 
-    void displayClass(List<Translator.ELEMENT> elements);
+    void displayClass(String classString);
 
     void displaySharkey();
 

@@ -449,15 +449,14 @@ public class ClassySharkPanel extends JPanel
             protected void done() {
                 if(className.isEmpty()) return;
 
-                // TODO add logic to scroll to relevant place in file
                 if (viewTopClass || viewMouseClickedClass) {
                     toolbar.setText(className);
-                    displayArea.displayClass(displayedClassTokens);
+                    displayArea.displayClass(displayedClassTokens, textFromTypingArea);
                 } else {
                     if (noResults()) {
                         displayArea.displayError();
                     } else if (oneResult()) {
-                        displayArea.displayClass(displayedClassTokens);
+                        displayArea.displayClass(displayedClassTokens, "");
                     } else {
                         displayArea.displaySearches(filteredClassNames,
                                 manifestSearchResultsTokens,

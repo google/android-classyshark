@@ -340,7 +340,7 @@ public class DisplayArea implements IDisplayArea {
     // TODO add here logic fo highlighter
     // TODO by adding flag to Translator.ELEMENT
     @Override
-    public void displayClass(List<Translator.ELEMENT> elements) {
+    public void displayClass(List<Translator.ELEMENT> elements, String key) {
         displayDataState = DisplayDataState.INSIDE_CLASS;
         clearText();
         StyleConstants.setFontSize(style, 18);
@@ -385,6 +385,46 @@ public class DisplayArea implements IDisplayArea {
         StyleConstants.setForeground(style, theme.getIdentifiersColor());
 
         jTextPane.setDocument(doc);
+
+        int i = calcPos(key);
+        jTextPane.setCaretPosition(i);
+    }
+
+    private int calcPos(String find) {
+
+        int pos = 0;
+        // Make sure we have a valid search term
+        if (find != null && find.length() > 0) {
+            Document document = jTextPane.getDocument();
+            int findLength = find.length();
+            try {
+                boolean found = false;
+                // Rest the search position if we're at the end of the document
+                if (pos + findLength > document.getLength()) {
+                    pos = 0;
+                }
+                // While we haven't reached the end...
+                // "<=" Correction
+                while (pos + findLength <= document.getLength()) {
+                    // Extract the text from teh docuemnt
+                    String match = document.getText(pos, findLength).toLowerCase();
+                    // Check to see if it matches or request
+                    if (match.equals(find)) {
+                        found = true;
+                        break;
+                    }
+                    pos++;
+                }
+
+
+
+            } catch (Exception exp) {
+                exp.printStackTrace();
+            }
+
+        }
+
+        return pos;
     }
 
     @Override
@@ -443,7 +483,7 @@ public class DisplayArea implements IDisplayArea {
         Translator emitter = new JavaTranslator(StringTokenizer.class);
         emitter.apply();
 
-        da.displayClass(emitter.getElementsList());
+        da.displayClass(emitter.getElementsList(), "");
 
         JFrame frame = new JFrame("Test");
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
