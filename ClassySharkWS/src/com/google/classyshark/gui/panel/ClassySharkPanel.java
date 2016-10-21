@@ -458,7 +458,7 @@ public class ClassySharkPanel extends JPanel
                     } else if (oneResult()) {
                         displayArea.displayClass(displayedClassTokens, "");
                     } else {
-                        displayArea.displaySearches(filteredClassNames,
+                        displayArea.displaySearchResults(filteredClassNames,
                                 manifestSearchResultsTokens,
                                 textFromTypingArea);
                     }

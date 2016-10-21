@@ -160,9 +160,9 @@ public class DisplayArea implements IDisplayArea {
 
 
     @Override
-    public void displaySearches(List<String> filteredClassNames,
-                                                      List<Translator.ELEMENT> displayedManifestSearchResultsTokens,
-                                                      String textFromTypingArea) {
+    public void displaySearchResults(List<String> filteredClassNames,
+                                     List<Translator.ELEMENT> displayedManifestSearchResultsTokens,
+                                     String textFromTypingArea) {
         displayDataState = DisplayDataState.CLASSES_LIST;
         StyleConstants.setFontSize(style, 18);
         StyleConstants.setForeground(style, theme.getIdentifiersColor());
@@ -175,54 +175,27 @@ public class DisplayArea implements IDisplayArea {
         StyleConstants.setFontSize(style, 18);
         StyleConstants.setBackground(style, theme.getBackgroundColor());
 
-        try {
-            for (Translator.ELEMENT e : displayedManifestSearchResultsTokens) {
-                switch (e.tag) {
-                    case MODIFIER:
-                        StyleConstants.setForeground(style, theme.getKeyWordsColor());
-                        break;
-                    case DOCUMENT:
-                        StyleConstants.setForeground(style, theme.getDefaultColor());
-                        break;
-                    case IDENTIFIER:
-                        StyleConstants.setForeground(style, theme.getIdentifiersColor());
-                        break;
-                    case ANNOTATION:
-                        StyleConstants.setForeground(style, theme.getAnnotationsColor());
-                        break;
-                    case XML_TAG:
-                        StyleConstants.setForeground(style, theme.getIdentifiersColor());
-                        break;
-                    case XML_ATTR_NAME:
-                        StyleConstants.setForeground(style, theme.getKeyWordsColor());
-                        break;
-                    case XML_ATTR_VALUE:
-                        StyleConstants.setForeground(style, theme.getDefaultColor());
-                        break;
-                    default:
-                        StyleConstants.setForeground(style, Color.LIGHT_GRAY);
-                }
-                doc.insertString(doc.getLength(), e.text + "\n", style);
-
-            }
-        } catch (BadLocationException e) {
-            e.printStackTrace();
-        }
+        fillTokensToDoc(displayedManifestSearchResultsTokens, doc, true);
 
         StyleConstants.setFontSize(style, 18);
         StyleConstants.setForeground(style, theme.getIdentifiersColor());
         StyleConstants.setBackground(style, theme.getBackgroundColor());
 
-        // TODO limit for 50
-        for (String s : filteredClassNames) {
+
+        int displayedClassLimit = 50;
+
+        if(filteredClassNames.size() < displayedClassLimit) {
+            displayedClassLimit = filteredClassNames.size();
+        }
+
+        for (int i = 0; i < displayedClassLimit; i++) {
             try {
-                doc.insertString(doc.getLength(), s + "\n", style);
+                doc.insertString(doc.getLength(), filteredClassNames.get(i) + "\n", style);
             } catch (BadLocationException e) {
                 e.printStackTrace();
             }
         }
 
-        // TODO not sure, remove the line below
         jTextPane.setDocument(doc);
     }
 
@@ -304,7 +277,6 @@ public class DisplayArea implements IDisplayArea {
             e.printStackTrace();
         }
 
-        // TODO not sure, remove the line below
         jTextPane.setDocument(blank);
 
         System.out.println("UI update " + (System.currentTimeMillis() - start) + " ms");
@@ -348,8 +320,19 @@ public class DisplayArea implements IDisplayArea {
 
         Document doc = new DefaultStyledDocument();
 
+        fillTokensToDoc(elements, doc, false);
+
+        StyleConstants.setForeground(style, theme.getIdentifiersColor());
+
+        jTextPane.setDocument(doc);
+
+        int i = calcScrollingPosition(key);
+        jTextPane.setCaretPosition(i);
+    }
+
+    private void fillTokensToDoc(List<Translator.ELEMENT> from, Document to, boolean newLine) {
         try {
-            for (Translator.ELEMENT e : elements) {
+            for (Translator.ELEMENT e : from) {
                 switch (e.tag) {
                     case MODIFIER:
                         StyleConstants.setForeground(style, theme.getKeyWordsColor());
@@ -375,55 +358,45 @@ public class DisplayArea implements IDisplayArea {
                     default:
                         StyleConstants.setForeground(style, Color.LIGHT_GRAY);
                 }
-                doc.insertString(doc.getLength(), e.text, style);
+
+                String text = e.text;
+
+                if(newLine) {
+                    text += "\n";
+                }
+
+                to.insertString(to.getLength(), text, style);
 
             }
         } catch (BadLocationException e) {
             e.printStackTrace();
         }
-
-        StyleConstants.setForeground(style, theme.getIdentifiersColor());
-
-        jTextPane.setDocument(doc);
-
-        int i = calcPos(key);
-        jTextPane.setCaretPosition(i);
     }
 
-    private int calcPos(String find) {
-
+    private int calcScrollingPosition(String textToFind) {
         int pos = 0;
-        // Make sure we have a valid search term
-        if (find != null && find.length() > 0) {
+
+        if (textToFind != null && textToFind.length() > 0) {
             Document document = jTextPane.getDocument();
-            int findLength = find.length();
+            int findLength = textToFind.length();
             try {
-                boolean found = false;
                 // Rest the search position if we're at the end of the document
                 if (pos + findLength > document.getLength()) {
                     pos = 0;
                 }
-                // While we haven't reached the end...
-                // "<=" Correction
+                // While we haven't reached the end... "<=" Correction
                 while (pos + findLength <= document.getLength()) {
-                    // Extract the text from teh docuemnt
                     String match = document.getText(pos, findLength).toLowerCase();
-                    // Check to see if it matches or request
-                    if (match.equals(find)) {
-                        found = true;
+
+                    if (match.equals(textToFind)) {
                         break;
                     }
                     pos++;
                 }
-
-
-
             } catch (Exception exp) {
                 exp.printStackTrace();
             }
-
         }
-
         return pos;
     }
 
