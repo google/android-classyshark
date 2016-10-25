@@ -153,30 +153,42 @@ public class SilverGhost {
             return result;
         }
 
+        result.add(new Translator.ELEMENT(ANDROID_MANIFEST_XML_SEARCH, Translator.TAG.IDENTIFIER));
+        result.add(new Translator.ELEMENT("\n::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::",
+                Translator.TAG.SELECTION));
+
+
         String[] manifestStrArray = manifestStr.split("[\\r\\n]+");
 
         if (textFromTypingArea.length() > 2) {
             for (int i = 0; i < manifestStrArray.length; i++) {
                 if (manifestStrArray[i].contains(textFromTypingArea) ||
                         manifestStrArray[i].equalsIgnoreCase(textFromTypingArea)) {
+
+                    result.add(new Translator.ELEMENT("\n", Translator.TAG.ANNOTATION));
+
                     if (i > 2) {
                         int j = i;
-                        result.add(new Translator.ELEMENT(ANDROID_MANIFEST_XML_SEARCH + manifestStrArray[j - 1], Translator.TAG.ANNOTATION));
-                        result.add(new Translator.ELEMENT(ANDROID_MANIFEST_XML_SEARCH + manifestStrArray[j - 2], Translator.TAG.ANNOTATION));
+                        result.add(new Translator.ELEMENT(manifestStrArray[j - 1], Translator.TAG.ANNOTATION));
+                        result.add(new Translator.ELEMENT( manifestStrArray[j - 2], Translator.TAG.ANNOTATION));
                     }
 
-                    result.add(new Translator.ELEMENT(ANDROID_MANIFEST_XML_SEARCH + manifestStrArray[i], Translator.TAG.IDENTIFIER));
+                    result.add(new Translator.ELEMENT( manifestStrArray[i], Translator.TAG.IDENTIFIER));
 
                     if (i < manifestStrArray.length - 4) {
                         int j = i;
-                        result.add(new Translator.ELEMENT(ANDROID_MANIFEST_XML_SEARCH + manifestStrArray[j + 1], Translator.TAG.ANNOTATION));
-                        result.add(new Translator.ELEMENT(ANDROID_MANIFEST_XML_SEARCH + manifestStrArray[j + 2], Translator.TAG.ANNOTATION));
+                        result.add(new Translator.ELEMENT(manifestStrArray[j + 1], Translator.TAG.ANNOTATION));
+                        result.add(new Translator.ELEMENT(manifestStrArray[j + 2], Translator.TAG.ANNOTATION));
                     }
 
                     result.add(new Translator.ELEMENT("", Translator.TAG.ANNOTATION));
-                    result.add(new Translator.ELEMENT("",Translator.TAG.ANNOTATION));
+
+                    result.add(new Translator.ELEMENT("::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::",
+                            Translator.TAG.SELECTION));
                 }
             }
+
+            result.add(new Translator.ELEMENT("", Translator.TAG.ANNOTATION));
         }
 
         return result;

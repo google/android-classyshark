@@ -355,6 +355,9 @@ public class DisplayArea implements IDisplayArea {
                     case XML_ATTR_VALUE:
                         StyleConstants.setForeground(style, theme.getDefaultColor());
                         break;
+                    case SELECTION:
+                        StyleConstants.setForeground(style, theme.getSelectionBgColor());
+                        break;
                     default:
                         StyleConstants.setForeground(style, Color.LIGHT_GRAY);
                 }

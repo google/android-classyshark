@@ -450,8 +450,16 @@ public class ClassySharkPanel extends JPanel
                 if(className.isEmpty()) return;
 
                 if (viewTopClass || viewMouseClickedClass) {
-                    toolbar.setText(className);
-                    displayArea.displayClass(displayedClassTokens, textFromTypingArea);
+                    if (displayedClassTokens != null) {
+                        toolbar.setText(className);
+                        displayArea.displayClass(displayedClassTokens, textFromTypingArea);
+                    } else {
+                        // TODO refactor here display manifest ==> update condition
+                        silverGhost.translateArchiveElement("AndroidManifest.xml");
+                        displayedClassTokens = silverGhost.getArchiveElementTokens();
+
+                        displayArea.displayClass(displayedClassTokens, className);
+                    }
                 } else {
                     if (noResults()) {
                         displayArea.displayError();
