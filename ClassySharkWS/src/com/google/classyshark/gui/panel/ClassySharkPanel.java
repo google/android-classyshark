@@ -418,9 +418,9 @@ public class ClassySharkPanel extends JPanel
         toolbar.setTypingAreaCaret();
 
         SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
-            private List<Translator.ELEMENT> displayedClassTokens;
-            private List<Translator.ELEMENT> manifestSearchResultsTokens;
-            private List<String> filteredClassNames;
+            private List<Translator.ELEMENT> displayedClassTokens = new ArrayList<>();
+            private List<Translator.ELEMENT> manifestSearchResultsTokens = new ArrayList<>() ;
+            private List<String> filteredClassNames = new ArrayList<>();
             private String className = "";
 
             @Override
@@ -450,14 +450,12 @@ public class ClassySharkPanel extends JPanel
                 if(className.isEmpty()) return;
 
                 if (viewTopClass || viewMouseClickedClass) {
-                    if (displayedClassTokens != null) {
+                    if (!displayedClassTokens.isEmpty()) {
                         toolbar.setText(className);
                         displayArea.displayClass(displayedClassTokens, textFromTypingArea);
                     } else {
-                        // TODO refactor here display manifest ==> update condition
                         silverGhost.translateArchiveElement("AndroidManifest.xml");
                         displayedClassTokens = silverGhost.getArchiveElementTokens();
-
                         displayArea.displayClass(displayedClassTokens, className);
                     }
                 } else {
