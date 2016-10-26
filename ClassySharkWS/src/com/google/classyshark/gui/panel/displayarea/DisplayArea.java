@@ -379,6 +379,9 @@ public class DisplayArea implements IDisplayArea {
     private int calcScrollingPosition(String textToFind) {
         int pos = 0;
 
+
+        textToFind = textToFind.trim();
+
         if (textToFind != null && textToFind.length() > 0) {
             Document document = jTextPane.getDocument();
             int findLength = textToFind.length();
@@ -391,7 +394,7 @@ public class DisplayArea implements IDisplayArea {
                 while (pos + findLength <= document.getLength()) {
                     String match = document.getText(pos, findLength).toLowerCase();
 
-                    if (match.equals(textToFind)) {
+                    if (match.equalsIgnoreCase(textToFind)) {
                         break;
                     }
                     pos++;

@@ -449,14 +449,13 @@ public class ClassySharkPanel extends JPanel
             protected void done() {
                 if(className.isEmpty()) return;
 
-                if (viewTopClass || viewMouseClickedClass) {
-                    if (!displayedClassTokens.isEmpty()) {
+                if (isUserClickedOnSearchResult()) {
+                    if (clickedOnClass()) {
                         toolbar.setText(className);
                         displayArea.displayClass(displayedClassTokens, textFromTypingArea);
                     } else {
-                        silverGhost.translateArchiveElement("AndroidManifest.xml");
-                        displayedClassTokens = silverGhost.getArchiveElementTokens();
-                        displayArea.displayClass(displayedClassTokens, className);
+                        toolbar.setText("AndroidManifest.xml");
+                        displayManifestWithSpecificLine();
                     }
                 } else {
                     if (noResults()) {
@@ -469,6 +468,20 @@ public class ClassySharkPanel extends JPanel
                                 textFromTypingArea);
                     }
                 }
+            }
+
+            private boolean isUserClickedOnSearchResult() {
+                return viewTopClass || viewMouseClickedClass;
+            }
+
+            private boolean clickedOnClass() {
+                return !displayedClassTokens.isEmpty();
+            }
+
+            private void displayManifestWithSpecificLine() {
+                silverGhost.translateArchiveElement("AndroidManifest.xml");
+                displayedClassTokens = silverGhost.getArchiveElementTokens();
+                displayArea.displayClass(displayedClassTokens, className);
             }
 
             private void checkIfOneClassAndPrepareTokens() {
