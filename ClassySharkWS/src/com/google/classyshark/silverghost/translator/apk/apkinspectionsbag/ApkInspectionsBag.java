@@ -60,13 +60,37 @@ public class ApkInspectionsBag {
     }
 
     public String getAllMethodsCountPerDex(int i) {
-        int methodCounts = apkAnalysis.dexes.get(i).allMethods;
-        return methodCounts + "";
+
+        // no such thing classes1.dex
+        if(i >= 1) { i++;}
+
+        int result = 0;
+
+        for(int j = 0; j < apkAnalysis.dexes.size(); j++ ) {
+            if(apkAnalysis.dexes.get(j).index == i) {
+                result = apkAnalysis.dexes.get(j).allMethods;
+                break;
+            }
+        }
+
+        return result + "";
     }
 
     public String getAllNativeMethodsCountPerDex(int i) {
-        int methodsCount = apkAnalysis.dexes.get(i).nativeMethodsCount;
-        return methodsCount + "";
+
+        // no such thing classes1.dex
+        if(i >= 1) { i++;}
+
+        int result = 0;
+
+        for(int j = 0; j < apkAnalysis.dexes.size(); j++ ) {
+            if(apkAnalysis.dexes.get(j).index == i) {
+                result = apkAnalysis.dexes.get(j).nativeMethodsCount;
+                break;
+            }
+        }
+
+        return result + "";
     }
 
     public List<String> getSyntheticAccessors(int i) {
@@ -168,7 +192,16 @@ public class ApkInspectionsBag {
                 }
 
                 if (zipEntry.getName().endsWith(".dex")) {
-                    String fName = "ANALYZER_classes" + dexIndex;
+
+                    dexIndex = Character.getNumericValue(zipEntry.getName().charAt(zipEntry.getName().length() - 5));
+
+                    String fName = "ANALYZER_classes";
+                    if(dexIndex != 28) {
+                        fName = "ANALYZER_classes" + dexIndex;
+                    } else {
+                        dexIndex = 0;
+                    }
+
                     String ext = "dex";
 
                     File file = SherlockHash.INSTANCE.getFileFromZipStream(binaryArchiveFile,
@@ -176,7 +209,7 @@ public class ApkInspectionsBag {
 
                     result.dexes.add(fillAnalysisPerClassesDex(dexIndex, file));
 
-                    dexIndex++;
+
                 } else {
                     if (zipEntry.getName().startsWith("lib")) {
 

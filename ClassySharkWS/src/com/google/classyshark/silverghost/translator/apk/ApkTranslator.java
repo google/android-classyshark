@@ -57,7 +57,10 @@ public class ApkTranslator implements Translator {
 
         for (int i = 0; i < numDexes; i++) {
 
-            ELEMENT element = new ELEMENT("\nclasses" + ((i == 0) ? "" : i + "") + ".dex", TAG.MODIFIER);
+            int j = i;
+            if(j>= 1) {j++;}
+
+            ELEMENT element = new ELEMENT("\nclasses" + ((j == 0) ? "" : j + "") + ".dex", TAG.MODIFIER);
             elements.add(element);
 
             element = new ELEMENT(
