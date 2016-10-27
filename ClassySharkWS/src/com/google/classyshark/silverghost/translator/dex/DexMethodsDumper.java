@@ -60,7 +60,6 @@ public class DexMethodsDumper {
 
                 if (zipEntry.getName().endsWith(".dex")) {
 
-
                     int dexIndex = Character.getNumericValue(zipEntry.getName().charAt(zipEntry.getName().length() - 5));
 
                     String fName = "DUMPER_METHODS_classes";
@@ -86,7 +85,6 @@ public class DexMethodsDumper {
                     List<String> methodsList = fillAnalysis(dexIndex, file);
                     result.addAll(methodsList);
 
-                    dexIndex++;
                 } else {
 
                 }
