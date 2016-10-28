@@ -15,7 +15,7 @@
  */
 
 
-package com.google.classyshark.silverghost.translator.apk.apkinspectionsbag;
+package com.google.classyshark.silverghost.translator.apk.dashboard;
 
 import com.google.classyshark.silverghost.translator.java.dex.DexlibAdapter;
 import java.util.Iterator;

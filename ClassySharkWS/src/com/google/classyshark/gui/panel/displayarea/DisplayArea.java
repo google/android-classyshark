@@ -197,6 +197,8 @@ public class DisplayArea implements IDisplayArea {
         }
 
         jTextPane.setDocument(doc);
+
+        jTextPane.setCaretPosition(1);
     }
 
 
@@ -307,6 +309,8 @@ public class DisplayArea implements IDisplayArea {
         }
 
         jTextPane.setDocument(doc);
+
+        jTextPane.setCaretPosition(1);
     }
 
     // TODO add here logic fo highlighter
@@ -378,6 +382,7 @@ public class DisplayArea implements IDisplayArea {
 
     private int calcScrollingPosition(String textToFind) {
         int pos = 0;
+        boolean found = false;
 
 
         textToFind = textToFind.trim();
@@ -395,6 +400,7 @@ public class DisplayArea implements IDisplayArea {
                     String match = document.getText(pos, findLength).toLowerCase();
 
                     if (match.equalsIgnoreCase(textToFind)) {
+                        found = true;
                         break;
                     }
                     pos++;
@@ -403,7 +409,12 @@ public class DisplayArea implements IDisplayArea {
                 exp.printStackTrace();
             }
         }
-        return pos;
+
+        if(found) {
+            return pos;
+        } else {
+            return 1;
+        }
     }
 
     @Override

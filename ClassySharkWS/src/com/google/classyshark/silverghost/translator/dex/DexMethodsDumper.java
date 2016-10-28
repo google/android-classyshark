@@ -49,8 +49,6 @@ public class DexMethodsDumper {
 
             ZipEntry zipEntry;
 
-
-
             while (true) {
                 zipEntry = zipFile.getNextEntry();
 
@@ -63,12 +61,13 @@ public class DexMethodsDumper {
                     int dexIndex = Character.getNumericValue(zipEntry.getName().charAt(zipEntry.getName().length() - 5));
 
                     String fName = "DUMPER_METHODS_classes";
+
+                    // classes.dex <=> classes2.dex valid names
                     if(dexIndex != 28) {
                         fName += dexIndex;
                     } else {
                         dexIndex = 0;
                     }
-
 
                     File file = File.createTempFile(fName, "dex");
                     file.deleteOnExit();

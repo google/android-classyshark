@@ -28,7 +28,7 @@ import java.util.Set;
 import org.jf.dexlib2.dexbacked.DexBackedDexFile;
 import org.jf.dexlib2.iface.DexFile;
 
-import static com.google.classyshark.silverghost.translator.apk.apkinspectionsbag.ApkInspectionsBag.getClassesWithNativeMethodsPerDexIndex;
+import static com.google.classyshark.silverghost.translator.apk.dashboard.ApkDashboard.getClassesWithNativeMethodsPerDexIndex;
 import static com.google.classyshark.silverghost.translator.java.dex.Multidex.extractClassesDex;
 
 /**
@@ -38,7 +38,7 @@ public class
 DexInfoTranslator implements Translator {
     private File apkFile;
     private String dexFileName;
-    public int index;
+    private int index;
     private List<ELEMENT> elements = new ArrayList<>();
 
     public DexInfoTranslator(String dexFileName, File apkFile) {
@@ -107,5 +107,9 @@ DexInfoTranslator implements Translator {
     @Override
     public List<String> getDependencies() {
         return new LinkedList<>();
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
     }
 }

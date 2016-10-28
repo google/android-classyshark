@@ -228,9 +228,9 @@ public class Multidex {
 
                     if (dexName.equals(currentClassesDexName)) {
                         if (dexName.equals("classes.dex")) {
-                            diTranslator.index = 0;
+                            diTranslator.setIndex(0);
                         } else {
-                            diTranslator.index = Integer.parseInt(fName.substring(fName.length() - 1));
+                            diTranslator.setIndex(Integer.parseInt(fName.substring(fName.length() - 1)));
                         }
 
 
@@ -266,7 +266,7 @@ public class Multidex {
                             file = SherlockHash.INSTANCE.getFileFromZipStream(apkFile, fromInnerZip, fName, ext);
 
                             if (dexName.startsWith(zipEntry.getName())) {
-                                diTranslator.index = 99;
+                                diTranslator.setIndex(99);
                                 zipFile.close();
                                 return file;
                             }
