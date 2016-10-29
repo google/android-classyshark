@@ -29,9 +29,9 @@ import nl.lxtreme.binutils.elf.Elf;
 
 import static com.google.classyshark.silverghost.translator.apk.dashboard.ApkDashboard.fillAnalysisPerClassesDexIndex;
 
-class ApkReader {
+public class ApkReader {
 
-    static class ClassesDexEntry implements Comparable {
+    public static class ClassesDexEntry implements Comparable {
         public int index;
         public int nativeMethodsCount = 0;
         public Set<String> classesWithNativeMethods = new TreeSet<>();
@@ -48,7 +48,15 @@ class ApkReader {
                 return -1;
             }
 
-            return Integer.valueOf(index).compareTo(((ClassesDexEntry) o).index);
+            return -1 * Integer.valueOf(index).compareTo(((ClassesDexEntry) o).index);
+        }
+
+        public String getName() {
+            if(index == 0) {
+                return "classes.dex";
+            } else {
+                return "classes" + index + ".dex";
+            }
         }
 
         public String toString() {
@@ -76,16 +84,21 @@ class ApkReader {
                     break;
                 }
 
-                if (zipEntry.getName().endsWith(".dex")) {
+                if (zipEntry.getName().endsWith(".dex")
+                        /*|| zipEntry.getName().endsWith(".zip")*/) {
 
                     String fName = "ANALYZER_classes";
 
                     int dexIndex = Character.getNumericValue(zipEntry.getName().charAt(zipEntry.getName().length() - 5));
 
-
-                    if (dexIndex != 28) {
+                    // TODO stopped here, need to extract classes.dex entry
+                    if(dexIndex == 21 /* zip*/) {
+                        dexIndex = 99;
+                        fName = "ANALYZER_custom_classes" + dexIndex;
+                    } else if (dexIndex != 28 /* classes.dex*/) {
                         fName = "ANALYZER_classes" + dexIndex;
                     } else {
+                        /* classes2.dex*/
                         dexIndex = 0;
                     }
 
@@ -94,7 +107,7 @@ class ApkReader {
                     File file = SherlockHash.INSTANCE.getFileFromZipStream(binaryArchiveFile,
                             zipFile, fName, ext);
 
-                    to.dexes.add(fillAnalysisPerClassesDexIndex(dexIndex, file));
+                    to.classesDexEntries.add(fillAnalysisPerClassesDexIndex(dexIndex, file));
 
                 } else {
                     if (zipEntry.getName().startsWith("lib")) {

@@ -22,6 +22,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -32,14 +33,13 @@ import org.ow2.asmdex.ApplicationReader;
 import org.ow2.asmdex.ApplicationVisitor;
 import org.ow2.asmdex.Opcodes;
 
-public class ApkDashboard {
+public class ApkDashboard implements Iterable<ApkReader.ClassesDexEntry> {
 
-    ArrayList<ApkReader.ClassesDexEntry> dexes = new ArrayList<>();
+    ArrayList<ApkReader.ClassesDexEntry> classesDexEntries = new ArrayList<>();
     List<String> nativeLibs = new ArrayList<>();
     ArrayList<String> nativeDependencies = new ArrayList<>();
     List<String> nativeErrors = new LinkedList<>();
-
-    private File apkFile;
+    File apkFile;
 
     public ApkDashboard(File apkFile) {
         this.apkFile = apkFile;
@@ -50,72 +50,10 @@ public class ApkDashboard {
         ApkReader.fillDashboard(apkFile, this);
     }
 
-    // TODO sort the methods above by iterator
-
-    // TODO add support for custom dex loading
-    public int getNumberOfDexes() {
-        return dexes.size();
+    public Iterator<ApkReader.ClassesDexEntry> iterator() {
+        return new ClassesDexIterator();
     }
 
-    public String getAllMethodsCountPerDex(int i) {
-
-        // no such thing classes1.dex
-        if (i >= 1) {
-            i++;
-        }
-
-        int result = 0;
-
-        for (int j = 0; j < dexes.size(); j++) {
-            if (dexes.get(j).index == i) {
-                result = dexes.get(j).allMethods;
-                break;
-            }
-        }
-
-        return result + "";
-    }
-
-    public String getAllNativeMethodsCountPerDex(int i) {
-
-        // no such thing classes1.dex
-        if (i >= 1) {
-            i++;
-        }
-
-        int result = 0;
-
-        for (int j = 0; j < dexes.size(); j++) {
-            if (dexes.get(j).index == i) {
-                result = dexes.get(j).nativeMethodsCount;
-                break;
-            }
-        }
-
-        return result + "";
-    }
-
-    public List<String> getSyntheticAccessors(int i) {
-
-        // no such thing classes1.dex
-        if (i >= 1) {
-            i++;
-        }
-
-        List<String> result = new ArrayList<>();
-
-        for (int j = 0; j < dexes.size(); j++) {
-            if (dexes.get(j).index == i) {
-                result = dexes.get(j).syntheticAccessors;
-                break;
-            }
-        }
-
-        return result;
-    }
-
-
-    // TODO end
     public List<String> getNativeErrors() {
         return nativeErrors;
     }
@@ -126,7 +64,6 @@ public class ApkDashboard {
     }
 
     public List<String> getNativeLibNamesSorted() {
-
         Set<String> uniqueDependencies = new LinkedHashSet<>(nativeDependencies);
         LinkedList<String> sortedNativeDependencies = new LinkedList<>(uniqueDependencies);
         Collections.sort(sortedNativeDependencies);
@@ -165,14 +102,23 @@ public class ApkDashboard {
             ApplicationReader ar = new ApplicationReader(Opcodes.ASM4, is);
             ar.accept(av, 0);
 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
             DexFile dxFile = DexlibLoader.loadDexFile(classesDex);
+
             DexBackedDexFile dataPack = (DexBackedDexFile) dxFile;
             dexData.allMethods = dataPack.getMethodCount();
 
             dexData.syntheticAccessors =
                     new SyntheticAccessorsInspector(dxFile).getSyntheticAccessors();
+
         } catch (Exception e) {
+            e.printStackTrace();
         }
+
         return dexData;
     }
 
@@ -192,5 +138,40 @@ public class ApkDashboard {
         }
 
         return result;
+    }
+
+    private class ClassesDexIterator implements Iterator<ApkReader.ClassesDexEntry> {
+        private int size;
+        private int current;
+
+        public ClassesDexIterator() {
+            size = classesDexEntries.size();
+            current = 0;
+        }
+
+        public boolean hasNext() {
+            return current < size;
+        }
+
+        public ApkReader.ClassesDexEntry next() {
+            ApkReader.ClassesDexEntry result = new ApkReader.ClassesDexEntry(0);
+
+            for (ApkReader.ClassesDexEntry classesDex : classesDexEntries) {
+                int dexIndex = currentToDexIndex(current);
+                if (dexIndex == classesDex.index) {
+                    result = classesDex;
+                    current++;
+                    break;
+                }
+            }
+
+            return result;
+        }
+
+        private int currentToDexIndex(int current) {
+            if (current == 0) return 0;
+
+            return ++current;
+        }
     }
 }
