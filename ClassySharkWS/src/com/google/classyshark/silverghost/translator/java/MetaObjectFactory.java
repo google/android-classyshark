@@ -22,7 +22,7 @@ import com.google.classyshark.silverghost.translator.java.clazz.reflect.ClassUti
 import com.google.classyshark.silverghost.translator.java.clazz.reflect.MetaObjectClass;
 import com.google.classyshark.silverghost.translator.java.dex.DexlibAdapter;
 import com.google.classyshark.silverghost.translator.java.dex.MetaObjectDex;
-import com.google.classyshark.silverghost.translator.java.dex.Multidex;
+import com.google.classyshark.silverghost.translator.java.dex.MultidexReader;
 import org.jf.dexlib2.iface.ClassDef;
 import org.jf.dexlib2.iface.DexFile;
 
@@ -139,7 +139,7 @@ public class MetaObjectFactory {
         MetaObject result;
         try {
             File classesDexWithClass =
-                    Multidex.extractClassesDexWithClass(className, apk);
+                    MultidexReader.extractClassesDexWithClass(className, apk);
             result = getMetaObjectFromDex(className, classesDexWithClass);
         } catch (Exception e) {
             result = new MetaObjectClass(Exception.class);

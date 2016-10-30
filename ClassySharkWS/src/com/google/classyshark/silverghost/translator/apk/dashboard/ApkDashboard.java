@@ -17,6 +17,7 @@
 package com.google.classyshark.silverghost.translator.apk.dashboard;
 
 import com.google.classyshark.silverghost.contentreader.dex.DexlibLoader;
+import com.google.classyshark.silverghost.translator.java.dex.MultidexReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -33,13 +34,14 @@ import org.ow2.asmdex.ApplicationReader;
 import org.ow2.asmdex.ApplicationVisitor;
 import org.ow2.asmdex.Opcodes;
 
-public class ApkDashboard implements Iterable<ApkReader.ClassesDexEntry> {
+public class ApkDashboard implements Iterable<ClassesDexEntry> {
 
-    ArrayList<ApkReader.ClassesDexEntry> classesDexEntries = new ArrayList<>();
-    List<String> nativeLibs = new ArrayList<>();
-    ArrayList<String> nativeDependencies = new ArrayList<>();
-    List<String> nativeErrors = new LinkedList<>();
-    File apkFile;
+    public ArrayList<ClassesDexEntry> classesDexEntries = new ArrayList<>();
+    public ArrayList<ClassesDexEntry> customClassesDexEntries = new ArrayList<>();
+    public List<String> nativeLibs = new ArrayList<>();
+    public ArrayList<String> nativeDependencies = new ArrayList<>();
+    public List<String> nativeErrors = new LinkedList<>();
+    public File apkFile;
 
     public ApkDashboard(File apkFile) {
         this.apkFile = apkFile;
@@ -47,10 +49,10 @@ public class ApkDashboard implements Iterable<ApkReader.ClassesDexEntry> {
 
     public void inspect() {
         // TODO add exception for not calling inspect
-        ApkReader.fillDashboard(apkFile, this);
+        MultidexReader.fillApkDashboard(apkFile, this);
     }
 
-    public Iterator<ApkReader.ClassesDexEntry> iterator() {
+    public Iterator<ClassesDexEntry> iterator() {
         return new ClassesDexIterator();
     }
 
@@ -87,14 +89,14 @@ public class ApkDashboard implements Iterable<ApkReader.ClassesDexEntry> {
 
     public static Set<String> getClassesWithNativeMethodsPerDexIndex(int dexIndex,
                                                                      File classesDex) {
-        ApkReader.ClassesDexEntry dexInspectionsData =
+        ClassesDexEntry dexInspectionsData =
                 ApkDashboard.fillAnalysisPerClassesDexIndex(dexIndex, classesDex);
 
         return dexInspectionsData.classesWithNativeMethods;
     }
 
-    public static ApkReader.ClassesDexEntry fillAnalysisPerClassesDexIndex(int dexIndex, File classesDex) {
-        ApkReader.ClassesDexEntry dexData = new ApkReader.ClassesDexEntry(dexIndex);
+    public static ClassesDexEntry fillAnalysisPerClassesDexIndex(int dexIndex, File classesDex) {
+        ClassesDexEntry dexData = new ClassesDexEntry(dexIndex);
 
         try {
             InputStream is = new FileInputStream(classesDex);
@@ -140,9 +142,10 @@ public class ApkDashboard implements Iterable<ApkReader.ClassesDexEntry> {
         return result;
     }
 
-    private class ClassesDexIterator implements Iterator<ApkReader.ClassesDexEntry> {
+    private class ClassesDexIterator implements Iterator<ClassesDexEntry> {
         private int size;
         private int current;
+        private int currentCustom = 0;
 
         public ClassesDexIterator() {
             size = classesDexEntries.size();
@@ -150,19 +153,24 @@ public class ApkDashboard implements Iterable<ApkReader.ClassesDexEntry> {
         }
 
         public boolean hasNext() {
-            return current < size;
+            return current < size || currentCustom < customClassesDexEntries.size();
         }
 
-        public ApkReader.ClassesDexEntry next() {
-            ApkReader.ClassesDexEntry result = new ApkReader.ClassesDexEntry(0);
+        public ClassesDexEntry next() {
+            ClassesDexEntry result = new ClassesDexEntry(0);
 
-            for (ApkReader.ClassesDexEntry classesDex : classesDexEntries) {
-                int dexIndex = currentToDexIndex(current);
-                if (dexIndex == classesDex.index) {
-                    result = classesDex;
-                    current++;
-                    break;
+            if (current < size) {
+                for (ClassesDexEntry classesDex : classesDexEntries) {
+                    int dexIndex = currentToDexIndex(current);
+                    if (dexIndex == classesDex.index) {
+                        result = classesDex;
+                        current++;
+                        break;
+                    }
                 }
+            } else {
+                currentCustom++;
+                result = customClassesDexEntries.get(0);
             }
 
             return result;

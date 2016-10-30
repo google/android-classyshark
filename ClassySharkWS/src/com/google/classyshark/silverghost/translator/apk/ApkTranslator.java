@@ -19,7 +19,7 @@ package com.google.classyshark.silverghost.translator.apk;
 import com.google.classyshark.silverghost.TokensMapper;
 import com.google.classyshark.silverghost.translator.Translator;
 import com.google.classyshark.silverghost.translator.apk.dashboard.ApkDashboard;
-import com.google.classyshark.silverghost.translator.apk.dashboard.ApkReader;
+import com.google.classyshark.silverghost.translator.apk.dashboard.ClassesDexEntry;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -56,11 +56,11 @@ public class ApkTranslator implements Translator {
         apkDashboard.inspect();
 
 
-        Iterator<ApkReader.ClassesDexEntry> dexesIter = apkDashboard.iterator();
+        Iterator<ClassesDexEntry> dexesIter = apkDashboard.iterator();
 
-        while(dexesIter.hasNext()) {
+        while (dexesIter.hasNext()) {
 
-            ApkReader.ClassesDexEntry dexEntry = dexesIter.next();
+            ClassesDexEntry dexEntry = dexesIter.next();
 
             ELEMENT element = new ELEMENT("\n" + dexEntry.getName(), TAG.MODIFIER);
             elements.add(element);
@@ -101,9 +101,9 @@ public class ApkTranslator implements Translator {
 
         dexesIter = apkDashboard.iterator();
 
-        while(dexesIter.hasNext()) {
+        while (dexesIter.hasNext()) {
 
-            ApkReader.ClassesDexEntry dexEntry = dexesIter.next();
+            ClassesDexEntry dexEntry = dexesIter.next();
 
             element = new ELEMENT("\n" + dexEntry.getName(), TAG.MODIFIER);
             elements.add(element);

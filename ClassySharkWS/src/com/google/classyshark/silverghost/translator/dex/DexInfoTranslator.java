@@ -29,7 +29,7 @@ import org.jf.dexlib2.dexbacked.DexBackedDexFile;
 import org.jf.dexlib2.iface.DexFile;
 
 import static com.google.classyshark.silverghost.translator.apk.dashboard.ApkDashboard.getClassesWithNativeMethodsPerDexIndex;
-import static com.google.classyshark.silverghost.translator.java.dex.Multidex.extractClassesDex;
+import static com.google.classyshark.silverghost.translator.java.dex.MultidexReader.extractClassesDex;
 
 /**
  * Translator for the classes.dex entry
