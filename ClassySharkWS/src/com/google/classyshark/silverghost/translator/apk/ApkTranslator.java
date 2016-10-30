@@ -19,7 +19,7 @@ package com.google.classyshark.silverghost.translator.apk;
 import com.google.classyshark.silverghost.TokensMapper;
 import com.google.classyshark.silverghost.translator.Translator;
 import com.google.classyshark.silverghost.translator.apk.dashboard.ApkDashboard;
-import com.google.classyshark.silverghost.translator.apk.dashboard.ClassesDexEntry;
+import com.google.classyshark.silverghost.translator.apk.dashboard.ClassesDexDataEntry;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -56,11 +56,11 @@ public class ApkTranslator implements Translator {
         apkDashboard.inspect();
 
 
-        Iterator<ClassesDexEntry> dexesIter = apkDashboard.iterator();
+        Iterator<ClassesDexDataEntry> dexesIter = apkDashboard.iterator();
 
         while (dexesIter.hasNext()) {
 
-            ClassesDexEntry dexEntry = dexesIter.next();
+            ClassesDexDataEntry dexEntry = dexesIter.next();
 
             ELEMENT element = new ELEMENT("\n" + dexEntry.getName(), TAG.MODIFIER);
             elements.add(element);
@@ -103,7 +103,7 @@ public class ApkTranslator implements Translator {
 
         while (dexesIter.hasNext()) {
 
-            ClassesDexEntry dexEntry = dexesIter.next();
+            ClassesDexDataEntry dexEntry = dexesIter.next();
 
             element = new ELEMENT("\n" + dexEntry.getName(), TAG.MODIFIER);
             elements.add(element);

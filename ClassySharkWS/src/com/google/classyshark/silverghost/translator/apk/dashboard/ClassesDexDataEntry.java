@@ -20,25 +20,24 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-public class ClassesDexEntry implements Comparable {
+public class ClassesDexDataEntry implements Comparable {
     public int index;
     public int nativeMethodsCount = 0;
     public Set<String> classesWithNativeMethods = new TreeSet<>();
     public int allMethods = 0;
     public List<String> syntheticAccessors;
-    public boolean isCustomLoad = false;
 
-    public ClassesDexEntry(int index) {
+    public ClassesDexDataEntry(int index) {
         this.index = index;
     }
 
     @Override
     public int compareTo(Object o) {
-        if (!(o instanceof ClassesDexEntry)) {
+        if (!(o instanceof ClassesDexDataEntry)) {
             return -1;
         }
 
-        return -1 * Integer.valueOf(index).compareTo(((ClassesDexEntry) o).index);
+        return -1 * Integer.valueOf(index).compareTo(((ClassesDexDataEntry) o).index);
     }
 
     public String getName() {
@@ -46,7 +45,7 @@ public class ClassesDexEntry implements Comparable {
             return "classes.dex";
         }
 
-        if(index < 10) {
+        if (index < 10) {
             return "classes" + index + ".dex";
         }
 
@@ -61,5 +60,4 @@ public class ClassesDexEntry implements Comparable {
                         + "\nclasses with native methods"
                         + classesWithNativeMethods;
     }
-
 }

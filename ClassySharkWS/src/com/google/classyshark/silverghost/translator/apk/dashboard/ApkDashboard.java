@@ -34,10 +34,10 @@ import org.ow2.asmdex.ApplicationReader;
 import org.ow2.asmdex.ApplicationVisitor;
 import org.ow2.asmdex.Opcodes;
 
-public class ApkDashboard implements Iterable<ClassesDexEntry> {
+public class ApkDashboard implements Iterable<ClassesDexDataEntry> {
 
-    public ArrayList<ClassesDexEntry> classesDexEntries = new ArrayList<>();
-    public ArrayList<ClassesDexEntry> customClassesDexEntries = new ArrayList<>();
+    public ArrayList<ClassesDexDataEntry> classesDexEntries = new ArrayList<>();
+    public ArrayList<ClassesDexDataEntry> customClassesDexEntries = new ArrayList<>();
     public List<String> nativeLibs = new ArrayList<>();
     public ArrayList<String> nativeDependencies = new ArrayList<>();
     public List<String> nativeErrors = new LinkedList<>();
@@ -52,7 +52,7 @@ public class ApkDashboard implements Iterable<ClassesDexEntry> {
         MultidexReader.fillApkDashboard(apkFile, this);
     }
 
-    public Iterator<ClassesDexEntry> iterator() {
+    public Iterator<ClassesDexDataEntry> iterator() {
         return new ClassesDexIterator();
     }
 
@@ -89,14 +89,14 @@ public class ApkDashboard implements Iterable<ClassesDexEntry> {
 
     public static Set<String> getClassesWithNativeMethodsPerDexIndex(int dexIndex,
                                                                      File classesDex) {
-        ClassesDexEntry dexInspectionsData =
+        ClassesDexDataEntry dexInspectionsData =
                 ApkDashboard.fillAnalysisPerClassesDexIndex(dexIndex, classesDex);
 
         return dexInspectionsData.classesWithNativeMethods;
     }
 
-    public static ClassesDexEntry fillAnalysisPerClassesDexIndex(int dexIndex, File classesDex) {
-        ClassesDexEntry dexData = new ClassesDexEntry(dexIndex);
+    public static ClassesDexDataEntry fillAnalysisPerClassesDexIndex(int dexIndex, File classesDex) {
+        ClassesDexDataEntry dexData = new ClassesDexDataEntry(dexIndex);
 
         try {
             InputStream is = new FileInputStream(classesDex);
@@ -142,34 +142,33 @@ public class ApkDashboard implements Iterable<ClassesDexEntry> {
         return result;
     }
 
-    private class ClassesDexIterator implements Iterator<ClassesDexEntry> {
-        private int size;
-        private int current;
-        private int currentCustom = 0;
+    private class ClassesDexIterator implements Iterator<ClassesDexDataEntry> {
+        private int currentClassesDex;
+        private int currentCustomClassesDex;
 
         public ClassesDexIterator() {
-            size = classesDexEntries.size();
-            current = 0;
+            currentClassesDex = 0;
+            currentCustomClassesDex = 0;
         }
 
         public boolean hasNext() {
-            return current < size || currentCustom < customClassesDexEntries.size();
+            return currentClassesDex < classesDexEntries.size() || currentCustomClassesDex < customClassesDexEntries.size();
         }
 
-        public ClassesDexEntry next() {
-            ClassesDexEntry result = new ClassesDexEntry(0);
+        public ClassesDexDataEntry next() {
+            ClassesDexDataEntry result = new ClassesDexDataEntry(0);
 
-            if (current < size) {
-                for (ClassesDexEntry classesDex : classesDexEntries) {
-                    int dexIndex = currentToDexIndex(current);
+            if (currentClassesDex < classesDexEntries.size()) {
+                for (ClassesDexDataEntry classesDex : classesDexEntries) {
+                    int dexIndex = currentToDexIndex(currentClassesDex);
                     if (dexIndex == classesDex.index) {
                         result = classesDex;
-                        current++;
+                        currentClassesDex++;
                         break;
                     }
                 }
             } else {
-                currentCustom++;
+                currentCustomClassesDex++;
                 result = customClassesDexEntries.get(0);
             }
 
@@ -177,6 +176,12 @@ public class ApkDashboard implements Iterable<ClassesDexEntry> {
         }
 
         private int currentToDexIndex(int current) {
+            /*
+              0 --> classes.dex
+              1 --> classes2.dex
+              2 --> classes3.dex
+             */
+
             if (current == 0) return 0;
 
             return ++current;

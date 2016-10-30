@@ -23,9 +23,9 @@ import org.ow2.asmdex.MethodVisitor;
 import org.ow2.asmdex.Opcodes;
 
 public  class ApkNativeMethodsVisitor extends ApplicationVisitor {
-    private ClassesDexEntry dexData;
+    private ClassesDexDataEntry dexData;
 
-    public ApkNativeMethodsVisitor(ClassesDexEntry dexData) {
+    public ApkNativeMethodsVisitor(ClassesDexDataEntry dexData) {
         super(Opcodes.ASM4);
         this.dexData = dexData;
     }
