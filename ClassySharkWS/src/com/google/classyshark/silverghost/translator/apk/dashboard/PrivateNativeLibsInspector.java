@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.classyshark.silverghost.translator.apk.apkinspectionsbag;
+package com.google.classyshark.silverghost.translator.apk.dashboard;
 
 import java.util.Arrays;
 import java.util.LinkedList;

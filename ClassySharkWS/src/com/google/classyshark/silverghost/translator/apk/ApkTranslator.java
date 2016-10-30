@@ -18,9 +18,11 @@ package com.google.classyshark.silverghost.translator.apk;
 
 import com.google.classyshark.silverghost.TokensMapper;
 import com.google.classyshark.silverghost.translator.Translator;
-import com.google.classyshark.silverghost.translator.apk.apkinspectionsbag.ApkInspectionsBag;
+import com.google.classyshark.silverghost.translator.apk.dashboard.ApkDashboard;
+import com.google.classyshark.silverghost.translator.apk.dashboard.ClassesDexDataEntry;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -29,7 +31,7 @@ import java.util.List;
  */
 public class ApkTranslator implements Translator {
     private File apkFile;
-    private ApkInspectionsBag apkInspectionsBag;
+    private ApkDashboard apkDashboard;
 
     private List<ELEMENT> elements = new ArrayList<>();
 
@@ -50,21 +52,24 @@ public class ApkTranslator implements Translator {
 
     @Override
     public void apply() {
-        apkInspectionsBag = new ApkInspectionsBag(apkFile);
-        apkInspectionsBag.inspect();
+        apkDashboard = new ApkDashboard(apkFile);
+        apkDashboard.inspect();
 
-        int numDexes = apkInspectionsBag.getNumberOfDexes();
 
-        for (int i = 0; i < numDexes; i++) {
+        Iterator<ClassesDexDataEntry> dexesIter = apkDashboard.iterator();
 
-            ELEMENT element = new ELEMENT("\nclasses" + ((i == 0) ? "" : i + "") + ".dex", TAG.MODIFIER);
+        while (dexesIter.hasNext()) {
+
+            ClassesDexDataEntry dexEntry = dexesIter.next();
+
+            ELEMENT element = new ELEMENT("\n" + dexEntry.getName(), TAG.MODIFIER);
             elements.add(element);
 
             element = new ELEMENT(
                     "\nall methods: "
-                            + apkInspectionsBag.getAllMethodsCountPerDex(i)
+                            + dexEntry.allMethods
                             + "\nnative methods: "
-                            + apkInspectionsBag.getAllNativeMethodsCountPerDex(i)
+                            + dexEntry.nativeMethodsCount
                             + "\n", TAG.DOCUMENT);
             elements.add(element);
         }
@@ -72,7 +77,7 @@ public class ApkTranslator implements Translator {
         ELEMENT element = new ELEMENT("\n\n\nDynamic Symbol Errors", TAG.MODIFIER);
         elements.add(element);
 
-        for (String error : apkInspectionsBag.getNativeErrors()) {
+        for (String error : apkDashboard.getNativeErrors()) {
             element = new ELEMENT("\n" + error, TAG.DOCUMENT);
             elements.add(element);
         }
@@ -80,7 +85,7 @@ public class ApkTranslator implements Translator {
         element = new ELEMENT("\n\n\nNative Libraries\n", TAG.MODIFIER);
         elements.add(element);
 
-        for (String nativeLib : apkInspectionsBag.getFullPathNativeLibNamesSorted()) {
+        for (String nativeLib : apkDashboard.getFullPathNativeLibNamesSorted()) {
             element = new ELEMENT(nativeLib, TAG.DOCUMENT);
             elements.add(element);
         }
@@ -88,26 +93,28 @@ public class ApkTranslator implements Translator {
         element = new ELEMENT("\n\nNative Dependencies\n", TAG.MODIFIER);
         elements.add(element);
 
-        for (String nativeLib : apkInspectionsBag.getNativeLibNamesSorted()) {
-            element = new ELEMENT(nativeLib + " " + apkInspectionsBag.getPrivateLibErrorTag(nativeLib)
+        for (String nativeLib : apkDashboard.getNativeLibNamesSorted()) {
+            element = new ELEMENT(nativeLib + " " + apkDashboard.getPrivateLibErrorTag(nativeLib)
                     + "\n", TAG.DOCUMENT);
             elements.add(element);
         }
 
-        for (int i = 0; i < numDexes; i++) {
+        dexesIter = apkDashboard.iterator();
 
-            element = new ELEMENT("\nclasses" + ((i == 0) ? "" : i + "") + ".dex", TAG.MODIFIER);
+        while (dexesIter.hasNext()) {
+
+            ClassesDexDataEntry dexEntry = dexesIter.next();
+
+            element = new ELEMENT("\n" + dexEntry.getName(), TAG.MODIFIER);
             elements.add(element);
 
             element = new ELEMENT(
                     "\nSyntheticAccessors \n", TAG.MODIFIER);
-
             elements.add(element);
 
             element = new ELEMENT(
-                    apkInspectionsBag.getSyntheticAccessors(i).toString(),
-                    TAG.DOCUMENT);
-
+                    "\n" + dexEntry.syntheticAccessors.toString()
+                            + "\n", TAG.DOCUMENT);
             elements.add(element);
         }
     }

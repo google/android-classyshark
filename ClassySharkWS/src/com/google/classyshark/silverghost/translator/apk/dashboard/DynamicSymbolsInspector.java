@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.classyshark.silverghost.translator.apk.apkinspectionsbag;
+package com.google.classyshark.silverghost.translator.apk.dashboard;
 
 import java.io.IOException;
 import nl.lxtreme.binutils.elf.Elf;

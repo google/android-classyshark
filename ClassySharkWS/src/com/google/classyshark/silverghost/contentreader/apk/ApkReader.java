@@ -22,7 +22,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.google.classyshark.silverghost.translator.java.dex.Multidex.readClassNamesFromMultidex;
+import static com.google.classyshark.silverghost.translator.java.dex.MultidexReader.readClassNamesFromMultidex;
 
 public class ApkReader implements BinaryContentReader {
 

@@ -23,16 +23,6 @@ import com.google.classyshark.gui.panel.displayarea.doodles.Doodle;
 import com.google.classyshark.gui.theme.Theme;
 import com.google.classyshark.silverghost.translator.Translator;
 import com.google.classyshark.silverghost.translator.java.JavaTranslator;
-
-import javax.swing.JFrame;
-import javax.swing.JTextPane;
-import javax.swing.WindowConstants;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.DefaultStyledDocument;
-import javax.swing.text.Document;
-import javax.swing.text.Style;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.Utilities;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Toolkit;
@@ -43,6 +33,15 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.StringTokenizer;
+import javax.swing.JFrame;
+import javax.swing.JTextPane;
+import javax.swing.WindowConstants;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultStyledDocument;
+import javax.swing.text.Document;
+import javax.swing.text.Style;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.Utilities;
 
 /**
  * the area to display lists of classes and individual class
@@ -159,6 +158,50 @@ public class DisplayArea implements IDisplayArea {
         return this.jTextPane;
     }
 
+
+    @Override
+    public void displaySearchResults(List<String> filteredClassNames,
+                                     List<Translator.ELEMENT> displayedManifestSearchResultsTokens,
+                                     String textFromTypingArea) {
+        displayDataState = DisplayDataState.CLASSES_LIST;
+        StyleConstants.setFontSize(style, 18);
+        StyleConstants.setForeground(style, theme.getIdentifiersColor());
+
+        clearText();
+
+        Document doc = new DefaultStyledDocument();
+        jTextPane.setDocument(doc);
+
+        StyleConstants.setFontSize(style, 18);
+        StyleConstants.setBackground(style, theme.getBackgroundColor());
+
+        fillTokensToDoc(displayedManifestSearchResultsTokens, doc, true);
+
+        StyleConstants.setFontSize(style, 18);
+        StyleConstants.setForeground(style, theme.getIdentifiersColor());
+        StyleConstants.setBackground(style, theme.getBackgroundColor());
+
+
+        int displayedClassLimit = 50;
+
+        if(filteredClassNames.size() < displayedClassLimit) {
+            displayedClassLimit = filteredClassNames.size();
+        }
+
+        for (int i = 0; i < displayedClassLimit; i++) {
+            try {
+                doc.insertString(doc.getLength(), filteredClassNames.get(i) + "\n", style);
+            } catch (BadLocationException e) {
+                e.printStackTrace();
+            }
+        }
+
+        jTextPane.setDocument(doc);
+
+        jTextPane.setCaretPosition(1);
+    }
+
+
     @Override
     public void displayClassNames(List<String> classNamesToShow,
                                   String inputText) {
@@ -167,7 +210,7 @@ public class DisplayArea implements IDisplayArea {
         StyleConstants.setForeground(style, theme.getIdentifiersColor());
         StyleConstants.setBackground(style, theme.getBackgroundColor());
 
-        if(classNamesToShow.size() > 50) {
+        if (classNamesToShow.size() > 50) {
             displayAllClassesNames(classNamesToShow);
             return;
         }
@@ -181,7 +224,7 @@ public class DisplayArea implements IDisplayArea {
         String beforeMatch = "";
         String match;
         String afterMatch = "";
-        
+
         Document doc = jTextPane.getDocument();
 
         for (String className : classNamesToShow) {
@@ -236,7 +279,6 @@ public class DisplayArea implements IDisplayArea {
             e.printStackTrace();
         }
 
-        // TODO not sure, remove the line below
         jTextPane.setDocument(blank);
 
         System.out.println("UI update " + (System.currentTimeMillis() - start) + " ms");
@@ -267,12 +309,14 @@ public class DisplayArea implements IDisplayArea {
         }
 
         jTextPane.setDocument(doc);
+
+        jTextPane.setCaretPosition(1);
     }
 
     // TODO add here logic fo highlighter
     // TODO by adding flag to Translator.ELEMENT
     @Override
-    public void displayClass(List<Translator.ELEMENT> elements) {
+    public void displayClass(List<Translator.ELEMENT> elements, String key) {
         displayDataState = DisplayDataState.INSIDE_CLASS;
         clearText();
         StyleConstants.setFontSize(style, 18);
@@ -280,8 +324,19 @@ public class DisplayArea implements IDisplayArea {
 
         Document doc = new DefaultStyledDocument();
 
+        fillTokensToDoc(elements, doc, false);
+
+        StyleConstants.setForeground(style, theme.getIdentifiersColor());
+
+        jTextPane.setDocument(doc);
+
+        int i = calcScrollingPosition(key);
+        jTextPane.setCaretPosition(i);
+    }
+
+    private void fillTokensToDoc(List<Translator.ELEMENT> from, Document to, boolean newLine) {
         try {
-            for (Translator.ELEMENT e : elements) {
+            for (Translator.ELEMENT e : from) {
                 switch (e.tag) {
                     case MODIFIER:
                         StyleConstants.setForeground(style, theme.getKeyWordsColor());
@@ -304,19 +359,62 @@ public class DisplayArea implements IDisplayArea {
                     case XML_ATTR_VALUE:
                         StyleConstants.setForeground(style, theme.getDefaultColor());
                         break;
+                    case SELECTION:
+                        StyleConstants.setForeground(style, theme.getSelectionBgColor());
+                        break;
                     default:
                         StyleConstants.setForeground(style, Color.LIGHT_GRAY);
                 }
-                doc.insertString(doc.getLength(), e.text, style);
+
+                String text = e.text;
+
+                if(newLine) {
+                    text += "\n";
+                }
+
+                to.insertString(to.getLength(), text, style);
 
             }
         } catch (BadLocationException e) {
             e.printStackTrace();
         }
+    }
 
-        StyleConstants.setForeground(style, theme.getIdentifiersColor());
+    private int calcScrollingPosition(String textToFind) {
+        int pos = 0;
+        boolean found = false;
 
-        jTextPane.setDocument(doc);
+
+        textToFind = textToFind.trim();
+
+        if (textToFind != null && textToFind.length() > 0) {
+            Document document = jTextPane.getDocument();
+            int findLength = textToFind.length();
+            try {
+                // Rest the search position if we're at the end of the document
+                if (pos + findLength > document.getLength()) {
+                    pos = 0;
+                }
+                // While we haven't reached the end... "<=" Correction
+                while (pos + findLength <= document.getLength()) {
+                    String match = document.getText(pos, findLength).toLowerCase();
+
+                    if (match.equalsIgnoreCase(textToFind)) {
+                        found = true;
+                        break;
+                    }
+                    pos++;
+                }
+            } catch (Exception exp) {
+                exp.printStackTrace();
+            }
+        }
+
+        if(found) {
+            return pos;
+        } else {
+            return 1;
+        }
     }
 
     @Override
@@ -375,7 +473,7 @@ public class DisplayArea implements IDisplayArea {
         Translator emitter = new JavaTranslator(StringTokenizer.class);
         emitter.apply();
 
-        da.displayClass(emitter.getElementsList());
+        da.displayClass(emitter.getElementsList(), "");
 
         JFrame frame = new JFrame("Test");
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);

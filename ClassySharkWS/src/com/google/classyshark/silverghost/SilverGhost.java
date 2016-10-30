@@ -17,13 +17,16 @@
 package com.google.classyshark.silverghost;
 
 import com.google.classyshark.gui.panel.reducer.Reducer;
-import com.google.classyshark.silverghost.plugins.EmptyFullArchiveReader;
 import com.google.classyshark.silverghost.contentreader.ContentReader;
+import com.google.classyshark.silverghost.plugins.EmptyFullArchiveReader;
 import com.google.classyshark.silverghost.plugins.IdentityMapper;
 import com.google.classyshark.silverghost.translator.Translator;
 import com.google.classyshark.silverghost.translator.TranslatorFactory;
 import java.io.File;
+import java.util.LinkedList;
 import java.util.List;
+
+import static com.google.classyshark.gui.panel.ClassySharkPanel.ANDROID_MANIFEST_XML_SEARCH;
 
 /**
  * Main API class with respect to threading (never call readXXX method from UI thread)
@@ -34,6 +37,7 @@ public class SilverGhost {
     private Reducer reducer;
     private Translator translator;
     private ContentReader contentReader;
+    private String manifestStr = "";
     private static TokensMapper tokensMapper;
     private static FullArchiveReader fullArchiveReader;
 
@@ -60,6 +64,13 @@ public class SilverGhost {
         reducer = new Reducer(contentReader.getAllClassNames());
         System.out.println("Archive Reading "
                 + (System.currentTimeMillis() - start) + " ms ");
+
+        if (binaryArchive.getName().endsWith(".apk")) {
+            Translator translator =
+                    TranslatorFactory.createTranslator("AndroidManifest.xml", binaryArchive);
+            translator.apply();
+            manifestStr = translator.toString();
+        }
 
         fullArchiveReader.readAsyncArchive(binaryArchive);
     }
@@ -132,5 +143,54 @@ public class SilverGhost {
 
     public String getCurrentClassContent() {
         return translator.toString();
+    }
+
+    public List<Translator.ELEMENT> getManifestMatches(String textFromTypingArea) {
+
+        LinkedList<Translator.ELEMENT> result = new LinkedList<>();
+
+        if (manifestStr.isEmpty()) {
+            return result;
+        }
+
+        result.add(new Translator.ELEMENT(ANDROID_MANIFEST_XML_SEARCH, Translator.TAG.IDENTIFIER));
+        result.add(new Translator.ELEMENT("\n::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::",
+                Translator.TAG.SELECTION));
+
+
+        String[] manifestStrArray = manifestStr.split("[\\r\\n]+");
+
+        if (textFromTypingArea.length() > 2) {
+            for (int i = 0; i < manifestStrArray.length; i++) {
+                if (manifestStrArray[i].contains(textFromTypingArea) ||
+                        manifestStrArray[i].equalsIgnoreCase(textFromTypingArea)) {
+
+                    result.add(new Translator.ELEMENT("\n", Translator.TAG.ANNOTATION));
+
+                    if (i > 2) {
+                        int j = i;
+                        result.add(new Translator.ELEMENT(manifestStrArray[j - 1], Translator.TAG.ANNOTATION));
+                        result.add(new Translator.ELEMENT( manifestStrArray[j - 2], Translator.TAG.ANNOTATION));
+                    }
+
+                    result.add(new Translator.ELEMENT( manifestStrArray[i], Translator.TAG.IDENTIFIER));
+
+                    if (i < manifestStrArray.length - 4) {
+                        int j = i;
+                        result.add(new Translator.ELEMENT(manifestStrArray[j + 1], Translator.TAG.ANNOTATION));
+                        result.add(new Translator.ELEMENT(manifestStrArray[j + 2], Translator.TAG.ANNOTATION));
+                    }
+
+                    result.add(new Translator.ELEMENT("", Translator.TAG.ANNOTATION));
+
+                    result.add(new Translator.ELEMENT("::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::",
+                            Translator.TAG.SELECTION));
+                }
+            }
+
+            result.add(new Translator.ELEMENT("", Translator.TAG.ANNOTATION));
+        }
+
+        return result;
     }
 }

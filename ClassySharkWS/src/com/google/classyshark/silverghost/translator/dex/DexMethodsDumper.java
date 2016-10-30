@@ -49,7 +49,6 @@ public class DexMethodsDumper {
 
             ZipEntry zipEntry;
 
-            int dexIndex = 0;
             while (true) {
                 zipEntry = zipFile.getNextEntry();
 
@@ -58,7 +57,19 @@ public class DexMethodsDumper {
                 }
 
                 if (zipEntry.getName().endsWith(".dex")) {
-                    File file = File.createTempFile("DUMPER_METHODS_classes" + dexIndex, "dex");
+
+                    int dexIndex = Character.getNumericValue(zipEntry.getName().charAt(zipEntry.getName().length() - 5));
+
+                    String fName = "DUMPER_METHODS_classes";
+
+                    // classes.dex <=> classes2.dex valid names
+                    if(dexIndex != 28) {
+                        fName += dexIndex;
+                    } else {
+                        dexIndex = 0;
+                    }
+
+                    File file = File.createTempFile(fName, "dex");
                     file.deleteOnExit();
 
                     FileOutputStream fos =
@@ -73,7 +84,6 @@ public class DexMethodsDumper {
                     List<String> methodsList = fillAnalysis(dexIndex, file);
                     result.addAll(methodsList);
 
-                    dexIndex++;
                 } else {
 
                 }

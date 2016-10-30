@@ -19,15 +19,112 @@ package com.google.classyshark.silverghost.translator.java.dex;
 import com.google.classyshark.silverghost.contentreader.ContentReader;
 import com.google.classyshark.silverghost.contentreader.dex.DexReader;
 import com.google.classyshark.silverghost.io.SherlockHash;
+import com.google.classyshark.silverghost.translator.apk.dashboard.ApkDashboard;
+import com.google.classyshark.silverghost.translator.apk.dashboard.DynamicSymbolsInspector;
 import com.google.classyshark.silverghost.translator.dex.DexInfoTranslator;
+import com.google.classyshark.silverghost.translator.elf.ElfTranslator;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+import nl.lxtreme.binutils.elf.Elf;
 
-public class Multidex {
-    private Multidex() {
+import static com.google.classyshark.silverghost.translator.apk.dashboard.ApkDashboard.fillAnalysisPerClassesDexIndex;
+
+public class MultidexReader {
+    private MultidexReader() {
+    }
+
+    public static void fillApkDashboard(File binaryArchiveFile, ApkDashboard to)  {
+
+        try {
+            ZipInputStream zipFile = new ZipInputStream(new FileInputStream(
+                    binaryArchiveFile));
+
+            ZipEntry zipEntry;
+
+            while (true) {
+                zipEntry = zipFile.getNextEntry();
+
+                if (zipEntry == null) {
+                    break;
+                }
+
+                if (zipEntry.getName().endsWith(".dex")) {
+
+                    String fName = "ANALYZER_classes";
+
+                    int dexIndex = Character.getNumericValue(zipEntry.getName().charAt(zipEntry.getName().length() - 5));
+
+                    if (dexIndex != 28 /* classes.dex*/) {
+                        fName = "ANALYZER_classes" + dexIndex;
+                    } else {
+
+                        dexIndex = 0;
+                    }
+
+                    String ext = "dex";
+
+                    File file = SherlockHash.INSTANCE.getFileFromZipStream(binaryArchiveFile,
+                            zipFile, fName, ext);
+
+                    to.classesDexEntries.add(fillAnalysisPerClassesDexIndex(dexIndex, file));
+
+                } else if (zipEntry.getName().endsWith("jar") || zipEntry.getName().endsWith("zip")) {
+
+                    String fName = "inner_zip";
+                    String ext = "zip";
+
+                    File innerZip = SherlockHash.INSTANCE.getFileFromZipStream(binaryArchiveFile,
+                            zipFile, fName, ext);
+
+                    // so far we have a zip file
+                    ZipInputStream fromInnerZip = new ZipInputStream(new FileInputStream(
+                            innerZip));
+
+                    ZipEntry innerZipEntry;
+
+                    while (true) {
+                        innerZipEntry = fromInnerZip.getNextEntry();
+
+                        if (innerZipEntry == null) {
+                            fromInnerZip.close();
+                            break;
+                        }
+
+                        if (innerZipEntry.getName().endsWith(".dex")) {
+                            fName = "inner_zip_classes";
+                            ext = "dex";
+                            File file = SherlockHash.INSTANCE.getFileFromZipStream(binaryArchiveFile, fromInnerZip, fName, ext);
+
+                            to.customClassesDexEntries.add(fillAnalysisPerClassesDexIndex(99, file));
+                        }
+                    }
+                } else if (zipEntry.getName().startsWith("lib")) {
+
+                    File nativeLib = ElfTranslator.extractElf(zipEntry.getName(), binaryArchiveFile);
+
+                    Elf dependenciesReader = new Elf(nativeLib);
+                    List<String> libraryDependencies = dependenciesReader.getSharedDependencies();
+                    for (String dependency : libraryDependencies) {
+                        to.nativeDependencies.add(dependency);
+                    }
+
+                    DynamicSymbolsInspector dsi = new DynamicSymbolsInspector(dependenciesReader);
+
+                    if (dsi.areErrors()) {
+                        to.nativeErrors.add(zipEntry.getName() + " " + dsi.getErrors());
+                    }
+
+                    to.nativeLibs.add(zipEntry.getName() + "\n");
+                }
+            }
+            zipFile.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static void readClassNamesFromMultidex(File binaryArchiveFile,
@@ -217,7 +314,6 @@ public class Multidex {
 
                 if (zipEntry.getName().endsWith(".dex")) {
 
-
                     String fName = zipEntry.getName().substring(0, zipEntry.getName().lastIndexOf("."));
                     String ext = "dex";
 
@@ -228,11 +324,10 @@ public class Multidex {
 
                     if (dexName.equals(currentClassesDexName)) {
                         if (dexName.equals("classes.dex")) {
-                            diTranslator.index = 0;
+                            diTranslator.setIndex(0);
                         } else {
-                            diTranslator.index = Integer.parseInt(fName.substring(fName.length() - 1));
+                            diTranslator.setIndex(Integer.parseInt(fName.substring(fName.length() - 1)));
                         }
-
 
                         break;
                     }
@@ -266,7 +361,7 @@ public class Multidex {
                             file = SherlockHash.INSTANCE.getFileFromZipStream(apkFile, fromInnerZip, fName, ext);
 
                             if (dexName.startsWith(zipEntry.getName())) {
-                                diTranslator.index = 99;
+                                diTranslator.setIndex(99);
                                 zipFile.close();
                                 return file;
                             }
