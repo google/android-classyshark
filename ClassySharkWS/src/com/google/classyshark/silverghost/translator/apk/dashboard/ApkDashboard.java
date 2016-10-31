@@ -175,6 +175,10 @@ public class ApkDashboard implements Iterable<ClassesDexDataEntry> {
             return result;
         }
 
+        public void remove() {
+
+        }
+
         private int currentToDexIndex(int current) {
             /*
               0 --> classes.dex
