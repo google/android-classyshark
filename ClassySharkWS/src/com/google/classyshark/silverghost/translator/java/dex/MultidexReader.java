@@ -25,6 +25,7 @@ import com.google.classyshark.silverghost.translator.dex.DexInfoTranslator;
 import com.google.classyshark.silverghost.translator.elf.ElfTranslator;
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -125,6 +126,8 @@ public class MultidexReader {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        readClassNamesFromMultidex(binaryArchiveFile, to.allClasses, new ArrayList<ContentReader.Component>());
     }
 
     public static void readClassNamesFromMultidex(File binaryArchiveFile,
