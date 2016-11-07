@@ -23,7 +23,6 @@ public class JavaDependenciesInspector {
 
     private final List<String> allClasses;
 
-    // TODO add universal image loader
     private int imageLoading = 0;
     private boolean hasGlide;
     private boolean hasPicasso;
@@ -34,10 +33,15 @@ public class JavaDependenciesInspector {
     private boolean hasVolley;
     private boolean hasLoopj;
 
+    private int jsonParsing = 0;
+    private boolean hasJackson;
+    private boolean hasGson;
+
     // other dependencies
     private boolean hasGuava;
     private boolean hasDeprecatedHttp;
-
+    private boolean hasActionBarSherlock;
+    private boolean hasPullToRefresh;
 
     public JavaDependenciesInspector(List<String> allClasses) {
         this.allClasses = allClasses;
@@ -64,6 +68,12 @@ public class JavaDependenciesInspector {
             if (hasLoopj) result.add("loopj ");
         }
 
+        if (jsonParsing > 1) {
+            result.add("\n* Duplicate json parsing - ");
+            if (hasJackson) result.add("jackson ");
+            if (hasGson) result.add("gson ");
+        }
+
         if (hasGuava) {
             result.add("\n* Guava (server side library)usage");
         }
@@ -72,16 +82,18 @@ public class JavaDependenciesInspector {
             result.add("\n* Apache Http is deprecated");
         }
 
+        if (hasActionBarSherlock) {
+            result.add("\n* ActionBar Sherlock is deprecated");
+        }
+
+        if (hasPullToRefresh) {
+            result.add("\n* PullToRefresh is deprecated");
+        }
+
         return result;
     }
 
     private void updateLogic(String cName) {
-        /*
-            Not clear the impact of
-            event bus - Guava, greenrobot, otto
-            protocol buffers - Wire, thrifty
-            JSON parsing - GSON, Jackson, instagram JSON parser
-        */
 
         if (cName.contains("glide") && !hasGlide) {
             hasGlide = true;
@@ -92,9 +104,7 @@ public class JavaDependenciesInspector {
         } else if (cName.contains("fresco") && !hasFresco) {
             hasFresco = true;
             imageLoading++;
-        }
-
-        if (cName.contains("okhttp") && !hasOkHttp) {
+        } else if (cName.contains("okhttp") && !hasOkHttp) {
             hasOkHttp = true;
             asyncHttp++;
         } else if (cName.contains("volley") && !hasVolley) {
@@ -103,21 +113,33 @@ public class JavaDependenciesInspector {
         } else if (cName.contains("loopj") && !hasLoopj) {
             hasLoopj = true;
             asyncHttp++;
-        }
-
-        /*
-            not clear the impact of testing libraries : mockito, leak canary, expresso
-         */
-
-        if (cName.contains("google.common") && !hasGuava) {
+        } else if (cName.contains("fasterxml.jackson") && !hasJackson) {
+            hasJackson = true;
+            jsonParsing++;
+        } else if (cName.contains("google.code.gson") && !hasGson) {
+            hasGson = true;
+            jsonParsing++;
+        } else if (cName.contains("google.common") && !hasGuava) {
             hasGuava = true;
+        } else if (cName.contains("apache.http") && !hasDeprecatedHttp) {
+            hasDeprecatedHttp = true;
+        } else if (cName.contains("'com.actionbarsherlock") && !hasActionBarSherlock) {
+            hasActionBarSherlock = true;
+        } else if (cName.contains("chrisbanes.pulltorefresh") && !hasPullToRefresh) {
+            hasPullToRefresh = true;
         }
 
         /*
             other deprecated libraries
          */
-        if (cName.contains("apache.http") && !hasDeprecatedHttp) {
-            hasDeprecatedHttp = true;
-        }
+
+         /*
+            not clear the impact of testing libraries : mockito, leak canary, expresso
+         */
+
+         /*
+            Not clear the impact of protocol buffers - Wire, thrifty
+        */
+
     }
 }
