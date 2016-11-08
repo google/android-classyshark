@@ -40,7 +40,8 @@ public class ApkDashboard implements Iterable<ClassesDexDataEntry> {
     public ArrayList<ClassesDexDataEntry> customClassesDexEntries = new ArrayList<>();
     public List<String> nativeLibs = new ArrayList<>();
     public ArrayList<String> nativeDependencies = new ArrayList<>();
-    public List<String> nativeErrors = new LinkedList<>();
+    public List<String> nativeErrors = new ArrayList<>();
+    public List<String> allClasses = new ArrayList<>();
     public File apkFile;
 
     public ApkDashboard(File apkFile) {
@@ -84,7 +85,6 @@ public class ApkDashboard implements Iterable<ClassesDexDataEntry> {
         } else {
             return "";
         }
-
     }
 
     public static Set<String> getClassesWithNativeMethodsPerDexIndex(int dexIndex,
@@ -93,6 +93,25 @@ public class ApkDashboard implements Iterable<ClassesDexDataEntry> {
                 ApkDashboard.fillAnalysisPerClassesDexIndex(dexIndex, classesDex);
 
         return dexInspectionsData.classesWithNativeMethods;
+    }
+
+    public String getJavaDependenciesErrorsAsString() {
+        List<String> javaDependenciesErrors = getJavaDependenciesErrors();
+
+        StringBuilder builder = new StringBuilder();
+
+        for (String javaDepError : javaDependenciesErrors) {
+            builder.append(javaDepError);
+        }
+
+        return builder.toString();
+    }
+
+    public List<String> getJavaDependenciesErrors() {
+        JavaDependenciesInspector ddi = new JavaDependenciesInspector(allClasses);
+        List<String> result = ddi.getInspections();
+
+        return result;
     }
 
     public static ClassesDexDataEntry fillAnalysisPerClassesDexIndex(int dexIndex, File classesDex) {

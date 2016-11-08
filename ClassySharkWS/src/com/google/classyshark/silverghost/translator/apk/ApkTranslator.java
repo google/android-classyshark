@@ -55,6 +55,9 @@ public class ApkTranslator implements Translator {
         apkDashboard = new ApkDashboard(apkFile);
         apkDashboard.inspect();
 
+        ELEMENT element = new ELEMENT("\n                  ~ APK DASHBOARD ~\n" , TAG.IDENTIFIER);
+        elements.add(element);
+
 
         Iterator<ClassesDexDataEntry> dexesIter = apkDashboard.iterator();
 
@@ -62,7 +65,7 @@ public class ApkTranslator implements Translator {
 
             ClassesDexDataEntry dexEntry = dexesIter.next();
 
-            ELEMENT element = new ELEMENT("\n" + dexEntry.getName(), TAG.MODIFIER);
+            element = new ELEMENT("\n" + dexEntry.getName(), TAG.MODIFIER);
             elements.add(element);
 
             element = new ELEMENT(
@@ -74,7 +77,13 @@ public class ApkTranslator implements Translator {
             elements.add(element);
         }
 
-        ELEMENT element = new ELEMENT("\n\n\nDynamic Symbol Errors", TAG.MODIFIER);
+        element = new ELEMENT("\n\nPossible Java Dependencies Errors", TAG.MODIFIER);
+        elements.add(element);
+
+        element = new ELEMENT("\n" + apkDashboard.getJavaDependenciesErrorsAsString(), TAG.DOCUMENT);
+        elements.add(element);
+
+        element = new ELEMENT("\n\n\nDynamic Symbol Errors", TAG.MODIFIER);
         elements.add(element);
 
         for (String error : apkDashboard.getNativeErrors()) {
@@ -131,11 +140,9 @@ public class ApkTranslator implements Translator {
 
     public String toString() {
         StringBuilder sb = new StringBuilder();
-
         for (ELEMENT element : elements) {
             sb.append(element.text);
         }
-
         return sb.toString();
     }
 }
