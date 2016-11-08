@@ -128,18 +128,5 @@ public class JavaDependenciesInspector {
         } else if (cName.contains("chrisbanes.pulltorefresh") && !hasPullToRefresh) {
             hasPullToRefresh = true;
         }
-
-        /*
-            other deprecated libraries
-         */
-
-         /*
-            not clear the impact of testing libraries : mockito, leak canary, expresso
-         */
-
-         /*
-            Not clear the impact of protocol buffers - Wire, thrifty
-        */
-
     }
 }
