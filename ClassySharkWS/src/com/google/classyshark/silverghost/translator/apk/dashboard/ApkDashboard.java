@@ -96,12 +96,12 @@ public class ApkDashboard implements Iterable<ClassesDexDataEntry> {
     }
 
     public String getJavaDependenciesErrorsAsString() {
-        List<String> mmm = getJavaDependenciesErrors();
+        List<String> javaDependenciesErrors = getJavaDependenciesErrors();
 
         StringBuilder builder = new StringBuilder();
 
-        for (String nnn : mmm) {
-            builder.append(nnn);
+        for (String javaDepError : javaDependenciesErrors) {
+            builder.append(javaDepError);
         }
 
         return builder.toString();
