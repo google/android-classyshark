@@ -36,6 +36,7 @@ public class JavaDependenciesInspector {
     private int jsonParsing = 0;
     private boolean hasJackson;
     private boolean hasGson;
+    private boolean hasMoshi;
 
     // other dependencies
     private boolean hasGuava;
@@ -72,6 +73,7 @@ public class JavaDependenciesInspector {
             result.add("\n* Duplicate json parsing - ");
             if (hasJackson) result.add("jackson ");
             if (hasGson) result.add("gson ");
+            if (hasMoshi) result.add("moshi ");
         }
 
         if (hasGuava) {
@@ -118,6 +120,9 @@ public class JavaDependenciesInspector {
             jsonParsing++;
         } else if (cName.contains("google.code.gson") && !hasGson) {
             hasGson = true;
+            jsonParsing++;
+        } else if (cName.contains("squareup.moshi") && !hasMoshi) {
+            hasMoshi = true;
             jsonParsing++;
         } else if (cName.contains("google.common") && !hasGuava) {
             hasGuava = true;
