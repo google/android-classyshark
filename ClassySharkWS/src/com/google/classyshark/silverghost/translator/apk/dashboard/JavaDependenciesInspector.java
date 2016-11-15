@@ -43,6 +43,7 @@ public class JavaDependenciesInspector {
     private boolean hasDeprecatedHttp;
     private boolean hasActionBarSherlock;
     private boolean hasPullToRefresh;
+    private boolean hasViewPagerIndicator;
 
     public JavaDependenciesInspector(List<String> allClasses) {
         this.allClasses = allClasses;
@@ -92,6 +93,11 @@ public class JavaDependenciesInspector {
             result.add("\n* PullToRefresh is deprecated");
         }
 
+        if (hasViewPagerIndicator) {
+            result.add("\n* ViewPagerIndicator is deprecated - use support library");
+        }
+
+
         return result;
     }
 
@@ -132,6 +138,8 @@ public class JavaDependenciesInspector {
             hasActionBarSherlock = true;
         } else if (cName.contains("chrisbanes.pulltorefresh") && !hasPullToRefresh) {
             hasPullToRefresh = true;
+        } else if (cName.contains("com.viewpagerindicator") && !hasPullToRefresh) {
+            hasViewPagerIndicator = true;
         }
     }
 }
