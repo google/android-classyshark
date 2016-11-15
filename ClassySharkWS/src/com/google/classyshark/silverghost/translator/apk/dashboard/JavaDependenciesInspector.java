@@ -138,7 +138,7 @@ public class JavaDependenciesInspector {
             hasActionBarSherlock = true;
         } else if (cName.contains("chrisbanes.pulltorefresh") && !hasPullToRefresh) {
             hasPullToRefresh = true;
-        } else if (cName.contains("com.viewpagerindicator") && !hasPullToRefresh) {
+        } else if (cName.contains("com.viewpagerindicator") && !hasViewPagerIndicator) {
             hasViewPagerIndicator = true;
         }
     }
