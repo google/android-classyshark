@@ -114,6 +114,13 @@ public class ApkDashboard implements Iterable<ClassesDexDataEntry> {
         return result;
     }
 
+    public List<String> getJavaUnsafeErrors() {
+        JavaUnsafeInspector unsafeInspector = new JavaUnsafeInspector(apkFile);
+        List<String> result = unsafeInspector.getInspections();
+
+        return result;
+    }
+
     public static ClassesDexDataEntry fillAnalysisPerClassesDexIndex(int dexIndex, File classesDex) {
         ClassesDexDataEntry dexData = new ClassesDexDataEntry(dexIndex);
 
