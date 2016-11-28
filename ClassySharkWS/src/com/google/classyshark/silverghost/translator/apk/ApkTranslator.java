@@ -83,6 +83,12 @@ public class ApkTranslator implements Translator {
         element = new ELEMENT("\n" + apkDashboard.getJavaDependenciesErrorsAsString(), TAG.DOCUMENT);
         elements.add(element);
 
+        element = new ELEMENT("\n\nPossible Java Unsafe Errors", TAG.MODIFIER);
+        elements.add(element);
+
+        element = new ELEMENT("\n" + apkDashboard.getJavaUnsafeErrors(), TAG.DOCUMENT);
+        elements.add(element);
+
         element = new ELEMENT("\n\n\nDynamic Symbol Errors", TAG.MODIFIER);
         elements.add(element);
 
