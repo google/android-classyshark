@@ -22,5 +22,5 @@ package com.google.classyshark;
 public class Version {
 
     public static final int MAJOR = 7;
-    public static final int MINOR = 2;
+    public static final int MINOR = 3;
 }

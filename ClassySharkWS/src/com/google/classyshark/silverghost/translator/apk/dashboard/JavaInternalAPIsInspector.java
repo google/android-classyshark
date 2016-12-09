@@ -21,10 +21,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JavaUnsafeInspector {
+public class JavaInternalAPIsInspector {
     private final File apkFile;
 
-    public JavaUnsafeInspector(File apkFile) {
+    public JavaInternalAPIsInspector(File apkFile) {
         this.apkFile = apkFile;
     }
 
@@ -33,8 +33,9 @@ public class JavaUnsafeInspector {
 
         List<String> allStrings = DexStringsDumper.dumpStrings(apkFile);
 
+        // com.sun.* inspection
         for (String curr : allStrings) {
-            if (curr.contains("sun.misc.Unsafe")) {
+            if (curr.contains("sun.")) {
                 result.add(curr);
             }
         }
