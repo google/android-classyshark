@@ -29,8 +29,8 @@ import java.util.jar.JarInputStream;
 
 public class JarReader implements BinaryContentReader {
 
-    private File binaryArchive;
-    private List<String> allClassNames = new ArrayList<>();
+    protected final File binaryArchive;
+    protected List<String> allClassNames = new ArrayList<>();
     private List<ContentReader.Component> components = new ArrayList<>();
 
     public JarReader(File binaryArchive) {

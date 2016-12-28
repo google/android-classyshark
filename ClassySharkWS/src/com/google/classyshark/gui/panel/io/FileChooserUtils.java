@@ -16,6 +16,7 @@
 
 package com.google.classyshark.gui.panel.io;
 
+import com.google.classyshark.silverghost.contentreader.jar.JayceReader;
 import java.io.File;
 
 public class FileChooserUtils {
@@ -37,6 +38,7 @@ public class FileChooserUtils {
         String filename = f.getName().toLowerCase();
         return filename.endsWith(".dex")
                 || filename.endsWith(".jar")
+                || (filename.endsWith(".zip") && JayceReader.isJackAndJillArchive(f))
                 || filename.endsWith(".apk")
                 || filename.endsWith(".class")
                 || filename.endsWith(".aar");

@@ -55,6 +55,8 @@ public class TranslatorFactory {
         }
 
         if (className.endsWith(".jar")) {
+            // TODO: does it make any sense to check for jayce subvariant?
+            // size does not make much sense as jayce jar may include other files beyond the code
             return new JarInfoTranslator(archiveFile, allClassNames);
         }
 
