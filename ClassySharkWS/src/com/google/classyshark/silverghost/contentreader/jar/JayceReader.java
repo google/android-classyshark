@@ -81,6 +81,10 @@ public class JayceReader extends JarReader {
         reset();
     }
 
+    public JayceReader(File binaryArchive, boolean isME) {
+        super(binaryArchive);
+    }
+
     // SourceFormatter
     private String getClassOrInterfaceName(final JClassOrInterface type) {
         JPackage enclosingPackage = type.getEnclosingPackage();
@@ -170,6 +174,12 @@ public class JayceReader extends JarReader {
 
     public static void reset() {
         cache.clear();
+    }
+
+    public HashMap<String, JDefinedClassOrInterface> getCache() {
+        // TODO add logic when the object is not init-ed
+
+        return cache;
     }
 
     public static void ensureThreadConfigInitialized() {

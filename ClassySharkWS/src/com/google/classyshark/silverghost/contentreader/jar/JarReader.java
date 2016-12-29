@@ -46,7 +46,6 @@ public class JarReader implements BinaryContentReader {
             e.printStackTrace();
         }
         Collections.sort(allClassNames);
-
     }
 
     @Override
