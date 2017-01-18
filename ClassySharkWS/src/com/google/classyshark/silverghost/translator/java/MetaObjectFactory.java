@@ -17,15 +17,13 @@
 package com.google.classyshark.silverghost.translator.java;
 
 import com.google.classyshark.silverghost.contentreader.dex.DexlibLoader;
+import com.google.classyshark.silverghost.contentreader.jar.JayceReader;
 import com.google.classyshark.silverghost.translator.java.clazz.asm.MetaObjectAsmClass;
 import com.google.classyshark.silverghost.translator.java.clazz.reflect.ClassUtils;
 import com.google.classyshark.silverghost.translator.java.clazz.reflect.MetaObjectClass;
 import com.google.classyshark.silverghost.translator.java.dex.DexlibAdapter;
 import com.google.classyshark.silverghost.translator.java.dex.MetaObjectDex;
 import com.google.classyshark.silverghost.translator.java.dex.MultidexReader;
-import org.jf.dexlib2.iface.ClassDef;
-import org.jf.dexlib2.iface.DexFile;
-
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -34,6 +32,8 @@ import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+import org.jf.dexlib2.iface.ClassDef;
+import org.jf.dexlib2.iface.DexFile;
 
 /**
  * Factory for creating meta-objects to represent Java's data
@@ -46,7 +46,12 @@ public class MetaObjectFactory {
         MetaObject result;
 
         if (archiveFile.getName().toLowerCase().endsWith(".jar")) {
-            result = getMetaObjectFromJar(className, archiveFile);
+            // jayce is either ZIP or JAR with /jack.properties, and can be read as a whole only
+            if (JayceReader.isJackAndJillArchive(archiveFile)) {
+                result = getMetaObjectFromJayce(className, archiveFile);
+            } else {
+                result = getMetaObjectFromJar(className, archiveFile);
+            }
         } else if (archiveFile.getName().toLowerCase().endsWith(".class")) {
             result = getMetaObjectFromClass(archiveFile);
         } else if (archiveFile.getName().toLowerCase().endsWith(".dex")) {
@@ -162,5 +167,9 @@ public class MetaObjectFactory {
     private static MetaObject getMetaObjectFromClass(File archiveFile) {
         MetaObject result = new MetaObjectAsmClass(archiveFile);
         return result;
+    }
+
+    private static MetaObject getMetaObjectFromJayce(String className, File archiveFile) {
+        return JayceReader.getMetaObjectJayce(className, archiveFile);
     }
 }

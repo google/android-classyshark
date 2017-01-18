@@ -21,7 +21,7 @@ import com.google.classyshark.silverghost.contentreader.apk.ApkReader;
 import com.google.classyshark.silverghost.contentreader.clazz.ClazzReader;
 import com.google.classyshark.silverghost.contentreader.dex.DexReader;
 import com.google.classyshark.silverghost.contentreader.jar.JarReader;
-
+import com.google.classyshark.silverghost.contentreader.jar.JayceReader;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -56,14 +56,23 @@ public class ContentReader {
     public ContentReader(File binaryArchive) {
         allClassNames = new ArrayList<>();
 
-        if (binaryArchive.getName().toLowerCase().endsWith(".jar")) {
-            formatReader = new JarReader(binaryArchive);
-        } else if (binaryArchive.getName().toLowerCase().endsWith(".dex")) {
+
+        final String archiveName = binaryArchive.getName().toLowerCase();
+
+        if (archiveName.endsWith(".jar")) {
+            if(JayceReader.isJackAndJillArchive(binaryArchive)) {
+                formatReader = new JayceReader(binaryArchive);
+            } else {
+                formatReader = new JarReader(binaryArchive);
+            }
+        } else if (archiveName.endsWith(".dex")) {
             formatReader = new DexReader(binaryArchive);
-        } else if (binaryArchive.getName().toLowerCase().endsWith(".apk")) {
+        } else if (archiveName.endsWith(".apk")) {
             formatReader = new ApkReader(binaryArchive);
-        } else if (binaryArchive.getName().toLowerCase().endsWith(".aar")) {
+        } else if (archiveName.endsWith(".aar")) {
             formatReader = new AarReader(binaryArchive);
+        } else if (archiveName.endsWith(".zip") && JayceReader.isJackAndJillArchive(binaryArchive)) {
+            formatReader = new JayceReader(binaryArchive);
         } else {
             formatReader = new ClazzReader(binaryArchive);
         }
