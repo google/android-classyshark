@@ -17,6 +17,7 @@
 package com.google.classyshark.silverghost.translator.apk.dashboard;
 
 import com.google.classyshark.silverghost.contentreader.dex.DexlibLoader;
+import com.google.classyshark.silverghost.translator.apk.dashboard.manifest.ManifestInspector;
 import com.google.classyshark.silverghost.translator.java.dex.MultidexReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -164,6 +165,14 @@ public class ApkDashboard implements Iterable<ClassesDexDataEntry> {
 
             result.add(simpleNativeLibName);
         }
+
+        return result;
+    }
+
+    public List<String> getManifestErrors() {
+        ManifestInspector mi = new ManifestInspector(apkFile);
+
+        List<String> result = mi.getInspections();
 
         return result;
     }
