@@ -264,7 +264,7 @@ public class FilesTree {
 
     public static void main(String[] args) {
         File test = new File(System.getProperty("user.home") +
-                "/Desktop/Scenarios/2 Samples/android.jar");
+                "/Desktop/ClassyShark/Scenarios/7 Jayce/data.jar");
 
         FilesTree filesTree = new FilesTree(null);
 

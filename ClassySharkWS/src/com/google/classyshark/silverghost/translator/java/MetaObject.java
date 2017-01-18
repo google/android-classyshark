@@ -80,7 +80,7 @@ public abstract class MetaObject {
     /**
      * data class for exceptions
      */
-    public class ExceptionInfo {
+    public static class ExceptionInfo {
         public String exceptionStr;
     }
 

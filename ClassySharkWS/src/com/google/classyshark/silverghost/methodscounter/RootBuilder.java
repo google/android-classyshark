@@ -17,6 +17,7 @@
 package com.google.classyshark.silverghost.methodscounter;
 
 import com.google.classyshark.silverghost.contentreader.dex.DexlibLoader;
+import com.google.classyshark.silverghost.contentreader.jar.JayceReader;
 import org.apache.bcel.classfile.ClassParser;
 import org.apache.bcel.classfile.JavaClass;
 import org.jf.dexlib2.iface.ClassDef;
@@ -88,6 +89,11 @@ public class RootBuilder {
 
 
     private ClassNode fillFromJar(File file) {
+
+        if(JayceReader.isJackAndJillArchive(file)) {
+            return fillFromJayce(file);
+        }
+
         ClassNode rootNode = new ClassNode(file.getName());
         try {
             JarFile theJar = new JarFile(file);
@@ -108,6 +114,27 @@ public class RootBuilder {
             System.err.println("Error reading file: " + file + ". " + e.getMessage());
             e.printStackTrace(System.err);
         }
+
+        return rootNode;
+    }
+
+
+
+    private ClassNode fillFromJayce(File file) {
+
+        ClassNode rootNode = new ClassNode(file.getName());
+        rootNode.add(new ClassInfo("not ready", 1));
+
+        // TODO threading need to wait till the content reader finishes
+        /*
+        JayceReader jr = new JayceReader(file);
+        jr.read();
+
+        for(String clazz: jr.getClassNames()) {
+            ClassInfo classInfo = new ClassInfo(clazz,
+                    jr.getCache().get(clazz).getMethods().size());
+            rootNode.add(classInfo);
+        }*/
 
         return rootNode;
     }

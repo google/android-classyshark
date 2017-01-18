@@ -17,10 +17,10 @@
 package com.google.classyshark;
 
 /**
- * This file is the one containing the data for the current ClassyShark version
+ * This class holds the current ClassyShark version
  */
 public class Version {
 
-    public static final int MAJOR = 7;
-    public static final int MINOR = 3;
+    public static final int MAJOR = 8;
+    public static final int MINOR = 0;
 }
