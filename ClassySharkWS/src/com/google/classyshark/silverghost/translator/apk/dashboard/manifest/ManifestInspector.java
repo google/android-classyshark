@@ -6,6 +6,7 @@ import com.google.classyshark.silverghost.translator.TranslatorFactory;
 import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class ManifestInspector {
 
@@ -24,9 +25,10 @@ public class ManifestInspector {
 
         List<String> result = new LinkedList<>();
 
-        // broadcast actions
-
-
+        // receivers with system actions
+        Map<String, String> actions = amptr.getActionsWithReceivers();
+        ReceiverActionsBL rabl = new ReceiverActionsBL(actions);
+        result.addAll(rabl.getBGActionsList());
 
         // IntentService
         for(String serviceName : amptr.getServices()) {

@@ -88,7 +88,7 @@ public class ApkTranslator implements Translator {
         element = new ELEMENT("\n" + apkDashboard.getJavaInternalAPIsErrors(), TAG.DOCUMENT);
         elements.add(element);
 
-        element = new ELEMENT("\n\n\nAndroid Manifest Errors", TAG.MODIFIER);
+        element = new ELEMENT("\n\n\nAndroid Manifest Warnings", TAG.MODIFIER);
         elements.add(element);
 
         element = new ELEMENT("\n" + apkDashboard.getManifestErrors(), TAG.DOCUMENT);
