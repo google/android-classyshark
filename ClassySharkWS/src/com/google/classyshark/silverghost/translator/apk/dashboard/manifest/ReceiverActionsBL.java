@@ -25,9 +25,23 @@ import java.util.TreeMap;
 public class ReceiverActionsBL {
 
     static List<String> approvedActions = Arrays.asList(
+            "android.intent.action.LOCKED_BOOT_COMPLETED",
             "android.intent.action.BOOT_COMPLETED",
-            "com.google.android.c2dm.intent.REGISTRATION",
-            "com.google.android.c2dm.intent.RECEIVE"
+            "android.intent.action.USER_INITIALIZE",
+            "android.intent.action.USER_ADDED",
+            "android.intent.action.USER_REMOVED",
+            "android.intent.action.TIMEZONE_CHANGED",
+            "android.intent.action.LOCALE_CHANGED",
+            "android.hardware.usb.action.USB_ACCESSORY_ATTACHED",
+            "android.hardware.usb.action.USB_ACCESSORY_DETACHED",
+            "android.hardware.usb.action.USB_DEVICE_ATTACHED",
+            "android.hardware.usb.action.USB_DEVICE_DETACHED",
+            "android.hardware.usb.action.USB_PORT_CHANGED",
+            "android.intent.action.DEVICE_STORAGE_LOW",
+            "android.accounts.LOGIN_ACCOUNTS_CHANGED",
+            "android.intent.action.PACKAGE_DATA_CLEARED",
+            "android.intent.action.PACKAGE_FULLY_REMOVED",
+            "android.intent.action.NEW_OUTGOING_CALL"
     );
     private final Map<String, String> actionsToReceivers;
     private final Map<String, String> bgActionsToReceivers;
