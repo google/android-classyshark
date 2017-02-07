@@ -30,19 +30,38 @@ public class ManifestInspector {
         ReceiverActionsBL rabl = new ReceiverActionsBL(actions);
         result.addAll(rabl.getBGActionsList());
 
-        // IntentService
-        for(String serviceName : amptr.getServices()) {
+        for (String serviceName : amptr.getServices()) {
             Translator translator =
                     TranslatorFactory.createTranslator(serviceName, apkFile);
             translator.apply();
             String strRep = translator.toString();
-
-            if(strRep.contains("IntentService")) {
-                result.add("* " + serviceName +
-                        " is a background service (IntentService) \n");
-            }
+            inspectService(result, serviceName, strRep);
         }
 
         return result;
+    }
+
+    private void inspectService(List<String> serviceInspections, String serviceName, String serviceCode) {
+        // base services that should be ok
+        if (serviceCode.contains("JobService") ||
+                serviceCode.contains("GcmTaskService") ||
+                serviceCode.contains("FirebaseInstanceIdService") ||
+                serviceCode.contains("FirebaseMessagingService")) {
+            return;
+        }
+
+        // IntentService - error
+        if (serviceCode.contains("IntentService")) {
+            serviceInspections.add("* " + serviceName +
+                    " is a background service (IntentService) \n");
+
+            return;
+        }
+
+        // all services need to be reviewed
+        if (serviceCode.contains("Service")) {
+            serviceInspections.add("* please check " + serviceName +
+                    " is not a background service \n");
+        }
     }
 }
