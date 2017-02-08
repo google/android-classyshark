@@ -1,0 +1,41 @@
+group 'classyshark'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+
+repositories {
+    flatDir {
+        dirs '../third_party'
+    }
+}
+
+// ClassyShark doesn't follow the standard src/main/java convention
+// https://docs.gradle.org/current/userguide/java_plugin.html#sec:changing_java_project_layout
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src/']
+        }
+        resources {
+            srcDirs = ['src/']
+        }
+    }
+}
+
+dependencies {
+    compile name: 'asm-all-5.0.4', ext: 'jar'
+    compile name: 'asmdex-1.0', ext: 'jar'
+    compile name: 'bcel-5.2', ext: 'jar'
+    compile name: 'converter-gson-2.0.2', ext: 'jar'
+    compile name: 'dexlib2-2.1.0', ext: 'jar'
+    compile name: 'gson-2.6.2', ext: 'jar'
+    compile name: 'guava-18.0', ext: 'jar'
+    compile name: 'jack-1.3-b2', ext: 'jar'
+    compile name: 'java-binutils', ext: 'jar'
+    compile name: 'okhttp-3.2.0', ext: 'jar'
+    compile name: 'okio-1.7.0', ext: 'jar'
+    compile name: 'retrofit-2.0.2', ext: 'jar'
+    compile name: 'util-2.0.6', ext: 'jar'
+}
