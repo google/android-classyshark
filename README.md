@@ -18,7 +18,7 @@ ClassyShark is a standalone binary inspection tool for Android developers. It ca
 To run, grab the [latest JAR](https://github.com/google/android-classyshark/releases)
 and run `java -jar ClassyShark.jar`.
 
-### Download
+### Develop
 1. Clone the repo
 2. Open in your favorite IDE/editor
 3. Build options:
