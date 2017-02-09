@@ -12,12 +12,19 @@ ClassyShark is a standalone binary inspection tool for Android developers. It ca
 * [User guide] (https://github.com/borisf/classyshark-user-guide)
 * [Command-line reference] (https://github.com/google/android-classyshark/blob/master/CommandLine.pdf)
 * Gradle [sample](https://github.com/google/android-classyshark/tree/master/Samples/SampleGradle)
-* [Roadmap](https://github.com/borisf/classyshark-roadmap)
+* [Vision and Strategy](https://docs.google.com/document/d/1sK_WNzHn_6Q1V_dohxrtk1tlsPXsi9cEVnIuYuVig0M/edit?usp=sharing)
 
 ### Download
-
 To run, grab the [latest JAR](https://github.com/google/android-classyshark/releases)
 and run `java -jar ClassyShark.jar`.
+
+### Develop
+1. Clone the repo
+2. Open in your favorite IDE/editor
+3. Build options:
+     * IntelliJ - builds automatically when exporting the project 
+     * [Gradle script](https://github.com/google/android-classyshark/blob/master/ClassySharkWS/build.gradle)
+     * [Retrobuid](https://github.com/borisf/RetroBuild)
 
 ### Arch Linux
 
@@ -42,7 +49,7 @@ submitting a pull request through GitHub.
 License
 =======
 
-    Copyright 2016 Google, Inc.
+    Copyright 2017 Google, Inc.
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
