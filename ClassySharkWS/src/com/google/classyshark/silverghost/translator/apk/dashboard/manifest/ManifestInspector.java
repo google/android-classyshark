@@ -53,7 +53,8 @@ public class ManifestInspector {
         // IntentService - error
         if (serviceCode.contains("IntentService")) {
             serviceInspections.add("* " + serviceName +
-                    " is a background service (IntentService) \n");
+                    " extends IntentService, make sure it doesn't run " +
+                    "when the app us down\n");
 
             return;
         }
