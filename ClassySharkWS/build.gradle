@@ -2,6 +2,7 @@ group 'classyshark'
 version '1.0-SNAPSHOT'
 
 apply plugin: 'java'
+apply plugin: 'java-library-distribution' // task: gradle distZip
 
 sourceCompatibility = 1.8
 
@@ -38,4 +39,13 @@ dependencies {
     compile name: 'okio-1.7.0', ext: 'jar'
     compile name: 'retrofit-2.0.2', ext: 'jar'
     compile name: 'util-2.0.6', ext: 'jar'
+}
+
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'com.google.classyshark.Main',
+                "Class-Path": configurations.compile.collect { "lib/$it.name"  }.join(' ')
+        )
+    }
 }
