@@ -16,6 +16,7 @@
 
 package com.google.classyshark;
 
+import com.google.classyshark.analytics.Analytics;
 import com.google.classyshark.cli.CliMode;
 import com.google.classyshark.gui.GuiMode;
 
@@ -36,6 +37,8 @@ public class Main {
 
     public static void main(final String[] args) {
         final List<String> argsAsArray = Arrays.asList(args);
+
+        Analytics.INSTANCE.addActivation();
 
         if (isGui(argsAsArray)) {
             GuiMode.with(argsAsArray);
