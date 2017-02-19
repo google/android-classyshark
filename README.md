@@ -20,7 +20,7 @@ and run `java -jar ClassyShark.jar`.
 
 ### Export data in text format
 * [Exporter] (https://medium.com/@BorisFarber/exporting-data-from-classyshark-e3cf3fe3fab8#.deec4nyjq)
-* API finder
+* API finder :construction: work in progress
 
 ### Develop
 1. Clone the repo
