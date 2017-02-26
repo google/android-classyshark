@@ -175,7 +175,7 @@ public class ApkDashboard {
 
         return result;
     }
-<<<<<<< HEAD
+
 
     public List<String> getManifestErrors() {
         ManifestInspector mi = new ManifestInspector(apkFile);
@@ -184,56 +184,4 @@ public class ApkDashboard {
 
         return result;
     }
-
-    private class ClassesDexIterator implements Iterator<ClassesDexDataEntry> {
-        private int currentClassesDex;
-        private int currentCustomClassesDex;
-
-        public ClassesDexIterator() {
-            currentClassesDex = 0;
-            currentCustomClassesDex = 0;
-        }
-
-        public boolean hasNext() {
-            return currentClassesDex < classesDexEntries.size() || currentCustomClassesDex < customClassesDexEntries.size();
-        }
-
-        public ClassesDexDataEntry next() {
-            ClassesDexDataEntry result = new ClassesDexDataEntry(0);
-
-            if (currentClassesDex < classesDexEntries.size()) {
-                for (ClassesDexDataEntry classesDex : classesDexEntries) {
-                    int dexIndex = currentToDexIndex(currentClassesDex);
-                    if (dexIndex == classesDex.index) {
-                        result = classesDex;
-                        currentClassesDex++;
-                        break;
-                    }
-                }
-            } else {
-                currentCustomClassesDex++;
-                result = customClassesDexEntries.get(0);
-            }
-
-            return result;
-        }
-
-        public void remove() {
-
-        }
-
-        private int currentToDexIndex(int current) {
-            /*
-              0 --> classes.dex
-              1 --> classes2.dex
-              2 --> classes3.dex
-             */
-
-            if (current == 0) return 0;
-
-            return ++current;
-        }
-    }
-=======
->>>>>>> master
 }

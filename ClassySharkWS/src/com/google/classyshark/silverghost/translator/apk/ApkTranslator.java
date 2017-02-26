@@ -57,15 +57,8 @@ public class ApkTranslator implements Translator {
         ELEMENT element = new ELEMENT("\n                  ~ APK DASHBOARD ~\n" , TAG.IDENTIFIER);
         elements.add(element);
 
-<<<<<<< HEAD
-        Iterator<ClassesDexDataEntry> dexesIter = apkDashboard.iterator();
-
-        while (dexesIter.hasNext()) {
-
-            ClassesDexDataEntry dexEntry = dexesIter.next();
-=======
         for (ClassesDexDataEntry dexEntry : apkDashboard.getAllDexEntries()) {
->>>>>>> master
+
 
             element = new ELEMENT("\n" + dexEntry.getName(), TAG.MODIFIER);
             elements.add(element);
