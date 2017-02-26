@@ -23,7 +23,6 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -34,7 +33,7 @@ import org.ow2.asmdex.ApplicationReader;
 import org.ow2.asmdex.ApplicationVisitor;
 import org.ow2.asmdex.Opcodes;
 
-public class ApkDashboard implements Iterable<ClassesDexDataEntry> {
+public class ApkDashboard {
 
     public ArrayList<ClassesDexDataEntry> classesDexEntries = new ArrayList<>();
     public ArrayList<ClassesDexDataEntry> customClassesDexEntries = new ArrayList<>();
@@ -51,10 +50,16 @@ public class ApkDashboard implements Iterable<ClassesDexDataEntry> {
     public void inspect() {
         // TODO add exception for not calling inspect
         MultidexReader.fillApkDashboard(apkFile, this);
+
+        System.out.println("Done inspecting");
     }
 
-    public Iterator<ClassesDexDataEntry> iterator() {
-        return new ClassesDexIterator();
+    public List<ClassesDexDataEntry> getAllDexEntries() {
+        ArrayList<ClassesDexDataEntry> result = new ArrayList<>();
+        result.addAll(classesDexEntries);
+        result.addAll(customClassesDexEntries);
+
+        return result;
     }
 
     public List<String> getNativeErrors() {
@@ -124,6 +129,7 @@ public class ApkDashboard implements Iterable<ClassesDexDataEntry> {
     public static ClassesDexDataEntry fillAnalysisPerClassesDexIndex(int dexIndex, File classesDex) {
         ClassesDexDataEntry dexData = new ClassesDexDataEntry(dexIndex);
 
+
         try {
             InputStream is = new FileInputStream(classesDex);
             ApplicationVisitor av = new ApkNativeMethodsVisitor(dexData);
@@ -140,11 +146,12 @@ public class ApkDashboard implements Iterable<ClassesDexDataEntry> {
             DexBackedDexFile dataPack = (DexBackedDexFile) dxFile;
             dexData.allMethods = dataPack.getMethodCount();
 
-            dexData.syntheticAccessors =
-                    new SyntheticAccessorsInspector(dxFile).getSyntheticAccessors();
+            //dexData.syntheticAccessors =
+            //        new SyntheticAccessorsInspector(dxFile).getSyntheticAccessors();
 
         } catch (Exception e) {
             e.printStackTrace();
+            System.out.println("here " + e);
         }
 
         return dexData;
@@ -166,55 +173,5 @@ public class ApkDashboard implements Iterable<ClassesDexDataEntry> {
         }
 
         return result;
-    }
-
-    private class ClassesDexIterator implements Iterator<ClassesDexDataEntry> {
-        private int currentClassesDex;
-        private int currentCustomClassesDex;
-
-        public ClassesDexIterator() {
-            currentClassesDex = 0;
-            currentCustomClassesDex = 0;
-        }
-
-        public boolean hasNext() {
-            return currentClassesDex < classesDexEntries.size() || currentCustomClassesDex < customClassesDexEntries.size();
-        }
-
-        public ClassesDexDataEntry next() {
-            ClassesDexDataEntry result = new ClassesDexDataEntry(0);
-
-            if (currentClassesDex < classesDexEntries.size()) {
-                for (ClassesDexDataEntry classesDex : classesDexEntries) {
-                    int dexIndex = currentToDexIndex(currentClassesDex);
-                    if (dexIndex == classesDex.index) {
-                        result = classesDex;
-                        currentClassesDex++;
-                        break;
-                    }
-                }
-            } else {
-                currentCustomClassesDex++;
-                result = customClassesDexEntries.get(0);
-            }
-
-            return result;
-        }
-
-        public void remove() {
-
-        }
-
-        private int currentToDexIndex(int current) {
-            /*
-              0 --> classes.dex
-              1 --> classes2.dex
-              2 --> classes3.dex
-             */
-
-            if (current == 0) return 0;
-
-            return ++current;
-        }
     }
 }
