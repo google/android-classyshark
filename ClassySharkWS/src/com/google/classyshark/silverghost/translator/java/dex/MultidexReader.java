@@ -45,6 +45,9 @@ public class MultidexReader {
 
             ZipEntry zipEntry;
 
+
+            int customDexIndex = 0;
+
             while (true) {
                 zipEntry = zipFile.getNextEntry();
 
@@ -54,12 +57,14 @@ public class MultidexReader {
 
                 if (zipEntry.getName().endsWith(".dex")) {
 
-                    String fName = "ANALYZER_classes";
+                    customDexIndex++;
+
+                    String fName = customDexIndex + "ANALYZER_classes";
 
                     int dexIndex = Character.getNumericValue(zipEntry.getName().charAt(zipEntry.getName().length() - 5));
 
                     if (dexIndex != 28 /* classes.dex*/) {
-                        fName = "ANALYZER_classes" + dexIndex;
+                        fName = fName + dexIndex;
                     } else {
 
                         dexIndex = 0;
@@ -70,7 +75,13 @@ public class MultidexReader {
                     File file = SherlockHash.INSTANCE.getFileFromZipStream(binaryArchiveFile,
                             zipFile, fName, ext);
 
-                    to.classesDexEntries.add(fillAnalysisPerClassesDexIndex(dexIndex, file));
+
+                    if(zipEntry.getName().equals("classes.dex") || (zipEntry.getName().startsWith("classes") &&
+                            zipEntry.getName().endsWith(".dex"))) {
+                        to.classesDexEntries.add(fillAnalysisPerClassesDexIndex(dexIndex, file));
+                    } else {
+                        to.customClassesDexEntries.add(fillAnalysisPerClassesDexIndex(999, file));
+                    }
 
                 } else if (zipEntry.getName().endsWith("jar") || zipEntry.getName().endsWith("zip")) {
 
@@ -121,6 +132,7 @@ public class MultidexReader {
                     to.nativeLibs.add(zipEntry.getName() + "\n");
                 }
             }
+
             zipFile.close();
 
         } catch (Exception e) {

@@ -24,7 +24,6 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -35,7 +34,7 @@ import org.ow2.asmdex.ApplicationReader;
 import org.ow2.asmdex.ApplicationVisitor;
 import org.ow2.asmdex.Opcodes;
 
-public class ApkDashboard implements Iterable<ClassesDexDataEntry> {
+public class ApkDashboard {
 
     public ArrayList<ClassesDexDataEntry> classesDexEntries = new ArrayList<>();
     public ArrayList<ClassesDexDataEntry> customClassesDexEntries = new ArrayList<>();
@@ -52,10 +51,16 @@ public class ApkDashboard implements Iterable<ClassesDexDataEntry> {
     public void inspect() {
         // TODO add exception for not calling inspect
         MultidexReader.fillApkDashboard(apkFile, this);
+
+        System.out.println("Done inspecting");
     }
 
-    public Iterator<ClassesDexDataEntry> iterator() {
-        return new ClassesDexIterator();
+    public List<ClassesDexDataEntry> getAllDexEntries() {
+        ArrayList<ClassesDexDataEntry> result = new ArrayList<>();
+        result.addAll(classesDexEntries);
+        result.addAll(customClassesDexEntries);
+
+        return result;
     }
 
     public List<String> getNativeErrors() {
@@ -125,6 +130,7 @@ public class ApkDashboard implements Iterable<ClassesDexDataEntry> {
     public static ClassesDexDataEntry fillAnalysisPerClassesDexIndex(int dexIndex, File classesDex) {
         ClassesDexDataEntry dexData = new ClassesDexDataEntry(dexIndex);
 
+
         try {
             InputStream is = new FileInputStream(classesDex);
             ApplicationVisitor av = new ApkNativeMethodsVisitor(dexData);
@@ -141,11 +147,12 @@ public class ApkDashboard implements Iterable<ClassesDexDataEntry> {
             DexBackedDexFile dataPack = (DexBackedDexFile) dxFile;
             dexData.allMethods = dataPack.getMethodCount();
 
-            dexData.syntheticAccessors =
-                    new SyntheticAccessorsInspector(dxFile).getSyntheticAccessors();
+            //dexData.syntheticAccessors =
+            //        new SyntheticAccessorsInspector(dxFile).getSyntheticAccessors();
 
         } catch (Exception e) {
             e.printStackTrace();
+            System.out.println("here " + e);
         }
 
         return dexData;
@@ -168,6 +175,7 @@ public class ApkDashboard implements Iterable<ClassesDexDataEntry> {
 
         return result;
     }
+<<<<<<< HEAD
 
     public List<String> getManifestErrors() {
         ManifestInspector mi = new ManifestInspector(apkFile);
@@ -226,4 +234,6 @@ public class ApkDashboard implements Iterable<ClassesDexDataEntry> {
             return ++current;
         }
     }
+=======
+>>>>>>> master
 }

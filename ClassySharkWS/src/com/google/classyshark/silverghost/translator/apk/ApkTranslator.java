@@ -22,7 +22,6 @@ import com.google.classyshark.silverghost.translator.apk.dashboard.ApkDashboard;
 import com.google.classyshark.silverghost.translator.apk.dashboard.ClassesDexDataEntry;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -58,11 +57,15 @@ public class ApkTranslator implements Translator {
         ELEMENT element = new ELEMENT("\n                  ~ APK DASHBOARD ~\n" , TAG.IDENTIFIER);
         elements.add(element);
 
+<<<<<<< HEAD
         Iterator<ClassesDexDataEntry> dexesIter = apkDashboard.iterator();
 
         while (dexesIter.hasNext()) {
 
             ClassesDexDataEntry dexEntry = dexesIter.next();
+=======
+        for (ClassesDexDataEntry dexEntry : apkDashboard.getAllDexEntries()) {
+>>>>>>> master
 
             element = new ELEMENT("\n" + dexEntry.getName(), TAG.MODIFIER);
             elements.add(element);
@@ -116,25 +119,6 @@ public class ApkTranslator implements Translator {
         for (String nativeLib : apkDashboard.getNativeLibNamesSorted()) {
             element = new ELEMENT(nativeLib + " " + apkDashboard.getPrivateLibErrorTag(nativeLib)
                     + "\n", TAG.DOCUMENT);
-            elements.add(element);
-        }
-
-        dexesIter = apkDashboard.iterator();
-
-        while (dexesIter.hasNext()) {
-
-            ClassesDexDataEntry dexEntry = dexesIter.next();
-
-            element = new ELEMENT("\n" + dexEntry.getName(), TAG.MODIFIER);
-            elements.add(element);
-
-            element = new ELEMENT(
-                    "\nSyntheticAccessors \n", TAG.MODIFIER);
-            elements.add(element);
-
-            element = new ELEMENT(
-                    "\n" + dexEntry.syntheticAccessors.toString()
-                            + "\n", TAG.DOCUMENT);
             elements.add(element);
         }
     }
