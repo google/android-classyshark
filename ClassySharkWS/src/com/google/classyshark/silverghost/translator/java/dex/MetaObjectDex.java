@@ -19,27 +19,35 @@ package com.google.classyshark.silverghost.translator.java.dex;
 import com.google.classyshark.silverghost.translator.Translator;
 import com.google.classyshark.silverghost.translator.TranslatorFactory;
 import com.google.classyshark.silverghost.translator.java.MetaObject;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.jf.dexlib2.iface.Annotation;
 import org.jf.dexlib2.iface.ClassDef;
 import org.jf.dexlib2.iface.Field;
 import org.jf.dexlib2.iface.Method;
 import org.jf.dexlib2.iface.MethodParameter;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
 /**
  * Dex implementation of MetaObject
  */
 public class MetaObjectDex extends MetaObject {
 
-    private final ClassDef classDef;
+    private ClassDef classDef;
 
     public MetaObjectDex(ClassDef classDef) {
         super();
         this.classDef = classDef;
+
+        if (this.classDef == null) {
+            this.classDef = new EmptyClassDef();
+        }
     }
 
     @Override
@@ -76,7 +84,7 @@ public class MetaObjectDex extends MetaObject {
         }
 
         FieldInfo[] array = new FieldInfo[result.size()];
-        return  result.toArray(array);
+        return result.toArray(array);
     }
 
     @Override
@@ -85,7 +93,7 @@ public class MetaObjectDex extends MetaObject {
         List<ConstructorInfo> result = new ArrayList<>();
 
         for (Method constructor : implConstructors) {
-            if(isConstructor(constructor)) {
+            if (isConstructor(constructor)) {
                 ConstructorInfo ci = new ConstructorInfo();
                 ci.parameterTypes = convertParameters(constructor.getParameters());
                 ci.annotations = convertAnnotations(constructor.getAnnotations());
@@ -96,7 +104,7 @@ public class MetaObjectDex extends MetaObject {
         }
 
         ConstructorInfo[] array = new ConstructorInfo[result.size()];
-        return  result.toArray(array);
+        return result.toArray(array);
     }
 
     @Override
@@ -105,7 +113,7 @@ public class MetaObjectDex extends MetaObject {
         List<MethodInfo> result = new ArrayList<>();
 
         for (Method method : implMethods) {
-            if(!isConstructor(method)) {
+            if (!isConstructor(method)) {
                 MethodInfo mi = new MethodInfo();
                 mi.parameterTypes = convertParameters(method.getParameters());
                 mi.annotations = convertAnnotations(method.getAnnotations());
@@ -119,7 +127,7 @@ public class MetaObjectDex extends MetaObject {
         }
 
         MethodInfo[] array = new MethodInfo[result.size()];
-        return  result.toArray(array);
+        return result.toArray(array);
     }
 
     @Override
@@ -184,5 +192,218 @@ public class MetaObjectDex extends MetaObject {
         translator.apply();
 
         System.out.println(translator.toString());
+    }
+
+    private static class EmptyClassDef implements ClassDef {
+        @Nonnull
+        @Override
+        public String getType() {
+            return "";
+        }
+
+        @Override
+        public int compareTo(@Nonnull CharSequence charSequence) {
+            return 0;
+        }
+
+        @Override
+        public int getAccessFlags() {
+            return 0;
+        }
+
+        @Nullable
+        @Override
+        public String getSuperclass() {
+            return "";
+        }
+
+        @Nonnull
+        @Override
+        public List<String> getInterfaces() {
+            return new LinkedList<>();
+        }
+
+        @Nullable
+        @Override
+        public String getSourceFile() {
+            return "";
+        }
+
+        @Nonnull
+        @Override
+        public Set<? extends Annotation> getAnnotations() {
+            return new LinkedHashSet<>();
+        }
+
+        @Nonnull
+        @Override
+        public Iterable<? extends Field> getStaticFields() {
+            return new Iterable<Field>() {
+                @Override
+                public Iterator<Field> iterator() {
+                    return new Iterator<Field>() {
+                        @Override
+                        public boolean hasNext() {
+                            return false;
+                        }
+
+                        @Override
+                        public Field next() {
+                            return null;
+                        }
+
+                        @Override
+                        public void remove() {
+
+                        }
+                    };
+                }
+            };
+        }
+
+        @Nonnull
+        @Override
+        public Iterable<? extends Field> getInstanceFields() {
+            return new Iterable<Field>() {
+                @Override
+                public Iterator<Field> iterator() {
+                    return new Iterator<Field>() {
+                        @Override
+                        public boolean hasNext() {
+                            return false;
+                        }
+
+                        @Override
+                        public Field next() {
+                            return null;
+                        }
+
+                        @Override
+                        public void remove() {
+
+                        }
+                    };
+                }
+            };
+        }
+
+        @Nonnull
+        @Override
+        public Iterable<? extends Field> getFields() {
+            return new Iterable<Field>() {
+                @Override
+                public Iterator<Field> iterator() {
+                    return new Iterator<Field>() {
+                        @Override
+                        public boolean hasNext() {
+                            return false;
+                        }
+
+                        @Override
+                        public Field next() {
+                            return null;
+                        }
+
+                        @Override
+                        public void remove() {
+
+                        }
+                    };
+                }
+            };
+        }
+
+        @Nonnull
+        @Override
+        public Iterable<? extends Method> getDirectMethods() {
+            return new Iterable<Method>() {
+                @Override
+                public Iterator<Method> iterator() {
+                    return new Iterator<Method>() {
+                        @Override
+                        public boolean hasNext() {
+                            return false;
+                        }
+
+                        @Override
+                        public Method next() {
+                            return null;
+                        }
+
+                        @Override
+                        public void remove() {
+
+                        }
+                    };
+                }
+            };
+        }
+
+        @Nonnull
+        @Override
+        public Iterable<? extends Method> getVirtualMethods() {
+            return new Iterable<Method>() {
+                @Override
+                public Iterator<Method> iterator() {
+                    return new Iterator<Method>() {
+                        @Override
+                        public boolean hasNext() {
+                            return false;
+                        }
+
+                        @Override
+                        public Method next() {
+                            return null;
+                        }
+
+                        @Override
+                        public void remove() {
+
+                        }
+                    };
+                }
+            };
+        }
+
+        @Nonnull
+        @Override
+        public Iterable<? extends Method> getMethods() {
+            return new Iterable<Method>() {
+                @Override
+                public Iterator<Method> iterator() {
+                    return new Iterator<Method>() {
+                        @Override
+                        public boolean hasNext() {
+                            return false;
+                        }
+
+                        @Override
+                        public Method next() {
+                            return null;
+                        }
+
+                        @Override
+                        public void remove() {
+
+                        }
+                    };
+                }
+            };
+        }
+
+        @Override
+        public int length() {
+            return 0;
+        }
+
+        @Override
+        public char charAt(int index) {
+            return 0;
+        }
+
+        @Override
+        public CharSequence subSequence(int start, int end) {
+            return "";
+        }
     }
 }
