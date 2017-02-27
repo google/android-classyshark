@@ -54,7 +54,7 @@ public class ManifestInspector {
         if (serviceCode.contains("IntentService")) {
             serviceInspections.add("* " + serviceName +
                     " extends IntentService, make sure it doesn't run " +
-                    "when the app us down\n");
+                    "when the app is down\n");
 
             return;
         }
