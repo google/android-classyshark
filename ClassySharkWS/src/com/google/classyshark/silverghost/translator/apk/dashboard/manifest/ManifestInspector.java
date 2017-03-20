@@ -50,7 +50,7 @@ public class ManifestInspector {
             return;
         }
 
-        // IntentService - error
+        // IntentService - verify are not running when the app is down
         if (serviceCode.contains("IntentService")) {
             serviceInspections.add("* " + serviceName +
                     " extends IntentService, make sure it doesn't run " +
@@ -61,7 +61,7 @@ public class ManifestInspector {
 
         // all services need to be reviewed
         if (serviceCode.contains("Service")) {
-            serviceInspections.add("* please check " + serviceName +
+            serviceInspections.add("* please check that " + serviceName +
                     " is not a background service \n");
         }
     }
