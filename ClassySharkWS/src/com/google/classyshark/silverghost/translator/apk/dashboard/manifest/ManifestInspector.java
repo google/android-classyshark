@@ -17,8 +17,6 @@
 package com.google.classyshark.silverghost.translator.apk.dashboard.manifest;
 
 import com.google.classyshark.silverghost.SilverGhostFacade;
-import com.google.classyshark.silverghost.translator.Translator;
-import com.google.classyshark.silverghost.translator.TranslatorFactory;
 import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
@@ -46,39 +44,6 @@ public class ManifestInspector {
         ReceiverActionsBL rabl = new ReceiverActionsBL(actions);
         result.addAll(rabl.getBGActionsList());
 
-        for (String serviceName : amptr.getServices()) {
-            Translator translator =
-                    TranslatorFactory.createTranslator(serviceName, apkFile);
-            translator.apply();
-            String strRep = translator.toString();
-            inspectService(result, serviceName, strRep);
-        }
-
         return result;
-    }
-
-    private void inspectService(List<String> serviceInspections, String serviceName, String serviceCode) {
-        // base services that should be ok
-        if (serviceCode.contains("JobService") ||
-                serviceCode.contains("GcmTaskService") ||
-                serviceCode.contains("FirebaseInstanceIdService") ||
-                serviceCode.contains("FirebaseMessagingService")) {
-            return;
-        }
-
-        // IntentService - verify are not running when the app is down
-        if (serviceCode.contains("IntentService")) {
-            serviceInspections.add("* " + serviceName +
-                    " extends IntentService, make sure it doesn't run " +
-                    "when the app is down\n");
-
-            return;
-        }
-
-        // all services need to be reviewed
-        if (serviceCode.contains("Service")) {
-            serviceInspections.add("* please check that " + serviceName +
-                    " is not a background service \n");
-        }
     }
 }

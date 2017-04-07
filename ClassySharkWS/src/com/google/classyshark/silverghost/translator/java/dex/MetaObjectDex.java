@@ -26,8 +26,6 @@ import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.jf.dexlib2.iface.Annotation;
 import org.jf.dexlib2.iface.ClassDef;
 import org.jf.dexlib2.iface.Field;
@@ -195,14 +193,14 @@ public class MetaObjectDex extends MetaObject {
     }
 
     private static class EmptyClassDef implements ClassDef {
-        @Nonnull
+
         @Override
         public String getType() {
             return "";
         }
 
         @Override
-        public int compareTo(@Nonnull CharSequence charSequence) {
+        public int compareTo(CharSequence charSequence) {
             return 0;
         }
 
@@ -211,31 +209,26 @@ public class MetaObjectDex extends MetaObject {
             return 0;
         }
 
-        @Nullable
         @Override
         public String getSuperclass() {
             return "";
         }
 
-        @Nonnull
         @Override
         public List<String> getInterfaces() {
             return new LinkedList<>();
         }
 
-        @Nullable
         @Override
         public String getSourceFile() {
             return "";
         }
 
-        @Nonnull
         @Override
         public Set<? extends Annotation> getAnnotations() {
             return new LinkedHashSet<>();
         }
 
-        @Nonnull
         @Override
         public Iterable<? extends Field> getStaticFields() {
             return new Iterable<Field>() {
@@ -261,7 +254,6 @@ public class MetaObjectDex extends MetaObject {
             };
         }
 
-        @Nonnull
         @Override
         public Iterable<? extends Field> getInstanceFields() {
             return new Iterable<Field>() {
@@ -287,7 +279,6 @@ public class MetaObjectDex extends MetaObject {
             };
         }
 
-        @Nonnull
         @Override
         public Iterable<? extends Field> getFields() {
             return new Iterable<Field>() {
@@ -313,7 +304,6 @@ public class MetaObjectDex extends MetaObject {
             };
         }
 
-        @Nonnull
         @Override
         public Iterable<? extends Method> getDirectMethods() {
             return new Iterable<Method>() {
@@ -339,7 +329,6 @@ public class MetaObjectDex extends MetaObject {
             };
         }
 
-        @Nonnull
         @Override
         public Iterable<? extends Method> getVirtualMethods() {
             return new Iterable<Method>() {
@@ -365,7 +354,6 @@ public class MetaObjectDex extends MetaObject {
             };
         }
 
-        @Nonnull
         @Override
         public Iterable<? extends Method> getMethods() {
             return new Iterable<Method>() {

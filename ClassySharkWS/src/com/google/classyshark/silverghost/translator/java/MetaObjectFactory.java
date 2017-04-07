@@ -17,7 +17,6 @@
 package com.google.classyshark.silverghost.translator.java;
 
 import com.google.classyshark.silverghost.contentreader.dex.DexlibLoader;
-import com.google.classyshark.silverghost.contentreader.jar.JayceReader;
 import com.google.classyshark.silverghost.translator.java.clazz.asm.MetaObjectAsmClass;
 import com.google.classyshark.silverghost.translator.java.clazz.reflect.ClassUtils;
 import com.google.classyshark.silverghost.translator.java.clazz.reflect.MetaObjectClass;
@@ -46,12 +45,7 @@ public class MetaObjectFactory {
         MetaObject result;
 
         if (archiveFile.getName().toLowerCase().endsWith(".jar")) {
-            // jayce is either ZIP or JAR with /jack.properties, and can be read as a whole only
-            if (JayceReader.isJackAndJillArchive(archiveFile)) {
-                result = getMetaObjectFromJayce(className, archiveFile);
-            } else {
-                result = getMetaObjectFromJar(className, archiveFile);
-            }
+            result = getMetaObjectFromJar(className, archiveFile);
         } else if (archiveFile.getName().toLowerCase().endsWith(".class")) {
             result = getMetaObjectFromClass(archiveFile);
         } else if (archiveFile.getName().toLowerCase().endsWith(".dex")) {
@@ -167,9 +161,5 @@ public class MetaObjectFactory {
     private static MetaObject getMetaObjectFromClass(File archiveFile) {
         MetaObject result = new MetaObjectAsmClass(archiveFile);
         return result;
-    }
-
-    private static MetaObject getMetaObjectFromJayce(String className, File archiveFile) {
-        return JayceReader.getMetaObjectJayce(className, archiveFile);
     }
 }

@@ -24,6 +24,9 @@ import java.util.TreeMap;
 
 public class ReceiverActionsBL {
 
+
+    // TODO follow up with https://developer.android.com/preview/features/background-broadcasts.html
+
     static List<String> approvedActions = Arrays.asList(
             "android.intent.action.LOCKED_BOOT_COMPLETED",
             "android.intent.action.BOOT_COMPLETED",

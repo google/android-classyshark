@@ -17,13 +17,6 @@
 package com.google.classyshark.silverghost.methodscounter;
 
 import com.google.classyshark.silverghost.contentreader.dex.DexlibLoader;
-import com.google.classyshark.silverghost.contentreader.jar.JayceReader;
-import org.apache.bcel.classfile.ClassParser;
-import org.apache.bcel.classfile.JavaClass;
-import org.jf.dexlib2.iface.ClassDef;
-import org.jf.dexlib2.iface.DexFile;
-import org.jf.dexlib2.iface.Method;
-
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -36,6 +29,11 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+import org.apache.bcel.classfile.ClassParser;
+import org.apache.bcel.classfile.JavaClass;
+import org.jf.dexlib2.iface.ClassDef;
+import org.jf.dexlib2.iface.DexFile;
+import org.jf.dexlib2.iface.Method;
 
 /**
  *
@@ -89,10 +87,6 @@ public class RootBuilder {
 
 
     private ClassNode fillFromJar(File file) {
-
-        if(JayceReader.isJackAndJillArchive(file)) {
-            return fillFromJayce(file);
-        }
 
         ClassNode rootNode = new ClassNode(file.getName());
         try {
