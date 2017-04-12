@@ -101,17 +101,6 @@ public class ApkDashboard {
         return dexInspectionsData.classesWithNativeMethods;
     }
 
-    public String getJavaDependenciesErrorsAsString() {
-        List<String> javaDependenciesErrors = getJavaDependenciesErrors();
-
-        StringBuilder builder = new StringBuilder();
-
-        for (String javaDepError : javaDependenciesErrors) {
-            builder.append(javaDepError);
-        }
-
-        return builder.toString();
-    }
 
     public List<String> getJavaDependenciesErrors() {
         JavaDependenciesInspector ddi = new JavaDependenciesInspector(allClasses);
@@ -120,16 +109,8 @@ public class ApkDashboard {
         return result;
     }
 
-    public List<String> getJavaInternalAPIsErrors() {
-        JavaInternalAPIsInspector unsafeInspector = new JavaInternalAPIsInspector(apkFile);
-        List<String> result = unsafeInspector.getInspections();
-
-        return result;
-    }
-
     public static ClassesDexDataEntry fillAnalysisPerClassesDexIndex(int dexIndex, File classesDex) {
         ClassesDexDataEntry dexData = new ClassesDexDataEntry(dexIndex);
-
 
         try {
             InputStream is = new FileInputStream(classesDex);
@@ -175,7 +156,6 @@ public class ApkDashboard {
 
         return result;
     }
-
 
     public List<String> getManifestErrors() {
         ManifestInspector mi = new ManifestInspector(apkFile);

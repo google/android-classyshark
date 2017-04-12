@@ -59,7 +59,7 @@ public class ReceiverActionsBL {
         List<String> result = new LinkedList<>();
 
         for (Map.Entry<String, String> entry : bgActionsToReceivers.entrySet()) {
-            result.add("* System action " + entry.getKey() + " at receiver "+ entry.getValue() + "\n");
+            result.add(entry.getKey() + " ==> " + entry.getValue());
         }
         return result;
     }

@@ -20,6 +20,7 @@ import com.google.classyshark.silverghost.TokensMapper;
 import com.google.classyshark.silverghost.translator.Translator;
 import com.google.classyshark.silverghost.translator.apk.dashboard.ApkDashboard;
 import com.google.classyshark.silverghost.translator.apk.dashboard.ClassesDexDataEntry;
+import com.google.classyshark.silverghost.translator.apk.dashboard.asciitable.Table;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -29,6 +30,7 @@ import java.util.List;
  * Translator for the apk
  */
 public class ApkTranslator implements Translator {
+    public static final String[] NEW_LINE = {" ", " "};
     private File apkFile;
     private ApkDashboard apkDashboard;
 
@@ -54,66 +56,58 @@ public class ApkTranslator implements Translator {
         apkDashboard = new ApkDashboard(apkFile);
         apkDashboard.inspect();
 
-        ELEMENT element = new ELEMENT("\n                  ~ APK DASHBOARD ~\n" , TAG.IDENTIFIER);
+        ELEMENT element = new ELEMENT("\n                  ~ APK DASHBOARD ~\n\n", TAG.IDENTIFIER);
         elements.add(element);
+
+
+        String[] headers = {"Entry",
+                "Description"
+        };
+
+        List<String[]> data = new LinkedList<>();
+
+        data.add(NEW_LINE);
 
         for (ClassesDexDataEntry dexEntry : apkDashboard.getAllDexEntries()) {
-
-
-            element = new ELEMENT("\n" + dexEntry.getName(), TAG.MODIFIER);
-            elements.add(element);
-
-            element = new ELEMENT(
-                    "\nall methods: "
-                            + dexEntry.allMethods
-                            + "\nnative methods: "
-                            + dexEntry.nativeMethodsCount
-                            + "\n", TAG.DOCUMENT);
-            elements.add(element);
+            addRow(data, dexEntry.getName(), String.valueOf(dexEntry.allMethods));
         }
 
-        element = new ELEMENT("\n\nPossible Java Dependencies Errors", TAG.MODIFIER);
-        elements.add(element);
+        data.add(NEW_LINE);
 
-        element = new ELEMENT("\n" + apkDashboard.getJavaDependenciesErrorsAsString(), TAG.DOCUMENT);
-        elements.add(element);
-
-        element = new ELEMENT("\n\nPossible Java Internal API Errors", TAG.MODIFIER);
-        elements.add(element);
-
-        element = new ELEMENT("\n" + apkDashboard.getJavaInternalAPIsErrors(), TAG.DOCUMENT);
-        elements.add(element);
-
-        element = new ELEMENT("\n\n\nAndroid Manifest Warnings", TAG.MODIFIER);
-        elements.add(element);
-
-        element = new ELEMENT("\n" + apkDashboard.getManifestErrors(), TAG.DOCUMENT);
-        elements.add(element);
-
-        element = new ELEMENT("\n\n\nDynamic Symbol Errors", TAG.MODIFIER);
-        elements.add(element);
-
-        for (String error : apkDashboard.getNativeErrors()) {
-            element = new ELEMENT("\n" + error, TAG.DOCUMENT);
-            elements.add(element);
+        for (String javaDepError : apkDashboard.getJavaDependenciesErrors()) {
+            addRow(data, "Java ", javaDepError);
         }
 
-        element = new ELEMENT("\n\n\nNative Libraries\n", TAG.MODIFIER);
-        elements.add(element);
+        data.add(NEW_LINE);
 
-        for (String nativeLib : apkDashboard.getFullPathNativeLibNamesSorted()) {
-            element = new ELEMENT(nativeLib, TAG.DOCUMENT);
-            elements.add(element);
+        for (String systemAction : apkDashboard.getManifestErrors()) {
+            addRow(data, "System Action ", systemAction);
         }
 
-        element = new ELEMENT("\n\nNative Dependencies\n", TAG.MODIFIER);
-        elements.add(element);
+        data.add(NEW_LINE);
 
         for (String nativeLib : apkDashboard.getNativeLibNamesSorted()) {
-            element = new ELEMENT(nativeLib + " " + apkDashboard.getPrivateLibErrorTag(nativeLib)
-                    + "\n", TAG.DOCUMENT);
-            elements.add(element);
+            if (!apkDashboard.getPrivateLibErrorTag(nativeLib).isEmpty()) {
+                addRow(data, "Native Error ", nativeLib + " " + apkDashboard.getPrivateLibErrorTag(nativeLib));
+            }
         }
+
+        String[][] array = new String[data.size()][];
+        for (int i = 0; i < data.size(); i++) {
+            array[i] = data.get(i);
+        }
+
+        element = new ELEMENT(Table.getTable(headers, array).toString(), TAG.DOCUMENT);
+        elements.add(element);
+
+    }
+
+    private void addRow(List<String[]> data, String param1, String param2) {
+        List<String> row = new LinkedList<>();
+        row.add(param1);
+        row.add(param2);
+
+        data.add(row.toArray(new String[0]));
     }
 
     @Override
