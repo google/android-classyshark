@@ -25,7 +25,7 @@ import java.util.TreeMap;
 public class ReceiverActionsBL {
 
 
-    // TODO follow up with https://developer.android.com/preview/features/background-broadcasts.html
+    // TODO follow up with https://developer.android.com/preview/features/background.html
 
     static List<String> approvedActions = Arrays.asList(
             "android.intent.action.LOCKED_BOOT_COMPLETED",
@@ -46,12 +46,11 @@ public class ReceiverActionsBL {
             "android.intent.action.PACKAGE_FULLY_REMOVED",
             "android.intent.action.NEW_OUTGOING_CALL"
     );
-    private final Map<String, String> actionsToReceivers;
+
     private final Map<String, String> bgActionsToReceivers;
 
 
     public ReceiverActionsBL(Map<String, String> actionsToReceivers) {
-        this.actionsToReceivers = actionsToReceivers;
         this.bgActionsToReceivers = filterBGActions(actionsToReceivers);
     }
 

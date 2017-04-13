@@ -56,7 +56,8 @@ public class ApkTranslator implements Translator {
         apkDashboard = new ApkDashboard(apkFile);
         apkDashboard.inspect();
 
-        ELEMENT element = new ELEMENT("\n                  ~ APK DASHBOARD ~\n\n", TAG.IDENTIFIER);
+        ELEMENT element = new ELEMENT("\n                  ~ APK DASHBOARD ~\n\n",
+                TAG.IDENTIFIER);
         elements.add(element);
 
 
@@ -69,7 +70,8 @@ public class ApkTranslator implements Translator {
         data.add(NEW_LINE);
 
         for (ClassesDexDataEntry dexEntry : apkDashboard.getAllDexEntries()) {
-            addRow(data, dexEntry.getName(), String.valueOf(dexEntry.allMethods));
+            addRow(data, dexEntry.getName(),
+                    String.valueOf(dexEntry.allMethods) + " methods");
         }
 
         data.add(NEW_LINE);
@@ -99,7 +101,6 @@ public class ApkTranslator implements Translator {
 
         element = new ELEMENT(Table.getTable(headers, array).toString(), TAG.DOCUMENT);
         elements.add(element);
-
     }
 
     private void addRow(List<String[]> data, String param1, String param2) {
