@@ -57,46 +57,51 @@ public class JavaDependenciesInspector {
         }
 
         if (imageLoading > 1) {
-            result.add("\n* Duplicate image loading libraries - ");
-            if (hasPicasso) result.add("picasso ");
-            if (hasGlide) result.add("glide ");
-            if (hasFresco) result.add("fresco ");
+            String line = "Duplicate image loading libraries - ";
+            if (hasPicasso) line += " picasso ";
+            if (hasGlide) line += "glide ";
+            if (hasFresco) line += "fresco ";
+
+            result.add(line);
         }
 
         if (asyncHttp > 1) {
-            result.add("\n* Duplicate async http libraries - ");
-            if (hasOkHttp) result.add("okhttp ");
-            if (hasVolley) result.add("volley ");
-            if (hasLoopj) result.add("loopj ");
+            String line = "Duplicate async http libraries - ";
+            if (hasOkHttp) line += "okhttp ";
+            if (hasVolley) line += "volley ";
+            if (hasLoopj) line += "loopj ";
+
+            result.add(line);
         }
 
         if (jsonParsing > 1) {
-            result.add("\n* Duplicate json parsing - ");
-            if (hasJackson) result.add("jackson ");
-            if (hasGson) result.add("gson ");
-            if (hasMoshi) result.add("moshi ");
+            String line = "Duplicate json parsing - ";
+            if (hasJackson) line += "jackson ";
+            if (hasGson) line += "gson ";
+            if (hasMoshi) line += "moshi ";
+
+            result.add(line);
         }
 
         if (hasGuava) {
-            result.add("\n* Guava (server side library)usage");
+            result.add("Guava (server side library)usage");
         }
 
         if (hasDeprecatedHttp) {
-            result.add("\n* Apache Http is deprecated");
+            result.add("Apache Http is deprecated");
         }
 
         if (hasActionBarSherlock) {
-            result.add("\n* ActionBar Sherlock is deprecated");
+            result.add("ActionBar Sherlock is deprecated");
         }
 
         if (hasPullToRefresh) {
-            result.add("\n* PullToRefresh is deprecated");
+            result.add("PullToRefresh is deprecated");
         }
 
         if (hasViewPagerIndicator) {
-            result.add("\n* ViewPagerIndicator is deprecated - use support library");
+            result.add("ViewPagerIndicator is deprecated - use support library");
         }
-
 
         return result;
     }

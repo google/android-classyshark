@@ -17,6 +17,7 @@
 package com.google.classyshark.silverghost.translator.apk.dashboard;
 
 import com.google.classyshark.silverghost.contentreader.dex.DexlibLoader;
+import com.google.classyshark.silverghost.translator.apk.dashboard.manifest.ManifestInspector;
 import com.google.classyshark.silverghost.translator.java.dex.MultidexReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -43,6 +44,8 @@ public class ApkDashboard {
     public List<String> allClasses = new ArrayList<>();
     public File apkFile;
 
+    public static final String[] NEW_LINE = {" ", " "};
+
     public ApkDashboard(File apkFile) {
         this.apkFile = apkFile;
     }
@@ -50,8 +53,6 @@ public class ApkDashboard {
     public void inspect() {
         // TODO add exception for not calling inspect
         MultidexReader.fillApkDashboard(apkFile, this);
-
-        System.out.println("Done inspecting");
     }
 
     public List<ClassesDexDataEntry> getAllDexEntries() {
@@ -60,10 +61,6 @@ public class ApkDashboard {
         result.addAll(customClassesDexEntries);
 
         return result;
-    }
-
-    public List<String> getNativeErrors() {
-        return nativeErrors;
     }
 
     public List<String> getFullPathNativeLibNamesSorted() {
@@ -100,17 +97,6 @@ public class ApkDashboard {
         return dexInspectionsData.classesWithNativeMethods;
     }
 
-    public String getJavaDependenciesErrorsAsString() {
-        List<String> javaDependenciesErrors = getJavaDependenciesErrors();
-
-        StringBuilder builder = new StringBuilder();
-
-        for (String javaDepError : javaDependenciesErrors) {
-            builder.append(javaDepError);
-        }
-
-        return builder.toString();
-    }
 
     public List<String> getJavaDependenciesErrors() {
         JavaDependenciesInspector ddi = new JavaDependenciesInspector(allClasses);
@@ -119,16 +105,8 @@ public class ApkDashboard {
         return result;
     }
 
-    public List<String> getJavaInternalAPIsErrors() {
-        JavaInternalAPIsInspector unsafeInspector = new JavaInternalAPIsInspector(apkFile);
-        List<String> result = unsafeInspector.getInspections();
-
-        return result;
-    }
-
     public static ClassesDexDataEntry fillAnalysisPerClassesDexIndex(int dexIndex, File classesDex) {
         ClassesDexDataEntry dexData = new ClassesDexDataEntry(dexIndex);
-
 
         try {
             InputStream is = new FileInputStream(classesDex);
@@ -173,5 +151,62 @@ public class ApkDashboard {
         }
 
         return result;
+    }
+
+    public List<String> getManifestRecommendations() {
+        ManifestInspector mi = new ManifestInspector(apkFile);
+
+        List<String> result = mi.getInspections();
+
+        return result;
+    }
+
+    public String toString() {
+        String[] columnHeaders = {"Recommendation", "Description"};
+
+        List<String[]> rows = new LinkedList<>();
+
+        rows.add(NEW_LINE);
+
+        for (ClassesDexDataEntry dexEntry : getAllDexEntries()) {
+            addRow(rows, dexEntry.getName(),
+                    String.valueOf(dexEntry.allMethods) + " methods");
+        }
+
+        rows.add(NEW_LINE);
+
+        for (String javaDepError : getJavaDependenciesErrors()) {
+            addRow(rows, "Java ", javaDepError);
+        }
+
+        rows.add(NEW_LINE);
+
+        for (String systemBroadcast : getManifestRecommendations()) {
+            addRow(rows, "System Broadcast ", systemBroadcast);
+        }
+
+        rows.add(NEW_LINE);
+
+        for (String nativeLib : getNativeLibNamesSorted()) {
+            if (!getPrivateLibErrorTag(nativeLib).isEmpty()) {
+                addRow(rows, "Native Error ", nativeLib + " " +
+                        getPrivateLibErrorTag(nativeLib));
+            }
+        }
+
+        String[][] array = new String[rows.size()][];
+        for (int i = 0; i < rows.size(); i++) {
+            array[i] = rows.get(i);
+        }
+
+        return Table.getTable(columnHeaders, array).toString();
+    }
+
+    private void addRow(List<String[]> data, String param1, String param2) {
+        List<String> row = new LinkedList<>();
+        row.add(param1);
+        row.add(param2);
+
+        data.add(row.toArray(new String[0]));
     }
 }

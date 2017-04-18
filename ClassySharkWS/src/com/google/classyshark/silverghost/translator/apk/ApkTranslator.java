@@ -19,7 +19,6 @@ package com.google.classyshark.silverghost.translator.apk;
 import com.google.classyshark.silverghost.TokensMapper;
 import com.google.classyshark.silverghost.translator.Translator;
 import com.google.classyshark.silverghost.translator.apk.dashboard.ApkDashboard;
-import com.google.classyshark.silverghost.translator.apk.dashboard.ClassesDexDataEntry;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -29,6 +28,7 @@ import java.util.List;
  * Translator for the apk
  */
 public class ApkTranslator implements Translator {
+
     private File apkFile;
     private ApkDashboard apkDashboard;
 
@@ -54,59 +54,12 @@ public class ApkTranslator implements Translator {
         apkDashboard = new ApkDashboard(apkFile);
         apkDashboard.inspect();
 
-        ELEMENT element = new ELEMENT("\n                  ~ APK DASHBOARD ~\n" , TAG.IDENTIFIER);
+        ELEMENT element = new ELEMENT("\n                  ~ APK DASHBOARD ~\n\n",
+                TAG.IDENTIFIER);
         elements.add(element);
 
-        for (ClassesDexDataEntry dexEntry : apkDashboard.getAllDexEntries()) {
-
-            element = new ELEMENT("\n" + dexEntry.getName(), TAG.MODIFIER);
-            elements.add(element);
-
-            element = new ELEMENT(
-                    "\nall methods: "
-                            + dexEntry.allMethods
-                            + "\nnative methods: "
-                            + dexEntry.nativeMethodsCount
-                            + "\n", TAG.DOCUMENT);
-            elements.add(element);
-        }
-
-        element = new ELEMENT("\n\nPossible Java Dependencies Errors", TAG.MODIFIER);
+        element = new ELEMENT(apkDashboard.toString(), TAG.DOCUMENT);
         elements.add(element);
-
-        element = new ELEMENT("\n" + apkDashboard.getJavaDependenciesErrorsAsString(), TAG.DOCUMENT);
-        elements.add(element);
-
-        element = new ELEMENT("\n\nPossible Java Internal API Errors", TAG.MODIFIER);
-        elements.add(element);
-
-        element = new ELEMENT("\n" + apkDashboard.getJavaInternalAPIsErrors(), TAG.DOCUMENT);
-        elements.add(element);
-
-        element = new ELEMENT("\n\n\nDynamic Symbol Errors", TAG.MODIFIER);
-        elements.add(element);
-
-        for (String error : apkDashboard.getNativeErrors()) {
-            element = new ELEMENT("\n" + error, TAG.DOCUMENT);
-            elements.add(element);
-        }
-
-        element = new ELEMENT("\n\n\nNative Libraries\n", TAG.MODIFIER);
-        elements.add(element);
-
-        for (String nativeLib : apkDashboard.getFullPathNativeLibNamesSorted()) {
-            element = new ELEMENT(nativeLib, TAG.DOCUMENT);
-            elements.add(element);
-        }
-
-        element = new ELEMENT("\n\nNative Dependencies\n", TAG.MODIFIER);
-        elements.add(element);
-
-        for (String nativeLib : apkDashboard.getNativeLibNamesSorted()) {
-            element = new ELEMENT(nativeLib + " " + apkDashboard.getPrivateLibErrorTag(nativeLib)
-                    + "\n", TAG.DOCUMENT);
-            elements.add(element);
-        }
     }
 
     @Override
