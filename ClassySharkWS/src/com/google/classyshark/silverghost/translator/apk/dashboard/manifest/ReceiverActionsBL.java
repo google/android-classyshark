@@ -25,7 +25,7 @@ import java.util.TreeMap;
 public class ReceiverActionsBL {
 
 
-    // TODO follow up with https://developer.android.com/preview/features/background.html
+    // https://developer.android.com/preview/features/background-broadcasts.html
 
     static List<String> approvedActions = Arrays.asList(
             "android.intent.action.LOCKED_BOOT_COMPLETED",
@@ -34,17 +34,27 @@ public class ReceiverActionsBL {
             "android.intent.action.USER_ADDED",
             "android.intent.action.USER_REMOVED",
             "android.intent.action.TIMEZONE_CHANGED",
+            "android.intent.action.TIME_SET",
             "android.intent.action.LOCALE_CHANGED",
             "android.hardware.usb.action.USB_ACCESSORY_ATTACHED",
             "android.hardware.usb.action.USB_ACCESSORY_DETACHED",
             "android.hardware.usb.action.USB_DEVICE_ATTACHED",
             "android.hardware.usb.action.USB_DEVICE_DETACHED",
-            "android.hardware.usb.action.USB_PORT_CHANGED",
-            "android.intent.action.DEVICE_STORAGE_LOW",
             "android.accounts.LOGIN_ACCOUNTS_CHANGED",
+            "android.intent.action.DEVICE_STORAGE_LOW",
+            "android.intent.action.DEVICE_STORAGE_OK",
             "android.intent.action.PACKAGE_DATA_CLEARED",
             "android.intent.action.PACKAGE_FULLY_REMOVED",
-            "android.intent.action.NEW_OUTGOING_CALL"
+            "android.intent.action.NEW_OUTGOING_CALL",
+            "android.intent.action.HEADSET_PLUG",
+            "android.intent.action.EVENT_REMINDER",
+            "android.hardware.usb.action.USB_ACCESSORY_ATTACHED",
+            "android.hardware.usb.action.USB_ACCESSORY_DETACHED",
+            "android.hardware.usb.action.USB_DEVICE_ATTACHED",
+            "android.hardware.usb.action.USB_DEVICE_DETACHED",
+            "android.app.action.DEVICE_OWNER_CHANGED",
+            "android.bluetooth.headset.profile.action.CONNECTION_STATE_CHANGED",
+            "android.bluetooth.a2dp.profile.action.CONNECTION_STATE_CHANGED"
     );
 
     private final Map<String, String> bgActionsToReceivers;

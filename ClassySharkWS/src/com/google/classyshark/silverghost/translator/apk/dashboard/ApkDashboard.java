@@ -17,7 +17,6 @@
 package com.google.classyshark.silverghost.translator.apk.dashboard;
 
 import com.google.classyshark.silverghost.contentreader.dex.DexlibLoader;
-import com.google.classyshark.silverghost.translator.apk.dashboard.asciitable.Table;
 import com.google.classyshark.silverghost.translator.apk.dashboard.manifest.ManifestInspector;
 import com.google.classyshark.silverghost.translator.java.dex.MultidexReader;
 import java.io.File;

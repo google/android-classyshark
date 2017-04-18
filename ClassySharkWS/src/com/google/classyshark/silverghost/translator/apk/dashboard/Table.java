@@ -1,4 +1,21 @@
-package com.google.classyshark.silverghost.translator.apk.dashboard.asciitable;
+/**
+ * Copyright (C) 2014 ned.twigg@diffplug.com
+ * Copyright (C) 2011 K Venkata Sudhakar <kvenkatasudhakar@gmail.com>
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.google.classyshark.silverghost.translator.apk.dashboard;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -124,11 +141,11 @@ public class Table {
 		
 		StringBuilder rowBuilder = new StringBuilder();
 		String formattedData = null;
-		Align align;
+		Column.Align align;
 		
 		for (int i = 0 ; i < colCount ; i ++) {
 		
-			align = isHeader ? Align.HEADER_DEFAULT : Align.DATA_DEFAULT;
+			align = isHeader ? Column.Align.HEADER_DEFAULT : Column.Align.DATA_DEFAULT;
 			
 			if (headerObjs != null && i < headerObjs.length) {
 				if (isHeader) {
@@ -154,7 +171,7 @@ public class Table {
 		return rowBuilder.append("\n").toString();
 	}
 	
-	private static String getFormattedData(int maxLength, String data, Align align) {
+	private static String getFormattedData(int maxLength, String data, Column.Align align) {
 		if (data.length() > maxLength) {
 			return data;
 		}
@@ -162,11 +179,11 @@ public class Table {
 		boolean toggle = true;
 		
 		while (data.length() < maxLength) {
-			if (align == Align.LEFT) {
+			if (align == Column.Align.LEFT) {
 				data = data + " ";
-			} else if (align == Align.RIGHT) {
+			} else if (align == Column.Align.RIGHT) {
 				data = " " + data;
-			} else if (align == Align.CENTER) {
+			} else if (align == Column.Align.CENTER) {
 				if (toggle) {
 					data = " " + data;
 					toggle = false;
@@ -270,4 +287,49 @@ public class Table {
 		
 		return header;
 	}
+
+	/** Represents a column's title and alignment. */
+    public static class Column {
+
+        /** Represents a horizontal alignment. */
+        public enum Align {
+            LEFT, CENTER, RIGHT;
+
+            public static final Align HEADER_DEFAULT = LEFT;
+            public static final Align DATA_DEFAULT = LEFT;
+        }
+
+
+        public final String header;
+        public final Align headerAlign;
+        public final Align dataAlign;
+
+        /** A Column with a name. */
+        public Column(String headerName) {
+            this(headerName, Align.HEADER_DEFAULT, Align.DATA_DEFAULT);
+        }
+
+        /** A Column with a name and alignment. */
+        public Column(String header, Align headerAlign, Align dataAlign) {
+            this.header = header;
+            this.headerAlign = headerAlign;
+            this.dataAlign = dataAlign;
+        }
+
+        /** An object which can extract data with which to populate its column. */
+        public <T> Data<T> with(Function<T, String> getter) {
+            return new Data<T>(this, getter);
+        }
+
+        /** Represents a Data-driven column. */
+        public static class Data<T> {
+            public final Column column;
+            public final Function<T, String> getter;
+
+            private Data(Column column, Function<T, String> getter) {
+                this.column = column;
+                this.getter = getter;
+            }
+        }
+    }
 }
