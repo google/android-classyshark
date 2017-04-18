@@ -9,8 +9,8 @@ Follow the shark on twitter [@ItsClassyshark](https://twitter.com/ItsClassyshark
 ClassyShark is a standalone binary inspection tool for Android developers. It can reliably browse any Android executable and show important info such as class interfaces and members, dex counts and dependencies. ClassyShark supports multiple formats including libraries (.dex, .aar, .so), executables (.apk, .jar, .class) and all Android binary XMLs: AndroidManifest, resources, layouts etc.
 
 ### Useful links
-* [User guide] (https://github.com/borisf/classyshark-user-guide)
-* [Command-line reference] (https://github.com/google/android-classyshark/blob/master/CommandLine.pdf)
+* [User guide](https://github.com/borisf/classyshark-user-guide)
+* [Command-line reference](https://github.com/google/android-classyshark/blob/master/CommandLine.pdf)
 * Gradle [sample](https://github.com/google/android-classyshark/tree/master/Samples/SampleGradle)
 * [Vision and Strategy](https://docs.google.com/document/d/1sK_WNzHn_6Q1V_dohxrtk1tlsPXsi9cEVnIuYuVig0M/edit?usp=sharing)
 
@@ -19,7 +19,7 @@ To run, grab the [latest JAR](https://github.com/google/android-classyshark/rele
 and run `java -jar ClassyShark.jar`.
 
 ### Export data in text format
-* [Exporter] (https://medium.com/@BorisFarber/exporting-data-from-classyshark-e3cf3fe3fab8#.deec4nyjq)
+* [Exporter](https://medium.com/@BorisFarber/exporting-data-from-classyshark-e3cf3fe3fab8#.deec4nyjq)
 * API finder :construction: work in progress
 
 ### Develop
