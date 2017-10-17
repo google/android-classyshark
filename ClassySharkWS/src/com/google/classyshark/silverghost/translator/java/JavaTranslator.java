@@ -21,10 +21,10 @@ import com.google.classyshark.silverghost.translator.Translator;
 import com.google.classyshark.silverghost.translator.TranslatorFactory;
 import com.google.classyshark.silverghost.translator.java.clazz.QualifiedTypesMap;
 import com.google.classyshark.silverghost.translator.java.clazz.reflect.MetaObjectClass;
-
 import java.io.File;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -227,7 +227,11 @@ public class JavaTranslator implements Translator {
                 + "    //======================== F I E L D S ==================\n\n",
                 TAG.DOCUMENT));
 
-        for (MetaObject.FieldInfo field : fields) {
+        List<MetaObject.FieldInfo> sortedFields =
+                Arrays.asList(fields);
+        Collections.sort(sortedFields);
+
+        for (MetaObject.FieldInfo field : sortedFields) {
             int md = field.modifiers;
             annotations = field.annotations;
 
@@ -286,7 +290,11 @@ public class JavaTranslator implements Translator {
                 + "    //======================== M E T H O D S ================\n\n",
                 TAG.DOCUMENT));
 
-        for (MetaObject.MethodInfo method : methods) {
+       List<MetaObject.MethodInfo> sortedMethods =
+                Arrays.asList(methods);
+        Collections.sort(sortedMethods);
+
+        for (MetaObject.MethodInfo method : sortedMethods) {
             int md = method.modifiers;
 
             annotations = method.annotations;
