@@ -32,12 +32,22 @@ public abstract class MetaObject {
     /**
      * data class for fields
      */
-    public static class FieldInfo {
+    public static class FieldInfo implements Comparable {
         public String typeName;
         public int modifiers;
         public AnnotationInfo[] annotations;
         public String name;
         public String genericStr = "";
+
+        @Override
+        public int compareTo(Object o) {
+            if(o instanceof FieldInfo) {
+                FieldInfo other = (FieldInfo)o;
+                return this.name.compareTo(other.name);
+            }
+
+            return 0;
+        }
     }
 
     /**
@@ -52,7 +62,7 @@ public abstract class MetaObject {
     /**
      * data class for methods
      */
-    public static class MethodInfo {
+    public static class MethodInfo implements Comparable{
         public AnnotationInfo[] annotations;
         public ParameterInfo[] parameterTypes;
         public int modifiers;
@@ -60,6 +70,17 @@ public abstract class MetaObject {
         public ExceptionInfo[] exceptionTypes;
         public String returnType;
         public String genericReturnType = "";
+
+        @Override
+        public int compareTo(Object o) {
+
+            if(o instanceof MethodInfo) {
+                MethodInfo other = (MethodInfo)o;
+                return this.name.compareTo(other.name);
+            }
+
+            return 0;
+        }
     }
 
     /**
