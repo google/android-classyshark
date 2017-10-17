@@ -59,7 +59,6 @@ task fatJar(type: Jar) {
         attributes (
                 'Main-Class': 'com.google.classyshark.Main',
         )
-
     }
     baseName = project.name + '-all'
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
