@@ -4,7 +4,7 @@ version '1.0-SNAPSHOT'
 apply plugin: 'java'
 apply plugin: 'java-library-distribution' // task: gradle distZip
 
-sourceCompatibility = 1.8
+sourceCompatibility = 1.7
 
 repositories {
     flatDir {
