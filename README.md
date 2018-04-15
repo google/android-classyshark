@@ -28,7 +28,7 @@ and run `java -jar ClassyShark.jar`.
 3. Build options:
      * IntelliJ - builds automatically when exporting the project 
      * [Gradle script](https://github.com/google/android-classyshark/blob/master/ClassySharkWS/build.gradle)
-     * [Retrobuid](https://github.com/borisf/RetroBuild)
+     * [RetroBuild](https://github.com/borisf/RetroBuild)
 
 ### Arch Linux
 
