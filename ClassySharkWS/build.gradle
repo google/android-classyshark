@@ -29,12 +29,12 @@ sourceSets {
 dependencies {
     // local jars
     compile name: 'asmdex-1.0', ext: 'jar'
-    compile name: 'dexlib2', ext: 'jar'
     compile name: 'util-2.0.6', ext: 'jar'
     compile name: 'java-binutils', ext: 'jar'
 
     // maven
     compile 'org.ow2.asm:asm-all:5.0.4'
+    compile group: 'org.smali', name: 'dexlib2', version: '2.2.4'
     compile 'org.apache.bcel:bcel:6.0'
     compile 'com.squareup.retrofit2:converter-gson:2.3.0'
     compile 'com.google.code.gson:gson-parent:2.8.1'
