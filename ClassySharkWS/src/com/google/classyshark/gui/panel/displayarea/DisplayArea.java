@@ -164,7 +164,7 @@ public class DisplayArea implements IDisplayArea {
                                      List<Translator.ELEMENT> displayedManifestSearchResultsTokens,
                                      String textFromTypingArea) {
         displayDataState = DisplayDataState.CLASSES_LIST;
-        StyleConstants.setFontSize(style, 18);
+        StyleConstants.setFontSize(style, 20);
         StyleConstants.setForeground(style, theme.getIdentifiersColor());
 
         clearText();
@@ -172,12 +172,12 @@ public class DisplayArea implements IDisplayArea {
         Document doc = new DefaultStyledDocument();
         jTextPane.setDocument(doc);
 
-        StyleConstants.setFontSize(style, 18);
+        StyleConstants.setFontSize(style, 20);
         StyleConstants.setBackground(style, theme.getBackgroundColor());
 
         fillTokensToDoc(displayedManifestSearchResultsTokens, doc, true);
 
-        StyleConstants.setFontSize(style, 18);
+        StyleConstants.setFontSize(style, 20);
         StyleConstants.setForeground(style, theme.getIdentifiersColor());
         StyleConstants.setBackground(style, theme.getBackgroundColor());
 
@@ -206,7 +206,7 @@ public class DisplayArea implements IDisplayArea {
     public void displayClassNames(List<String> classNamesToShow,
                                   String inputText) {
 
-        StyleConstants.setFontSize(style, 18);
+        StyleConstants.setFontSize(style, 20);
         StyleConstants.setForeground(style, theme.getIdentifiersColor());
         StyleConstants.setBackground(style, theme.getBackgroundColor());
 
@@ -260,7 +260,7 @@ public class DisplayArea implements IDisplayArea {
         long start = System.currentTimeMillis();
 
         displayDataState = DisplayDataState.CLASSES_LIST;
-        StyleConstants.setFontSize(style, 18);
+        StyleConstants.setFontSize(style, 20);
         StyleConstants.setForeground(style, theme.getIdentifiersColor());
 
         clearText();
@@ -298,7 +298,7 @@ public class DisplayArea implements IDisplayArea {
         }
 
         clearText();
-        StyleConstants.setFontSize(style, 18);
+        StyleConstants.setFontSize(style, 20);
 
         Document doc = new DefaultStyledDocument();
 
@@ -319,7 +319,7 @@ public class DisplayArea implements IDisplayArea {
     public void displayClass(List<Translator.ELEMENT> elements, String key) {
         displayDataState = DisplayDataState.INSIDE_CLASS;
         clearText();
-        StyleConstants.setFontSize(style, 18);
+        StyleConstants.setFontSize(style,  20);
         StyleConstants.setBackground(style, theme.getBackgroundColor());
 
         Document doc = new DefaultStyledDocument();
@@ -426,8 +426,8 @@ public class DisplayArea implements IDisplayArea {
 
         try {
             StyleConstants.setForeground(style, theme.getIdentifiersColor());
-            StyleConstants.setFontSize(style, 13);
-            StyleConstants.setFontFamily(style, "Menlo");
+            StyleConstants.setFontSize(style, 15);
+            StyleConstants.setFontFamily(style, "Monospaced");
 
             doc.insertString(doc.getLength(), Doodle.get(), style);
         } catch (BadLocationException e) {
@@ -447,8 +447,8 @@ public class DisplayArea implements IDisplayArea {
 
         try {
             StyleConstants.setForeground(style, theme.getDefaultColor());
-            StyleConstants.setFontSize(style, 13);
-            StyleConstants.setFontFamily(style, "Menlo");
+            StyleConstants.setFontSize(style, 15);
+            StyleConstants.setFontFamily(style, "Monospaced");
 
             doc.insertString(doc.getLength(), "\n\n\n\t\t\t There was a problem loading the class  ", style);
             doc.insertString(doc.getLength(), Doodle.get(), style);

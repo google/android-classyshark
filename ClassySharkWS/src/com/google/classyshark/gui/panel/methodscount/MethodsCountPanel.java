@@ -72,7 +72,7 @@ public class MethodsCountPanel extends JPanel {
 
         DefaultTreeCellRenderer cellRenderer = (DefaultTreeCellRenderer) jTree.getCellRenderer();
 
-        cellRenderer.setFont(new Font("Menlo", Font.PLAIN, 18));
+        cellRenderer.setFont(new Font("Monospaced", Font.PLAIN, 20));
         jTree.setCellRenderer(cellRenderer);
         jTree.addTreeSelectionListener(new TreeSelectionListener() {
             @Override

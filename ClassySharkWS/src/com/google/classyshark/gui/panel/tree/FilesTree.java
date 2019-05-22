@@ -208,7 +208,7 @@ public class FilesTree {
     private void configureJTree(final JTree jTree) {
         jTree.setRootVisible(false);
         DefaultTreeCellRenderer cellRenderer = (DefaultTreeCellRenderer) jTree.getCellRenderer();
-        cellRenderer.setFont(new Font("Menlo", Font.PLAIN, 18));
+        cellRenderer.setFont(new Font("Monospaced", Font.PLAIN, 20));
         jTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
         jTree.addTreeSelectionListener(new TreeSelectionListener() {
             @Override
