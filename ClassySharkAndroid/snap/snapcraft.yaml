@@ -1,0 +1,26 @@
+name: android-classyshark
+version: '8.2'
+summary: Binary analysis of any Android/Java based app/APK/game.
+description: |ClassyShark is a standalone binary inspection tool for Android developers. It can reliably browse any Android executable and show important info such as class interfaces and members, dex counts and dependencies. 
+
+confinement: devmode
+
+parts:
+  android-classyshark:
+    after: [desktop-glib-only]
+    plugin: gradle
+    source: https://codeload.github.com/android-classyshark-8.2.zip
+    build: |
+      export JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64"
+      gradle release -x test -x createGitTag
+    install: |
+      unzip DIST/android-classyshark_bin-*.zip -d $SNAPCRAFT_PART_INSTALL/
+    build-packages:
+      - unzip
+      - openjdk-8-jdk
+      - dexlib2
+      - java-binutils
+
+apps:
+  android-classyshark:
+    command: desktop-launch $SNAP/android-classyshark-8.2/android-classyshark.sh
