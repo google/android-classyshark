@@ -20,13 +20,10 @@ import com.google.common.io.LittleEndianDataInputStream;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInput;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -57,7 +54,7 @@ public class XmlDecompressor {
 
     private static final int RES_XML_RESOURCE_MAP_TYPE = 0x180;
     private static final int RES_XML_FIRST_CHUNK_TYPE = 0x100;
-    private static final int REX_XML_STRING_TABLE = 0x0001;
+    private static final int RES_XML_STRING_TABLE = 0x0001;
 
     //Resource Types
     private static final int RES_TYPE_NULL = 0x00;
@@ -128,7 +125,7 @@ public class XmlDecompressor {
     public String decompressXml(InputStream is) throws IOException {
         StringBuilder result = new StringBuilder("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
         try(LittleEndianDataInputStream dis = new LittleEndianDataInputStream(is)) {
-            //Getting and checking the marker for a valid XMl file
+            //Getting and checking the marker for a valid XML file
             int fileMarker = dis.readInt();
             if (fileMarker != PACKED_XML_IDENTIFIER) {
                 throw new IOException(
@@ -181,7 +178,7 @@ public class XmlDecompressor {
         //Skipping 3 unknowns integers:
         dis.skipBytes(8);
         int nameStringIndex = dis.readInt();
-        //Skipping more 2 unknown integers.
+        //Skipping 2 more unknown integers.
         dis.skipBytes(8);
 
         if (appendCData) {
@@ -304,7 +301,7 @@ public class XmlDecompressor {
 
     private List<String> parseStrings(DataInput dis) throws IOException {
         int stringMarker = dis.readShort();
-        if (stringMarker != REX_XML_STRING_TABLE) {
+        if (stringMarker != RES_XML_STRING_TABLE) {
             throw new IOException(
                     String.format(ERROR_INVALID_MAGIC_NUMBER,
                             PACKED_XML_IDENTIFIER,
