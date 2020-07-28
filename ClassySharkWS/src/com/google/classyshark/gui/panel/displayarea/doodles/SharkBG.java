@@ -24,7 +24,6 @@ import com.google.classyshark.Version;
 class SharkBG {
       public static final String SHARKEY =
               "\n\n\n\n"
-                      + "\t\t\t www.classyshark.com"
                       + "\n\n\n\n"
                       + "                                     _,,                                   ,dW\n"
                       + "                                   ,iSMP                                  JIl;\n"
