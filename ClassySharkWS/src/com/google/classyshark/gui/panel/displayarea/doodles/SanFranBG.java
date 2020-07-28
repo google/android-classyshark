@@ -20,7 +20,6 @@ package com.google.classyshark.gui.panel.displayarea.doodles;
 public class SanFranBG {
     public static final String SHARKEY =
             "\n\n\n\n"
-                    + "\t\t\t www.classyshark.com"
                     + "\n\n\n\n"
                     + "\t                                         ^^\n" +
                     "\t    ^^      ..                                       ..\n" +
