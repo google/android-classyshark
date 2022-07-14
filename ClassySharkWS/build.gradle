@@ -4,7 +4,7 @@ version '1.0-SNAPSHOT'
 apply plugin: 'java'
 apply plugin: 'java-library-distribution' // task: gradle distZip
 
-sourceCompatibility = 1.7
+sourceCompatibility = 1.8
 
 repositories {
     flatDir {
@@ -33,15 +33,15 @@ dependencies {
     compile name: 'java-binutils', ext: 'jar'
 
     // maven
-    compile 'org.ow2.asm:asm-all:5.0.4'
-    compile group: 'org.smali', name: 'dexlib2', version: '2.2.4'
-    compile 'org.apache.bcel:bcel:6.0'
-    compile 'com.squareup.retrofit2:converter-gson:2.3.0'
-    compile 'com.google.code.gson:gson-parent:2.8.1'
-    compile 'com.google.guava:guava:22.0'
-    compile 'com.squareup.okhttp3:okhttp:3.8.1'
-    compile 'com.squareup.okio:okio:1.13.0'
-    compile 'com.squareup.retrofit2:retrofit:2.3.0'
+    compile 'org.ow2.asm:asm-all:5.2'
+    compile group: 'org.smali', name: 'dexlib2', version: '2.2.7'
+    compile 'org.apache.bcel:bcel:6.5.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.9.0'
+    compile 'com.google.code.gson:gson-parent:2.9.0'
+    compile 'com.google.guava:guava:31.1-jre'
+    compile 'com.squareup.okhttp3:okhttp:4.10.0'
+    compile 'com.squareup.okio:okio:3.2.0'
+    compile 'com.squareup.retrofit2:retrofit:2.9.0'
 }
 
 jar {
