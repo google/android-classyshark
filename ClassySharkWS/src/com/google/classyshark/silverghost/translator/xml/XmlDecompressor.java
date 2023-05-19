@@ -295,7 +295,7 @@ public class XmlDecompressor {
                     attributeValue = String.format("0x%08X", attributeResourceId);
 
             }
-            sb.append(attributeName).append("='").append(attributeValue).append("'");
+            sb.append(attributeName).append("=\"").append(attributeValue).append("\"");
         }
     }
 
